@@ -36,7 +36,7 @@ void KeyMatrix::init()
 
 void KeyMatrix::scan(const EventCallback& callback)
 {
-    size_t index(0);
+    std::size_t index(0);
     int rowMask(mRowMask);
     
     while (rowMask && (index < mMask.size()))
@@ -59,7 +59,7 @@ void KeyMatrix::scan(const EventCallback& callback)
             Wire.endTransmission();
         }
 
-        Bitmask<10> row;
+        Mask::Row row;
         
         Wire.beginTransmission(mAddr);
         Wire.write(0x12);

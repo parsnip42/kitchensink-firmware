@@ -1,19 +1,17 @@
 #ifndef INCLUDED_KEYMATRIX_H
 #define INCLUDED_KEYMATRIX_H
 
-#include "keymask.h"
-#include "bitmask.h"
+#include "bitmask2d.h"
 
 #include <array>
+#include <cstddef>
+#include <cstdint>
 #include <functional>
-
-#include <stdio.h>
-#include <inttypes.h>
 
 class KeyMatrix
 {
 public:
-    typedef KeyMask<5> Mask;
+    typedef Bitmask2d<10, 5> Mask;
 
 public:
     class Event
@@ -37,7 +35,7 @@ public:
 public:
     void scan(const EventCallback& callback);
 
-    const Bitmask<10>& operator[](size_t n) const;
+    const Mask::Row& operator[](std::size_t n) const;
     const Mask& delta() const;
     
 private:
@@ -67,7 +65,7 @@ KeyMatrix::Event::Event(int  nRow,
 { }
 
 inline
-const Bitmask<10>& KeyMatrix::operator[](size_t n) const
+const KeyMatrix::Mask::Row& KeyMatrix::operator[](std::size_t n) const
 {
     return mMask[n];
 }
