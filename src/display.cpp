@@ -16,9 +16,9 @@ const unsigned char charset[] = {
 const int ledPin = 13;
 const int db[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 const size_t db_count = sizeof(db)/sizeof(*db);
-const int dc = 23;
+const int dc = 21;
 const int reset = 22;
-const int csrw = 21;
+const int csrw = 23;
 
 void writeBus(unsigned char data, int type)
 {

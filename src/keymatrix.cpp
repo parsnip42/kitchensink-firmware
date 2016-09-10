@@ -6,7 +6,8 @@ KeyMatrix::KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask)
     : mAddr(addr)
     , mRowMask(rowMask)
     , mColMask(colMask)
-    , mMask()
+    , mState()
+    , mDelta() 
 {
     init();
 }
@@ -34,14 +35,14 @@ void KeyMatrix::init()
     Wire.endTransmission();
 }
 
-void KeyMatrix::scan(const EventCallback& callback)
+void KeyMatrix::scan()
 {
     std::size_t index(0);
     int rowMask(mRowMask);
     
-    while (rowMask && (index < mMask.size()))
+    while (rowMask && (index < mState.size()))
     {
-        uint16_t rowBit = (rowMask & -rowMask);
+        uint16_t rowBit(rowMask & -rowMask);
 
         if (rowBit & 0xff)
         {    
@@ -74,8 +75,8 @@ void KeyMatrix::scan(const EventCallback& callback)
         row.data() |= (((~Wire.read()) & 0xff) << 8);
         row.data() &= mColMask;
 
-        mDelta[index].data() = mMask[index].data() ^ row.data();
-        mMask[index].data() = row.data();
+        mDelta[index].data() = mState[index].data() ^ row.data();
+        mState[index].data() = row.data();
         
         rowMask &= ~rowBit;
         ++index;

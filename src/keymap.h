@@ -10,22 +10,21 @@
 class KeyMap
 {
 public:
-    static const size_t WIDTH  = 16;
-    static const size_t HEIGHT = 5;
+    static const int Rows    = 5;
+    static const int Columns = 16;
 
 public:
-    typedef std::array<uint32_t, WIDTH> Row;
-    
-public:
-    explicit KeyMap(std::initializer_list<Row> rows);
+    typedef std::array<uint32_t, Columns> ColumnData;
+    typedef std::array<ColumnData, Rows> RowData;
 
 public:
-    const Row& operator[](size_t n) const;
+    explicit KeyMap(std::initializer_list<ColumnData> rows);
+
+public:
+    const ColumnData& operator[](size_t n) const;
     
 private:
-    typedef std::array<Row, HEIGHT> Rows;
-
-    Rows rows_;
+    RowData mData;
 
 private:
     KeyMap(const KeyMap&) = delete;
@@ -33,9 +32,9 @@ private:
 };
 
 inline
-const KeyMap::Row& KeyMap::operator[](size_t n) const
+const KeyMap::ColumnData& KeyMap::operator[](size_t n) const
 {
-    return rows_[n];
+    return mData[n];
 }
 
 #endif

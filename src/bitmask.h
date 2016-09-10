@@ -20,7 +20,9 @@ public:
     std::size_t size() const;
     const Data& data() const;
     Data& data();
-    
+    void set(std::size_t n);
+    void clear(std::size_t n);
+
 private:
     Data mData;
 };
@@ -58,6 +60,20 @@ inline
 typename Bitmask<Size>::Data& Bitmask<Size>::data()
 {
     return mData;
+}
+
+template <std::size_t Size>
+inline
+void Bitmask<Size>::set(std::size_t n)
+{
+    mData |= (Data)1 << n;
+}
+
+template <std::size_t Size>
+inline
+void Bitmask<Size>::clear(std::size_t n)
+{
+    mData &= ~((Data)1 << n);
 }
 
 #endif

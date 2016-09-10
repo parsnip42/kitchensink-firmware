@@ -11,31 +11,19 @@
 class KeyMatrix
 {
 public:
-    typedef Bitmask2d<10, 5> Mask;
+    static const int Rows    = 5;
+    static const int Columns = 16;
 
-public:
-    class Event
-    {
-    public:
-        Event(int  nRow,
-              int  nColumn,
-              bool nPressed);
-        
-    public:
-        int  row;
-        int  column;
-        bool pressed;
-    };
+    typedef Bitmask2d<Columns, Rows> Mask;
 
-    typedef std::function<void(const Event&)> EventCallback;
-    
 public:
     KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask);
 
 public:
-    void scan(const EventCallback& callback);
+    void scan();
 
     const Mask::Row& operator[](std::size_t n) const;
+    const Mask& state() const;
     const Mask& delta() const;
     
 private:
@@ -46,7 +34,7 @@ private:
     const uint16_t mRowMask;
     const uint16_t mColMask;
 
-    Mask mMask;
+    Mask mState;
     Mask mDelta;
     
 private:
@@ -56,18 +44,15 @@ private:
 
 
 inline
-KeyMatrix::Event::Event(int  nRow,
-                        int  nColumn,
-                        bool nPressed)
-    : row(nRow)
-    , column(nColumn)
-    , pressed(nPressed)
-{ }
-
-inline
 const KeyMatrix::Mask::Row& KeyMatrix::operator[](std::size_t n) const
 {
-    return mMask[n];
+    return mState[n];
+}
+
+inline
+const KeyMatrix::Mask& KeyMatrix::state() const
+{
+    return mState;
 }
 
 inline

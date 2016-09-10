@@ -25,6 +25,12 @@ private:
     typedef std::array<Row, Height> Rows;
 
     Rows mRows;
+
+public:
+    typedef typename Rows::const_iterator const_iterator;
+
+    const_iterator begin() const;
+    const_iterator end() const;
     
 private:
     Bitmask2d(const Bitmask2d&) = delete;
@@ -57,6 +63,20 @@ inline
 std::size_t Bitmask2d<Width, Height>::size() const
 {
     return Height;
+}
+
+template <std::size_t Width, std::size_t Height>
+inline
+typename Bitmask2d<Width, Height>::const_iterator Bitmask2d<Width, Height>::begin() const
+{
+    return mRows.begin();
+}
+
+template <std::size_t Width, std::size_t Height>
+inline
+typename Bitmask2d<Width, Height>::const_iterator Bitmask2d<Width, Height>::end() const
+{
+    return mRows.end();
 }
 
 #endif
