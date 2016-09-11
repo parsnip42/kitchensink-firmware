@@ -9,25 +9,30 @@ LayerStack::LayerStack()
 }
 
 
-int LayerStack::at(int row, int column) const
+KeyId LayerStack::at(int row, int column) const
 {
     auto data(mLayerMask.data());
 
     int index(0);
-    int value(0);
+    KeyId keyId;
     
     while (data)
     {
         if ((data & 1) && mLayers[index])
         {
-            value = mLayers[index]->at(row, column);
+            KeyId next = mLayers[index]->at(row, column);
+
+            if (next.type() != 0)
+            {
+                keyId = next;
+            }
         }
 
         data >>= 1;
         ++index;
     }
     
-    return value;
+    return keyId;
 }
     
 void LayerStack::assignLayer(const Layer* layer, int index)

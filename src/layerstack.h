@@ -2,6 +2,7 @@
 #define INCLUDED_LAYERSTACK_H
 
 #include "bitmask.h"
+#include "keyid.h"
 
 #include <array>
 
@@ -16,7 +17,7 @@ public:
     LayerStack();
 
 public:
-    int at(int row, int column) const;
+    KeyId at(int row, int column) const;
     
 public:
     void assignLayer(const Layer* layer, int index);

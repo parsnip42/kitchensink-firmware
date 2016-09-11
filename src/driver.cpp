@@ -11,7 +11,7 @@
 #include "layer.h"
 #include "layerstack.h"
 
-const int layer0_[5][20]={
+const KeyId layer0_[5][20]={
     { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KEY_ESC,0,
       KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
     
@@ -30,7 +30,7 @@ const int layer0_[5][20]={
 
 const Layer layer0(layer0_);
 
-const int layer1_[5][20]={
+const KeyId layer1_[5][20]={
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     
@@ -49,7 +49,7 @@ const int layer1_[5][20]={
 
 const Layer layer1(layer1_);
 
-const int layer2_[5][20]={
+const KeyId layer2_[5][20]={
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 
@@ -144,9 +144,6 @@ void loop() {
 
         auto callback([&](const KeyMatrixEvent& event)
                       {
-                          sprintf(outStr,"%d %d %d   ",event.row, event.column, event.state);
-                          display.paint(48, 0, outStr);
-
                           if (event.row == 4 && event.column == 7)
                           {
                               if (event.state == KeyMatrixEvent::kPressed)
@@ -182,20 +179,15 @@ void loop() {
                               }
                           }
                           
-                          int keyCode(layerStack.at(event.row, event.column));
-
-                          if (keyCode & 0x80000000)
-                          {
-                              keyboard_modifier_keys |= ((keyCode >> 16) & 0xff);
-                          }
+                          KeyId keyId(layerStack.at(event.row, event.column));
                           
-                          if (keyCode & 0x8000)
+                          if (keyId.type() == KeyId::kModifier)
                           {
-                              keyboard_modifier_keys |= (keyCode & 0xff);
+                              keyboard_modifier_keys |= keyId.value();
                           }
-                          else if ((keyCode & 0xff) && (key < 6))
+                          else if ((keyId.type() == KeyId::kKey) && (key < 6))
                           {
-                              keyboard_keys[key++] = keyCode & 0xff;
+                              keyboard_keys[key++] = keyId.value();
                           }
                       });
         

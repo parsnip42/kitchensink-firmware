@@ -1,6 +1,8 @@
 #ifndef INCLUDED_LAYER_H
 #define INCLUDED_LAYER_H
 
+#include "keyid.h"
+
 class Layer
 {
 public:
@@ -8,23 +10,23 @@ public:
     static const int Columns = 20;
     
 public:
-    explicit Layer(const int (&mapping)[Rows][Columns]);
+    explicit Layer(const KeyId (&mapping)[Rows][Columns]);
 
 public:
-    int at(int row, int column) const;
+    KeyId at(int row, int column) const;
     
 private:
-    const int (&mMapping)[Rows][Columns];
+    const KeyId (&mMapping)[Rows][Columns];
 };
 
 
 inline
-Layer::Layer(const int (&mapping)[Rows][Columns])
+Layer::Layer(const KeyId (&mapping)[Rows][Columns])
     : mMapping(mapping)
 { }
 
 inline
-int Layer::at(int row, int column) const
+KeyId Layer::at(int row, int column) const
 {
     if ((row >= 0) && (row < Rows)
         && (column >= 0) && (column < Columns))
