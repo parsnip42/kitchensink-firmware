@@ -2,6 +2,7 @@
 
 #include "keymatrix.h"
 #include "keymatrixevent.h"
+#include "keystate.h"
 
 KeyMatrixEventDispatcher::KeyMatrixEventDispatcher(const RowMapping&    rowMapping,
                                                    const ColumnMapping& columnMapping)
@@ -21,13 +22,13 @@ void KeyMatrixEventDispatcher::dispatch(const KeyMatrix& keyMatrix,
         
         while ((state || delta) && column < KeyMatrix::Columns)
         {
-            int keyState(((state & 1) << 1) + (delta & 1));
+            KeyState::Value keyState(KeyState::fromMatrix(state & 1, delta & 1));
             
             if (keyState)
             {
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],
-                                        (KeyMatrixEvent::State)keyState));
+                                        keyState));
             }
             
             state>>=1;

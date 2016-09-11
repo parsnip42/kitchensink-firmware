@@ -16,7 +16,12 @@ public:
 public:
     KeyId();
     KeyId(int keyCode);
+
+private:
     KeyId(uint8_t type, uint8_t value);
+
+public:
+    static KeyId Action(int actionId);
 
 public:
     uint8_t type() const;
@@ -41,6 +46,12 @@ inline
 KeyId::KeyId(uint8_t type, uint8_t value)
     : mData(type << 8 | value)
 { }
+
+inline
+KeyId KeyId::Action(int actionId)
+{
+    return KeyId(kAction, actionId);
+}
 
 inline
 uint8_t KeyId::type() const
