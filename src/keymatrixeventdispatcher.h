@@ -15,8 +15,8 @@ public:
     typedef std::function<void(const KeyMatrixEvent&)> Callback;
 
 public:
-    typedef std::array<int, KeyMatrix::Rows>    RowMapping;
-    typedef std::array<int, KeyMatrix::Columns> ColumnMapping;
+    typedef std::array<int, KeyMatrix::kRows>    RowMapping;
+    typedef std::array<int, KeyMatrix::kColumns> ColumnMapping;
 
 public:
     KeyMatrixEventDispatcher(const RowMapping&    rowMapping,

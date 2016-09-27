@@ -40,12 +40,19 @@ void LayerStack::assignLayer(const Layer* layer, int index)
     mLayers[index] = layer;
 }
 
-void LayerStack::enableLayer(int index)
+void LayerStack::setLayer(int index, bool enabled)
 {
-    mLayerMask.set(index);
+    if (enabled)
+    {
+        mLayerMask.set(index);
+    }
+    else
+    {
+        mLayerMask.clear(index);
+    }
 }
 
-void LayerStack::disableLayer(int index)
+bool LayerStack::enabled(int layer) const
 {
-    mLayerMask.clear(index);
+    return mLayerMask[layer];
 }

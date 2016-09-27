@@ -21,8 +21,8 @@ public:
     
 public:
     void assignLayer(const Layer* layer, int index);
-    void enableLayer(int index);
-    void disableLayer(int index);
+    void setLayer(int index, bool enabled);
+    bool enabled(int layer) const;
     
 private:
     std::array<const Layer*, MaxLayers> mLayers;

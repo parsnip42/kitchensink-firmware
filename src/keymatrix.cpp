@@ -43,22 +43,16 @@ void KeyMatrix::scan()
     while (rowMask && (index < mState.size()))
     {
         uint16_t rowBit(rowMask & -rowMask);
-
-        if (rowBit & 0xff)
-        {    
-            Wire.beginTransmission(mAddr);
-            Wire.write(0x12);
-            Wire.write(~(rowBit & 0xff));
-            Wire.endTransmission();
-        }
         
-        if ((rowBit >> 8) & 0xff)
-        {    
-            Wire.beginTransmission(mAddr);
-            Wire.write(0x13);
-            Wire.write(~((rowBit >> 8) & 0xff));
-            Wire.endTransmission();
-        }
+        Wire.beginTransmission(mAddr);
+        Wire.write(0x12);
+        Wire.write(~(rowBit & 0xff));
+        Wire.endTransmission();
+        
+        Wire.beginTransmission(mAddr);
+        Wire.write(0x13);
+        Wire.write(~((rowBit >> 8) & 0xff));
+        Wire.endTransmission();
 
         Mask::Row row;
         
@@ -74,7 +68,7 @@ void KeyMatrix::scan()
         Wire.requestFrom(mAddr, 1);
         row.data() |= (((~Wire.read()) & 0xff) << 8);
         row.data() &= mColMask;
-
+        
         mDelta[index].data() = mState[index].data() ^ row.data();
         mState[index].data() = row.data();
         

@@ -11,10 +11,10 @@
 class KeyMatrix
 {
 public:
-    static const int Rows    = 5;
-    static const int Columns = 16;
+    static const int kRows    = 5;
+    static const int kColumns = 16;
 
-    typedef Bitmask2d<Columns, Rows> Mask;
+    typedef Bitmask2d<kColumns, kRows> Mask;
 
 public:
     KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask);

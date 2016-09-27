@@ -13,14 +13,14 @@ KeyMatrixEventDispatcher::KeyMatrixEventDispatcher(const RowMapping&    rowMappi
 void KeyMatrixEventDispatcher::dispatch(const KeyMatrix& keyMatrix,
                                         const Callback&  callback)
 {
-    for (int row(0); row < KeyMatrix::Rows; ++row)
+    for (int row(0); row < KeyMatrix::kRows; ++row)
     {
         auto state(keyMatrix.state()[row].data());
         auto delta(keyMatrix.delta()[row].data());
 
         int column(0);
         
-        while ((state || delta) && column < KeyMatrix::Columns)
+        while ((state || delta) && column < KeyMatrix::kColumns)
         {
             KeyState::Value keyState(KeyState::fromMatrix(state & 1, delta & 1));
             
