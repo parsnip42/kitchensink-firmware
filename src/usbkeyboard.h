@@ -1,8 +1,6 @@
 #ifndef INCLUDED_USBKEYBOARD_H
 #define INCLUDED_USBKEYBOARD_H
 
-#include <cstdint>
-
 class UsbKeyboard
 {
 public:

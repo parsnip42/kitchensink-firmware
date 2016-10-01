@@ -10,6 +10,7 @@
 #include "keymatrixeventdispatcher.h"
 #include "layer.h"
 #include "layerstack.h"
+#include "tapping.h"
 #include "usbkeyboard.h"
 
 const KeyId layer0_[5][20]={
@@ -180,13 +181,18 @@ void loop() {
             {
                 layerStack.setLayer(2, false);
             }
+
+            // if (context.state == KeyState::kPressed && context.taps == 2)
+            // {
+            //     layerStack.setLayer(2, !layerStack.enabled(2));
+            // }
         });
     
     actionManager.registerAction(
         2,
         [&display, &displayDebug](const ActionContext& context)
         {
-            if (context.state == KeyState::kPressed)
+            if (context.state == KeyState::kPressed && context.taps == 2)
             {
                 displayDebug = !displayDebug;
                 
@@ -208,88 +214,79 @@ void loop() {
         });
 
     UsbKeyboard usbKeyboard;
+    bool keyEvent(false);
 
     actionManager.registerAction(
         4,
-        [&usbKeyboard](const ActionContext& context)
-        {
-            usbKeyboard.setModifier(MODIFIERKEY_LEFT_SHIFT);
-            usbKeyboard.setKey(KEY_MINUS);
-        });
-
-    actionManager.registerAction(
-        5,
         [&](const ActionContext& context)
         {
-            sprintf(outStr,">>..  ");
-            display.paint(48, 0, outStr);
-
-            auto start(millis());
-            for (int i = 0; i < 500; ++i)
+            if (context.state != KeyState::kReleased)
             {
-                matrixA.scan();
-                matrixB.scan();
+                usbKeyboard.setModifier(MODIFIERKEY_LEFT_SHIFT);
+                usbKeyboard.setKey(KEY_MINUS);
             }
-            auto end(millis());
-            
-            sprintf(outStr,">>%d  ", (int)(end - start));
-            display.paint(48, 0, outStr);
 
+            if (context.state != KeyState::kHeld)
+            {
+                keyEvent = true;
+            }
         });
 
     KeyMatrixEventDispatcher dispatcherA({4,3,2,1,0}, {0,1,2,3,4,5,6,7,9,8,10,11,12,13,14,15});
     KeyMatrixEventDispatcher dispatcherB({0,1,2,3,4}, {12,13,14,15,16,17,18,19,20,21,22,23,24,25,11,10});        
 
+    Tapping tapping(500);
+        
+    auto callback([&](const KeyMatrixEvent& event)
+    {
+        KeyId keyId(layerStack.at(event.row, event.column));
+
+        if (event.state == KeyState::kPressed)
+        {
+            tapping.processKey(keyId);
+        }
+        
+        if (keyId.type() == KeyId::kModifier)
+        {
+            if (event.state != KeyState::kReleased)
+            {
+                usbKeyboard.setModifier(keyId.value());
+            }
+
+            if (event.state != KeyState::kHeld)
+            {
+                keyEvent = true;
+            }
+        }
+        else if (keyId.type() == KeyId::kKey)
+        {
+            if (event.state != KeyState::kReleased)
+            {
+                usbKeyboard.setKey(keyId.value());
+            }
+                              
+            if (event.state != KeyState::kHeld)
+            {
+                keyEvent = true;
+            }
+        }
+        else if (keyId.type() == KeyId::kAction)
+        {
+            actionManager.fireAction(keyId.value(),
+                                     ActionContext(event.state,
+                                                   tapping.count(keyId)));
+        }
+    });
+        
     while (1)
     {
-        bool matrixEvent(false);
-
-        matrixEvent |= matrixA.scan();
-        matrixEvent |= matrixB.scan();
-
-        if (!matrixEvent)
+        keyEvent = false;
+        
+        if (!matrixA.scan() && !matrixB.scan())
         {
             continue;
         }
         
-        bool keyEvent(false);
-        
-        auto callback([&](const KeyMatrixEvent& event)
-                      {
-                          KeyId keyId(layerStack.at(event.row, event.column));
-                          
-                          if (keyId.type() == KeyId::kModifier)
-                          {
-                              if (event.state != KeyState::kReleased)
-                              {
-                                  usbKeyboard.setModifier(keyId.value());
-                              }
-
-                              if (event.state != KeyState::kHeld)
-                              {
-                                  keyEvent = true;
-                              }
-                          }
-                          else if (keyId.type() == KeyId::kKey)
-                          {
-                              if (event.state != KeyState::kReleased)
-                              {
-                                  usbKeyboard.setKey(keyId.value());
-                              }
-                              
-                              if (event.state != KeyState::kHeld)
-                              {
-                                  keyEvent = true;
-                              }
-                          }
-                          else if (keyId.type() == KeyId::kAction)
-                          {
-                              actionManager.fireAction(keyId.value(),
-                                                       ActionContext(event.state, 0));
-                          }
-                      });
-        
-
         dispatcherA.dispatch(matrixA, callback);
         dispatcherB.dispatch(matrixB, callback);
 
@@ -321,6 +318,4 @@ void loop() {
             usbKeyboard.clear();
         }
     }
-    
-    delay(5000000);
 }

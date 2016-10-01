@@ -12,7 +12,11 @@ public:
         kModifier = 2,
         kAction   = 3
     };
-    
+
+public:
+    static const KeyId None;
+    static KeyId Action(int actionId);
+
 public:
     KeyId();
     KeyId(int keyCode);
@@ -21,15 +25,35 @@ private:
     KeyId(uint8_t type, uint8_t value);
 
 public:
-    static KeyId Action(int actionId);
-
-public:
     uint8_t type() const;
     uint8_t value() const;
     
 private:
     uint16_t mData;
+
+private:
+    friend bool operator==(const KeyId& lhs, const KeyId& rhs);
 };
+
+
+inline
+bool operator==(const KeyId& lhs, const KeyId& rhs)
+{
+    return (lhs.mData == rhs.mData);
+}
+
+inline
+bool operator!=(const KeyId& lhs, const KeyId& rhs)
+{
+    return !(lhs == rhs);
+}
+
+
+inline
+KeyId KeyId::Action(int actionId)
+{
+    return KeyId(kAction, actionId);
+}
 
 
 inline
@@ -46,12 +70,6 @@ inline
 KeyId::KeyId(uint8_t type, uint8_t value)
     : mData(type << 8 | value)
 { }
-
-inline
-KeyId KeyId::Action(int actionId)
-{
-    return KeyId(kAction, actionId);
-}
 
 inline
 uint8_t KeyId::type() const
