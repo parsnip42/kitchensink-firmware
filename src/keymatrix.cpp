@@ -1,6 +1,12 @@
 #include "keymatrix.h"
 
-#include "Wire.h"
+#include <Wire.h>
+
+void KeyMatrix::init()
+{
+    Wire.begin();
+    Wire.setClock(1000000);
+}
 
 KeyMatrix::KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask)
     : mAddr(addr)
@@ -9,10 +15,10 @@ KeyMatrix::KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask)
     , mState()
     , mDelta() 
 {
-    init();
+    config();
 }
 
-void KeyMatrix::init()
+void KeyMatrix::config()
 {
     Wire.beginTransmission(mAddr);
     Wire.write(0x00);
@@ -44,8 +50,6 @@ bool KeyMatrix::scan()
 
     uint8_t maskData[2];
 
-    Mask::Row row;
-
     while (rowMask && (index < mState.size()))
     {
         uint16_t rowBit(rowMask & -rowMask);
@@ -69,20 +73,22 @@ bool KeyMatrix::scan()
         Wire.write(0x12);
         Wire.endTransmission();
         Wire.requestFrom(mAddr, 1);
-        row.data() = ((~Wire.read()) & 0xff);
+
+        Mask::Row row((~Wire.read()) & 0xff);
 
         Wire.beginTransmission(mAddr);
         Wire.write(0x13);
         Wire.endTransmission();
         Wire.requestFrom(mAddr, 1);
         
-        row.data() |= (((~Wire.read()) & 0xff) << 8);
-        row.data() &= mColMask;
+        row |= (((~Wire.read()) & 0xff) << 8);
+        row &= mColMask;
         
-        mDelta[index].data() = mState[index].data() ^ row.data();
-        mState[index].data() = row.data();
-
-        hasDelta |= mDelta[index].data();
+        mDelta[index] = mState[index];
+        mDelta[index] ^= row;
+        mState[index] = row;
+        
+        hasDelta |= !mDelta[index].empty();
         
         rowMask &= ~rowBit;
         ++index;

@@ -27,7 +27,7 @@ private:
 inline
 int Tapping::count(const KeyId& keyId)
 {
-    if ((keyId == mKeyId) && (mCount > 1))
+    if (keyId == mKeyId)
     {
         return mCount;
     }

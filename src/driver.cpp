@@ -1,6 +1,6 @@
-#include "Wire.h"
 #include "SdFat.h"
 
+#include "actions.h"
 #include "actioncontext.h"
 #include "actionmanager.h"
 #include "display.h"
@@ -65,7 +65,7 @@ const KeyId layer2_[5][20]={
       0, 0, 0, 0, KEY_1, KEY_2, KEY_3, 0, 0, 0 },
     
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, KEY_0, 0, 0, 0, 0, 0, 0, 0 }
+      0, 0, 0, 0, KEY_0, 0, 0, 0, 0, 0 }
 };
 
 const Layer layer2(layer2_);
@@ -92,9 +92,7 @@ const Layer layer3(layer3_);
 SdFat sd;
 
 void setup() {
-
-    Wire.begin();
-    Wire.setClock(1000000);
+    KeyMatrix::init();
 }
 
 void loop() {
@@ -152,42 +150,15 @@ void loop() {
     layerStack.assignLayer(&layer3, 3);
     layerStack.setLayer(0, true);
 
+
+    UsbKeyboard usbKeyboard;
     ActionManager actionManager;
 
-    actionManager.registerAction(
-        0,
-        [&layerStack](const ActionContext& context)
-        {
-            if (context.state == KeyState::kPressed)
-            {
-                layerStack.setLayer(1, true);
-            }
-            else if (context.state == KeyState::kReleased)
-            {
-                layerStack.setLayer(1, false);
-            }
-        });
+    actionManager.registerAction(0, Actions::layerModifier(layerStack, 1));
+    actionManager.registerAction(1, Actions::layerModifier(layerStack, 2));
+    actionManager.registerAction(3, Actions::toggleLayer(layerStack, 3));
+    actionManager.registerAction(4, Actions::modifierKey(usbKeyboard, MODIFIERKEY_LEFT_SHIFT, KEY_MINUS));
 
-    actionManager.registerAction(
-        1,
-        [&layerStack](const ActionContext& context)
-        {
-            if (context.state == KeyState::kPressed)
-            {
-                layerStack.setLayer(2, true);
-                
-            }
-            else if (context.state == KeyState::kReleased)
-            {
-                layerStack.setLayer(2, false);
-            }
-
-            // if (context.state == KeyState::kPressed && context.taps == 2)
-            // {
-            //     layerStack.setLayer(2, !layerStack.enabled(2));
-            // }
-        });
-    
     actionManager.registerAction(
         2,
         [&display, &displayDebug](const ActionContext& context)
@@ -202,35 +173,7 @@ void loop() {
                 }
             }
         });
-    
-    actionManager.registerAction(
-        3,
-        [&layerStack](const ActionContext& context)
-        {
-            if (context.state == KeyState::kPressed)
-            {
-                layerStack.setLayer(3, !layerStack.enabled(3));
-            }
-        });
 
-    UsbKeyboard usbKeyboard;
-    bool keyEvent(false);
-
-    actionManager.registerAction(
-        4,
-        [&](const ActionContext& context)
-        {
-            if (context.state != KeyState::kReleased)
-            {
-                usbKeyboard.setModifier(MODIFIERKEY_LEFT_SHIFT);
-                usbKeyboard.setKey(KEY_MINUS);
-            }
-
-            if (context.state != KeyState::kHeld)
-            {
-                keyEvent = true;
-            }
-        });
 
     KeyMatrixEventDispatcher dispatcherA({4,3,2,1,0}, {0,1,2,3,4,5,6,7,9,8,10,11,12,13,14,15});
     KeyMatrixEventDispatcher dispatcherB({0,1,2,3,4}, {12,13,14,15,16,17,18,19,20,21,22,23,24,25,11,10});        
@@ -255,7 +198,7 @@ void loop() {
 
             if (event.state != KeyState::kHeld)
             {
-                keyEvent = true;
+                usbKeyboard.markDirty();
             }
         }
         else if (keyId.type() == KeyId::kKey)
@@ -267,7 +210,7 @@ void loop() {
                               
             if (event.state != KeyState::kHeld)
             {
-                keyEvent = true;
+                usbKeyboard.markDirty();
             }
         }
         else if (keyId.type() == KeyId::kAction)
@@ -280,8 +223,6 @@ void loop() {
         
     while (1)
     {
-        keyEvent = false;
-        
         if (!matrixA.scan() && !matrixB.scan())
         {
             continue;
@@ -309,13 +250,6 @@ void loop() {
             display.paint(48, 14, outStr);
         }
 
-        if (keyEvent)
-        {
-            usbKeyboard.send();
-        }
-        else
-        {
-            usbKeyboard.clear();
-        }
+        usbKeyboard.update();
     }
 }

@@ -31,8 +31,8 @@ void KeyMatrixEventDispatcher::dispatch(const KeyMatrix& keyMatrix,
                                         keyState));
             }
             
-            state>>=1;
-            delta>>=1;
+            state >>= 1;
+            delta >>= 1;
             ++column;
         }
     }

@@ -6,7 +6,6 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
-#include <functional>
 
 class KeyMatrix
 {
@@ -16,6 +15,9 @@ public:
 
     typedef Bitmask2d<kColumns, kRows> Mask;
 
+public:
+    static void init();
+    
 public:
     KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask);
 
@@ -27,7 +29,7 @@ public:
     const Mask& delta() const;
     
 private:
-    void init();
+    void config();
     
 private:
     const int      mAddr;

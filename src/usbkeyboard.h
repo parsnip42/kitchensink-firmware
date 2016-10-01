@@ -1,6 +1,8 @@
 #ifndef INCLUDED_USBKEYBOARD_H
 #define INCLUDED_USBKEYBOARD_H
 
+#include <cstdint>
+
 class UsbKeyboard
 {
 public:
@@ -9,12 +11,17 @@ public:
 public:
     void setKey(int keyId);
     void setModifier(int modifierId);
-    void send();
+    void markDirty();
+    void update();
+
+private:
     void clear();
     
 private:
-    int mKeyNum;
-
+    bool    mDirty;
+    int     mKeyNum;
+    uint8_t mKeyMask[256 >> 3];
+    
 private:
     UsbKeyboard(const UsbKeyboard&) = delete;
     UsbKeyboard& operator=(const UsbKeyboard&) = delete;
