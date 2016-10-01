@@ -16,7 +16,7 @@ const KeyId layer0_[5][20]={
     { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
       KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
 
-    { KEY_ESC,MODIFIERKEY_LEFT_SHIFT<<16|KEY_MINUS,KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
+    { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
       KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
     
     {0,KeyId::Action(1),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
@@ -93,7 +93,7 @@ SdFat sd;
 void setup() {
 
     Wire.begin();
-    Wire.setClock(400000);
+    Wire.setClock(1000000);
 }
 
 void loop() {
@@ -208,20 +208,79 @@ void loop() {
         });
 
     UsbKeyboard usbKeyboard;
-    
+
+    actionManager.registerAction(
+        4,
+        [&usbKeyboard](const ActionContext& context)
+        {
+            usbKeyboard.setModifier(MODIFIERKEY_LEFT_SHIFT);
+            usbKeyboard.setKey(KEY_MINUS);
+        });
+
+    actionManager.registerAction(
+        5,
+        [&](const ActionContext& context)
+        {
+            sprintf(outStr,">>..  ");
+            display.paint(48, 0, outStr);
+
+            auto start(millis());
+            for (int i = 0; i < 500; ++i)
+            {
+                matrixA.scan();
+                matrixB.scan();
+            }
+            auto end(millis());
+            
+            sprintf(outStr,">>%d  ", (int)(end - start));
+            display.paint(48, 0, outStr);
+
+        });
+
+    KeyMatrixEventDispatcher dispatcherA({4,3,2,1,0}, {0,1,2,3,4,5,6,7,9,8,10,11,12,13,14,15});
+    KeyMatrixEventDispatcher dispatcherB({0,1,2,3,4}, {12,13,14,15,16,17,18,19,20,21,22,23,24,25,11,10});        
+
     while (1)
     {
+        bool matrixEvent(false);
+
+        matrixEvent |= matrixA.scan();
+        matrixEvent |= matrixB.scan();
+
+        if (!matrixEvent)
+        {
+            continue;
+        }
+        
+        bool keyEvent(false);
+        
         auto callback([&](const KeyMatrixEvent& event)
                       {
                           KeyId keyId(layerStack.at(event.row, event.column));
                           
                           if (keyId.type() == KeyId::kModifier)
                           {
-                              usbKeyboard.setModifier(keyId.value());
+                              if (event.state != KeyState::kReleased)
+                              {
+                                  usbKeyboard.setModifier(keyId.value());
+                              }
+
+                              if (event.state != KeyState::kHeld)
+                              {
+                                  keyEvent = true;
+                              }
                           }
                           else if (keyId.type() == KeyId::kKey)
                           {
-                              usbKeyboard.setKey(keyId.value());
+                              if (event.state != KeyState::kReleased)
+                              {
+                                  usbKeyboard.setKey(keyId.value());
+                              }
+                              
+                              if (event.state != KeyState::kHeld)
+                              {
+                                  keyEvent = true;
+                              }
                           }
                           else if (keyId.type() == KeyId::kAction)
                           {
@@ -230,17 +289,9 @@ void loop() {
                           }
                       });
         
-        matrixA.scan();
-        matrixB.scan();
-
-        KeyMatrixEventDispatcher dispatcherA({4,3,2,1,0}, {0,1,2,3,4,5,6,7,9,8,10,11,12,13,14,15});
 
         dispatcherA.dispatch(matrixA, callback);
-
-        KeyMatrixEventDispatcher dispatcherB({0,1,2,3,4}, {12,13,14,15,16,17,18,19,20,21,22,23,24,25,11,10});
-        
         dispatcherB.dispatch(matrixB, callback);
-
 
         if (displayDebug) 
         {
@@ -251,7 +302,7 @@ void loop() {
                     (int)matrixA[3].data(),
                     (int)matrixA[4].data());
             display.paint(48, 0, outStr);
-
+            
             sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
                     (int)matrixB[0].data(),
                     (int)matrixB[1].data(),
@@ -261,7 +312,14 @@ void loop() {
             display.paint(48, 14, outStr);
         }
 
-        usbKeyboard.send();
+        if (keyEvent)
+        {
+            usbKeyboard.send();
+        }
+        else
+        {
+            usbKeyboard.clear();
+        }
     }
     
     delay(5000000);

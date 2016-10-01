@@ -9,11 +9,9 @@ public:
     UsbKeyboard();
 
 public:
-    void setKey(uint8_t keyId);
-    void setModifier(uint8_t modifierId);
+    void setKey(int keyId);
+    void setModifier(int modifierId);
     void send();
-
-private:
     void clear();
     
 private:

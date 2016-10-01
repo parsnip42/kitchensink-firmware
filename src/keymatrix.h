@@ -20,7 +20,7 @@ public:
     KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask);
 
 public:
-    void scan();
+    bool scan();
 
     const Mask::Row& operator[](std::size_t n) const;
     const Mask& state() const;

@@ -7,7 +7,7 @@ UsbKeyboard::UsbKeyboard()
     clear();
 }
 
-void UsbKeyboard::setKey(uint8_t keyId)
+void UsbKeyboard::setKey(int keyId)
 {
     if (mKeyNum < 6)
     {
@@ -15,7 +15,7 @@ void UsbKeyboard::setKey(uint8_t keyId)
     }
 }
 
-void UsbKeyboard::setModifier(uint8_t modifierId)
+void UsbKeyboard::setModifier(int modifierId)
 {
     keyboard_modifier_keys |= modifierId;
 }
