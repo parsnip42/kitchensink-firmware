@@ -23,8 +23,9 @@ public:
                              const ColumnMapping& columnMapping);
     
 public:
-    void dispatch(const KeyMatrix& keyMatrix,
-                  const Callback&  callback);
+    void dispatch(const KeyMatrix::Mask& stateMask,
+                  const KeyMatrix::Mask& deltaMask,
+                  const Callback&        callback);
 
 private:
     const RowMapping    mRowMapping;

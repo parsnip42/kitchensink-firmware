@@ -23,10 +23,8 @@ public:
 
 public:
     bool scan();
-
-    const Mask::Row& operator[](std::size_t n) const;
+    
     const Mask& state() const;
-    const Mask& delta() const;
     
 private:
     void config();
@@ -37,7 +35,6 @@ private:
     const uint16_t mColMask;
 
     Mask mState;
-    Mask mDelta;
     
 private:
     KeyMatrix(const KeyMatrix&) = delete;
@@ -46,21 +43,9 @@ private:
 
 
 inline
-const KeyMatrix::Mask::Row& KeyMatrix::operator[](std::size_t n) const
-{
-    return mState[n];
-}
-
-inline
 const KeyMatrix::Mask& KeyMatrix::state() const
 {
     return mState;
-}
-
-inline
-const KeyMatrix::Mask& KeyMatrix::delta() const
-{
-    return mDelta;
 }
 
 #endif

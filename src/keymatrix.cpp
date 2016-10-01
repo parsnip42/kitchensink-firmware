@@ -13,7 +13,6 @@ KeyMatrix::KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask)
     , mRowMask(rowMask)
     , mColMask(colMask)
     , mState()
-    , mDelta() 
 {
     config();
 }
@@ -43,7 +42,7 @@ void KeyMatrix::config()
 
 bool KeyMatrix::scan()
 {
-    bool hasDelta(false);
+    bool populated(false);
     
     std::size_t index(0);
     int rowMask(mRowMask);
@@ -74,7 +73,7 @@ bool KeyMatrix::scan()
         Wire.endTransmission();
         Wire.requestFrom(mAddr, 1);
 
-        Mask::Row row((~Wire.read()) & 0xff);
+        uint16_t row((~Wire.read()) & 0xff);
 
         Wire.beginTransmission(mAddr);
         Wire.write(0x13);
@@ -84,15 +83,12 @@ bool KeyMatrix::scan()
         row |= (((~Wire.read()) & 0xff) << 8);
         row &= mColMask;
         
-        mDelta[index] = mState[index];
-        mDelta[index] ^= row;
-        mState[index] = row;
-        
-        hasDelta |= !mDelta[index].empty();
+        mState[index] = Mask::Row(row);
+        populated |= (row != 0);
         
         rowMask &= ~rowBit;
         ++index;
     }
 
-    return hasDelta;
+    return populated;
 }

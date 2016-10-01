@@ -10,13 +10,14 @@ KeyMatrixEventDispatcher::KeyMatrixEventDispatcher(const RowMapping&    rowMappi
     , mColumnMapping(columnMapping)
 { }
 
-void KeyMatrixEventDispatcher::dispatch(const KeyMatrix& keyMatrix,
-                                        const Callback&  callback)
+void KeyMatrixEventDispatcher::dispatch(const KeyMatrix::Mask& stateMask,
+                                        const KeyMatrix::Mask& deltaMask,
+                                        const Callback&        callback)
 {
     for (int row(0); row < KeyMatrix::kRows; ++row)
     {
-        auto state(keyMatrix.state()[row].data());
-        auto delta(keyMatrix.delta()[row].data());
+        auto state(stateMask[row].data());
+        auto delta(deltaMask[row].data());
 
         int column(0);
         

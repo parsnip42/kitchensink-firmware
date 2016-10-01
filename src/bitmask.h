@@ -41,6 +41,21 @@ private:
 
 template <std::size_t Size>
 inline
+bool operator==(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
+{
+    return (lhs.data() == rhs.data());
+}
+
+template <std::size_t Size>
+inline
+bool operator!=(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
+{
+    return !(lhs == rhs);
+}
+
+
+template <std::size_t Size>
+inline
 Bitmask<Size>::Bitmask()
     : mData(0)
 { }

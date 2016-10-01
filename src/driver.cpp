@@ -3,6 +3,7 @@
 #include "actions.h"
 #include "actioncontext.h"
 #include "actionmanager.h"
+#include "debounce.h"
 #include "display.h"
 #include "keymatrix.h"
 #include "keymap.h"
@@ -163,7 +164,7 @@ void loop() {
         2,
         [&display, &displayDebug](const ActionContext& context)
         {
-            if (context.state == KeyState::kPressed && context.taps == 2)
+            if (context.state == KeyState::kPressed)
             {
                 displayDebug = !displayDebug;
                 
@@ -220,34 +221,54 @@ void loop() {
                                                    tapping.count(keyId)));
         }
     });
-        
+
+    Debounce debounceA(3);
+    Debounce debounceB(3);
+    
     while (1)
     {
-        if (!matrixA.scan() && !matrixB.scan())
+        matrixA.scan();
+        matrixB.scan();
+
+        bool nextDelta(false);
+        
+        nextDelta |= debounceA.process(matrixA.state());
+        nextDelta |= debounceB.process(matrixB.state());
+
+        if (!nextDelta)
         {
             continue;
         }
         
-        dispatcherA.dispatch(matrixA, callback);
-        dispatcherB.dispatch(matrixB, callback);
+        dispatcherA.dispatch(debounceA.state(),
+                             debounceA.delta(),
+                             callback);
+        dispatcherB.dispatch(debounceB.state(),
+                             debounceB.delta(),
+                             callback);
 
         if (displayDebug) 
         {
             sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
-                    (int)matrixA[0].data(),
-                    (int)matrixA[1].data(),
-                    (int)matrixA[2].data(),
-                    (int)matrixA[3].data(),
-                    (int)matrixA[4].data());
+                    (int)matrixA.state()[0].data(),
+                    (int)matrixA.state()[1].data(),
+                    (int)matrixA.state()[2].data(),
+                    (int)matrixA.state()[3].data(),
+                    (int)matrixA.state()[4].data());
             display.paint(48, 0, outStr);
             
             sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
-                    (int)matrixB[0].data(),
-                    (int)matrixB[1].data(),
-                    (int)matrixB[2].data(),
-                    (int)matrixB[3].data(),
-                    (int)matrixB[4].data());
+                    (int)matrixB.state()[0].data(),
+                    (int)matrixB.state()[1].data(),
+                    (int)matrixB.state()[2].data(),
+                    (int)matrixB.state()[3].data(),
+                    (int)matrixB.state()[4].data());
             display.paint(48, 14, outStr);
+
+            sprintf(outStr,"%d / %d ",
+                    (int)debounceA.filtered(),
+                    (int)debounceB.filtered());
+            display.paint(60, 42, outStr);
         }
 
         usbKeyboard.update();
