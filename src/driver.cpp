@@ -12,6 +12,7 @@
 #include "layer.h"
 #include "layerstack.h"
 #include "tapping.h"
+#include "ui.h"
 #include "usbkeyboard.h"
 
 const KeyId layer0_[5][20]={
@@ -101,30 +102,32 @@ void loop() {
 
     display.init();
 
-    display.paint(30, 0, "Start");
+    UI ui(display);
+    
+    ui.paintText(30, 0, "Start");
     
     KeyMatrix matrixA(0x20, 0x7C00, 0x3FF);
     KeyMatrix matrixB(0x21, 0x3E00, 0xC0FF);
     
-    display.paint(30, 14, "Config");
+    ui.paintText(30, 14, "Config");
 
     if (!sd.begin(10, SPI_HALF_SPEED)) {
         if (sd.card()->errorCode()) {
             char sderr[48];
             sprintf(sderr,"SD Failed : 0x%x", sd.card()->errorCode());
-            display.paint(30, 28, sderr);
+            ui.paintText(30, 28, sderr);
         }
     }
     else
     {
         char sdinfo[48];
         sprintf(sdinfo, "SD OK : %dMB / FAT%d", (int)(0.000512 * sd.card()->cardSize() + 0.5), sd.vol()->fatType());
-        display.paint(30, 28, sdinfo);
+        ui.paintText(30, 28, sdinfo);
 
         SdBaseFile myFile;
 
         if (!myFile.open("test.cfg", O_READ)) {
-            display.paint(30, 42, "Couldn't open file");
+            ui.paintText(30, 42, "Couldn't open file");
         }
         else
         {
@@ -132,11 +135,13 @@ void loop() {
 
             myFile.fgets(data, sizeof(data));
             
-            display.paint(30, 42, data);
+            ui.paintText(30, 42, data);
 
             myFile.close();
         }
     }
+
+
 
     
     char outStr[48];
@@ -255,7 +260,7 @@ void loop() {
                     (int)matrixA.state()[2].data(),
                     (int)matrixA.state()[3].data(),
                     (int)matrixA.state()[4].data());
-            display.paint(48, 0, outStr);
+            ui.paintText(48, 0, outStr);
             
             sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
                     (int)matrixB.state()[0].data(),
@@ -263,12 +268,12 @@ void loop() {
                     (int)matrixB.state()[2].data(),
                     (int)matrixB.state()[3].data(),
                     (int)matrixB.state()[4].data());
-            display.paint(48, 14, outStr);
+            ui.paintText(48, 14, outStr);
 
             sprintf(outStr,"%d / %d ",
                     (int)debounceA.filtered(),
                     (int)debounceB.filtered());
-            display.paint(60, 42, outStr);
+            ui.paintText(60, 42, outStr);
         }
 
         usbKeyboard.update();
