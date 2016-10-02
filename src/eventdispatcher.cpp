@@ -1,18 +1,34 @@
-#include "keymatrixeventdispatcher.h"
+#include "eventdispatcher.h"
 
 #include "keymatrix.h"
 #include "keymatrixevent.h"
 #include "keystate.h"
 
-KeyMatrixEventDispatcher::KeyMatrixEventDispatcher(const RowMapping&    rowMapping,
-                                                   const ColumnMapping& columnMapping)
-    : mRowMapping(rowMapping)
-    , mColumnMapping(columnMapping)
-{ }
+EventDispatcher::EventDispatcher(const std::initializer_list<int>& rowMapping,
+                                 const std::initializer_list<int>& columnMapping)
+{
+    mRowMapping.fill(0);
 
-void KeyMatrixEventDispatcher::dispatch(const KeyMatrix::Mask& stateMask,
-                                        const KeyMatrix::Mask& deltaMask,
-                                        const Callback&        callback)
+    size_t row(0);
+
+    for (auto& index : rowMapping)
+    {
+        mRowMapping[row++] = index;
+    }
+
+    mColumnMapping.fill(0);
+
+    size_t column(0);
+
+    for (auto& index : columnMapping)
+    {
+        mColumnMapping[column++] = index;
+    }
+}
+
+void EventDispatcher::dispatch(const KeyMatrix::Mask& stateMask,
+                               const KeyMatrix::Mask& deltaMask,
+                               const Callback&        callback)
 {
     for (int row(0); row < KeyMatrix::kRows; ++row)
     {

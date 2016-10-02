@@ -1,6 +1,8 @@
 #ifndef INCLUDED_KEYID_H
 #define INCLUDED_KEYID_H
 
+#include "modifierid.h"
+
 #include <cstdint>
 
 class KeyId
@@ -20,6 +22,7 @@ public:
 public:
     KeyId();
     KeyId(int keyCode);
+    KeyId(const ModifierId& modifier);
 
 private:
     KeyId(uint8_t type, uint8_t value);
@@ -64,6 +67,11 @@ KeyId::KeyId()
 inline
 KeyId::KeyId(int keyCode)
     : mData(((keyCode >> 6) & 0xff00) | (keyCode & 0xff))
+{ }
+
+inline
+KeyId::KeyId(const ModifierId& modifier)
+    : mData(2 << 8 | modifier.value())
 { }
 
 inline

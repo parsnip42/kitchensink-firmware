@@ -1,6 +1,7 @@
 #include "ui.h"
 
 #include "display.h"
+#include "kskeyboard.h"
 
 #include <string.h>
 
@@ -52,6 +53,36 @@ void UI::paintText(int x, int y, const char* str)
             mDisplay.writeData(a0);
         }
     }
+}
+
+
+void UI::menu(KsKeyboard& keyboard)
+{
+    mDisplay.clear();
+
+    // for (int i=0;i<14*4;i+=14)
+    //     paintText(28, i, "Test");
+
+    bool quit(false);
+
+    while (!quit)
+    {
+        if (keyboard.poll([&](const KsKeyboard::Event& event)
+                          {
+                              if (event.row == 0)
+                              {
+                                  quit = true;
+                              }
+                          }))
+        {
+            paintText(28, 0,  "Macros");
+            paintText(28, 14, "Display");
+            paintText(28, 28, "Configuration");
+            paintText(28, 42, "System");
+        }
+    }
+
+    mDisplay.clear();
 }
 
 void UI::clear()

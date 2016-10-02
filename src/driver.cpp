@@ -1,95 +1,90 @@
-#include "SdFat.h"
 
-#include "actions.h"
 #include "actioncontext.h"
 #include "actionmanager.h"
-#include "debounce.h"
+#include "actions.h"
+#include "ctrlutil.h"
 #include "display.h"
-#include "keymatrix.h"
-#include "keymap.h"
 #include "keymatrixevent.h"
-#include "keymatrixeventdispatcher.h"
+#include "kskeyboard.h"
 #include "layer.h"
 #include "layerstack.h"
 #include "tapping.h"
 #include "ui.h"
 #include "usbkeyboard.h"
 
-const KeyId layer0_[5][20]={
-    { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
-      KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
+#include "SdFat.h"
 
-    { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
-      KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
-    
-    {0,KeyId::Action(1),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
-     KEY_F6,KEY_F5, 0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
-    
-    {0,MODIFIERKEY_LEFT_SHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,KeyId::Action(2),
-     KEY_F7,KEY_F8,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,MODIFIERKEY_RIGHT_SHIFT },
-    
-     {0,MODIFIERKEY_LEFT_GUI,0,0,0,MODIFIERKEY_LEFT_SHIFT<<16|KEY_UP,MODIFIERKEY_LEFT_CTRL,KeyId::Action(0),MODIFIERKEY_LEFT_ALT,0,
-     0,MODIFIERKEY_LEFT_ALT,KEY_SPACE,MODIFIERKEY_RIGHT_CTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
-};
+const Layer layer0(
+    {
+        { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
+            KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
+        
+        { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
+            KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
+        
+        {0,KeyId::Action(1),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
+            KEY_F6,KEY_F5, 0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
+        
+        {0,MODIFIERKEY_LEFT_SHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,KeyId::Action(5),KeyId::Action(2),
+            KeyId::Action(9),0,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,MODIFIERKEY_RIGHT_SHIFT },
+        
+        {0,MODIFIERKEY_LEFT_GUI,0,0,0,MODIFIERKEY_LEFT_SHIFT<<16|KEY_UP,MODIFIERKEY_LEFT_CTRL,KeyId::Action(0),MODIFIERKEY_LEFT_ALT,0,
+            0,MODIFIERKEY_LEFT_ALT,KEY_SPACE,MODIFIERKEY_RIGHT_CTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
+    });
 
-const Layer layer0(layer0_);
+const Layer layer1(
+    {
+        { },
+        
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, KEY_BACKSPACE, KEY_PAGE_UP, KEY_END, KEY_UP, 0, 0, 0 },
+        
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, KEY_HOME, KEY_LEFT,KEY_DOWN,KEY_RIGHT, 0, 0, 0 },
+        
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 },
+        
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, MODIFIERKEY_RIGHT_CTRL, 0, 0, 0, 0, 0, 0 },
+    });
 
-const KeyId layer1_[5][20]={
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, KEY_BACKSPACE, KEY_PAGE_UP, KEY_END, KEY_UP, 0, 0, 0 },
-    
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, KEY_HOME, KEY_LEFT,KEY_DOWN,KEY_RIGHT, 0, 0, 0 },
+const Layer layer2(
+    {
+        { },
+        
+        { 0, 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, 0, 0, 0,
+            0, 0, 0, 0, KEY_7, KEY_8, KEY_9, 0, 0, 0 },
+        
+        { 0, 0, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, 0, 0, 0,
+            0, 0, 0, 0, KEY_4, KEY_5, KEY_6, 0, 0, 0 },
+        
+        { 0, 0, KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, 0, 0, 0,
+            0, 0, 0, 0, KEY_1, KEY_2, KEY_3, 0, 0, 0 },
+        
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, KEY_0, 0, 0, 0, 0, 0 }
+    });
 
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 },
 
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, MODIFIERKEY_RIGHT_CTRL, 0, 0, 0, 0, 0, 0 },
-};
+const Layer layer3(
+    {
+        { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
+            KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
+        
+        { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
+            KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
+        
+        {0,KEY_TAB,KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
+            KEY_F6,KEY_F5,0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
+        
+        {0,MODIFIERKEY_LEFT_SHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,0,
+            KEY_F7,KEY_F8,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,MODIFIERKEY_RIGHT_SHIFT },
+        
+        {0,MODIFIERKEY_LEFT_GUI,0,0,0,MODIFIERKEY_LEFT_SHIFT<<16|KEY_UP,MODIFIERKEY_LEFT_CTRL,KEY_SPACE,MODIFIERKEY_LEFT_ALT,0,
+            0,MODIFIERKEY_LEFT_ALT,KEY_SPACE,MODIFIERKEY_RIGHT_CTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
+    });
 
-const Layer layer1(layer1_);
-
-const KeyId layer2_[5][20]={
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-
-    { 0, 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, 0, 0, 0,
-      0, 0, 0, 0, KEY_7, KEY_8, KEY_9, 0, 0, 0 },
-    
-    { 0, 0, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, 0, 0, 0,
-      0, 0, 0, 0, KEY_4, KEY_5, KEY_6, 0, 0, 0 },
-    
-    { 0, 0, KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, 0, 0, 0,
-      0, 0, 0, 0, KEY_1, KEY_2, KEY_3, 0, 0, 0 },
-    
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, KEY_0, 0, 0, 0, 0, 0 }
-};
-
-const Layer layer2(layer2_);
-
-const KeyId layer3_[5][20]={
-    { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
-      KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
-
-    { KEY_ESC,MODIFIERKEY_LEFT_SHIFT<<16|KEY_MINUS,KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
-      KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
-    
-    {0,KEY_TAB,KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
-     KEY_F6,KEY_F5,0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
-    
-    {0,MODIFIERKEY_LEFT_SHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,0,
-     KEY_F7,KEY_F8,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,MODIFIERKEY_RIGHT_SHIFT },
-    
-     {0,MODIFIERKEY_LEFT_GUI,0,0,0,MODIFIERKEY_LEFT_SHIFT<<16|KEY_UP,MODIFIERKEY_LEFT_CTRL,KEY_SPACE,MODIFIERKEY_LEFT_ALT,0,
-     0,MODIFIERKEY_LEFT_ALT,KEY_SPACE,MODIFIERKEY_RIGHT_CTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
-};
-
-const Layer layer3(layer3_);
 
 SdFat sd;
 
@@ -105,10 +100,9 @@ void loop() {
     UI ui(display);
     
     ui.paintText(30, 0, "Start");
-    
-    KeyMatrix matrixA(0x20, 0x7C00, 0x3FF);
-    KeyMatrix matrixB(0x21, 0x3E00, 0xC0FF);
-    
+
+    KsKeyboard keyboard;
+
     ui.paintText(30, 14, "Config");
 
     if (!sd.begin(10, SPI_HALF_SPEED)) {
@@ -140,14 +134,7 @@ void loop() {
             myFile.close();
         }
     }
-
-
-
     
-    char outStr[48];
-
-    bool displayDebug = true;
-
     LayerStack layerStack;
 
     layerStack.assignLayer(&layer0, 0);
@@ -167,22 +154,41 @@ void loop() {
 
     actionManager.registerAction(
         2,
-        [&display, &displayDebug](const ActionContext& context)
+        [&](const ActionContext& context)
         {
             if (context.state == KeyState::kPressed)
             {
-                displayDebug = !displayDebug;
+                // displayDebug = !displayDebug;
                 
-                if (!displayDebug)
-                {
-                    display.clear();
-                }
+                // if (!displayDebug)
+                // {
+                //     display.clear();
+                // }
+
+                display.clear();
             }
         });
 
+    actionManager.registerAction(
+        5,
+        [&](const ActionContext& context)
+        {
+            if (context.state == KeyState::kPressed)
+            {
+                ui.menu(keyboard);
+            }
+        });
 
-    KeyMatrixEventDispatcher dispatcherA({4,3,2,1,0}, {0,1,2,3,4,5,6,7,9,8,10,11,12,13,14,15});
-    KeyMatrixEventDispatcher dispatcherB({0,1,2,3,4}, {12,13,14,15,16,17,18,19,20,21,22,23,24,25,11,10});        
+    actionManager.registerAction(
+        9,
+        [&display,&ui](const ActionContext& context)
+        {
+            if (context.taps == 2)
+            {
+                display.clear();
+                CtrlUtil::bootloader();
+            }
+        });
 
     Tapping tapping(500);
         
@@ -227,55 +233,36 @@ void loop() {
         }
     });
 
-    Debounce debounceA(3);
-    Debounce debounceB(3);
-    
     while (1)
     {
-        matrixA.scan();
-        matrixB.scan();
-
-        bool nextDelta(false);
-        
-        nextDelta |= debounceA.process(matrixA.state());
-        nextDelta |= debounceB.process(matrixB.state());
-
-        if (!nextDelta)
+        if (keyboard.poll(callback))
         {
-            continue;
+            usbKeyboard.update();
         }
-        
-        dispatcherA.dispatch(debounceA.state(),
-                             debounceA.delta(),
-                             callback);
-        dispatcherB.dispatch(debounceB.state(),
-                             debounceB.delta(),
-                             callback);
 
-        if (displayDebug) 
-        {
-            sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
-                    (int)matrixA.state()[0].data(),
-                    (int)matrixA.state()[1].data(),
-                    (int)matrixA.state()[2].data(),
-                    (int)matrixA.state()[3].data(),
-                    (int)matrixA.state()[4].data());
-            ui.paintText(48, 0, outStr);
+        // if (displayDebug) 
+        // {
+        //     sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
+        //             (int)matrixA.state()[0].data(),
+        //             (int)matrixA.state()[1].data(),
+        //             (int)matrixA.state()[2].data(),
+        //             (int)matrixA.state()[3].data(),
+        //             (int)matrixA.state()[4].data());
+        //     ui.paintText(48, 0, outStr);
             
-            sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
-                    (int)matrixB.state()[0].data(),
-                    (int)matrixB.state()[1].data(),
-                    (int)matrixB.state()[2].data(),
-                    (int)matrixB.state()[3].data(),
-                    (int)matrixB.state()[4].data());
-            ui.paintText(48, 14, outStr);
+        //     sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
+        //             (int)matrixB.state()[0].data(),
+        //             (int)matrixB.state()[1].data(),
+        //             (int)matrixB.state()[2].data(),
+        //             (int)matrixB.state()[3].data(),
+        //             (int)matrixB.state()[4].data());
+        //     ui.paintText(48, 14, outStr);
 
-            sprintf(outStr,"%d / %d ",
-                    (int)debounceA.filtered(),
-                    (int)debounceB.filtered());
-            ui.paintText(60, 42, outStr);
-        }
+        //     sprintf(outStr,"%d / %d ",
+        //             (int)debounceA.filtered(),
+        //             (int)debounceB.filtered());
+        //     ui.paintText(60, 42, outStr);
+        // }
 
-        usbKeyboard.update();
     }
 }
