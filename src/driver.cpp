@@ -4,11 +4,8 @@
 #include "actions.h"
 #include "ctrlutil.h"
 #include "display.h"
-#include "keymatrixevent.h"
 #include "kskeyboard.h"
 #include "layer.h"
-#include "layerstack.h"
-#include "tapping.h"
 #include "ui.h"
 #include "usbkeyboard.h"
 
@@ -135,21 +132,17 @@ void loop() {
         }
     }
     
-    LayerStack layerStack;
-
-    layerStack.assignLayer(&layer0, 0);
-    layerStack.assignLayer(&layer1, 1);
-    layerStack.assignLayer(&layer2, 2);
-    layerStack.assignLayer(&layer3, 3);
-    layerStack.setLayer(0, true);
-
+    keyboard.assignLayer(&layer0, 0);
+    keyboard.assignLayer(&layer1, 1);
+    keyboard.assignLayer(&layer2, 2);
+    keyboard.assignLayer(&layer3, 3);
 
     UsbKeyboard usbKeyboard;
     ActionManager actionManager;
 
-    actionManager.registerAction(0, Actions::layerModifier(layerStack, 1));
-    actionManager.registerAction(1, Actions::layerModifier(layerStack, 2));
-    actionManager.registerAction(3, Actions::toggleLayer(layerStack, 3));
+    actionManager.registerAction(0, Actions::layerModifier(keyboard, 1));
+    actionManager.registerAction(1, Actions::layerModifier(keyboard, 2));
+    actionManager.registerAction(3, Actions::toggleLayer(keyboard, 3));
     actionManager.registerAction(4, Actions::modifierKey(usbKeyboard, MODIFIERKEY_LEFT_SHIFT, KEY_MINUS));
 
     actionManager.registerAction(
@@ -190,17 +183,10 @@ void loop() {
             }
         });
 
-    Tapping tapping(500);
-        
-    auto callback([&](const KeyMatrixEvent& event)
+    auto callback([&](const KsKeyboard::Event& event)
     {
-        KeyId keyId(layerStack.at(event.row, event.column));
+        KeyId keyId(event.keyId);
 
-        if (event.state == KeyState::kPressed)
-        {
-            tapping.processKey(keyId);
-        }
-        
         if (keyId.type() == KeyId::kModifier)
         {
             if (event.state != KeyState::kReleased)
@@ -229,7 +215,7 @@ void loop() {
         {
             actionManager.fireAction(keyId.value(),
                                      ActionContext(event.state,
-                                                   tapping.count(keyId)));
+                                                   event.taps));
         }
     });
 

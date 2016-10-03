@@ -2,34 +2,34 @@
 #include "actioncontext.h"
 #include "keyid.h"
 #include "keystate.h"
-#include "layerstack.h"
+#include "kskeyboard.h"
 #include "usbkeyboard.h"
 
 namespace Actions
 {
 
-ActionFunc layerModifier(LayerStack& layerStack, int layer)
+ActionFunc layerModifier(KsKeyboard& keyboard, int layer)
 {
-    return [&layerStack, layer](const ActionContext& context)
+    return [&keyboard, layer](const ActionContext& context)
     {
         if (context.state == KeyState::kPressed)
         {
-            layerStack.setLayer(layer, true);
+            keyboard.setLayer(layer, true);
         }
         else if (context.state == KeyState::kReleased)
         {
-            layerStack.setLayer(layer, false);
+            keyboard.setLayer(layer, false);
         }
     };
 }
 
-ActionFunc toggleLayer(LayerStack& layerStack, int layer)
+ActionFunc toggleLayer(KsKeyboard& keyboard, int layer)
 {
-    return [&layerStack, layer](const ActionContext& context)
+    return [&keyboard, layer](const ActionContext& context)
     {
         if (context.state == KeyState::kPressed)
         {
-            layerStack.setLayer(layer, !layerStack.enabled(layer));
+            keyboard.setLayer(layer, !keyboard.enabled(layer));
         }
     };
 }

@@ -109,22 +109,22 @@ void UI::menu(KsKeyboard& keyboard)
     while (!quit)
     {
         if (keyboard.poll([&](const KsKeyboard::Event& event)
-                          {
-                              if (event.row == 0 && event.state == KeyState::kPressed)
-                              {
-                                  quit = true;
-                              }
-
-                              if (event.row == 1 && event.state == KeyState::kPressed)
-                              {
-                                  selected = (selected + 3) % 4;
-                              }
-
-                              if (event.row == 2 && event.state == KeyState::kPressed)
-                              {
-                                  selected = (selected + 1) % 4;
-                              }
-                          }))
+        {
+            if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
+            {
+                quit = true;
+            }
+            
+            if (event.keyId.value() == 82 && event.state == KeyState::kPressed)
+            {
+                selected = (selected + 3) % 4;
+            }
+            
+            if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
+            {
+                selected = (selected + 1) % 4;
+            }
+        }))
         {
             paintText(28, 0,  "             Macros             ", selected == 0);
             paintText(28, 14, "             Display            ", selected == 1);
