@@ -1,29 +1,47 @@
 #ifndef INCLUDED_KSKEYBOARD_H
 #define INCLUDED_KSKEYBOARD_H
 
-#include "eventdispatcher.h"
-#include "keyboardplate.h"
 #include "keymatrixevent.h"
+#include "keyboardplate.h"
 
 class KsKeyboard
 {
 public:
-    typedef EventDispatcher::Callback Callback;
-    typedef KeyMatrixEvent            Event;
+    typedef KeyMatrixEvent Event;
     
 public:
     KsKeyboard();
 
 public:
+    template <typename Callback>
     bool poll(const Callback& callback); 
+
+private:
+    bool scan();
     
 private:
     KeyboardPlate mLeft;
     KeyboardPlate mRight;
     
 private:
-    KsKeyboard(const KsKeyboard&);
-    KsKeyboard& operator=(const KsKeyboard&);
+    KsKeyboard(const KsKeyboard&) = delete;
+    KsKeyboard& operator=(const KsKeyboard&) = delete;
 };
+
+
+template <typename Callback>
+inline
+bool KsKeyboard::poll(const Callback& callback)
+{
+    bool hasEvent(scan());
+        
+    if (hasEvent)
+    {
+        mLeft.dispatch(callback);
+        mRight.dispatch(callback);
+    }
+
+    return hasEvent;
+}
 
 #endif

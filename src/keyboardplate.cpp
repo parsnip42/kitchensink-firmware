@@ -20,10 +20,3 @@ bool KeyboardPlate::scan()
     
     return mDebounce.process(mMatrix.state());
 }
-
-void KeyboardPlate::dispatch(const EventDispatcher::Callback& callback)
-{
-    mDispatcher.dispatch(mDebounce.state(),
-                         mDebounce.delta(),
-                         callback);
-}

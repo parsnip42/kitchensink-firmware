@@ -10,18 +10,12 @@ KsKeyboard::KsKeyboard()
              {12,13,14,15,16,17,18,19,20,21,22,23,24,25,11,10})
 { }
 
-bool KsKeyboard::poll(const Callback& callback)
+bool KsKeyboard::scan()
 {
     bool hasEvent(false);
         
     hasEvent |= mLeft.scan();
     hasEvent |= mRight.scan();
-
-    if (hasEvent)
-    {
-        mLeft.dispatch(callback);
-        mRight.dispatch(callback);
-    }
 
     return hasEvent;
 }

@@ -55,30 +55,81 @@ void UI::paintText(int x, int y, const char* str)
     }
 }
 
+void UI::paintText(int x, int y, const char* str, bool inv)
+{
+    static const uint8_t color(0xf);
+    static const int kCharHeight(14);
+    
+    int len(strlen(str));
+    
+    mDisplay.initRegion(x, y, len << 3, kCharHeight);
+    
+    for (int y(0); y < kCharHeight; ++y)
+    {
+        for (int x(0); x < len; ++x)
+        {
+            unsigned char a0(0);
+            unsigned char a1(0);
+            unsigned char a2(0);
+            unsigned char a3(0);                
+
+            if (str[x] > 32 && str[x] < 127)
+            {
+                unsigned char c(charset[str[x] - 33 + (y * 94)]);
+                
+                a0 = (((c>>7) & 1) * color) | ((c>>6 & 1) * (color << 4));
+                a1 = (((c>>5) & 1) * color) | ((c>>4 & 1) * (color << 4));
+                a2 = (((c>>3) & 1) * color) | ((c>>2 & 1) * (color << 4));
+                a3 = (((c>>1) & 1) * color) | ((c & 1)    * (color << 4));
+            }
+
+            if (inv)
+            {
+                a0 = ~a0;
+                a1 = ~a1;
+                a2 = ~a2;
+                a3 = ~a3;
+            }
+            
+            mDisplay.writeData(a3);
+            mDisplay.writeData(a2);
+            mDisplay.writeData(a1);
+            mDisplay.writeData(a0);
+        }
+    }
+}
 
 void UI::menu(KsKeyboard& keyboard)
 {
     mDisplay.clear();
 
-    // for (int i=0;i<14*4;i+=14)
-    //     paintText(28, i, "Test");
-
     bool quit(false);
-
+    int selected(0);
+    
     while (!quit)
     {
         if (keyboard.poll([&](const KsKeyboard::Event& event)
                           {
-                              if (event.row == 0)
+                              if (event.row == 0 && event.state == KeyState::kPressed)
                               {
                                   quit = true;
                               }
+
+                              if (event.row == 1 && event.state == KeyState::kPressed)
+                              {
+                                  selected = (selected + 3) % 4;
+                              }
+
+                              if (event.row == 2 && event.state == KeyState::kPressed)
+                              {
+                                  selected = (selected + 1) % 4;
+                              }
                           }))
         {
-            paintText(28, 0,  "Macros");
-            paintText(28, 14, "Display");
-            paintText(28, 28, "Configuration");
-            paintText(28, 42, "System");
+            paintText(28, 0,  "             Macros             ", selected == 0);
+            paintText(28, 14, "             Display            ", selected == 1);
+            paintText(28, 28, "          Configuration         ", selected == 2);
+            paintText(28, 42, "             System             ", selected == 3);
         }
     }
 

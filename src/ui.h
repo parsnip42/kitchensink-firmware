@@ -12,6 +12,7 @@ public:
 public:
     void menu(KsKeyboard& keyboard);
     void paintText(int x, int y, const char* str);
+    void paintText(int x, int y, const char* str, bool inv);
     void clear();
 
 private:

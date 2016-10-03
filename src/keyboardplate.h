@@ -17,8 +17,10 @@ public:
 
 public:
     bool scan();
-    void dispatch(const EventDispatcher::Callback& callback);
-        
+
+    template <typename Callback>
+    void dispatch(const Callback& callback);
+
 private:
     KeyMatrix       mMatrix;
     Debounce        mDebounce;
@@ -27,6 +29,15 @@ private:
 private:
     KeyboardPlate(const KeyboardPlate&);
     KeyboardPlate& operator=(const KeyboardPlate&);
+};
+
+template <typename Callback>
+inline
+void KeyboardPlate::dispatch(const Callback& callback)
+{
+    mDispatcher.dispatch(mDebounce.state(),
+                         mDebounce.delta(),
+                         callback);
 };
 
 #endif
