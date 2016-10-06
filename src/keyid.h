@@ -12,18 +12,19 @@ public:
     {
         kKey      = 1,
         kModifier = 2,
-        kAction   = 3
+        kAction   = 3,
     };
 
 public:
     static const KeyId None;
     static KeyId Action(int actionId);
+    static KeyId Layer(int layerId);
 
 public:
     KeyId();
     KeyId(int keyCode);
-    KeyId(const ModifierId& modifier);
-
+    KeyId(ModifierId::Value modifier);
+    
 private:
     KeyId(uint8_t type, uint8_t value);
 
@@ -58,6 +59,11 @@ KeyId KeyId::Action(int actionId)
     return KeyId(kAction, actionId);
 }
 
+inline
+KeyId KeyId::Layer(int layerId)
+{
+    return KeyId(kModifier, ModifierId::Layer(layerId));
+}
 
 inline
 KeyId::KeyId()
@@ -67,17 +73,19 @@ KeyId::KeyId()
 inline
 KeyId::KeyId(int keyCode)
     : mData(((keyCode >> 6) & 0xff00) | (keyCode & 0xff))
-{ }
 
-inline
-KeyId::KeyId(const ModifierId& modifier)
-    : mData(2 << 8 | modifier.value())
 { }
 
 inline
 KeyId::KeyId(uint8_t type, uint8_t value)
     : mData(type << 8 | value)
 { }
+
+inline
+KeyId::KeyId(ModifierId::Value value)
+    : mData(2 << 8 | value)
+{ }
+
 
 inline
 uint8_t KeyId::type() const

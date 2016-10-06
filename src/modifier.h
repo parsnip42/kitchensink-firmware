@@ -10,16 +10,11 @@ public:
 
 public:
     bool active() const;
-
-public:
-    void hold();
-    void release();
-    void toggle();
+    bool pressed();
+    bool released();
     
 private:
     uint8_t mRefCount;
-    bool    mToggle;
-    bool    mTrigger;
 };
 
 #endif

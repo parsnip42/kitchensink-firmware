@@ -2,6 +2,7 @@
 
 #include "display.h"
 #include "kskeyboard.h"
+#include "keyhandler.h"
 
 #include <string.h>
 
@@ -99,7 +100,8 @@ void UI::paintText(int x, int y, const char* str, bool inv)
     }
 }
 
-void UI::menu(KsKeyboard& keyboard)
+void UI::menu(KsKeyboard& keyboard,
+              KeyHandler& keyHandler)
 {
     mDisplay.clear();
 
@@ -108,7 +110,8 @@ void UI::menu(KsKeyboard& keyboard)
     
     while (!quit)
     {
-        if (keyboard.poll([&](const KsKeyboard::Event& event)
+        if (keyHandler.poll(keyboard,
+                            [&](const KeyHandler::Event& event)
         {
             if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
             {

@@ -15,11 +15,10 @@ public:
     void processKeyPress();
     
 public:
-    Modifier& operator[](const ModifierId& type);
     Modifier& operator[](uint8_t type);
 
 private:
-    std::array<Modifier, 10> mModifiers; 
+    std::array<Modifier, 30> mModifiers; 
 };
 
 #endif

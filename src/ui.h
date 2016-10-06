@@ -3,6 +3,7 @@
 
 class Display;
 class KsKeyboard;
+class KeyHandler;
 
 class UI
 {
@@ -10,7 +11,8 @@ public:
     explicit UI(Display& display);
 
 public:
-    void menu(KsKeyboard& keyboard);
+    void menu(KsKeyboard& keyboard,
+              KeyHandler& keyHandler);
     void paintText(int x, int y, const char* str);
     void paintText(int x, int y, const char* str, bool inv);
     void clear();

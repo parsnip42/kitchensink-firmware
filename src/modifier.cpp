@@ -1,24 +1,24 @@
 #include "modifier.h"
 
 Modifier::Modifier()
+    : mRefCount(0)
 { }
 
 bool Modifier::active() const
 {
-    return false;
+    return (mRefCount != 0);
 }
 
-void Modifier::hold()
+bool Modifier::pressed()
 {
+    mRefCount = 1;
 
+    return true;
 }
 
-void Modifier::release()
+bool Modifier::released()
 {
+    mRefCount = 0;
 
-}
-
-void Modifier::toggle()
-{
-
+    return true;
 }

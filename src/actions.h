@@ -13,11 +13,11 @@ namespace Actions
 
 typedef std::function<void(const ActionContext&)> ActionFunc;
 
-ActionFunc layerModifier(KsKeyboard& keyboard, int layer);
-ActionFunc toggleLayer(KsKeyboard& keyboard, int layer);
-ActionFunc modifierKey(UsbKeyboard& usbKeyboard,
-                       const KeyId& modifier,
-                       const KeyId& key);
+// ActionFunc layerModifier(KsKeyboard& keyboard, int layer);
+// ActionFunc toggleLayer(KsKeyboard& keyboard, int layer);
+// ActionFunc modifierKey(UsbKeyboard& usbKeyboard,
+//                        const KeyId& modifier,
+//                        const KeyId& key);
 
 }
 
