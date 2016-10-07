@@ -13,7 +13,7 @@ public:
     bool pressed();
     bool released();
     
-private:
+public:
     uint8_t mRefCount;
 };
 

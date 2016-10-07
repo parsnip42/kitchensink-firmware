@@ -24,8 +24,8 @@ private:
     uint32_t                          mFiltered;
     
 private:
-    Debounce(const Debounce&);
-    Debounce& operator=(const Debounce&);
+    Debounce(const Debounce&) = delete;
+    Debounce& operator=(const Debounce&) = delete;
 };
 
 inline

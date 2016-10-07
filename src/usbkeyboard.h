@@ -10,7 +10,7 @@ public:
 
 public:
     void setKey(int keyId);
-    void setModifier(int modifierId);
+    void setModifiers(uint8_t modifierMask);
     void markDirty();
     void update();
 

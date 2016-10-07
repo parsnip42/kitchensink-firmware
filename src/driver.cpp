@@ -3,6 +3,7 @@
 #include "actionmanager.h"
 #include "actions.h"
 #include "ctrlutil.h"
+#include "defaultlayers.h"
 #include "display.h"
 #include "keyhandler.h"
 #include "kskeyboard.h"
@@ -11,75 +12,6 @@
 #include "usbkeyboard.h"
 
 #include "SdFat.h"
-
-const Layer layer0(
-    {
-        { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(2),0,
-            KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
-        
-        { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
-            KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
-        
-        {0,KeyId::Layer(2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
-            KEY_F6,KEY_F5, 0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
-        
-        {0,ModifierId::kLShift,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,KeyId::Action(5),KeyId::Action(2),
-            KeyId::Action(9),0,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,ModifierId::kRShift },
-        
-        {0,ModifierId::kLGui,0,0,0,0,ModifierId::kLCtrl,KeyId::Layer(1),ModifierId::kLAlt,0,
-            0,ModifierId::kLAlt,KEY_SPACE,ModifierId::kRCtrl,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
-    });
-
-const Layer layer1(
-    {
-        { },
-        
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, KEY_BACKSPACE, KEY_PAGE_UP, KEY_END, KEY_UP, 0, 0, 0 },
-        
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, KEY_HOME, KEY_LEFT,KEY_DOWN,KEY_RIGHT, 0, 0, 0 },
-        
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 }
-    });
-
-const Layer layer2(
-    {
-        { },
-        
-        { 0, 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, 0, 0, 0,
-            0, 0, 0, 0, KEY_7, KEY_8, KEY_9, 0, 0, 0 },
-        
-        { 0, 0, KEY_F6, KEY_F7, KEY_F8, KEY_F9, KEY_F10, 0, 0, 0,
-            0, 0, 0, 0, KEY_4, KEY_5, KEY_6, 0, 0, 0 },
-        
-        { 0, 0, KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, 0, 0, 0,
-            0, 0, 0, 0, KEY_1, KEY_2, KEY_3, 0, 0, 0 },
-        
-        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, KEY_0, 0, 0, 0, 0, 0 }
-    });
-
-
-const Layer layer3(
-    {
-        { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
-            KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
-        
-        { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
-            KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
-        
-        {0,KEY_TAB,KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
-            KEY_F6,KEY_F5,0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
-        
-        {0,MODIFIERKEY_LEFT_SHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,0,
-            KEY_F7,KEY_F8,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,MODIFIERKEY_RIGHT_SHIFT },
-        
-        {0,MODIFIERKEY_LEFT_GUI,0,0,0,MODIFIERKEY_LEFT_SHIFT<<16|KEY_UP,MODIFIERKEY_LEFT_CTRL,KEY_SPACE,MODIFIERKEY_LEFT_ALT,0,
-            0,MODIFIERKEY_LEFT_ALT,KEY_SPACE,MODIFIERKEY_RIGHT_CTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
-    });
-
 
 SdFat sd;
 
@@ -130,12 +62,9 @@ void loop() {
         }
     }
 
-    KeyHandler keyHandler;
+    KeyHandler keyHandler(keyboard);
     
-    keyHandler.assignLayer(&layer0, 0);
-    keyHandler.assignLayer(&layer1, 1);
-    keyHandler.assignLayer(&layer2, 2);
-    keyHandler.assignLayer(&layer3, 3);
+    DefaultLayers::init(keyHandler);
 
     UsbKeyboard usbKeyboard;
     ActionManager actionManager;
@@ -168,7 +97,7 @@ void loop() {
         {
             if (context.state == KeyState::kPressed)
             {
-                ui.menu(keyboard, keyHandler);
+                ui.menu(keyHandler);
             }
         });
 
@@ -189,18 +118,11 @@ void loop() {
 
         if (keyId.type() == KeyId::kModifier)
         {
-            if (event.state != KeyState::kReleased)
-            {
-                usbKeyboard.setModifier(1 << keyId.value());
-            }
-
-            if (event.state != KeyState::kHeld)
-            {
-                usbKeyboard.markDirty();
-            }
+            usbKeyboard.markDirty();
         }
         else if (keyId.type() == KeyId::kKey)
         {
+
             if (event.state != KeyState::kReleased)
             {
                 usbKeyboard.setKey(keyId.value());
@@ -210,6 +132,7 @@ void loop() {
             {
                 usbKeyboard.markDirty();
             }
+
         }
         else if (keyId.type() == KeyId::kAction)
         {
@@ -221,10 +144,20 @@ void loop() {
 
     while (1)
     {
-        if (keyHandler.poll(keyboard, callback))
+        if (keyHandler.poll(callback))
         {
+            usbKeyboard.setModifiers(keyHandler.modifierMask());
             usbKeyboard.update();
         }
+
+        // char outStr[129];
+        // sprintf(outStr,"|%d %d %d %d|",
+        //         (int)keyHandler.mModifierSet[0].mRefCount,
+        //         (int)keyHandler.mModifierSet[1].mRefCount,
+        //         (int)keyHandler.mModifierSet[2].mRefCount,
+        //         (int)keyHandler.mModifierSet[3].mRefCount);
+        // ui.paintText(48, 0, outStr);
+
 
         // if (displayDebug) 
         // {

@@ -100,8 +100,7 @@ void UI::paintText(int x, int y, const char* str, bool inv)
     }
 }
 
-void UI::menu(KsKeyboard& keyboard,
-              KeyHandler& keyHandler)
+void UI::menu(KeyHandler& keyHandler)
 {
     mDisplay.clear();
 
@@ -110,8 +109,7 @@ void UI::menu(KsKeyboard& keyboard,
     
     while (!quit)
     {
-        if (keyHandler.poll(keyboard,
-                            [&](const KeyHandler::Event& event)
+        if (keyHandler.poll([&](const KeyHandler::Event& event)
         {
             if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
             {

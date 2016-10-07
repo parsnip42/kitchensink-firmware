@@ -18,9 +18,9 @@ void UsbKeyboard::setKey(int keyId)
     }
 }
 
-void UsbKeyboard::setModifier(int modifierId)
+void UsbKeyboard::setModifiers(uint8_t modifierMask)
 {
-    keyboard_modifier_keys |= modifierId;
+    keyboard_modifier_keys = modifierMask;
 }
 
 void UsbKeyboard::markDirty()

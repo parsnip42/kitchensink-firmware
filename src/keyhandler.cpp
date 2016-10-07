@@ -12,17 +12,19 @@ KeyHandler::Event::Event(KeyId           nKeyId,
 { }
 
 
-KeyHandler::KeyHandler()
-    : mLayerStack()
+KeyHandler::KeyHandler(KsKeyboard& keyboard)
+    : mKeyboard(keyboard)
+    , mLayerStack()
     , mModifierSet()
     , mTapping(500)
+    , mModifierMask(0)
 {
     mLayerStack.setLayer(0, true);
 }
 
-void KeyHandler::assignLayer(const Layer* layer, int index)
+void KeyHandler::assignLayer(int index, const Layer& layer)
 {
-    mLayerStack.assignLayer(layer, index);
+    mLayerStack.assignLayer(index, layer);
 }
 
 void KeyHandler::setLayer(int index, bool enabled)

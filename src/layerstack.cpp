@@ -4,10 +4,7 @@
 #include <algorithm>
 
 LayerStack::LayerStack()
-{
-    std::fill(mLayers.begin(), mLayers.end(), nullptr);
-}
-
+{  }
 
 KeyId LayerStack::at(int row, int column) const
 {
@@ -18,9 +15,9 @@ KeyId LayerStack::at(int row, int column) const
     
     while (data)
     {
-        if ((data & 1) && mLayers[index])
+        if (data & 1)
         {
-            KeyId next = mLayers[index]->at(row, column);
+            KeyId next = mLayers[index].at(row, column);
 
             if (next.type() != 0)
             {
@@ -35,7 +32,7 @@ KeyId LayerStack::at(int row, int column) const
     return keyId;
 }
     
-void LayerStack::assignLayer(const Layer* layer, int index)
+void LayerStack::assignLayer(int index, const Layer& layer)
 {
     mLayers[index] = layer;
 }

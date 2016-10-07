@@ -8,8 +8,6 @@
 #include "modifierset.h"
 #include "tapping.h"
 
-class KsKeyboard;
-
 class KeyHandler
 {
 public:
@@ -27,24 +25,27 @@ public:
     };
  
 public:
-    KeyHandler();
+    explicit KeyHandler(KsKeyboard& keyboard);
 
 public:
     template<typename Callback>
     inline
-    bool poll(KsKeyboard&     keyboard,
-              const Callback& callback);
+    bool poll(const Callback& callback);
 
+    uint8_t modifierMask() const;
+    
 public:
-    void assignLayer(const Layer* layer, int index);
+    void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled);
     bool layerEnabled(int layer) const;
     
-private:
+public:
+    KsKeyboard& mKeyboard;
     LayerStack  mLayerStack;
     ModifierSet mModifierSet;
     Tapping     mTapping;
-
+    uint8_t     mModifierMask;
+    
 private:
     KeyHandler(const KeyHandler&) = delete;
     KeyHandler& operator=(const KeyHandler&) = delete;
@@ -53,47 +54,65 @@ private:
 
 template<typename Callback>
 inline
-bool KeyHandler::poll(KsKeyboard&     keyboard,
-                      const Callback& callback)
+bool KeyHandler::poll(const Callback& callback)
 {
-    return keyboard.poll([&](const KsKeyboard::Event& event)
+    return mKeyboard.poll([&](const KsKeyboard::Event& event)
     {
         KeyId keyId(mLayerStack.at(event.row, event.column));
 
-        mTapping.processKey(keyId);
+        if (event.state == KeyState::kPressed)
+        {
+            mTapping.processKey(keyId);
+        }
         
+        int count(mTapping.count(keyId));
        
         if (keyId.type() == KeyId::kModifier)
         {
             bool updated(false);
+
+            int modifier(keyId.value());
             
             if (event.state == KeyState::kPressed)
             {
-                updated = mModifierSet[keyId.value()].pressed();
+                updated = mModifierSet[modifier].pressed();
             }
 
             if (event.state == KeyState::kReleased)
             {
-                updated = mModifierSet[keyId.value()].released();
+                updated = mModifierSet[modifier].released();
             }
 
             if (updated)
             {
-                if (keyId.value() >= 10)
+                uint8_t active(mModifierSet[modifier].active());
+                
+                if (modifier >= 10)
                 {
-                    setLayer(keyId.value() - 10, mModifierSet[keyId.value()].active());
+                    setLayer(modifier - 10, active);
                 }
                 else
                 {
-                    callback(Event(keyId, event.state, mTapping.count(keyId)));
+                    uint8_t set(active << modifier);
+                    uint8_t clear(~(1 << modifier));
+                    
+                    mModifierMask = (mModifierMask & clear) | set;
+
+                    callback(Event(keyId, event.state, count));
                 }
             }
         }
         else
         {
-            callback(Event(keyId, event.state, mTapping.count(keyId)));
+            callback(Event(keyId, event.state, count));
         }
     });
+}
+
+inline
+uint8_t KeyHandler::modifierMask() const
+{
+    return mModifierMask;
 }
 
 #endif

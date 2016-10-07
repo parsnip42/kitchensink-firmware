@@ -11,14 +11,14 @@ bool Modifier::active() const
 
 bool Modifier::pressed()
 {
-    mRefCount = 1;
+    ++mRefCount;
 
     return true;
 }
 
 bool Modifier::released()
 {
-    mRefCount = 0;
+    --mRefCount;
 
     return true;
 }

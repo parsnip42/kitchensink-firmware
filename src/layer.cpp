@@ -1,20 +1,12 @@
 #include "layer.h"
 
-// Layer::Layer(const KeyId list[5][20])
-// {
-//     for (auto& mappingRow : mMapping)
-//     {
-//         mappingRow.fill(KeyId::None);
-//     }
-    
-//     for (size_t row(0); row < kRows; ++row)
-//     {
-//         for (size_t column(0); column < kColumns; ++column)
-//         {
-//             mMapping[row][column] = list[row][column];
-//         }
-//     }
-// }
+Layer::Layer()
+{
+    for (auto& mappingRow : mMapping)
+    {
+        mappingRow.fill(KeyId::None);
+    }
+}
 
 Layer::Layer(const std::initializer_list<std::initializer_list<KeyId>>& list)
 {

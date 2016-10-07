@@ -9,35 +9,34 @@ Debounce::Debounce(int latency)
 
 bool Debounce::process(const KeyMatrix::Mask& next)
 {
-    bool delta(false);
+    bool populated(false);
     
     for (int row(0); row < KeyMatrix::kRows; ++row)
     {
-        if (next[row] != mLast[row])
-        {
-            if (mStableCount[row] > 0)
-            {
-                ++mFiltered;
-            }
+        // if (next[row] != mLast[row])
+        // {
+        //     mStableCount[row] = 0;
+        // }
+        // else if (++mStableCount[row] > mLatency)
+        // {
+        //     mDelta[row] = mState[row];
+        //     mDelta[row] ^= next[row];
+        //     mState[row] = next[row];
             
-            mStableCount[row] = 1;
-            mLast[row] = next[row];
-        }
-        else if (mStableCount[row] > 0)
-        {
-            ++mStableCount[row];
-            
-            if (mStableCount[row] > mLatency)
-            {
-                mDelta[row] = mState[row];
-                mDelta[row] ^= next[row];
-                mState[row] = next[row];
+        //     mStableCount[row] = 0;
+        // }
+        
+        // mLast[row] = next[row];
 
-                delta = true;
-                mStableCount[row] = 0;
-            }
+        mDelta[row] = mState[row];
+        mDelta[row] ^= next[row];
+        mState[row] = next[row];
+        
+        if (mDelta[row].data() || mState[row].data())
+        {
+            populated = true;
         }
     }
 
-    return delta;
+    return populated;
 }

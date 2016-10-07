@@ -32,4 +32,3 @@ void Tapping::processKey(KeyId keyId)
     
     mLastTap = tapTime;
 }
-

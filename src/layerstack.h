@@ -3,10 +3,9 @@
 
 #include "bitmask.h"
 #include "keyid.h"
+#include "layer.h"
 
 #include <array>
-
-class Layer;
 
 class LayerStack
 {
@@ -20,12 +19,12 @@ public:
     KeyId at(int row, int column) const;
     
 public:
-    void assignLayer(const Layer* layer, int index);
+    void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled);
     bool enabled(int layer) const;
     
 private:
-    std::array<const Layer*, MaxLayers> mLayers;
+    std::array<Layer, MaxLayers> mLayers;
     Bitmask<MaxLayers>                  mLayerMask;
 };
 

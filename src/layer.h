@@ -13,7 +13,7 @@ public:
     static const int kColumns = 20;
     
 public:
-    // explicit Layer(const KeyId list[5][20]);
+    Layer();
     explicit Layer(const std::initializer_list<std::initializer_list<KeyId>>& list);
 
 public:
@@ -23,8 +23,8 @@ private:
     std::array<std::array<KeyId, kColumns>, kRows> mMapping;
 
 private:
-    Layer(const Layer&) = delete;
-    Layer& operator=(const Layer&) = delete;
+    // Layer(const Layer&) = delete;
+    // Layer& operator=(const Layer&) = delete;
 };
 
 
