@@ -17,36 +17,50 @@ UsbKeyboard::UsbKeyboard()
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
-
-void UsbKeyboard::pressKey(int keyId)
+void UsbKeyboard::processKey(int keyCode, KeyState state)
 {
-    if (!(mKeyMask[keyId >> 3] & (1 << (keyId & 0x7)))
+    if (state == KeyState::kPressed)
+    {
+        pressKey(keyCode);
+    }
+    else if (state == KeyState::kReleased)
+    {
+        releaseKey(keyCode);
+    }
+}
+
+void UsbKeyboard::processModifier(int modifier, KeyState state)
+{
+    int active(state == KeyState::kPressed);
+    uint8_t set(active << modifier);
+    uint8_t clear(~(1 << modifier));
+
+    keyboard_modifier_keys = (keyboard_modifier_keys & clear) | set;
+    usb_keyboard_send();
+}
+
+void UsbKeyboard::pressKey(int keyCode)
+{
+    if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
          && (mKeyNum < 6))
     {
-        keyboard_keys[mKeyNum++] = keyId;
-        mKeyMask[keyId >> 3] |= (1 << (keyId & 0x7));
+        keyboard_keys[mKeyNum++] = keyCode;
+        mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
         usb_keyboard_send();
     }
 }
 
-void UsbKeyboard::releaseKey(int keyId)
+void UsbKeyboard::releaseKey(int keyCode)
 {
     for (int i = 0; i < mKeyNum; ++i)
     {
-        if (keyboard_keys[i] == keyId)
+        if (keyboard_keys[i] == keyCode)
         {
             keyboard_keys[i] = keyboard_keys[--mKeyNum];
             keyboard_keys[mKeyNum] = 0;
-            mKeyMask[keyId >> 3] &= ~(1 << (keyId & 0x7));
+            mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
             usb_keyboard_send();
             break;
         }
     }
-}
-
-
-void UsbKeyboard::setModifiers(uint8_t modifierMask)
-{
-    keyboard_modifier_keys = modifierMask;
-    usb_keyboard_send();
 }

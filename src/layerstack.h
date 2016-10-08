@@ -17,15 +17,17 @@ public:
 
 public:
     KeyId at(int row, int column) const;
+    int activeLayer(int row, int column) const;
+    KeyId atIndex(int index, int row, int column) const;
     
 public:
     void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled);
-    bool enabled(int layer) const;
+    bool enabled(int index) const;
     
 private:
     std::array<Layer, MaxLayers> mLayers;
-    Bitmask<MaxLayers>                  mLayerMask;
+    Bitmask<MaxLayers>           mLayerMask;
 };
 
 #endif

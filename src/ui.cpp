@@ -106,7 +106,7 @@ void UI::menu(KeyHandler& keyHandler)
 {
     mDisplay.clear();
 
-    bool quit(false);
+    // bool quit(false);
     // int selected(0);
     
     // while (!quit)
@@ -136,47 +136,47 @@ void UI::menu(KeyHandler& keyHandler)
     //     }
     // }
 
-    AutoRepeat autoRepeat(660);
-    char str[32]={0};
-    size_t len(0);
+    // AutoRepeat autoRepeat(660);
+    // char str[32]={0};
+    // size_t len(0);
     
-    while (!quit)
-    {
-        keyHandler.poll([&](const KeyEvent& event)
-        {
-            if (event.keyId.type() == KeyId::kKey)
-            {
-                if (event.keyId.value() == 0x28)
-                {
-                    quit = true;
-                }
-                else
-                {
-                    autoRepeat.processKey(event.keyId,
-                                          event.state);
+    // while (!quit)
+    // {
+        // keyHandler.poll([&](const KeyEvent& event)
+        // {
+        //     if (event.keyId.type() == KeyId::kKey)
+        //     {
+        //         if (event.keyId.value() == 0x28)
+        //         {
+        //             quit = true;
+        //         }
+        //         else
+        //         {
+        //             autoRepeat.processKey(event.keyId,
+        //                                   event.state);
                 
-                    KeyId current(autoRepeat.activeKey());
+        //             KeyId current(autoRepeat.activeKey());
 
-                    if (current != KeyId::None)
-                    {
-                        if (event.keyId.value() == 0x2a)
-                        {
-                            if (len > 0)
-                            {
-                                str[--len] = ' ';
-                            }
-                        }
-                        else
-                        {
-                            str[len++] = KeyMap::table()[event.keyId.value()].dflt[0];
-                        }
-                    }
-                }
-            }
-        });
+        //             if (current != KeyId::None)
+        //             {
+        //                 if (event.keyId.value() == 0x2a)
+        //                 {
+        //                     if (len > 0)
+        //                     {
+        //                         str[--len] = ' ';
+        //                     }
+        //                 }
+        //                 else
+        //                 {
+        //                     str[len++] = KeyMap::table()[event.keyId.value()].dflt[0];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // });
 
-        paintText(28, 0, str);
-    }
+        // paintText(28, 0, str);
+    // }
     
     mDisplay.clear();
 }

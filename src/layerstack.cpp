@@ -17,7 +17,7 @@ KeyId LayerStack::at(int row, int column) const
     {
         if (data & 1)
         {
-            KeyId next = mLayers[index].at(row, column);
+            auto next(mLayers[index].at(row, column));
 
             if (next.type() != 0)
             {
@@ -31,7 +31,38 @@ KeyId LayerStack::at(int row, int column) const
     
     return keyId;
 }
+
+int LayerStack::activeLayer(int row, int column) const
+{
+    auto data(mLayerMask.data());
+
+    int index(0);
+    int activeIndex(0);
     
+    while (data)
+    {
+        if (data & 1)
+        {
+            auto next(mLayers[index].at(row, column));
+
+            if (next.type() != 0)
+            {
+                activeIndex = index;
+            }
+        }
+
+        data >>= 1;
+        ++index;
+    }
+    
+    return activeIndex;
+}
+
+KeyId LayerStack::atIndex(int index, int row, int column) const
+{
+    return mLayers[index].at(row, column);
+}
+
 void LayerStack::assignLayer(int index, const Layer& layer)
 {
     mLayers[index] = layer;
@@ -49,7 +80,7 @@ void LayerStack::setLayer(int index, bool enabled)
     }
 }
 
-bool LayerStack::enabled(int layer) const
+bool LayerStack::enabled(int index) const
 {
-    return mLayerMask[layer];
+    return mLayerMask[index];
 }

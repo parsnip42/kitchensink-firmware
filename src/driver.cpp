@@ -2,13 +2,14 @@
 #include "actioncontext.h"
 #include "actionmanager.h"
 #include "actions.h"
-#include "circularbuffer.h"
 #include "ctrlutil.h"
 #include "defaultlayers.h"
 #include "display.h"
+#include "eventqueue.h"
 #include "keyhandler.h"
 #include "kskeyboard.h"
 #include "layer.h"
+#include "modifierset.h"
 #include "ui.h"
 #include "usbkeyboard.h"
 
@@ -72,7 +73,7 @@ void loop() {
     UsbKeyboard usbKeyboard;
     ActionManager actionManager;
 
-    CircularBuffer<KeyEvent, 100> eventQueue;
+    EventQueue eventQueue;
     
     // actionManager.registerAction(0, Actions::layerModifier(keyboard, 1));
     // actionManager.registerAction(1, Actions::layerModifier(keyboard, 2));
@@ -137,10 +138,12 @@ void loop() {
     {
         eventQueue.pushBack(event);
     });
+    
+    ModifierSet modifierSet;
 
     while (1)
     {
-        keyHandler.poll(callback);
+        keyHandler.poll(eventQueue);
 
         while (!eventQueue.empty())
         {
@@ -148,22 +151,36 @@ void loop() {
 
             const auto& keyId(event.keyId);
 
-            if (keyId.type() == KeyId::kModifierMask)
+            if (keyId.type() == KeyId::kModifier)
             {
-                usbKeyboard.setModifiers(keyId.value());
+                if (keyId.value() < 10)
+                {
+                    usbKeyboard.processModifier(keyId.value(), event.state);
+                }
+                else
+                {
+                    int layerId(keyId.value() - 10);
+                    bool state(event.state == KeyState::kPressed);
+
+                    if (state != keyHandler.layerEnabled(layerId))
+                    {
+                        if (state)
+                        {
+                            keyHandler.pressLayer(layerId, eventQueue);
+                            keyHandler.setLayer(layerId, state);
+                        }
+                        else
+                        {
+                            keyHandler.setLayer(layerId, state);
+                            keyHandler.releaseLayer(layerId, eventQueue);
+                        }
+                        
+                    }
+                }
             }
             else if (keyId.type() == KeyId::kKey)
             {
-                if (event.state == KeyState::kPressed)
-                {
-                    usbKeyboard.pressKey(keyId.value());
-                }
-
-                if (event.state == KeyState::kReleased)
-                {
-                    usbKeyboard.releaseKey(keyId.value());
-                }
-
+                usbKeyboard.processKey(keyId.value(), event.state);
             }
             else if (keyId.type() == KeyId::kAction)
             {
