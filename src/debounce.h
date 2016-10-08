@@ -6,7 +6,7 @@
 class Debounce
 {
 public:
-    explicit Debounce(int latency);
+    explicit Debounce(unsigned int latency);
 
 public:
     bool process(const KeyMatrix::Mask& next);
@@ -15,11 +15,11 @@ public:
     const KeyMatrix::Mask& delta() const;
     
 private:
-    const int       mLatency;
-    int             mCounter;
-    KeyMatrix::Mask mCurrent;
-    KeyMatrix::Mask mState;
-    KeyMatrix::Mask mDelta;
+    const unsigned int mLatency;
+    unsigned int       mCounter;
+    KeyMatrix::Mask    mCurrent;
+    KeyMatrix::Mask    mState;
+    KeyMatrix::Mask    mDelta;
     
 private:
     Debounce(const Debounce&) = delete;
