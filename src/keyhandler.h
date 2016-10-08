@@ -67,7 +67,7 @@ void KeyHandler::poll(const Callback& callback)
                 updated = mModifierSet[modifier].pressed();
             }
 
-            if (event.state == KeyState::kReleased)
+            if (event.state == KeyState::kReleased && count != 2)
             {
                 updated = mModifierSet[modifier].released();
             }

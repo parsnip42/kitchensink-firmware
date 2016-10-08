@@ -6,7 +6,7 @@ KeyHandler::KeyHandler(KsKeyboard& keyboard)
     : mKeyboard(keyboard)
     , mLayerStack()
     , mModifierSet()
-    , mTapping(500)
+    , mTapping(250)
     , mModifierMask(0)
 {
     mLayerStack.setLayer(0, true);

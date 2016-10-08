@@ -12,7 +12,7 @@ namespace DefaultLayers
 void init(KeyHandler& keyHandler)
 {
     keyHandler.assignLayer(0, Layer({
-                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(2),0,
+                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(3),0,
                     KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
                 { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
@@ -58,7 +58,7 @@ void init(KeyHandler& keyHandler)
             }));
     
     keyHandler.assignLayer(3, Layer({
-                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Action(3),0,
+                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(3),0,
                     KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
                 { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
@@ -67,11 +67,11 @@ void init(KeyHandler& keyHandler)
                 {0,KEY_TAB,KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
                     KEY_F6,KEY_F5,0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
                 
-                {0,MODIFIERKEY_LEFT_SHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,0,
-                    KEY_F7,KEY_F8,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,MODIFIERKEY_RIGHT_SHIFT },
+                {0,ModifierId::kLShift,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,0,
+                    KEY_F7,KEY_F8,KEY_DELETE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,ModifierId::kRShift },
                 
-                {0,MODIFIERKEY_LEFT_GUI,0,0,0,0,MODIFIERKEY_LEFT_CTRL,KEY_SPACE,MODIFIERKEY_LEFT_ALT,0,
-                    0,MODIFIERKEY_LEFT_ALT,KEY_SPACE,MODIFIERKEY_RIGHT_CTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
+                {0,ModifierId::kLGui,0,0,0,0,ModifierId::kLCtrl,KEY_SPACE,ModifierId::kLAlt,0,
+                    0,ModifierId::kLAlt,KEY_SPACE,ModifierId::kRCtrl,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
             }));
 }
 
