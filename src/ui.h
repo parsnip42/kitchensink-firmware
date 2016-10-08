@@ -1,8 +1,9 @@
 #ifndef INCLUDED_UI_H
 #define INCLUDED_UI_H
 
+#include "eventqueue.h"
+
 class Display;
-class KsKeyboard;
 class KeyHandler;
 
 class UI
@@ -11,7 +12,7 @@ public:
     explicit UI(Display& display);
 
 public:
-    void menu(KeyHandler& keyHandler);
+    void menu(KeyHandler& keyHandler, EventQueue& eventQueue);
     void paintText(int x, int y, const char* str);
     void paintText(int x, int y, const char* str, bool inv);
     void clear();

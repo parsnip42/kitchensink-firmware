@@ -65,7 +65,7 @@ void KeyHandler::pressLayer(int index, EventQueue& eventQueue)
         {
             auto next(mLayerStack.atIndex(index, event.row, event.column));
             
-            if (next.type() != 0)
+            if (next != KeyId::None)
             {
                 auto current(mLayerStack.at(event.row, event.column));
                 
@@ -91,7 +91,7 @@ void KeyHandler::releaseLayer(int index, EventQueue& eventQueue)
         {
             auto current(mLayerStack.atIndex(index, event.row, event.column));
 
-            if (current.type() != 0)
+            if (current != KeyId::None)
             {
                 auto next(mLayerStack.at(event.row, event.column));
                 

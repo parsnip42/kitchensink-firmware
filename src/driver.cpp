@@ -75,9 +75,6 @@ void loop() {
 
     EventQueue eventQueue;
     
-    // actionManager.registerAction(0, Actions::layerModifier(keyboard, 1));
-    // actionManager.registerAction(1, Actions::layerModifier(keyboard, 2));
-    // actionManager.registerAction(3, Actions::toggleLayer(keyboard, 3));
     // actionManager.registerAction(4, Actions::modifierKey(usbKeyboard, MODIFIERKEY_LEFT_SHIFT, KEY_MINUS));
 
     actionManager.registerAction(
@@ -86,30 +83,7 @@ void loop() {
         {
             if (context.state == KeyState::kPressed)
             {
-                // displayDebug = !displayDebug;
-                
-                // if (!displayDebug)
-                // {
-                //     display.clear();
-                // }
-
-                // display.clear();
-
-                // eventQueue.pushBack(KEY_T);
-                // eventQueue.pushBack(KEY_H);
-                // eventQueue.pushBack(KEY_I);
-                // eventQueue.pushBack(KEY_S);
-                // eventQueue.pushBack(KEY_SPACE);
-                // eventQueue.pushBack(KEY_I);
-                // eventQueue.pushBack(KEY_S);
-                // eventQueue.pushBack(KEY_SPACE);
-                // eventQueue.pushBack(KEY_A);
-                // eventQueue.pushBack(KEY_SPACE);
-                // eventQueue.pushBack(KEY_T);
-                // eventQueue.pushBack(KEY_E);
-                // eventQueue.pushBack(KEY_S);
-                // eventQueue.pushBack(KEY_T);
-
+                display.clear();
             }
         });
 
@@ -119,7 +93,7 @@ void loop() {
         {
             if (context.state == KeyState::kPressed)
             {
-                ui.menu(keyHandler);
+                ui.menu(keyHandler, eventQueue);
             }
         });
 

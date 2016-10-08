@@ -102,39 +102,69 @@ void UI::paintText(int x, int y, const char* str, bool inv)
     }
 }
 
-void UI::menu(KeyHandler& keyHandler)
+void UI::menu(KeyHandler& keyHandler,
+              EventQueue& eventQueue)
 {
     mDisplay.clear();
 
-    // bool quit(false);
-    // int selected(0);
+    bool quit(false);
+    int selected(0);
     
-    // while (!quit)
-    // {
-    //     if (keyHandler.poll([&](const KeyHandler::Event& event)
-    //     {
-    //         if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
-    //         {
-    //             quit = true;
-    //         }
+    bool repaint(true);
+    
+    while (!quit)
+    {    
+        keyHandler.poll(eventQueue);
+        
+        while (!eventQueue.empty())
+        {
+            auto event(eventQueue.pop());
+
+            if (event.keyId.type() == KeyId::kModifier)
+            {
+                if (event.keyId.value() >= 10)
+                {
+                    int layerId(event.keyId.value() - 10);
+                    bool state(event.state == KeyState::kPressed);
+
+                    keyHandler.setLayer(layerId, state, eventQueue);
+                }
+            }
+
+            if (event.keyId.value() == 40 && event.state == KeyState::kPressed)
+            {
+                eventQueue.pushBack(KeyEvent(KeyId::Action(9), KeyState::kPressed, 2));
+                quit = true;
+                break;
+            }
+
+            if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
+            {
+                quit = true;
+            }
             
-    //         if (event.keyId.value() == 82 && event.state == KeyState::kPressed)
-    //         {
-    //             selected = (selected + 3) % 4;
-    //         }
+            if (event.keyId.value() == 82 && event.state == KeyState::kPressed)
+            {
+                selected = (selected + 3) % 4;
+                repaint = true;
+            }
             
-    //         if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
-    //         {
-    //             selected = (selected + 1) % 4;
-    //         }
-    //     }))
-    //     {
-    //         paintText(28, 0,  "             Macros             ", selected == 0);
-    //         paintText(28, 14, "             Display            ", selected == 1);
-    //         paintText(28, 28, "          Configuration         ", selected == 2);
-    //         paintText(28, 42, "             System             ", selected == 3);
-    //     }
-    // }
+            if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
+            {
+                selected = (selected + 1) % 4;
+                repaint = true;
+            }
+        }
+
+        if (repaint)
+        {
+            paintText(28, 0,  "             Macros             ", selected == 0);
+            paintText(28, 14, "             Display            ", selected == 1);
+            paintText(28, 28, "          Configuration         ", selected == 2);
+            paintText(28, 42, "             System             ", selected == 3);
+            repaint = false;
+        }
+    }
 
     // AutoRepeat autoRepeat(660);
     // char str[32]={0};

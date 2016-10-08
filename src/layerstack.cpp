@@ -4,7 +4,7 @@
 #include <algorithm>
 
 LayerStack::LayerStack()
-{  }
+{ }
 
 KeyId LayerStack::at(int row, int column) const
 {
@@ -19,7 +19,7 @@ KeyId LayerStack::at(int row, int column) const
         {
             auto next(mLayers[index].at(row, column));
 
-            if (next.type() != 0)
+            if (next != KeyId::None)
             {
                 keyId = next;
             }
@@ -45,7 +45,7 @@ int LayerStack::activeLayer(int row, int column) const
         {
             auto next(mLayers[index].at(row, column));
 
-            if (next.type() != 0)
+            if (next != KeyId::None)
             {
                 activeIndex = index;
             }
