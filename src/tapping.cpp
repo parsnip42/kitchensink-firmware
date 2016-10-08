@@ -9,7 +9,7 @@ Tapping::Tapping(uint32_t tapDelay)
     , mLastTap(0)
 { }
 
-void Tapping::processKey(KeyId keyId)
+void Tapping::processKey(const KeyId& keyId)
 {
     auto tapTime(millis());
     

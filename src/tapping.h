@@ -11,7 +11,7 @@ public:
     explicit Tapping(uint32_t tapDelay);
 
 public:
-    void processKey(KeyId keyId);
+    void processKey(const KeyId& keyId);
     
 public:
     int count(const KeyId& keyId);

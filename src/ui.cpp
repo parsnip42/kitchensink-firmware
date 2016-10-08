@@ -1,8 +1,10 @@
 #include "ui.h"
 
+#include "autorepeat.h"
 #include "display.h"
 #include "kskeyboard.h"
 #include "keyhandler.h"
+#include "keymap.h"
 
 #include <string.h>
 
@@ -105,35 +107,82 @@ void UI::menu(KeyHandler& keyHandler)
     mDisplay.clear();
 
     bool quit(false);
-    int selected(0);
+    // int selected(0);
+    
+    // while (!quit)
+    // {
+    //     if (keyHandler.poll([&](const KeyHandler::Event& event)
+    //     {
+    //         if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
+    //         {
+    //             quit = true;
+    //         }
+            
+    //         if (event.keyId.value() == 82 && event.state == KeyState::kPressed)
+    //         {
+    //             selected = (selected + 3) % 4;
+    //         }
+            
+    //         if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
+    //         {
+    //             selected = (selected + 1) % 4;
+    //         }
+    //     }))
+    //     {
+    //         paintText(28, 0,  "             Macros             ", selected == 0);
+    //         paintText(28, 14, "             Display            ", selected == 1);
+    //         paintText(28, 28, "          Configuration         ", selected == 2);
+    //         paintText(28, 42, "             System             ", selected == 3);
+    //     }
+    // }
+
+    AutoRepeat autoRepeat(660);
+    char str[32]={0};
+    size_t len(0);
     
     while (!quit)
     {
         if (keyHandler.poll([&](const KeyHandler::Event& event)
         {
-            if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
+            if (event.keyId.type() == KeyId::kKey)
             {
-                quit = true;
-            }
-            
-            if (event.keyId.value() == 82 && event.state == KeyState::kPressed)
-            {
-                selected = (selected + 3) % 4;
-            }
-            
-            if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
-            {
-                selected = (selected + 1) % 4;
+                if (event.keyId.value() == 0x28)
+                {
+                    quit = true;
+                }
+                else
+                {
+                    autoRepeat.processKey(event.keyId,
+                                          event.state);
+                
+                    KeyId current(autoRepeat.activeKey());
+
+                    if (current != KeyId::None)
+                    {
+                        if (event.keyId.value() == 0x2a)
+                        {
+                            if (len > 0)
+                            {
+                                str[--len] = ' ';
+                            }
+                        }
+                        else if (keyHandler.modifierMask())
+                        {
+                            str[len++] = KeyMap::table()[event.keyId.value()].shift[0];
+                        }
+                        else
+                        {
+                            str[len++] = KeyMap::table()[event.keyId.value()].dflt[0];
+                        }
+                    }
+                }
             }
         }))
         {
-            paintText(28, 0,  "             Macros             ", selected == 0);
-            paintText(28, 14, "             Display            ", selected == 1);
-            paintText(28, 28, "          Configuration         ", selected == 2);
-            paintText(28, 42, "             System             ", selected == 3);
+            paintText(28, 0, str);
         }
     }
-
+    
     mDisplay.clear();
 }
 

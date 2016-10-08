@@ -4,37 +4,24 @@
 #include <array>
 #include <initializer_list>
 
-#include <stdio.h>
-#include <inttypes.h>
+namespace KeyMap
+{
 
-class KeyMap
+class Entry
 {
 public:
-    static const int Rows    = 5;
-    static const int Columns = 16;
-
-public:
-    typedef std::array<uint32_t, Columns> ColumnData;
-    typedef std::array<ColumnData, Rows> RowData;
-
-public:
-    explicit KeyMap(std::initializer_list<ColumnData> rows);
-
-public:
-    const ColumnData& operator[](size_t n) const;
+    Entry();
     
-private:
-    RowData mData;
+    Entry(const char* nDflt,
+          const char* nShift);
 
-private:
-    KeyMap(const KeyMap&) = delete;
-    KeyMap& operator=(const KeyMap&) = delete;
+public:
+    const char* dflt;
+    const char* shift;
 };
 
-inline
-const KeyMap::ColumnData& KeyMap::operator[](size_t n) const
-{
-    return mData[n];
+const std::array<Entry, 0xff>& table();
+
 }
 
 #endif
