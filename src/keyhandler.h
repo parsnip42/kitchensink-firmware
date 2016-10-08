@@ -18,6 +18,10 @@ public:
     template<typename Callback>
     inline
     void poll(const Callback& callback);
+
+    template<typename Callback>
+    inline
+    void releaseAll(const Callback& callback);
     
 public:
     void assignLayer(int index, const Layer& layer);
@@ -54,7 +58,7 @@ void KeyHandler::poll(const Callback& callback)
        
         if (keyId.type() == KeyId::kModifier)
         {
-            bool updated(false);
+            KeyState updated(KeyState::kNone);
 
             int modifier(keyId.value());
             
@@ -68,12 +72,13 @@ void KeyHandler::poll(const Callback& callback)
                 updated = mModifierSet[modifier].released();
             }
 
-            if (updated)
+            if (updated != KeyState::kNone)
             {
-                uint8_t active(mModifierSet[modifier].active());
+                uint8_t active(updated == KeyState::kPressed);
                 
                 if (modifier >= 10)
                 {
+                    releaseAll(callback);
                     setLayer(modifier - 10, active);
                 }
                 else
@@ -93,6 +98,18 @@ void KeyHandler::poll(const Callback& callback)
         {
             callback(KeyEvent(keyId, event.state, count));
         }
+    });
+}
+
+template<typename Callback>
+inline
+void KeyHandler::releaseAll(const Callback& callback)
+{
+    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    {
+        KeyId keyId(mLayerStack.at(event.row, event.column));
+
+        callback(KeyEvent(keyId, KeyState::kReleased, 0));
     });
 }
 

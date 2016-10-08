@@ -4,21 +4,16 @@ Modifier::Modifier()
     : mRefCount(0)
 { }
 
-bool Modifier::active() const
+KeyState Modifier::pressed()
 {
-    return (mRefCount != 0);
+    mRefCount = 1;
+    
+    return KeyState::kPressed;
 }
 
-bool Modifier::pressed()
+KeyState Modifier::released()
 {
-    ++mRefCount;
-
-    return true;
-}
-
-bool Modifier::released()
-{
-    --mRefCount;
-
-    return true;
+    mRefCount = 1;
+        
+    return KeyState::kReleased;
 }

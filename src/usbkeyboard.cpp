@@ -25,9 +25,8 @@ void UsbKeyboard::pressKey(int keyId)
     {
         keyboard_keys[mKeyNum++] = keyId;
         mKeyMask[keyId >> 3] |= (1 << (keyId & 0x7));
+        usb_keyboard_send();
     }
-
-    usb_keyboard_send();
 }
 
 void UsbKeyboard::releaseKey(int keyId)
@@ -39,11 +38,10 @@ void UsbKeyboard::releaseKey(int keyId)
             keyboard_keys[i] = keyboard_keys[--mKeyNum];
             keyboard_keys[mKeyNum] = 0;
             mKeyMask[keyId >> 3] &= ~(1 << (keyId & 0x7));
+            usb_keyboard_send();
             break;
         }
     }
-    
-    usb_keyboard_send();
 }
 
 

@@ -18,6 +18,9 @@ public:
 public:
     template <typename Callback>
     void poll(const Callback& callback);
+
+    template <typename Callback>
+    void pressed(const Callback& callback);
     
 private:
     bool scan();
@@ -42,6 +45,14 @@ void KeyboardPlate::poll(const Callback& callback)
                              mDebounce.delta(),
                              callback);
     }
-};
+}
+
+template <typename Callback>
+void KeyboardPlate::pressed(const Callback& callback)
+{
+    mDispatcher.pressed(mDebounce.state(),
+                        callback);
+}
+
 
 #endif

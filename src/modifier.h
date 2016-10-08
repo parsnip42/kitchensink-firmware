@@ -1,6 +1,8 @@
 #ifndef INCLUDED_MODIFIER_H
 #define INCLUDED_MODIFIER_H
 
+#include "keystate.h"
+
 #include <cstdint>
 
 class Modifier
@@ -9,11 +11,10 @@ public:
     Modifier();
 
 public:
-    bool active() const;
-    bool pressed();
-    bool released();
+    KeyState pressed();
+    KeyState released();
     
-public:
+private:
     uint8_t mRefCount;
 };
 
