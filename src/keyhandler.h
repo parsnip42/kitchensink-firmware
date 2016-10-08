@@ -1,6 +1,7 @@
 #ifndef INCLUDED_KEYHANDLER_H
 #define INCLUDED_KEYHANDLER_H
 
+#include "keyevent.h"
 #include "keyid.h"
 #include "keystate.h"
 #include "kskeyboard.h"
@@ -11,28 +12,12 @@
 class KeyHandler
 {
 public:
-    class Event
-    {
-    public:
-        Event(KeyId           nKeyId,
-              KeyState::Value nState,
-              int             nTaps);
-        
-    public:
-        KeyId           keyId;
-        KeyState::Value state;
-        int             taps;
-    };
- 
-public:
     explicit KeyHandler(KsKeyboard& keyboard);
 
 public:
     template<typename Callback>
     inline
-    bool poll(const Callback& callback);
-
-    uint8_t modifierMask() const;
+    void poll(const Callback& callback);
     
 public:
     void assignLayer(int index, const Layer& layer);
@@ -54,10 +39,8 @@ private:
 
 template<typename Callback>
 inline
-bool KeyHandler::poll(const Callback& callback)
+void KeyHandler::poll(const Callback& callback)
 {
-    bool eventProcessed(false);
-    
     mKeyboard.poll([&](const KsKeyboard::Event& event)
     {
         KeyId keyId(mLayerStack.at(event.row, event.column));
@@ -100,25 +83,17 @@ bool KeyHandler::poll(const Callback& callback)
                     
                     mModifierMask = (mModifierMask & clear) | set;
 
-                    callback(Event(keyId, event.state, count));
-                    eventProcessed = true;
+                    callback(KeyEvent(KeyId::ModifierMask(mModifierMask),
+                                      KeyState::kPressed,
+                                      0));
                 }
             }
         }
         else
         {
-            callback(Event(keyId, event.state, count));
-            eventProcessed = true;
+            callback(KeyEvent(keyId, event.state, count));
         }
     });
-
-    return eventProcessed;
-}
-
-inline
-uint8_t KeyHandler::modifierMask() const
-{
-    return mModifierMask;
 }
 
 #endif

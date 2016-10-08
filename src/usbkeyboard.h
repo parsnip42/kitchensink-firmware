@@ -9,16 +9,11 @@ public:
     UsbKeyboard();
 
 public:
-    void setKey(int keyId);
+    void pressKey(int keyId);
+    void releaseKey(int keyId);
     void setModifiers(uint8_t modifierMask);
-    void markDirty();
-    void update();
-
-private:
-    void clear();
     
 private:
-    bool    mDirty;
     int     mKeyNum;
     uint8_t mKeyMask[256 >> 3];
     

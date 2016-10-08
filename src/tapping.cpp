@@ -5,8 +5,8 @@
 Tapping::Tapping(uint32_t tapDelay)
     : mTapDelay(tapDelay)
     , mKeyId(KeyId::None)
-    , mCount(1)
     , mLastTap(0)
+    , mCount(1)
 { }
 
 void Tapping::processKey(const KeyId& keyId)

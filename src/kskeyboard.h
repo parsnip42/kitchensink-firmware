@@ -16,11 +16,8 @@ public:
 
 public:
     template <typename Callback>
-    bool poll(const Callback& callback); 
+    void poll(const Callback& callback); 
 
-private:
-    bool scan();
-    
 private:
     KeyboardPlate mLeft;
     KeyboardPlate mRight;
@@ -33,17 +30,10 @@ private:
 
 template <typename Callback>
 inline
-bool KsKeyboard::poll(const Callback& callback)
+void KsKeyboard::poll(const Callback& callback)
 {
-    bool hasEvent(scan());
-
-    if (hasEvent)
-    {
-        mLeft.dispatch(callback);
-        mRight.dispatch(callback);
-    }
-
-    return hasEvent;
+    mLeft.poll(callback);
+    mRight.poll(callback);
 }
 
 #endif

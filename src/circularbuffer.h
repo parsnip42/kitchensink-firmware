@@ -13,7 +13,8 @@ public:
 public:
     std::size_t size() const;
     bool empty() const;
-    void push(const T& value);
+    void pushBack(const T& value);
+    void pushFront(const T& value);
     T pop();
     
 private:
@@ -34,11 +35,21 @@ CircularBuffer<T, Capacity>::CircularBuffer()
 
 template <typename T, std::size_t Capacity>
 inline
-void CircularBuffer<T, Capacity>::push(const T& value)
+void CircularBuffer<T, Capacity>::pushBack(const T& value)
 {
     mData[mEnd] = value;
-
     mEnd = (mEnd + 1) % Capacity;
+    
+    mFull = (mStart == mEnd);
+}
+
+template <typename T, std::size_t Capacity>
+inline
+void CircularBuffer<T, Capacity>::pushFront(const T& value)
+{
+    mStart = (mStart + Capacity - 1) % Capacity;
+    mData[mStart] = value;
+
     mFull = (mStart == mEnd);
 }
 

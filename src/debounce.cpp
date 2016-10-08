@@ -7,6 +7,8 @@ Debounce::Debounce(unsigned int latency)
 
 bool Debounce::process(const KeyMatrix::Mask& next)
 {
+    mCounter = (mCounter + 1) % mLatency;
+    
     if (mCounter == 0)
     {
         mDelta = mState;
@@ -16,16 +18,9 @@ bool Debounce::process(const KeyMatrix::Mask& next)
     }
     else
     {
-        if (mCounter == 1)
-        {
-            mDelta = KeyMatrix::Mask();
-        }
-        
         mCurrent &= next;
     }
     
-    mCounter = (mCounter + 1) % mLatency;
-
-    return (!mState.empty() || !mDelta.empty());
+    return (mCounter == 0 && !mDelta.empty());
 }
 

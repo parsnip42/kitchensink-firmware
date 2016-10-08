@@ -14,18 +14,18 @@ public:
     void processKey(const KeyId& keyId);
     
 public:
-    int count(const KeyId& keyId);
+    uint8_t count(const KeyId& keyId);
     
 private:
-    const uint32_t mTapDelay;
-    KeyId          mKeyId;
-    int            mCount;
-    uint32_t       mLastTap;
+    uint32_t mTapDelay;
+    KeyId    mKeyId;
+    uint32_t mLastTap;
+    uint8_t  mCount;
 };
 
 
 inline
-int Tapping::count(const KeyId& keyId)
+uint8_t Tapping::count(const KeyId& keyId)
 {
     if (keyId == mKeyId)
     {

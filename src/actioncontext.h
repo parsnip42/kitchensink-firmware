@@ -6,17 +6,17 @@
 class ActionContext
 {
 public:
-    ActionContext(KeyState::Value nState,
-                  int             nTaps);
+    ActionContext(KeyState nState,
+                  int      nTaps);
 
 public:
-    KeyState::Value state;
-    int             taps;
+    KeyState state;
+    int      taps;
 };
 
 inline
-ActionContext::ActionContext(KeyState::Value nState,
-                             int             nTaps)
+ActionContext::ActionContext(KeyState nState,
+                             int      nTaps)
     : state(nState)
     , taps(nTaps)
 { }

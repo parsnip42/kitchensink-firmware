@@ -6,31 +6,25 @@ AutoRepeat::AutoRepeat(uint32_t repeatDelay)
     : mRepeatDelay(repeatDelay)
 { }
 
-void AutoRepeat::processKey(const KeyId&    keyId,
-                            KeyState::Value state)
+void AutoRepeat::processKey(const KeyId& keyId,
+                            KeyState     state)
 {
     if (state == KeyState::kPressed)
     {
         mKeyId = keyId;
-        mHeldTime = 0;
+        mHeldTime = millis();
     }
-    else if (mKeyId == keyId)
-    {
-        if ((state == KeyState::kHeld) && (mHeldTime == 0))
-        {
-            mHeldTime = millis();
-        }
-        else if (state == KeyState::kReleased)
-        {             
-            mKeyId = KeyId::None;
-        }
+    else if (state == KeyState::kReleased)
+    {             
+        mKeyId = KeyId::None;
     }
 }
 
 KeyId AutoRepeat::activeKey() const
 {
-    if ((mHeldTime == 0)
-        || (millis() - mHeldTime) > mRepeatDelay)
+    auto held(millis() - mHeldTime);
+    
+    if (held > mRepeatDelay)
     {
         return mKeyId;
     }

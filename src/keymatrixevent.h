@@ -6,21 +6,21 @@
 class KeyMatrixEvent
 {
 public:
-    KeyMatrixEvent(int             nRow,
-                   int             nColumn,
-                   KeyState::Value nState);
+    KeyMatrixEvent(int      nRow,
+                   int      nColumn,
+                   KeyState nState);
     
 public:
-    int             row;
-    int             column;
-    KeyState::Value state;
+    int      row;
+    int      column;
+    KeyState state;
 };
 
 
 inline
-KeyMatrixEvent::KeyMatrixEvent(int             nRow,
-                               int             nColumn,
-                               KeyState::Value nState)
+KeyMatrixEvent::KeyMatrixEvent(int      nRow,
+                               int      nColumn,
+                               KeyState nState)
     : row(nRow)
     , column(nColumn)
     , state(nState)

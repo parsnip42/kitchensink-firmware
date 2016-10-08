@@ -2,16 +2,6 @@
 
 #include "kskeyboard.h"
 
-
-KeyHandler::Event::Event(KeyId           nKeyId,
-                         KeyState::Value nState,
-                         int             nTaps)
-    : keyId(nKeyId)
-    , state(nState)
-    , taps(nTaps)
-{ }
-
-
 KeyHandler::KeyHandler(KsKeyboard& keyboard)
     : mKeyboard(keyboard)
     , mLayerStack()

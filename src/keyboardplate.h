@@ -16,11 +16,12 @@ public:
                   const std::initializer_list<int>& columnMapping);
 
 public:
-    bool scan();
-
     template <typename Callback>
-    void dispatch(const Callback& callback);
-
+    void poll(const Callback& callback);
+    
+private:
+    bool scan();
+    
 private:
     KeyMatrix       mMatrix;
     Debounce        mDebounce;
@@ -33,11 +34,14 @@ private:
 
 template <typename Callback>
 inline
-void KeyboardPlate::dispatch(const Callback& callback)
+void KeyboardPlate::poll(const Callback& callback)
 {
-    mDispatcher.dispatch(mDebounce.state(),
-                         mDebounce.delta(),
-                         callback);
+    if (scan())
+    {
+        mDispatcher.dispatch(mDebounce.state(),
+                             mDebounce.delta(),
+                             callback);
+    }
 };
 
 #endif

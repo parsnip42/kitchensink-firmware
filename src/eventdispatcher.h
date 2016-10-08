@@ -48,12 +48,13 @@ void EventDispatcher::dispatch(const KeyMatrix::Mask& stateMask,
 
         int column(0);
         
-        while ((state || delta) && column < KeyMatrix::kColumns)
+        while (delta && column < KeyMatrix::kColumns)
         {
-            KeyState::Value keyState(KeyState::fromMatrix(state & 1, delta & 1));
-            
-            if (keyState)
+            if (delta & 1)
             {
+                KeyState keyState(
+                    static_cast<KeyState>(((int)state & 1) + 1));
+                    
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],
                                         keyState));

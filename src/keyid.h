@@ -10,15 +10,17 @@ class KeyId
 public:
     enum Type
     {
-        kKey      = 1,
-        kModifier = 2,
-        kAction   = 3,
+        kKey          = 1,
+        kModifier     = 2,
+        kAction       = 3,
+        kModifierMask = 4
     };
 
 public:
     static const KeyId None;
     static KeyId Action(int actionId);
     static KeyId Layer(int layerId);
+    static KeyId ModifierMask(uint8_t mask);
 
 public:
     KeyId();
@@ -63,6 +65,12 @@ inline
 KeyId KeyId::Layer(int layerId)
 {
     return KeyId(kModifier, ModifierId::Layer(layerId));
+}
+
+inline
+KeyId KeyId::ModifierMask(uint8_t mask)
+{
+    return KeyId(kModifierMask, mask);
 }
 
 inline

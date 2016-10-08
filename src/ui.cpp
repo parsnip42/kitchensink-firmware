@@ -142,7 +142,7 @@ void UI::menu(KeyHandler& keyHandler)
     
     while (!quit)
     {
-        if (keyHandler.poll([&](const KeyHandler::Event& event)
+        keyHandler.poll([&](const KeyEvent& event)
         {
             if (event.keyId.type() == KeyId::kKey)
             {
@@ -166,10 +166,6 @@ void UI::menu(KeyHandler& keyHandler)
                                 str[--len] = ' ';
                             }
                         }
-                        else if (keyHandler.modifierMask())
-                        {
-                            str[len++] = KeyMap::table()[event.keyId.value()].shift[0];
-                        }
                         else
                         {
                             str[len++] = KeyMap::table()[event.keyId.value()].dflt[0];
@@ -177,10 +173,9 @@ void UI::menu(KeyHandler& keyHandler)
                     }
                 }
             }
-        }))
-        {
-            paintText(28, 0, str);
-        }
+        });
+
+        paintText(28, 0, str);
     }
     
     mDisplay.clear();

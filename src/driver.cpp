@@ -2,6 +2,7 @@
 #include "actioncontext.h"
 #include "actionmanager.h"
 #include "actions.h"
+#include "circularbuffer.h"
 #include "ctrlutil.h"
 #include "defaultlayers.h"
 #include "display.h"
@@ -11,7 +12,7 @@
 #include "ui.h"
 #include "usbkeyboard.h"
 
-#include "SdFat.h"
+#include <SdFat.h>
 
 SdFat sd;
 
@@ -62,6 +63,8 @@ void loop() {
         }
     }
 
+    display.clear();
+
     KeyHandler keyHandler(keyboard);
     
     DefaultLayers::init(keyHandler);
@@ -69,6 +72,8 @@ void loop() {
     UsbKeyboard usbKeyboard;
     ActionManager actionManager;
 
+    CircularBuffer<KeyEvent, 100> eventQueue;
+    
     // actionManager.registerAction(0, Actions::layerModifier(keyboard, 1));
     // actionManager.registerAction(1, Actions::layerModifier(keyboard, 2));
     // actionManager.registerAction(3, Actions::toggleLayer(keyboard, 3));
@@ -87,7 +92,23 @@ void loop() {
                 //     display.clear();
                 // }
 
-                display.clear();
+                // display.clear();
+
+                // eventQueue.pushBack(KEY_T);
+                // eventQueue.pushBack(KEY_H);
+                // eventQueue.pushBack(KEY_I);
+                // eventQueue.pushBack(KEY_S);
+                // eventQueue.pushBack(KEY_SPACE);
+                // eventQueue.pushBack(KEY_I);
+                // eventQueue.pushBack(KEY_S);
+                // eventQueue.pushBack(KEY_SPACE);
+                // eventQueue.pushBack(KEY_A);
+                // eventQueue.pushBack(KEY_SPACE);
+                // eventQueue.pushBack(KEY_T);
+                // eventQueue.pushBack(KEY_E);
+                // eventQueue.pushBack(KEY_S);
+                // eventQueue.pushBack(KEY_T);
+
             }
         });
 
@@ -112,42 +133,44 @@ void loop() {
             }
         });
 
-    auto callback([&](const KeyHandler::Event& event)
+    auto callback([&](const KeyEvent& event)
     {
-        KeyId keyId(event.keyId);
-
-        if (keyId.type() == KeyId::kModifier)
-        {
-            usbKeyboard.markDirty();
-        }
-        else if (keyId.type() == KeyId::kKey)
-        {
-
-            if (event.state != KeyState::kReleased)
-            {
-                usbKeyboard.setKey(keyId.value());
-            }
-                              
-            if (event.state != KeyState::kHeld)
-            {
-                usbKeyboard.markDirty();
-            }
-
-        }
-        else if (keyId.type() == KeyId::kAction)
-        {
-            actionManager.fireAction(keyId.value(),
-                                     ActionContext(event.state,
-                                                   event.taps));
-        }
+        eventQueue.pushBack(event);
     });
 
     while (1)
     {
-        if (keyHandler.poll(callback))
+        keyHandler.poll(callback);
+
+        while (!eventQueue.empty())
         {
-            usbKeyboard.setModifiers(keyHandler.modifierMask());
-            usbKeyboard.update();
+            auto event(eventQueue.pop());
+
+            const auto& keyId(event.keyId);
+
+            if (keyId.type() == KeyId::kModifierMask)
+            {
+                usbKeyboard.setModifiers(keyId.value());
+            }
+            else if (keyId.type() == KeyId::kKey)
+            {
+                if (event.state == KeyState::kPressed)
+                {
+                    usbKeyboard.pressKey(keyId.value());
+                }
+
+                if (event.state == KeyState::kReleased)
+                {
+                    usbKeyboard.releaseKey(keyId.value());
+                }
+
+            }
+            else if (keyId.type() == KeyId::kAction)
+            {
+                actionManager.fireAction(keyId.value(),
+                                         ActionContext(event.state,
+                                                       event.taps));
+            }
         }
 
         // char outStr[129];

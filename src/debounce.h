@@ -1,7 +1,7 @@
 #ifndef INCLUDED_DEBOUNCE_H
 #define INCLUDED_DEBOUNCE_H
 
-#include <keymatrix.h>
+#include "keymatrix.h"
 
 class Debounce
 {

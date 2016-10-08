@@ -10,11 +10,11 @@ TEST(CircularBuffer, Default)
     ASSERT_EQ(cb.size(), 0);
 }
 
-TEST(CircularBuffer, SimplePushPop)
+TEST(CircularBuffer, SimplePushBackPop)
 {
     CircularBuffer<int, 5> cb;
 
-    cb.push(123);
+    cb.pushBack(123);
     
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 1);
@@ -23,15 +23,15 @@ TEST(CircularBuffer, SimplePushPop)
     ASSERT_EQ(cb.size(), 0);    
 }
 
-TEST(CircularBuffer, SimplePushFull)
+TEST(CircularBuffer, SimplePushBackFull)
 {
     CircularBuffer<int, 5> cb;
 
-    cb.push(0);
-    cb.push(1);
-    cb.push(2);
-    cb.push(3);
-    cb.push(4);
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+    cb.pushBack(3);
+    cb.pushBack(4);
 
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 5);
@@ -46,14 +46,14 @@ TEST(CircularBuffer, SimplePushFull)
     ASSERT_EQ(cb.size(), 0);
 }
 
-TEST(CircularBuffer, OverlapPushPop)
+TEST(CircularBuffer, OverlapPushBackPop)
 {
     CircularBuffer<int, 5> cb;
 
-    cb.push(0);
-    cb.push(1);
-    cb.push(2);
-    cb.push(3);
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+    cb.pushBack(3);
 
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 4);
@@ -66,10 +66,10 @@ TEST(CircularBuffer, OverlapPushPop)
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
 
-    cb.push(0);
-    cb.push(1);
-    cb.push(2);
-    cb.push(3);
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+    cb.pushBack(3);
 
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 4);
@@ -83,13 +83,13 @@ TEST(CircularBuffer, OverlapPushPop)
     ASSERT_EQ(cb.size(), 0);
 }
 
-TEST(CircularBuffer, OverlapPushFull)
+TEST(CircularBuffer, OverlapPushBackFull)
 {
     CircularBuffer<int, 5> cb;
 
-    cb.push(0);
-    cb.push(1);
-    cb.push(2);
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
 
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 3);
@@ -98,11 +98,11 @@ TEST(CircularBuffer, OverlapPushFull)
     ASSERT_EQ(cb.pop(), 1);
     ASSERT_EQ(cb.pop(), 2);
 
-    cb.push(0);
-    cb.push(1);
-    cb.push(2);
-    cb.push(3);
-    cb.push(4);
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+    cb.pushBack(3);
+    cb.pushBack(4);
 
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 5);
@@ -112,6 +112,79 @@ TEST(CircularBuffer, OverlapPushFull)
     ASSERT_EQ(cb.pop(), 2);
     ASSERT_EQ(cb.pop(), 3);
     ASSERT_EQ(cb.pop(), 4);
+
+    ASSERT_TRUE(cb.empty());
+    ASSERT_EQ(cb.size(), 0);
+}
+
+TEST(CircularBuffer, SimplePushFrontPop)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushFront(123);
+    
+    ASSERT_FALSE(cb.empty());
+    ASSERT_EQ(cb.size(), 1);
+    ASSERT_EQ(cb.pop(), 123);
+    ASSERT_TRUE(cb.empty());
+    ASSERT_EQ(cb.size(), 0);    
+}
+
+TEST(CircularBuffer, SimplePushFrontFull)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushFront(0);
+    cb.pushFront(1);
+    cb.pushFront(2);
+    cb.pushFront(3);
+    cb.pushFront(4);
+
+    ASSERT_FALSE(cb.empty());
+    ASSERT_EQ(cb.size(), 5);
+
+    ASSERT_EQ(cb.pop(), 4);
+    ASSERT_EQ(cb.pop(), 3);
+    ASSERT_EQ(cb.pop(), 2);
+    ASSERT_EQ(cb.pop(), 1);
+    ASSERT_EQ(cb.pop(), 0);
+
+    ASSERT_TRUE(cb.empty());
+    ASSERT_EQ(cb.size(), 0);
+}
+
+TEST(CircularBuffer, OverlapPushFrontPop)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushFront(0);
+    cb.pushFront(1);
+    cb.pushFront(2);
+    cb.pushFront(3);
+
+    ASSERT_FALSE(cb.empty());
+    ASSERT_EQ(cb.size(), 4);
+
+    ASSERT_EQ(cb.pop(), 3);
+    ASSERT_EQ(cb.pop(), 2);
+    ASSERT_EQ(cb.pop(), 1);
+    ASSERT_EQ(cb.pop(), 0);
+
+    ASSERT_TRUE(cb.empty());
+    ASSERT_EQ(cb.size(), 0);
+
+    cb.pushFront(0);
+    cb.pushFront(1);
+    cb.pushFront(2);
+    cb.pushFront(3);
+
+    ASSERT_FALSE(cb.empty());
+    ASSERT_EQ(cb.size(), 4);
+
+    ASSERT_EQ(cb.pop(), 3);
+    ASSERT_EQ(cb.pop(), 2);
+    ASSERT_EQ(cb.pop(), 1);
+    ASSERT_EQ(cb.pop(), 0);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
