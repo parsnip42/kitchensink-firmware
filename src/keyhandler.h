@@ -16,14 +16,16 @@ public:
 
 public:
     void poll(EventQueue& eventQueue);
-    void pressLayer(int index, EventQueue& eventQueue);
-    void releaseLayer(int index, EventQueue& eventQueue);
         
 public:
     void assignLayer(int index, const Layer& layer);
-    void setLayer(int index, bool enabled);
-    bool layerEnabled(int layer) const;
-    
+    void setLayer(int index, bool enabled, EventQueue& eventQueue);
+    bool layerEnabled(int index) const;
+
+private:
+    void pressLayer(int index, EventQueue& eventQueue);
+    void releaseLayer(int index, EventQueue& eventQueue);
+
 private:
     KsKeyboard& mKeyboard;
     LayerStack  mLayerStack;

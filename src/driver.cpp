@@ -162,20 +162,7 @@ void loop() {
                     int layerId(keyId.value() - 10);
                     bool state(event.state == KeyState::kPressed);
 
-                    if (state != keyHandler.layerEnabled(layerId))
-                    {
-                        if (state)
-                        {
-                            keyHandler.pressLayer(layerId, eventQueue);
-                            keyHandler.setLayer(layerId, state);
-                        }
-                        else
-                        {
-                            keyHandler.setLayer(layerId, state);
-                            keyHandler.releaseLayer(layerId, eventQueue);
-                        }
-                        
-                    }
+                    keyHandler.setLayer(layerId, state, eventQueue);
                 }
             }
             else if (keyId.type() == KeyId::kKey)

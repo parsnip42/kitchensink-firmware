@@ -15,14 +15,29 @@ void KeyHandler::assignLayer(int index, const Layer& layer)
     mLayerStack.assignLayer(index, layer);
 }
 
-void KeyHandler::setLayer(int index, bool enabled)
+void KeyHandler::setLayer(int         index,
+                          bool        enabled,
+                          EventQueue& eventQueue)
 {
-    mLayerStack.setLayer(index, enabled);
+    if (enabled != mLayerStack.enabled(index))
+    {
+        if (enabled)
+        {
+            pressLayer(index, eventQueue);
+            mLayerStack.setLayer(index, enabled);
+
+        }
+        else
+        {
+            mLayerStack.setLayer(index, enabled);
+            releaseLayer(index, eventQueue);
+        }
+    }
 }
 
-bool KeyHandler::layerEnabled(int layer) const
+bool KeyHandler::layerEnabled(int index) const
 {
-    return mLayerStack.enabled(layer);
+    return mLayerStack.enabled(index);
 }
 
 void KeyHandler::poll(EventQueue& eventQueue)
