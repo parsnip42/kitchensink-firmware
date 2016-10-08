@@ -40,10 +40,8 @@ void KeyMatrix::config()
     Wire.endTransmission();
 }
 
-bool KeyMatrix::scan()
+void KeyMatrix::scan()
 {
-    bool populated(false);
-    
     std::size_t index(0);
     int rowMask(mRowMask);
 
@@ -84,11 +82,8 @@ bool KeyMatrix::scan()
         row &= mColMask;
         
         mState[index] = Mask::Row(row);
-        populated |= (row != 0);
         
         rowMask &= ~rowBit;
         ++index;
     }
-
-    return populated;
 }

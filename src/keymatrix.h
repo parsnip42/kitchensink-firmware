@@ -22,7 +22,7 @@ public:
     KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask);
 
 public:
-    bool scan();
+    void scan();
     
     const Mask& state() const;
     

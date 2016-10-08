@@ -13,25 +13,23 @@ bool Debounce::process(const KeyMatrix::Mask& next)
     
     for (int row(0); row < KeyMatrix::kRows; ++row)
     {
-        // if (next[row] != mLast[row])
-        // {
-        //     mStableCount[row] = 0;
-        // }
-        // else if (++mStableCount[row] > mLatency)
-        // {
-        //     mDelta[row] = mState[row];
-        //     mDelta[row] ^= next[row];
-        //     mState[row] = next[row];
+        mDelta[row] = KeyMatrix::Mask::Row();
+        
+        if (next[row] != mLast[row])
+        {
+            mStableCount[row] = 0;
+        }
+        else if (++mStableCount[row] > mLatency)
+        {
+            mDelta[row] = mState[row];
+            mDelta[row] ^= next[row];
+            mState[row] = next[row];
             
-        //     mStableCount[row] = 0;
-        // }
-        
-        // mLast[row] = next[row];
+            mStableCount[row] = 0;
+        }
 
-        mDelta[row] = mState[row];
-        mDelta[row] ^= next[row];
-        mState[row] = next[row];
-        
+        mLast[row] = next[row];
+
         if (mDelta[row].data() || mState[row].data())
         {
             populated = true;
@@ -40,3 +38,4 @@ bool Debounce::process(const KeyMatrix::Mask& next)
 
     return populated;
 }
+

@@ -18,8 +18,6 @@ public:
 
 public:
     const Data& data() const;
-    Data& data();
-
     static std::size_t size();
     bool empty() const;
     void set(std::size_t n);
@@ -71,13 +69,6 @@ Bitmask<Size>::Bitmask(const Data& data)
 template <std::size_t Size>
 inline
 const typename Bitmask<Size>::Data& Bitmask<Size>::data() const
-{
-    return mData;
-}
-
-template <std::size_t Size>
-inline
-typename Bitmask<Size>::Data& Bitmask<Size>::data()
 {
     return mData;
 }

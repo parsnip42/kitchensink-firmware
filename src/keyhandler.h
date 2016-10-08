@@ -56,7 +56,9 @@ template<typename Callback>
 inline
 bool KeyHandler::poll(const Callback& callback)
 {
-    return mKeyboard.poll([&](const KsKeyboard::Event& event)
+    bool eventProcessed(false);
+    
+    mKeyboard.poll([&](const KsKeyboard::Event& event)
     {
         KeyId keyId(mLayerStack.at(event.row, event.column));
 
@@ -99,14 +101,18 @@ bool KeyHandler::poll(const Callback& callback)
                     mModifierMask = (mModifierMask & clear) | set;
 
                     callback(Event(keyId, event.state, count));
+                    eventProcessed = true;
                 }
             }
         }
         else
         {
             callback(Event(keyId, event.state, count));
+            eventProcessed = true;
         }
     });
+
+    return eventProcessed;
 }
 
 inline
