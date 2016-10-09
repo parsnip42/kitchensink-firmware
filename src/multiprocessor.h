@@ -22,6 +22,10 @@ public:
     
 private:
     std::array<Multi, 40> mMulti;
+
+private:
+    MultiProcessor(const MultiProcessor&) = delete;
+    MultiProcessor& operator=(const MultiProcessor&) = delete;
 };
 
 #endif

@@ -38,7 +38,10 @@ void init(KeyHandler& keyHandler)
                     0, 0, 0, KEY_HOME, KEY_LEFT,KEY_DOWN,KEY_RIGHT, 0, 0, 0 },
                 
                 { 0, 0, 0, KEY_LEFT_BRACE, KEY_RIGHT_BRACE, KeyId::Multi(4), KeyId::Multi(5), 0, 0, 0,
-                    0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 }
+                    0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 },
+                
+                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                    0, 0, KeyId::Multi(11), 0, 0, 0, 0, 0, 0, 0 }
             }));
     
     keyHandler.assignLayer(2, Layer({

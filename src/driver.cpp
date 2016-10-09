@@ -139,10 +139,10 @@ void loop() {
     multiProcessor.assign(3, Multi(ModifierId::kLShift, KEY_0));
     multiProcessor.assign(4, Multi(ModifierId::kLShift, KEY_COMMA));
     multiProcessor.assign(5, Multi(ModifierId::kLShift, KEY_PERIOD));
-
     
     multiProcessor.assign(10, Multi(ModifierId::kLShift, KEY_MINUS));
-    
+    multiProcessor.assign(11, Multi(ModifierId::kLCtrl, KEY_SPACE));
+
     while (1)
     {
         keyHandler.poll(eventQueue);
@@ -171,14 +171,6 @@ void loop() {
 
         usbKeyboard.update();
 
-        // char outStr[129];
-        // sprintf(outStr,"|%d %d %d %d|",
-        //         (int)keyHandler.mModifierSet[0].mRefCount,
-        //         (int)keyHandler.mModifierSet[1].mRefCount,
-        //         (int)keyHandler.mModifierSet[2].mRefCount,
-        //         (int)keyHandler.mModifierSet[3].mRefCount);
-        // ui.paintText(48, 0, outStr);
-
 
         // if (displayDebug) 
         // {
@@ -197,12 +189,5 @@ void loop() {
         //             (int)matrixB.state()[3].data(),
         //             (int)matrixB.state()[4].data());
         //     ui.paintText(48, 14, outStr);
-
-        //     sprintf(outStr,"%d / %d ",
-        //             (int)debounceA.filtered(),
-        //             (int)debounceB.filtered());
-        //     ui.paintText(60, 42, outStr);
-        // }
-
     }
 }
