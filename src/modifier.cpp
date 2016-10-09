@@ -1,19 +1,36 @@
 #include "modifier.h"
 
 Modifier::Modifier()
-    : mRefCount(0)
+    : mState(false)
+    , mSingleTrigger(false)
 { }
 
-KeyState Modifier::pressed()
+bool Modifier::processEvent(const KeyEvent& keyEvent)
 {
-    mRefCount = 1;
+    const auto& keyId(keyEvent.keyId);
+    const auto& keyState(keyEvent.state);
     
-    return KeyState::kPressed;
-}
+    switch (keyId.modifierType())
+    {
+    case KeyId::ModifierType::kToggle:
+        if (keyState == KeyState::kPressed)
+        {
+            mState = !mState;
+        }
+        break;
 
-KeyState Modifier::released()
-{
-    mRefCount = 1;
-        
-    return KeyState::kReleased;
+    default:
+        if (keyState == KeyState::kPressed)
+        {
+            mState = true;
+        }
+        else if (keyState == KeyState::kReleased)
+        {
+            mState = false;
+        }
+        break;
+
+    }
+
+    return mState;
 }

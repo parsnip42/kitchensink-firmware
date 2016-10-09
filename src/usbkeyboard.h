@@ -11,16 +11,18 @@ public:
     UsbKeyboard();
 
 public:
-    void processKey(int keyCode, KeyState state);
-    void processModifier(int modifier, KeyState state);
-
+    void processKey(uint8_t keyCode, KeyState state);
+    void processModifier(uint8_t modifier, KeyState state);
+    void update();
+    
 private:
-    void pressKey(int keyCode);
-    void releaseKey(int keyCode);
+    void pressKey(uint8_t keyCode);
+    void releaseKey(uint8_t keyCode);
 
 private:
     int     mKeyNum;
     uint8_t mKeyMask[256 >> 3];
+    bool    mDirty;
     
 private:
     UsbKeyboard(const UsbKeyboard&) = delete;

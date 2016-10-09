@@ -1,5 +1,6 @@
 #include "keyhandler.h"
 
+#include "eventqueue.h"
 #include "kskeyboard.h"
 
 KeyHandler::KeyHandler(KsKeyboard& keyboard)

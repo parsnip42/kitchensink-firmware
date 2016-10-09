@@ -12,10 +12,10 @@ namespace DefaultLayers
 void init(KeyHandler& keyHandler)
 {
     keyHandler.assignLayer(0, Layer({
-                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(3),0,
+                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(KeyId::ModifierType::kToggle, 3),0,
                     KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
-                { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
+                { KEY_ESC,KeyId::Multi(10),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
                     KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
                 
                 {0,KeyId::Layer(2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
@@ -34,10 +34,10 @@ void init(KeyHandler& keyHandler)
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     0, 0, KEY_BACKSPACE, KEY_PAGE_UP, KEY_END, KEY_UP, 0, 0, 0 },
                 
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                { 0, 0, 0, KeyId::Multi(0), KeyId::Multi(1), KeyId::Multi(2), KeyId::Multi(3), 0, 0, 0,
                     0, 0, 0, KEY_HOME, KEY_LEFT,KEY_DOWN,KEY_RIGHT, 0, 0, 0 },
                 
-                { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                { 0, 0, 0, KEY_LEFT_BRACE, KEY_RIGHT_BRACE, KeyId::Multi(4), KeyId::Multi(5), 0, 0, 0,
                     0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 }
             }));
     
@@ -58,7 +58,7 @@ void init(KeyHandler& keyHandler)
             }));
     
     keyHandler.assignLayer(3, Layer({
-                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,KeyId::Layer(3),0,
+                { KEY_TILDE,KEY_NON_US_BS,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_NUM,0,0,
                     KEY_F1,KEY_F2,KEY_QUOTE,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
                 { KEY_ESC,KeyId::Action(4),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,

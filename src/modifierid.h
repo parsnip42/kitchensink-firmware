@@ -3,10 +3,7 @@
 
 #include <cstdint>
 
-namespace ModifierId
-{
-
-enum Value
+enum class ModifierId : uint8_t
 {
     kLCtrl  = 0,
     kLShift = 1,
@@ -17,13 +14,5 @@ enum Value
     kRAlt   = 6,
     kRGui   = 7
 };
-
-inline
-int Layer(int layerId)
-{
-    return layerId + 10;
-}
-
-}
 
 #endif

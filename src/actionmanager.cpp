@@ -1,7 +1,23 @@
 #include "actionmanager.h"
 
+#include "actioncontext.h"
+
 ActionManager::ActionManager()
 { }
+
+bool ActionManager::processEvent(const KeyEvent& event, EventQueue&)
+{
+    if (event.keyId.type() == KeyId::kAction)
+    {
+        fireAction(event.keyId.value(),
+                   ActionContext(event.state,
+                                 event.taps));
+        
+        return true;
+    }
+
+    return false;
+}
 
 void ActionManager::fireAction(int action, const ActionContext& context) const
 {

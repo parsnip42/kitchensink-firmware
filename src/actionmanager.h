@@ -1,10 +1,14 @@
 #ifndef INCLUDED_ACTIONMANAGER_H
 #define INCLUDED_ACTIONMANAGER_H
 
+#include "keyevent.h"
+#include "eventqueue.h"
+
 #include <array>
 #include <functional>
 
 class ActionContext;
+class EventQueue;
 
 class ActionManager
 {
@@ -18,9 +22,12 @@ public:
     ActionManager();
 
 public:
-    void fireAction(int action, const ActionContext& context) const;
+    bool processEvent(const KeyEvent& event, EventQueue&);
     void registerAction(int action, const Func& func);
-
+    
+private:
+    void fireAction(int action, const ActionContext& context) const;
+    
 private:
     std::array<Func, kMaxActions> mActions;
 

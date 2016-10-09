@@ -4,6 +4,17 @@
 #include "circularbuffer.h"
 #include "keyevent.h"
 
-typedef CircularBuffer<KeyEvent, 100> EventQueue;
+class EventQueue : public CircularBuffer<KeyEvent, 100>
+{
+public:
+    EventQueue();
+};
+
+
+inline
+EventQueue::EventQueue()
+    : CircularBuffer<KeyEvent, 100>()
+{ }
+
 
 #endif

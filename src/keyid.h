@@ -10,29 +10,45 @@ class KeyId
 public:
     enum Type
     {
-        kKey          = 1,
-        kModifier     = 2,
-        kAction       = 3,
-        kModifierMask = 4
+        kKey      = 0,
+        kModifier = 1,
+        kLayer    = 2,
+        kMulti    = 3,
+        kMacro    = 4,
+        kSMacro   = 5,
+        kAction   = 6
     };
 
+    enum class ModifierType : uint8_t
+    {
+        kHold   = 0,
+        kToggle = 1,
+        kSingle = 2
+    };
+    
 public:
     static const KeyId None;
     static KeyId Action(int actionId);
     static KeyId Layer(int layerId);
-    static KeyId ModifierMask(uint8_t mask);
+    static KeyId Layer(ModifierType modifierType,
+                       int          layerId);
+    static KeyId Multi(int multiId);
 
 public:
     KeyId();
     KeyId(int keyCode);
-    KeyId(ModifierId::Value modifier);
+    KeyId(ModifierId modifier);
     
 private:
     KeyId(uint8_t type, uint8_t value);
+    KeyId(uint8_t type, uint8_t subType, uint8_t value);
 
 public:
     uint8_t type() const;
+    uint8_t subType() const;
     uint8_t value() const;
+
+    ModifierType modifierType() const;
     
 private:
     uint16_t mData;
@@ -64,13 +80,22 @@ KeyId KeyId::Action(int actionId)
 inline
 KeyId KeyId::Layer(int layerId)
 {
-    return KeyId(kModifier, ModifierId::Layer(layerId));
+    return Layer(ModifierType::kHold, layerId);
 }
 
 inline
-KeyId KeyId::ModifierMask(uint8_t mask)
+KeyId KeyId::Layer(ModifierType modifierType,
+                   int          layerId)
 {
-    return KeyId(kModifierMask, mask);
+    return KeyId(kLayer,
+                 static_cast<uint8_t>(modifierType),
+                 layerId);
+}
+
+inline
+KeyId KeyId::Multi(int multiId)
+{
+    return KeyId(kMulti, multiId);
 }
 
 inline
@@ -80,31 +105,50 @@ KeyId::KeyId()
 
 inline
 KeyId::KeyId(int keyCode)
-    : mData(((keyCode >> 6) & 0xff00) | (keyCode & 0xff))
-
+    : mData(keyCode & 0xff)
 { }
 
 inline
 KeyId::KeyId(uint8_t type, uint8_t value)
-    : mData(type << 8 | value)
+    : mData((type & 0xf) << 12 |
+            (value & 0xff))
 { }
 
 inline
-KeyId::KeyId(ModifierId::Value value)
-    : mData(2 << 8 | value)
+KeyId::KeyId(uint8_t type, uint8_t subType, uint8_t value)
+    : mData((type & 0xf) << 12 |
+            (subType & 0xf) << 8 |
+            value)
+{ }
+
+inline
+KeyId::KeyId(ModifierId value)
+    : mData(1 << 12 | static_cast<uint8_t>(value))
 { }
 
 
 inline
 uint8_t KeyId::type() const
 {
-    return (mData >> 8);
+    return (mData >> 12) & 0xf;
+}
+
+inline
+uint8_t KeyId::subType() const
+{
+    return (mData >> 8) & 0xf;
 }
 
 inline
 uint8_t KeyId::value() const
 {
     return (mData & 0xff);
+}
+
+inline
+KeyId::ModifierType KeyId::modifierType() const
+{
+    return static_cast<KeyId::ModifierType>(subType());
 }
 
 #endif

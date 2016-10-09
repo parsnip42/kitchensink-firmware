@@ -1,7 +1,7 @@
 #ifndef INCLUDED_MODIFIER_H
 #define INCLUDED_MODIFIER_H
 
-#include "keystate.h"
+#include "keyevent.h"
 
 #include <cstdint>
 
@@ -11,11 +11,11 @@ public:
     Modifier();
 
 public:
-    KeyState pressed();
-    KeyState released();
+    bool processEvent(const KeyEvent& keyEvent);
     
 private:
-    uint8_t mRefCount;
+    bool mState;
+    bool mSingleTrigger;
 };
 
 #endif

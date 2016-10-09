@@ -1,13 +1,14 @@
 #ifndef INCLUDED_KEYHANDLER_H
 #define INCLUDED_KEYHANDLER_H
 
-#include "eventqueue.h"
 #include "keyevent.h"
 #include "keyid.h"
 #include "keystate.h"
 #include "kskeyboard.h"
 #include "layerstack.h"
 #include "tapping.h"
+
+class EventQueue;
 
 class KeyHandler
 {

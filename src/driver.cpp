@@ -9,7 +9,8 @@
 #include "keyhandler.h"
 #include "kskeyboard.h"
 #include "layer.h"
-#include "modifierset.h"
+#include "modifierprocessor.h"
+#include "multiprocessor.h"
 #include "ui.h"
 #include "usbkeyboard.h"
 
@@ -86,6 +87,22 @@ void loop() {
                 display.clear();
             }
         });
+    
+    actionManager.registerAction(
+        4,
+        [&](const ActionContext& context)
+        {
+            if (context.state == KeyState::kPressed)
+            {
+                eventQueue.pushBack(KeyEvent(ModifierId::kLShift, KeyState::kPressed));
+                eventQueue.pushBack(KeyEvent(KEY_MINUS, KeyState::kPressed));
+            }
+            else if (context.state == KeyState::kReleased)
+            {
+                eventQueue.pushBack(KeyEvent(KEY_MINUS, KeyState::kReleased));
+                eventQueue.pushBack(KeyEvent(ModifierId::kLShift, KeyState::kReleased));
+            }
+        });
 
     actionManager.registerAction(
         5,
@@ -113,8 +130,19 @@ void loop() {
         eventQueue.pushBack(event);
     });
     
-    ModifierSet modifierSet;
+    ModifierProcessor modifierProcessor(keyHandler);
+    MultiProcessor multiProcessor;
 
+    multiProcessor.assign(0, Multi(ModifierId::kLShift, KEY_LEFT_BRACE));
+    multiProcessor.assign(1, Multi(ModifierId::kLShift, KEY_RIGHT_BRACE));
+    multiProcessor.assign(2, Multi(ModifierId::kLShift, KEY_9));
+    multiProcessor.assign(3, Multi(ModifierId::kLShift, KEY_0));
+    multiProcessor.assign(4, Multi(ModifierId::kLShift, KEY_COMMA));
+    multiProcessor.assign(5, Multi(ModifierId::kLShift, KEY_PERIOD));
+
+    
+    multiProcessor.assign(10, Multi(ModifierId::kLShift, KEY_MINUS));
+    
     while (1)
     {
         keyHandler.poll(eventQueue);
@@ -127,29 +155,21 @@ void loop() {
 
             if (keyId.type() == KeyId::kModifier)
             {
-                if (keyId.value() < 10)
-                {
-                    usbKeyboard.processModifier(keyId.value(), event.state);
-                }
-                else
-                {
-                    int layerId(keyId.value() - 10);
-                    bool state(event.state == KeyState::kPressed);
-
-                    keyHandler.setLayer(layerId, state, eventQueue);
-                }
+                usbKeyboard.processModifier(keyId.value(), event.state);
             }
             else if (keyId.type() == KeyId::kKey)
             {
                 usbKeyboard.processKey(keyId.value(), event.state);
             }
-            else if (keyId.type() == KeyId::kAction)
+            else
             {
-                actionManager.fireAction(keyId.value(),
-                                         ActionContext(event.state,
-                                                       event.taps));
+                modifierProcessor.processEvent(event, eventQueue);
+                multiProcessor.processEvent(event, eventQueue);
+                actionManager.processEvent(event, eventQueue);
             }
         }
+
+        usbKeyboard.update();
 
         // char outStr[129];
         // sprintf(outStr,"|%d %d %d %d|",
