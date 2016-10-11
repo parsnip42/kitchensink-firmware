@@ -6,6 +6,7 @@
 #include "keyhandler.h"
 #include "keymap.h"
 
+#include <core_pins.h>
 #include <string.h>
 
 namespace
@@ -58,46 +59,49 @@ void UI::paintText(int x, int y, const char* str)
     }
 }
 
-void UI::paintText(int x, int y, const char* str, bool inv)
+void UI::paintText(int x, int y, const char* str, bool inv, uint8_t fg, uint8_t bg)
 {
-    static const uint8_t color(0xf);
     static const int kCharHeight(14);
     
     int len(strlen(str));
     
     mDisplay.initRegion(x, y, len << 3, kCharHeight);
+
+    if (inv)
+    {
+        uint8_t t(fg);
+        fg = bg;
+        bg = t;
+    }
+
+    uint8_t colorMap[] = {
+        uint8_t(bg | (bg << 4)),
+        uint8_t(bg | (fg << 4)),
+        uint8_t(fg | (bg << 4)),
+        uint8_t(fg | (fg << 4)),
+    };
     
     for (int y(0); y < kCharHeight; ++y)
     {
         for (int x(0); x < len; ++x)
         {
-            unsigned char a0(0);
-            unsigned char a1(0);
-            unsigned char a2(0);
-            unsigned char a3(0);                
-
             if (str[x] > 32 && str[x] < 127)
             {
-                unsigned char c(charset[str[x] - 33 + (y * 94)]);
-                
-                a0 = (((c>>7) & 1) * color) | ((c>>6 & 1) * (color << 4));
-                a1 = (((c>>5) & 1) * color) | ((c>>4 & 1) * (color << 4));
-                a2 = (((c>>3) & 1) * color) | ((c>>2 & 1) * (color << 4));
-                a3 = (((c>>1) & 1) * color) | ((c & 1)    * (color << 4));
-            }
+                uint8_t c(charset[str[x] - 33 + (y * 94)]);
 
-            if (inv)
-            {
-                a0 = ~a0;
-                a1 = ~a1;
-                a2 = ~a2;
-                a3 = ~a3;
+                mDisplay.writeData(colorMap[c & 0x3]);
+                mDisplay.writeData(colorMap[(c >> 2) & 0x3]);
+                mDisplay.writeData(colorMap[(c >> 4) & 0x3]);
+                mDisplay.writeData(colorMap[(c >> 6) & 0x3]);
+
             }
-            
-            mDisplay.writeData(a3);
-            mDisplay.writeData(a2);
-            mDisplay.writeData(a1);
-            mDisplay.writeData(a0);
+            else if (str[x] == 32)
+            {
+                mDisplay.writeData(bg | (bg << 4));
+                mDisplay.writeData(bg | (bg << 4));
+                mDisplay.writeData(bg | (bg << 4));
+                mDisplay.writeData(bg | (bg << 4));
+            }
         }
     }
 }
@@ -110,8 +114,18 @@ void UI::menu(KeyHandler& keyHandler,
     bool quit(false);
     int selected(0);
     
-    bool repaint(true);
-    
+    for (int color = 0; color <= 0xf; ++color)
+    {
+        paintText(28, 0,  "             Macros             ", selected == 0, color);
+        paintText(28, 14, "             Display            ", selected == 1, color);
+        paintText(28, 28, "          Configuration         ", selected == 2, color);
+        paintText(28, 42, "             System             ", selected == 3, color);
+        delay(4);
+    }
+
+    int counter(0);
+    mDisplay.scroll(counter);
+
     while (!quit)
     {    
         keyHandler.poll(eventQueue);
@@ -146,24 +160,47 @@ void UI::menu(KeyHandler& keyHandler,
             if (event.keyId.value() == 82 && event.state == KeyState::kPressed)
             {
                 selected = (selected + 3) % 4;
-                repaint = true;
+                
+                for (int i = 0; i < 14; i++)
+                {
+                    counter--;
+                    mDisplay.scroll(counter);
+                    delay(10);
+                }
+                
+                paintText(28, 0,  "             Macros             ", selected == 0);
+                paintText(28, 14, "             Display            ", selected == 1);
+                paintText(28, 28, "          Configuration         ", selected == 2);
+                paintText(28, 42, "             System             ", selected == 3);
             }
             
             if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
             {
                 selected = (selected + 1) % 4;
-                repaint = true;
+
+                paintText(28, 0,  "             Macros             ", selected == 0);
+                paintText(28, 14, "             Display            ", selected == 1);
+                paintText(28, 28, "          Configuration         ", selected == 2);
+                paintText(28, 42, "             System             ", selected == 3);
+
+                for (int i = 0; i < 14; i++)
+                {
+                    counter++;
+                    mDisplay.scroll(counter);
+                    delay(10);
+                }
+                
             }
         }
+    }
 
-        if (repaint)
-        {
-            paintText(28, 0,  "             Macros             ", selected == 0);
-            paintText(28, 14, "             Display            ", selected == 1);
-            paintText(28, 28, "          Configuration         ", selected == 2);
-            paintText(28, 42, "             System             ", selected == 3);
-            repaint = false;
-        }
+    for (int color = 0xf; color >= 0; --color)
+    {
+        paintText(28, 0,  "             Macros             ", selected == 0, color);
+        paintText(28, 14, "             Display            ", selected == 1, color);
+        paintText(28, 28, "          Configuration         ", selected == 2, color);
+        paintText(28, 42, "             System             ", selected == 3, color);
+        delay(4);
     }
 
     // AutoRepeat autoRepeat(660);

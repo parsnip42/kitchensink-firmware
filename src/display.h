@@ -13,6 +13,8 @@ public:
     void clear();
 
     void initRegion(int x, int y, int w, int h);
+
+    void scroll(uint8_t value);
     
     template <typename Iterator>
     void drawRegion(int x, int y, int w, int h, Iterator begin, Iterator end);

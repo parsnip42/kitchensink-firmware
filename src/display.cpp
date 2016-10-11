@@ -15,18 +15,18 @@ const int dc = 21;
 const int reset = 22;
 const int csrw = 23;
 
-void writeBus(unsigned char data, int type)
-{
-    digitalWrite(dc, type);
-    digitalWrite(csrw, 0);
+// void writeBus(unsigned char data, int type)
+// {
+//     digitalWriteFast(dc, type);
+//     digitalWriteFast(csrw, 0);
 
-    for (size_t i = 0; i < db_count; ++i)
-    {
-        digitalWrite(db[i], (data >> i) & 1);
-    }
- 
-    digitalWrite(csrw, 1);
-}
+//     for (size_t i = 0; i < db_count; ++i)
+//     {
+//         digitalWriteFast(db[i], (data >> i) & 1);
+//     }
+    
+//     digitalWriteFast(csrw, 1);
+// }
 
 }
 
@@ -44,11 +44,11 @@ void Display::init()
     pinMode(reset, OUTPUT);
     pinMode(csrw, OUTPUT);
 
-    digitalWrite(reset, HIGH);
+    digitalWriteFast(reset, HIGH);
     delay(200);
-    digitalWrite(reset, LOW);
+    digitalWriteFast(reset, LOW);
     delay(200);
-    digitalWrite(reset, HIGH);
+    digitalWriteFast(reset, HIGH);
 
     writeInst(0xFD); /*SET COMMAND LOCK */
     writeData(0x12); /* UNLOCK */
@@ -109,18 +109,38 @@ void Display::clear()
 
     for (int i=0;i<240*64*2;i++)
     {
-        writeData(0x00);
+        writeData(0x0);
     }
 }
 
-void Display::writeInst(unsigned char data)
+void Display::writeInst(uint8_t data)
 {
-    writeBus(data, 0);
+    digitalWriteFast(21, 0);
+    digitalWriteFast(23, 0);
+    digitalWriteFast(0, data & 1);
+    digitalWriteFast(1, (data >> 1) & 1);
+    digitalWriteFast(2, (data >> 2) & 1);
+    digitalWriteFast(3, (data >> 3) & 1);
+    digitalWriteFast(4, (data >> 4) & 1);
+    digitalWriteFast(5, (data >> 5) & 1);
+    digitalWriteFast(6, (data >> 6) & 1);
+    digitalWriteFast(7, (data >> 7) & 1);
+    digitalWriteFast(23, 1);
 }
 
-void Display::writeData(unsigned char data)
+void Display::writeData(uint8_t data)
 {
-    writeBus(data, 1);
+    digitalWriteFast(21, 1);
+    digitalWriteFast(23, 0);
+    digitalWriteFast(0, data & 1);
+    digitalWriteFast(1, (data >> 1) & 1);
+    digitalWriteFast(2, (data >> 2) & 1);
+    digitalWriteFast(3, (data >> 3) & 1);
+    digitalWriteFast(4, (data >> 4) & 1);
+    digitalWriteFast(5, (data >> 5) & 1);
+    digitalWriteFast(6, (data >> 6) & 1);
+    digitalWriteFast(7, (data >> 7) & 1);
+    digitalWriteFast(23, 1);
 }
 
 void Display::initRegion(int x, int y, int w, int h)
@@ -136,3 +156,8 @@ void Display::initRegion(int x, int y, int w, int h)
     writeInst(0x5C);
 }
 
+void Display::scroll(uint8_t value)
+{
+    writeInst(0xa2);
+    writeData(value);
+}
