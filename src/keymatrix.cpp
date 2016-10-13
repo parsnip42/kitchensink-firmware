@@ -47,7 +47,7 @@ void KeyMatrix::scan()
     std::size_t index(0);
     int rowMask(mRowMask);
 
-    uint16_t maskData;
+    uint8_t maskData[2];
 
     while (rowMask && (index < KeyMask::kRows))
     {
@@ -55,15 +55,17 @@ void KeyMatrix::scan()
         
         if (rowBit & 0xff)
         {
-            maskData = (0x12 << 8) | ~(rowBit & 0xff);
+            maskData[0] = 0x12;
+            maskData[1] = ~(rowBit & 0xff);
         }
         else
         {
-            maskData = (0x13 << 8) | ~((rowBit >> 8) & 0xff);
+            maskData[0] = 0x13;
+            maskData[1] = ~((rowBit >> 8) & 0xff);
         }
 
         Wire.beginTransmission(mAddr);
-        Wire.write(reinterpret_cast<uint8_t*>(&maskData), 2);
+        Wire.write(maskData, 2);
         Wire.endTransmission();
 
         Wire.beginTransmission(mAddr);

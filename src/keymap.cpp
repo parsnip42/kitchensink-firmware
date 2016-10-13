@@ -17,7 +17,7 @@ Entry::Entry(const char* nDflt,
 namespace
 {
 
-std::array<Entry, 0xff> tableData{
+const std::array<Entry, 0xff> tableData{{
     Entry(),
     Entry(),
     Entry(),
@@ -67,7 +67,7 @@ std::array<Entry, 0xff> tableData{
     Entry("=", "+"),
     Entry("[", "{"),
     Entry("]", "}")
-};
+}};
 
 }
 

@@ -23,4 +23,3 @@ bool Debounce::process(const KeyMask& next)
     
     return (mCounter == 0 && !mDelta.empty());
 }
-
