@@ -15,16 +15,16 @@ public:
 public:
     Bitmask();
     explicit Bitmask(const Data& data);
-
+    
 public:
-    const Data& data() const;
-    static std::size_t size();
     bool empty() const;
-    void set(std::size_t n);
-    void clear(std::size_t n);
+    void set(const std::size_t n);
+    void clear(const std::size_t n);
     
 public:
     bool operator[](std::size_t n) const;
+
+    void operator=(const Data& data);
 
     void operator|=(const Bitmask<Size>& rhs);
     void operator&=(const Bitmask<Size>& rhs);
@@ -33,6 +33,8 @@ public:
     void operator|=(const Data& data);
     void operator&=(const Data& data);
     void operator^=(const Data& data);
+
+    void operator>>=(const std::size_t n);
 
 private:
     Data mData;
@@ -68,20 +70,6 @@ Bitmask<Size>::Bitmask(const Data& data)
 
 template <std::size_t Size>
 inline
-const typename Bitmask<Size>::Data& Bitmask<Size>::data() const
-{
-    return mData;
-}
-
-template <std::size_t Size>
-inline
-std::size_t Bitmask<Size>::size()
-{
-    return Size;
-}
-
-template <std::size_t Size>
-inline
 bool Bitmask<Size>::empty() const
 {
     return (mData == 0);
@@ -89,24 +77,30 @@ bool Bitmask<Size>::empty() const
 
 template <std::size_t Size>
 inline
-void Bitmask<Size>::set(std::size_t n)
+void Bitmask<Size>::set(const std::size_t n)
 {
     mData |= (Data)1 << n;
 }
 
 template <std::size_t Size>
 inline
-void Bitmask<Size>::clear(std::size_t n)
+void Bitmask<Size>::clear(const std::size_t n)
 {
     mData &= ~((Data)1 << n);
 }
 
+template <std::size_t Size>
+inline
+bool Bitmask<Size>::operator[](const std::size_t n) const
+{
+    return (mData >> n) & 1;
+}
 
 template <std::size_t Size>
 inline
-bool Bitmask<Size>::operator[](std::size_t n) const
+void Bitmask<Size>::operator=(const Data& data)
 {
-    return (mData >> n) & 1;
+    mData = data;
 }
 
 template <std::size_t Size>
@@ -149,6 +143,13 @@ inline
 void Bitmask<Size>::operator^=(const Data& data)
 {
     mData ^= data;
+}
+
+template <std::size_t Size>
+inline
+void Bitmask<Size>::operator>>=(const std::size_t n)
+{
+    mData >>= n;
 }
 
 #endif

@@ -8,14 +8,14 @@ LayerStack::LayerStack()
 
 KeyId LayerStack::at(int row, int column) const
 {
-    auto data(mLayerMask.data());
-
+    auto data(mLayerMask);
+    
     int index(0);
     KeyId keyId;
     
-    while (data)
+    while (!data.empty())
     {
-        if (data & 1)
+        if (data[0])
         {
             auto next(mLayers[index].at(row, column));
 
@@ -34,14 +34,14 @@ KeyId LayerStack::at(int row, int column) const
 
 int LayerStack::activeLayer(int row, int column) const
 {
-    auto data(mLayerMask.data());
+    auto data(mLayerMask);
 
     int index(0);
     int activeIndex(0);
     
-    while (data)
+    while (!data.empty())
     {
-        if (data & 1)
+        if (data[0])
         {
             auto next(mLayers[index].at(row, column));
 

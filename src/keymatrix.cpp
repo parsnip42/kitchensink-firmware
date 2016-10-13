@@ -8,7 +8,9 @@ void KeyMatrix::init()
     Wire.setClock(1000000);
 }
 
-KeyMatrix::KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask)
+KeyMatrix::KeyMatrix(const int      addr,
+                     const uint16_t rowMask,
+                     const uint16_t colMask)
     : mAddr(addr)
     , mRowMask(rowMask)
     , mColMask(colMask)
@@ -45,25 +47,23 @@ void KeyMatrix::scan()
     std::size_t index(0);
     int rowMask(mRowMask);
 
-    uint8_t maskData[2];
+    uint16_t maskData;
 
-    while (rowMask && (index < mState.size()))
+    while (rowMask && (index < kRows))
     {
         uint16_t rowBit(rowMask & -rowMask);
         
         if (rowBit & 0xff)
         {
-            maskData[0] = 0x12;
-            maskData[1] = ~(rowBit & 0xff);
+            maskData = (0x12 << 8) | ~(rowBit & 0xff);
         }
         else
         {
-            maskData[0] = 0x13;
-            maskData[1] = ~((rowBit >> 8) & 0xff);
+            maskData = (0x13 << 8) | ~((rowBit >> 8) & 0xff);
         }
 
         Wire.beginTransmission(mAddr);
-        Wire.write(maskData, 2);        
+        Wire.write(reinterpret_cast<uint8_t*>(&maskData), 2);
         Wire.endTransmission();
 
         Wire.beginTransmission(mAddr);
@@ -71,7 +71,9 @@ void KeyMatrix::scan()
         Wire.endTransmission();
         Wire.requestFrom(mAddr, 1);
 
-        uint16_t row((~Wire.read()) & 0xff);
+        auto& row(mState[index]);
+        
+        row = ((~Wire.read()) & 0xff);
 
         Wire.beginTransmission(mAddr);
         Wire.write(0x13);
@@ -80,8 +82,6 @@ void KeyMatrix::scan()
         
         row |= (((~Wire.read()) & 0xff) << 8);
         row &= mColMask;
-        
-        mState[index] = Mask::Row(row);
         
         rowMask &= ~rowBit;
         ++index;

@@ -16,9 +16,9 @@ class KeyMatrixEvent;
 class EventDispatcher
 {
 public:
-    EventDispatcher(const std::initializer_list<int>& rowMapping,
-                    const std::initializer_list<int>& columnMapping);
-
+    EventDispatcher(const std::array<uint8_t, KeyMatrix::kRows>&    rowMapping,
+                    const std::array<uint8_t, KeyMatrix::kColumns>& columnMapping);
+    
 public:
     template <typename Callback>
     void dispatch(const KeyMatrix::Mask& stateMask,
@@ -30,14 +30,21 @@ public:
                  const Callback&        callback);
 
 private:
-    std::array<int, KeyMatrix::kRows>    mRowMapping;
-    std::array<int, KeyMatrix::kColumns> mColumnMapping;
+    const std::array<uint8_t, KeyMatrix::kRows>    mRowMapping;
+    const std::array<uint8_t, KeyMatrix::kColumns> mColumnMapping;
 
 private:
     EventDispatcher(const EventDispatcher&) = delete;
     EventDispatcher& operator=(const EventDispatcher&) = delete;
 };
 
+
+inline
+EventDispatcher::EventDispatcher(const std::array<uint8_t, KeyMatrix::kRows>&    rowMapping,
+                                 const std::array<uint8_t, KeyMatrix::kColumns>& columnMapping)
+    : mRowMapping(rowMapping)
+    , mColumnMapping(columnMapping)
+{ }
 
 template <typename Func>
 inline
@@ -47,17 +54,17 @@ void EventDispatcher::dispatch(const KeyMatrix::Mask& stateMask,
 {
     for (int row(0); row < KeyMatrix::kRows; ++row)
     {
-        auto state(stateMask[row].data());
-        auto delta(deltaMask[row].data());
+        auto state(stateMask[row]);
+        auto delta(deltaMask[row]);
 
         int column(0);
         
-        while (delta && column < KeyMatrix::kColumns)
+        while (!delta.empty() && column < KeyMatrix::kColumns)
         {
-            if (delta & 1)
+            if (delta[0])
             {
                 KeyState keyState(
-                    static_cast<KeyState>(((int)state & 1) + 1));
+                    static_cast<KeyState>(((int)state[0]) + 1));
                     
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],
@@ -78,13 +85,13 @@ void EventDispatcher::pressed(const KeyMatrix::Mask& stateMask,
 {
     for (int row(0); row < KeyMatrix::kRows; ++row)
     {
-        auto state(stateMask[row].data());
+        auto state(stateMask[row]);
 
         int column(0);
         
-        while (state && column < KeyMatrix::kColumns)
+        while (!state.empty() && column < KeyMatrix::kColumns)
         {
-            if (state & 1)
+            if (state[0])
             {
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],

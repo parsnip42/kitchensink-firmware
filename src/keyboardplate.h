@@ -8,12 +8,12 @@
 class KeyboardPlate
 {
 public:
-    KeyboardPlate(int                               matrixAddr,
-                  uint16_t                          matrixRowMask,
-                  uint16_t                          matrixColMask,
-                  int                               debounceLatency,
-                  const std::initializer_list<int>& rowMapping,
-                  const std::initializer_list<int>& columnMapping);
+    KeyboardPlate(const int                                       matrixAddr,
+                  const uint16_t                                  matrixRowMask,
+                  const uint16_t                                  matrixColMask,
+                  const int                                       debounceLatency,
+                  const std::array<uint8_t, KeyMatrix::kRows>&    rowMapping,
+                  const std::array<uint8_t, KeyMatrix::kColumns>& columnMapping);
 
 public:
     template <typename Callback>
@@ -21,9 +21,6 @@ public:
 
     template <typename Callback>
     void pressed(const Callback& callback);
-    
-private:
-    bool scan();
     
 private:
     KeyMatrix       mMatrix;
@@ -35,11 +32,14 @@ private:
     KeyboardPlate& operator=(const KeyboardPlate&);
 };
 
+
 template <typename Callback>
 inline
 void KeyboardPlate::poll(const Callback& callback)
 {
-    if (scan())
+    mMatrix.scan();
+
+    if (mDebounce.process(mMatrix.state()))
     {
         mDispatcher.dispatch(mDebounce.state(),
                              mDebounce.delta(),

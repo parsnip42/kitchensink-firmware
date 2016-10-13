@@ -17,12 +17,11 @@ public:
     Bitmask2d();
 
 public:
-    std::size_t size() const;
     bool empty() const;
 
 public:
-    const Row& operator[](std::size_t n) const;
-    Row& operator[](std::size_t n);
+    const Row& operator[](const std::size_t n) const;
+    Row& operator[](const std::size_t n);
 
     void operator|=(const Bitmask2d<Width, Height>& rhs);
     void operator&=(const Bitmask2d<Width, Height>& rhs);
@@ -52,13 +51,6 @@ Bitmask2d<Width, Height>::Bitmask2d()
 
 template <std::size_t Width, std::size_t Height>
 inline
-std::size_t Bitmask2d<Width, Height>::size() const
-{
-    return Height;
-}
-
-template <std::size_t Width, std::size_t Height>
-inline
 bool Bitmask2d<Width, Height>::empty() const
 {
     for (const auto& row : mRows)
@@ -74,14 +66,14 @@ bool Bitmask2d<Width, Height>::empty() const
 
 template <std::size_t Width, std::size_t Height>
 inline
-const typename Bitmask2d<Width, Height>::Row& Bitmask2d<Width, Height>::operator[](std::size_t n) const
+const typename Bitmask2d<Width, Height>::Row& Bitmask2d<Width, Height>::operator[](const std::size_t n) const
 {
     return mRows[n];
 }
 
 template <std::size_t Width, std::size_t Height>
 inline
-typename Bitmask2d<Width, Height>::Row& Bitmask2d<Width, Height>::operator[](std::size_t n)
+typename Bitmask2d<Width, Height>::Row& Bitmask2d<Width, Height>::operator[](const std::size_t n)
 {
     return mRows[n];
 }

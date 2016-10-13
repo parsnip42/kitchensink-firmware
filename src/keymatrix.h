@@ -19,7 +19,9 @@ public:
     static void init();
     
 public:
-    KeyMatrix(int addr, uint16_t rowMask, uint16_t colMask);
+    KeyMatrix(const int      addr,
+              const uint16_t rowMask,
+              const uint16_t colMask);
 
 public:
     void scan();
