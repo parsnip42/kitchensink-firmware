@@ -11,6 +11,10 @@ template <std::size_t Width, std::size_t Height>
 class Bitmask2d
 {
 public:
+    static const std::size_t kRows    = Height;
+    static const std::size_t kColumns = Width;
+
+public:
     typedef Bitmask<Width> Row;
     
 public:

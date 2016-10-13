@@ -1,6 +1,7 @@
 #ifndef INCLUDED_KEYBOARDPLATE_H
 #define INCLUDED_KEYBOARDPLATE_H
 
+#include "keymask.h"
 #include "keymatrix.h"
 #include "debounce.h"
 #include "eventdispatcher.h"
@@ -8,12 +9,12 @@
 class KeyboardPlate
 {
 public:
-    KeyboardPlate(const int                                       matrixAddr,
-                  const uint16_t                                  matrixRowMask,
-                  const uint16_t                                  matrixColMask,
-                  const int                                       debounceLatency,
-                  const std::array<uint8_t, KeyMatrix::kRows>&    rowMapping,
-                  const std::array<uint8_t, KeyMatrix::kColumns>& columnMapping);
+    KeyboardPlate(const int                                     matrixAddr,
+                  const uint16_t                                matrixRowMask,
+                  const uint16_t                                matrixColMask,
+                  const int                                     debounceLatency,
+                  const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                  const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
 
 public:
     template <typename Callback>

@@ -49,7 +49,7 @@ void KeyMatrix::scan()
 
     uint16_t maskData;
 
-    while (rowMask && (index < kRows))
+    while (rowMask && (index < KeyMask::kRows))
     {
         uint16_t rowBit(rowMask & -rowMask);
         

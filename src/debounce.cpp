@@ -5,7 +5,7 @@ Debounce::Debounce(unsigned int latency)
     , mCounter(0)
 { }
 
-bool Debounce::process(const KeyMatrix::Mask& next)
+bool Debounce::process(const KeyMask& next)
 {
     mCounter = (mCounter + 1) % mLatency;
     
