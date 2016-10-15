@@ -16,6 +16,53 @@
 
 #include <SdFat.h>
 
+namespace
+{
+
+class MainMenu : public UIMenu::Data
+{
+public:
+    virtual UIMenu::Entry entry(std::size_t n)
+    {
+        UIMenu::Entry entries[] = {
+            UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
+            UIMenu::Entry("              Macros            ", KeyEvent(KeyId::Action(5))),
+            UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
+            UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5)))
+        };
+
+        return entries[n];
+    }
+    
+    virtual std::size_t size()
+    {
+        return 4;
+    }
+};
+
+class MenuB : public UIMenu::Data
+{
+public:
+    virtual UIMenu::Entry entry(std::size_t n)
+    {
+        UIMenu::Entry entries[] = {
+            UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
+            UIMenu::Entry("             Display            ", KeyEvent(KeyId::Action(5))),
+            UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
+            UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5)))
+        };
+
+        return entries[n];
+    }
+    
+    virtual std::size_t size()
+    {
+        return 4;
+    }
+};
+
+}
+
 SdFat sd;
 
 void setup() {
@@ -110,7 +157,8 @@ void loop() {
         {
             if (context.state == KeyState::kPressed)
             {
-                ui.menu(keyHandler, eventQueue);
+                MainMenu mainMenu;
+                ui.menu(mainMenu, keyHandler, eventQueue);
             }
         });
 

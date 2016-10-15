@@ -11,9 +11,9 @@ class KeyEvent
 public:
     KeyEvent();
 
-    KeyEvent(const KeyId& nKeyId,
-             KeyState     nState,
-             uint8_t      nTaps = 0);
+    explicit KeyEvent(const KeyId& nKeyId,
+                      KeyState     nState = KeyState::kPressed,
+                      uint8_t      nTaps = 0);
     
 public:
     KeyId    keyId;

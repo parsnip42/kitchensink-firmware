@@ -2,6 +2,7 @@
 #define INCLUDED_DISPLAY_H
 
 #include <cstdint>
+#include <core_pins.h>
 
 class Display
 {
@@ -20,7 +21,7 @@ public:
     void drawRegion(int x, int y, int w, int h, Iterator begin, Iterator end);
 
     void writeData(uint8_t data);
-    
+
 private:
     void writeInst(uint8_t data);
     
@@ -41,6 +42,5 @@ void Display::drawRegion(int x, int y, int w, int h, Iterator begin, Iterator en
         writeData(*it);
     }
 }
-
 
 #endif

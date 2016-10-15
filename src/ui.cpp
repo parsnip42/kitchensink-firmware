@@ -23,104 +23,85 @@ UI::UI(Display& display)
     : mDisplay(display)
 { }
 
-void UI::paintText(int x, int y, const char* str)
-{
-    static const uint8_t color(0xf);
-    static const int kCharHeight(14);
-    
-    int len(strlen(str));
-    
-    mDisplay.initRegion(x, y, len << 3, kCharHeight);
-    
-    for (int y(0); y < kCharHeight; ++y)
-    {
-        for (int x(0); x < len; ++x)
-        {
-            unsigned char a0(0);
-            unsigned char a1(0);
-            unsigned char a2(0);
-            unsigned char a3(0);                
-
-            if (str[x] > 32 && str[x] < 127)
-            {
-                unsigned char c(charset[str[x] - 33 + (y * 94)]);
-                
-                a0 = (((c>>7) & 1) * color) | ((c>>6 & 1) * (color << 4));
-                a1 = (((c>>5) & 1) * color) | ((c>>4 & 1) * (color << 4));
-                a2 = (((c>>3) & 1) * color) | ((c>>2 & 1) * (color << 4));
-                a3 = (((c>>1) & 1) * color) | ((c & 1)    * (color << 4));
-            }
-
-            mDisplay.writeData(a3);
-            mDisplay.writeData(a2);
-            mDisplay.writeData(a1);
-            mDisplay.writeData(a0);
-        }
-    }
-}
-
-void UI::paintText(int x, int y, const char* str, bool inv, uint8_t fg, uint8_t bg)
+void UI::paintText(int         x,
+                   int         y,
+                   const char* str,
+                   uint8_t     fg,
+                   uint8_t     bg)
 {
     static const int kCharHeight(14);
     
-    int len(strlen(str));
+    auto len(strlen(str));
     
     mDisplay.initRegion(x, y, len << 3, kCharHeight);
 
-    if (inv)
+    const uint8_t colorMap[] =
     {
-        uint8_t t(fg);
-        fg = bg;
-        bg = t;
-    }
-
-    uint8_t colorMap[] = {
         uint8_t(bg | (bg << 4)),
         uint8_t(bg | (fg << 4)),
         uint8_t(fg | (bg << 4)),
         uint8_t(fg | (fg << 4)),
     };
     
-    for (int y(0); y < kCharHeight; ++y)
+    for (int line(0); line < kCharHeight; ++line)
     {
-        for (int x(0); x < len; ++x)
-        {
-            if (str[x] > 32 && str[x] < 127)
-            {
-                uint8_t c(charset[str[x] - 33 + (y * 94)]);
-
-                mDisplay.writeData(colorMap[c & 0x3]);
-                mDisplay.writeData(colorMap[(c >> 2) & 0x3]);
-                mDisplay.writeData(colorMap[(c >> 4) & 0x3]);
-                mDisplay.writeData(colorMap[(c >> 6) & 0x3]);
-
-            }
-            else if (str[x] == 32)
-            {
-                mDisplay.writeData(bg | (bg << 4));
-                mDisplay.writeData(bg | (bg << 4));
-                mDisplay.writeData(bg | (bg << 4));
-                mDisplay.writeData(bg | (bg << 4));
-            }
-        }
+        paintTextLine(str, str + len, line, colorMap);
     }
 }
 
-void UI::menu(KeyHandler& keyHandler,
+void UI::paintTextLine(const char*   begin,
+                       const char*   end,
+                       const int     line,
+                       const uint8_t (&colorMap)[4])
+{
+    for (auto it(begin); it != end; ++it)
+    {
+        const auto chr(*it);
+        
+        if (chr > 32 && chr < 127)
+        {
+            uint8_t data(charset[chr - 33 + (line * 94)]);
+            
+            mDisplay.writeData(colorMap[data & 0x3]);
+            mDisplay.writeData(colorMap[(data >> 2) & 0x3]);
+            mDisplay.writeData(colorMap[(data >> 4) & 0x3]);
+            mDisplay.writeData(colorMap[(data >> 6) & 0x3]);
+
+        }
+        else if (chr == 32)
+        {
+            mDisplay.writeData(colorMap[0]);
+            mDisplay.writeData(colorMap[0]);
+            mDisplay.writeData(colorMap[0]);
+            mDisplay.writeData(colorMap[0]);
+        }
+    }   
+}
+
+void UI::menu(UIMenu::Data& dataSource,
+              KeyHandler& keyHandler,
               EventQueue& eventQueue)
 {
     mDisplay.clear();
 
     bool quit(false);
-    int selected(0);
+    std::size_t selected(0);
     
     for (int color = 0; color <= 0xf; ++color)
     {
-        paintText(28, 0,  "             Macros             ", selected == 0, color);
-        paintText(28, 14, "             Display            ", selected == 1, color);
-        paintText(28, 28, "          Configuration         ", selected == 2, color);
-        paintText(28, 42, "             System             ", selected == 3, color);
-        delay(4);
+        for (std::size_t i(0); i < dataSource.size(); ++i)
+        {
+            if (selected != i)
+            {
+                paintText(28, i*14, dataSource.entry(i).text, color, 0x0);
+            }
+            else
+            {
+                paintText(28, i*14, dataSource.entry(i).text, 0x0, color);
+            }
+
+            delay(4);
+        }
     }
 
     int counter(0);
@@ -147,7 +128,7 @@ void UI::menu(KeyHandler& keyHandler,
 
             if (event.keyId.value() == 40 && event.state == KeyState::kPressed)
             {
-                eventQueue.pushBack(KeyEvent(KeyId::Action(9), KeyState::kPressed, 2));
+                eventQueue.pushBack(dataSource.entry(selected).keyEvent);
                 quit = true;
                 break;
             }
@@ -167,21 +148,35 @@ void UI::menu(KeyHandler& keyHandler,
                     mDisplay.scroll(counter);
                     delay(10);
                 }
-                
-                paintText(28, 0,  "             Macros             ", selected == 0);
-                paintText(28, 14, "             Display            ", selected == 1);
-                paintText(28, 28, "          Configuration         ", selected == 2);
-                paintText(28, 42, "             System             ", selected == 3);
+
+                for (std::size_t i(0); i < dataSource.size(); ++i)
+                {
+                    if (selected != i)
+                    {
+                        paintText(28, i*14, dataSource.entry(i).text);
+                    }
+                    else
+                    {
+                        paintText(28, i*14, dataSource.entry(i).text, 0x0, 0xf);
+                    }
+                }
             }
             
             if (event.keyId.value() == 81 && event.state == KeyState::kPressed)
             {
                 selected = (selected + 1) % 4;
 
-                paintText(28, 0,  "             Macros             ", selected == 0);
-                paintText(28, 14, "             Display            ", selected == 1);
-                paintText(28, 28, "          Configuration         ", selected == 2);
-                paintText(28, 42, "             System             ", selected == 3);
+                for (std::size_t i(0); i < dataSource.size(); ++i)
+                {
+                    if (selected != i)
+                    {
+                        paintText(28, i*14, dataSource.entry(i).text);
+                    }
+                    else
+                    {
+                        paintText(28, i*14, dataSource.entry(i).text, 0x0, 0xf);
+                    }
+                }
 
                 for (int i = 0; i < 14; i++)
                 {
@@ -196,11 +191,19 @@ void UI::menu(KeyHandler& keyHandler,
 
     for (int color = 0xf; color >= 0; --color)
     {
-        paintText(28, 0,  "             Macros             ", selected == 0, color);
-        paintText(28, 14, "             Display            ", selected == 1, color);
-        paintText(28, 28, "          Configuration         ", selected == 2, color);
-        paintText(28, 42, "             System             ", selected == 3, color);
-        delay(4);
+        for (std::size_t i(0); i < dataSource.size(); ++i)
+        {
+            if (selected != i)
+            {
+                paintText(28, i*14, dataSource.entry(i).text, color, 0x0);
+            }
+            else
+            {
+                paintText(28, i*14, dataSource.entry(i).text, 0x0, color);
+            }
+
+            delay(4);
+        }
     }
 
     // AutoRepeat autoRepeat(660);

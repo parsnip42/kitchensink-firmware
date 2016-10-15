@@ -111,6 +111,8 @@ void Display::clear()
     {
         writeData(0x0);
     }
+
+    scroll(0);
 }
 
 void Display::writeInst(uint8_t data)
