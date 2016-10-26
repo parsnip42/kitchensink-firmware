@@ -2,13 +2,15 @@
 
 #include "eventqueue.h"
 
-Modifier::Modifier(const KeyId& keyId)
-    : mKeyId(keyId)
+Modifier::Modifier(const char*  name,
+                   const KeyId& keyId)
+    : mName(name)
+    , mKeyId(keyId)
     , mLocked(false)
     , mHeld(false)
 { }
 
-bool Modifier::processEvent(const KeyEvent& keyEvent,
+void Modifier::processEvent(const KeyEvent& keyEvent,
                             EventQueue&     eventQueue)
 {
     const auto& keyId(keyEvent.keyId);
@@ -29,5 +31,5 @@ bool Modifier::processEvent(const KeyEvent& keyEvent,
 
     }
 
-    return mHeld || mLocked;
+    eventQueue.pushBack(KeyEvent(mKeyId, active()));
 }

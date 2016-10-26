@@ -170,6 +170,11 @@ void loop() {
     });
 
     ModifierProcessor modifierProcessor(keyHandler);
+
+    modifierProcessor.modifierSet()[0] = Modifier("Gm0", KeyId::Layer(3));
+    modifierProcessor.modifierSet()[1] = Modifier("Gm1", KeyId::Layer(4));
+    modifierProcessor.modifierSet()[2] = Modifier("Gm2", KeyId::Layer(5));
+
     MultiProcessor multiProcessor;
 
     multiProcessor.assign(0, Multi(0xe1, KEY_LEFT_BRACE));
@@ -183,7 +188,7 @@ void loop() {
     multiProcessor.assign(11, Multi(0xe0, KEY_SPACE));
 
     UI::Home home(surface,
-                  keyHandler.layerStack());
+                  modifierProcessor.modifierSet());
     
     while (1)
     {
@@ -202,7 +207,6 @@ void loop() {
             else if (keyId.type() == KeyId::kLayer)
             {
                 keyHandler.setLayer(keyId.value(), event.pressed, eventQueue);
-                home.update();
             }
             else
             {

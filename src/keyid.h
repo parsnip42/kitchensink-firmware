@@ -1,8 +1,6 @@
 #ifndef INCLUDED_KEYID_H
 #define INCLUDED_KEYID_H
 
-#include "modifierid.h"
-
 #include <cstdint>
 
 class KeyId
@@ -11,8 +9,8 @@ public:
     enum Type
     {
         kKey      = 0,
-        kModifier = 1,
-        kLayer    = 2,
+        kLayer    = 1,
+        kModifier = 2,
         kMulti    = 3,
         kMacro    = 4,
         kSMacro   = 5,
@@ -30,14 +28,13 @@ public:
     static const KeyId None;
     static KeyId Action(int actionId);
     static KeyId Layer(int layerId);
-    static KeyId Layer(ModifierType modifierType,
-                       int          layerId);
     static KeyId Multi(int multiId);
-
+    static KeyId Modifier(ModifierType modifierType,
+                          int          modifierId);
+    
 public:
     KeyId();
     KeyId(int keyCode);
-    KeyId(ModifierId modifier);
     
 private:
     KeyId(uint8_t type, uint8_t value);
@@ -80,22 +77,22 @@ KeyId KeyId::Action(int actionId)
 inline
 KeyId KeyId::Layer(int layerId)
 {
-    return Layer(ModifierType::kHold, layerId);
-}
-
-inline
-KeyId KeyId::Layer(ModifierType modifierType,
-                   int          layerId)
-{
-    return KeyId(kLayer,
-                 static_cast<uint8_t>(modifierType),
-                 layerId);
+    return KeyId(kLayer, layerId);
 }
 
 inline
 KeyId KeyId::Multi(int multiId)
 {
     return KeyId(kMulti, multiId);
+}
+
+inline
+KeyId KeyId::Modifier(ModifierType modifierType,
+                      int          modifierId)
+{
+    return KeyId(kModifier,
+                 static_cast<uint8_t>(modifierType),
+                 modifierId);
 }
 
 inline
@@ -119,11 +116,6 @@ KeyId::KeyId(uint8_t type, uint8_t subType, uint8_t value)
     : mData((type & 0xf) << 12 |
             (subType & 0xf) << 8 |
             value)
-{ }
-
-inline
-KeyId::KeyId(ModifierId value)
-    : mData(1 << 12 | static_cast<uint8_t>(value))
 { }
 
 

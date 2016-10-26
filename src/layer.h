@@ -14,11 +14,9 @@ public:
     
 public:
     Layer();
-    explicit Layer(const char*                                                name,
-                   const std::initializer_list<std::initializer_list<KeyId>>& list);
+    explicit Layer(const std::initializer_list<std::initializer_list<KeyId>>& list);
 
 public:
-    const char* name() const;
     KeyId at(int row, int column) const;
     
 private:
@@ -26,12 +24,6 @@ private:
     std::array<std::array<KeyId, kColumns>, kRows> mMapping;
 };
 
-
-inline
-const char* Layer::name() const
-{
-    return mName;
-}
 
 inline
 KeyId Layer::at(int row, int column) const

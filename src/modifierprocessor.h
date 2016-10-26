@@ -20,9 +20,25 @@ public:
     bool processEvent(const KeyEvent& event,
                       EventQueue&     eventQueue);
 
+    const ModifierSet& modifierSet() const;
+    ModifierSet& modifierSet();
+
 private:
     KeyHandler& mKeyHandler;
     ModifierSet mModifierSet;
 };
+
+
+inline
+const ModifierSet& ModifierProcessor::modifierSet() const
+{
+    return mModifierSet;
+}
+
+inline
+ModifierSet& ModifierProcessor::modifierSet()
+{
+    return mModifierSet;
+}
 
 #endif

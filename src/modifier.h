@@ -10,16 +10,34 @@ class EventQueue;
 class Modifier
 {
 public:
-    explicit Modifier(const KeyId& keyId = KeyId::None);
+    explicit Modifier(const char*  name  = "",
+                      const KeyId& keyId = KeyId::None);
 
 public:
-    bool processEvent(const KeyEvent& keyEvent,
+    void processEvent(const KeyEvent& keyEvent,
                       EventQueue&     eventQueue);
+
+    const char* name() const;
+    bool active() const;
     
 private:
-    KeyId mKeyId;
-    bool  mLocked;
-    bool  mHeld;
+    const char* mName;
+    KeyId       mKeyId;
+    bool        mLocked;
+    bool        mHeld;
 };
+
+
+inline
+const char* Modifier::name() const
+{
+    return mName;
+}
+
+inline
+bool Modifier::active() const
+{
+    return mLocked || mHeld;
+}
 
 #endif

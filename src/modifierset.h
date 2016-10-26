@@ -11,6 +11,7 @@ public:
     ModifierSet();
 
 public:
+    const Modifier& operator[](uint8_t modifier) const;
     Modifier& operator[](uint8_t modifier);
     
 private:
@@ -21,6 +22,12 @@ private:
 inline
 ModifierSet::ModifierSet()
 { }
+
+inline
+const Modifier& ModifierSet::operator[](uint8_t modifier) const
+{
+    return mModifiers[modifier];
+}
 
 inline
 Modifier& ModifierSet::operator[](uint8_t modifier)
