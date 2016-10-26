@@ -1,11 +1,13 @@
 #ifndef INCLUDED_UI_H
 #define INCLUDED_UI_H
 
+/*
 #include "eventqueue.h"
 #include "keyevent.h"
 
 class Display;
 class KeyHandler;
+class LayerStack;
 
 class UIMenu
 {
@@ -50,6 +52,10 @@ public:
     explicit UI(Display& display);
 
 public:
+    void paintMenu(UIMenu::Data& dataSource, int offset, uint8_t fgBase = 0xf, int selected = -1);
+    int scrollMenu(UIMenu::Data& dataSource, int point, int direction);
+
+    void main(const LayerStack& layerStack);
     void menu(UIMenu::Data& dataSource,KeyHandler& keyHandler, EventQueue& eventQueue);
     void paintText(int         x,
                    int         y,
@@ -72,5 +78,6 @@ private:
     UI(const UI&) = delete;
     UI& operator=(const UI&) = delete;
 };
+*/
 
 #endif

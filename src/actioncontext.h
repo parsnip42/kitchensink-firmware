@@ -1,23 +1,21 @@
 #ifndef INCLUDED_ACTIONCONTEXT_H
 #define INCLUDED_ACTIONCONTEXT_H
 
-#include "keystate.h"
-
 class ActionContext
 {
 public:
-    ActionContext(KeyState nState,
-                  int      nTaps);
+    ActionContext(bool nPressed,
+                  int  nTaps);
 
 public:
-    KeyState state;
-    int      taps;
+    bool pressed;
+    int  taps;
 };
 
 inline
-ActionContext::ActionContext(KeyState nState,
-                             int      nTaps)
-    : state(nState)
+ActionContext::ActionContext(bool nPressed,
+                             int  nTaps)
+    : pressed(nPressed)
     , taps(nTaps)
 { }
 

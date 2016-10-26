@@ -11,7 +11,7 @@ class LayerStack
 {
 public:
     static const int MaxLayers = 10;
-    
+
 public:
     LayerStack();
 
@@ -24,10 +24,20 @@ public:
     void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled);
     bool enabled(int index) const;
+
+public:
+    const Layer& operator[](int index) const;
     
 private:
     std::array<Layer, MaxLayers> mLayers;
     Bitmask<MaxLayers>           mLayerMask;
 };
+
+
+inline
+const Layer& LayerStack::operator[](int index) const
+{
+    return mLayers[index];
+}
 
 #endif

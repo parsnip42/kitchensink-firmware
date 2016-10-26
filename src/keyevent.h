@@ -2,7 +2,6 @@
 #define INCLUDED_KEYEVENT_H
 
 #include "keyid.h"
-#include "keystate.h"
 
 #include <cstdint>
 
@@ -12,28 +11,28 @@ public:
     KeyEvent();
 
     explicit KeyEvent(const KeyId& nKeyId,
-                      KeyState     nState = KeyState::kPressed,
+                      bool         nPressed = true,
                       uint8_t      nTaps = 0);
     
 public:
-    KeyId    keyId;
-    KeyState state;
-    uint8_t  taps;
+    KeyId   keyId;
+    bool    pressed;
+    uint8_t taps;
 };
 
 inline
 KeyEvent::KeyEvent()
     : keyId(KeyId::None)
-    , state(KeyState::kNone)
+    , pressed(false)
     , taps(0)
 { }
 
 inline
 KeyEvent::KeyEvent(const KeyId& nKeyId,
-                   KeyState     nState,
+                   bool         nPressed,
                    uint8_t      nTaps)
     : keyId(nKeyId)
-    , state(nState)
+    , pressed(nPressed)
     , taps(nTaps)
 { }
 

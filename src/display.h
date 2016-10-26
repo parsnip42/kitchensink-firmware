@@ -20,10 +20,10 @@ public:
     template <typename Iterator>
     void drawRegion(int x, int y, int w, int h, Iterator begin, Iterator end);
 
+    void writeInst(uint8_t data);
     void writeData(uint8_t data);
 
 private:
-    void writeInst(uint8_t data);
     
 private:
     Display(const Display&) = delete;

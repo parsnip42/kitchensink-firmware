@@ -1,4 +1,3 @@
-
 #include "actioncontext.h"
 #include "actionmanager.h"
 #include "actions.h"
@@ -11,55 +10,65 @@
 #include "layer.h"
 #include "modifierprocessor.h"
 #include "multiprocessor.h"
-#include "ui.h"
 #include "usbkeyboard.h"
+
+#include "ui/surface.h"
+#include "ui/home.h"
 
 #include <SdFat.h>
 
 namespace
 {
 
-class MainMenu : public UIMenu::Data
-{
-public:
-    virtual UIMenu::Entry entry(std::size_t n)
-    {
-        UIMenu::Entry entries[] = {
-            UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
-            UIMenu::Entry("              Macros            ", KeyEvent(KeyId::Action(5))),
-            UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
-            UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5)))
-        };
+// class MainMenu : public UIMenu::Data
+// {
+// public:
+//     virtual UIMenu::Entry entry(std::size_t n)
+//     {
+//         UIMenu::Entry entries[] = {
+//             UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
+//             UIMenu::Entry("              Macros            ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 0             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 1             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 2             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 3             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 4             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 5             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 6             ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             Test 7             ", KeyEvent(KeyId::Action(5)))
+//         };
 
-        return entries[n];
-    }
+//         return entries[n];
+//     }
     
-    virtual std::size_t size()
-    {
-        return 4;
-    }
-};
+//     virtual std::size_t size()
+//     {
+//         return 12;
+//     }
+// };
 
-class MenuB : public UIMenu::Data
-{
-public:
-    virtual UIMenu::Entry entry(std::size_t n)
-    {
-        UIMenu::Entry entries[] = {
-            UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
-            UIMenu::Entry("             Display            ", KeyEvent(KeyId::Action(5))),
-            UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
-            UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5)))
-        };
+// class MenuB : public UIMenu::Data
+// {
+// public:
+//     virtual UIMenu::Entry entry(std::size_t n)
+//     {
+//         UIMenu::Entry entries[] = {
+//             UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
+//             UIMenu::Entry("             Display            ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
+//             UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5)))
+//         };
 
-        return entries[n];
-    }
+//         return entries[n];
+//     }
     
-    virtual std::size_t size()
-    {
-        return 4;
-    }
-};
+//     virtual std::size_t size()
+//     {
+//         return 4;
+//     }
+// };
 
 }
 
@@ -74,31 +83,31 @@ void loop() {
 
     display.init();
 
-    UI ui(display);
+    UI::Surface surface(display);
     
-    ui.paintText(30, 0, "Start");
+    surface.paintText(30, 0, "Start");
 
     KsKeyboard keyboard;
 
-    ui.paintText(30, 14, "Config");
+    surface.paintText(30, 14, "Config");
 
     if (!sd.begin(10, SPI_HALF_SPEED)) {
         if (sd.card()->errorCode()) {
             char sderr[48];
             sprintf(sderr,"SD Failed : 0x%x", sd.card()->errorCode());
-            ui.paintText(30, 28, sderr);
+            surface.paintText(30, 28, sderr);
         }
     }
     else
     {
         char sdinfo[48];
         sprintf(sdinfo, "SD OK : %dMB / FAT%d", (int)(0.000512 * sd.card()->cardSize() + 0.5), sd.vol()->fatType());
-        ui.paintText(30, 28, sdinfo);
+        surface.paintText(30, 28, sdinfo);
 
         SdBaseFile myFile;
 
         if (!myFile.open("test.cfg", O_READ)) {
-            ui.paintText(30, 42, "Couldn't open file");
+            surface.paintText(30, 42, "Couldn't open file");
         }
         else
         {
@@ -106,7 +115,7 @@ void loop() {
 
             myFile.fgets(data, sizeof(data));
             
-            ui.paintText(30, 42, data);
+            surface.paintText(30, 42, data);
 
             myFile.close();
         }
@@ -123,52 +132,34 @@ void loop() {
 
     EventQueue eventQueue;
     
-    // actionManager.registerAction(4, Actions::modifierKey(usbKeyboard, MODIFIERKEY_LEFT_SHIFT, KEY_MINUS));
-
     actionManager.registerAction(
         2,
         [&](const ActionContext& context)
         {
-            if (context.state == KeyState::kPressed)
+            if (context.pressed)
             {
                 display.clear();
             }
         });
     
     actionManager.registerAction(
-        4,
-        [&](const ActionContext& context)
-        {
-            if (context.state == KeyState::kPressed)
-            {
-                eventQueue.pushBack(KeyEvent(ModifierId::kLShift, KeyState::kPressed));
-                eventQueue.pushBack(KeyEvent(KEY_MINUS, KeyState::kPressed));
-            }
-            else if (context.state == KeyState::kReleased)
-            {
-                eventQueue.pushBack(KeyEvent(KEY_MINUS, KeyState::kReleased));
-                eventQueue.pushBack(KeyEvent(ModifierId::kLShift, KeyState::kReleased));
-            }
-        });
-
-    actionManager.registerAction(
         5,
         [&](const ActionContext& context)
         {
-            if (context.state == KeyState::kPressed)
+            if (context.pressed)
             {
-                MainMenu mainMenu;
-                ui.menu(mainMenu, keyHandler, eventQueue);
+                // MainMenu mainMenu;
+                // surface.menu(mainMenu, keyHandler, eventQueue);
             }
         });
 
     actionManager.registerAction(
         9,
-        [&display,&ui](const ActionContext& context)
+        [&](const ActionContext& context)
         {
             if (context.taps == 2)
             {
-                display.clear();
+                surface.clear();
                 CtrlUtil::bootloader();
             }
         });
@@ -177,20 +168,23 @@ void loop() {
     {
         eventQueue.pushBack(event);
     });
-    
+
     ModifierProcessor modifierProcessor(keyHandler);
     MultiProcessor multiProcessor;
 
-    multiProcessor.assign(0, Multi(ModifierId::kLShift, KEY_LEFT_BRACE));
-    multiProcessor.assign(1, Multi(ModifierId::kLShift, KEY_RIGHT_BRACE));
-    multiProcessor.assign(2, Multi(ModifierId::kLShift, KEY_9));
-    multiProcessor.assign(3, Multi(ModifierId::kLShift, KEY_0));
-    multiProcessor.assign(4, Multi(ModifierId::kLShift, KEY_COMMA));
-    multiProcessor.assign(5, Multi(ModifierId::kLShift, KEY_PERIOD));
+    multiProcessor.assign(0, Multi(0xe1, KEY_LEFT_BRACE));
+    multiProcessor.assign(1, Multi(0xe1, KEY_RIGHT_BRACE));
+    multiProcessor.assign(2, Multi(0xe1, KEY_9));
+    multiProcessor.assign(3, Multi(0xe1, KEY_0));
+    multiProcessor.assign(4, Multi(0xe1, KEY_COMMA));
+    multiProcessor.assign(5, Multi(0xe1, KEY_PERIOD));
     
-    multiProcessor.assign(10, Multi(ModifierId::kLShift, KEY_MINUS));
-    multiProcessor.assign(11, Multi(ModifierId::kLCtrl, KEY_SPACE));
+    multiProcessor.assign(10, Multi(0xe1, KEY_MINUS));
+    multiProcessor.assign(11, Multi(0xe0, KEY_SPACE));
 
+    UI::Home home(surface,
+                  keyHandler.layerStack());
+    
     while (1)
     {
         keyHandler.poll(eventQueue);
@@ -201,41 +195,28 @@ void loop() {
 
             const auto& keyId(event.keyId);
 
-            if (keyId.type() == KeyId::kModifier)
+            if (keyId.type() == KeyId::kKey)
             {
-                usbKeyboard.processModifier(keyId.value(), event.state);
+                usbKeyboard.processKey(keyId.value(), event.pressed);
             }
-            else if (keyId.type() == KeyId::kKey)
+            else if (keyId.type() == KeyId::kLayer)
             {
-                usbKeyboard.processKey(keyId.value(), event.state);
+                keyHandler.setLayer(keyId.value(), event.pressed, eventQueue);
+                home.update();
             }
             else
             {
-                modifierProcessor.processEvent(event, eventQueue);
                 multiProcessor.processEvent(event, eventQueue);
                 actionManager.processEvent(event, eventQueue);
+                
+                if (modifierProcessor.processEvent(event, eventQueue))
+                {
+                    home.update();
+                }
             }
         }
 
         usbKeyboard.update();
-
-
-        // if (displayDebug) 
-        // {
-        //     sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
-        //             (int)matrixA.state()[0].data(),
-        //             (int)matrixA.state()[1].data(),
-        //             (int)matrixA.state()[2].data(),
-        //             (int)matrixA.state()[3].data(),
-        //             (int)matrixA.state()[4].data());
-        //     ui.paintText(48, 0, outStr);
-            
-        //     sprintf(outStr,"|%4.4x%4.4x%4.4x%4.4x%4.4x|",
-        //             (int)matrixB.state()[0].data(),
-        //             (int)matrixB.state()[1].data(),
-        //             (int)matrixB.state()[2].data(),
-        //             (int)matrixB.state()[3].data(),
-        //             (int)matrixB.state()[4].data());
-        //     ui.paintText(48, 14, outStr);
+        home.paint();
     }
 }

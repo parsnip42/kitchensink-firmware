@@ -8,7 +8,9 @@ Layer::Layer()
     }
 }
 
-Layer::Layer(const std::initializer_list<std::initializer_list<KeyId>>& list)
+Layer::Layer(const char*                                                name,
+             const std::initializer_list<std::initializer_list<KeyId>>& list)
+    : mName(name)
 {
     for (auto& mappingRow : mMapping)
     {

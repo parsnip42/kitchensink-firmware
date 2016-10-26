@@ -11,13 +11,13 @@ bool ModifierProcessor::processEvent(const KeyEvent& event,
 {
     const auto& keyId(event.keyId);
     
-    if (keyId.type() == KeyId::kLayer)
+    if (keyId.type() == KeyId::kModifier)
     {
-        auto& modifier(mLayers[keyId.value()]);
-        
-        mKeyHandler.setLayer(keyId.value(),
-                             modifier.processEvent(event),
-                             eventQueue);
+        auto& modifier(mModifierSet[keyId.value()]);
+
+        modifier.processEvent(event, eventQueue);
+
+        return true;
     }
     
     return false;

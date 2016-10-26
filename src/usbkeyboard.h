@@ -1,8 +1,6 @@
 #ifndef INCLUDED_USBKEYBOARD_H
 #define INCLUDED_USBKEYBOARD_H
 
-#include "keystate.h"
-
 #include <cstdint>
 
 class UsbKeyboard
@@ -11,8 +9,7 @@ public:
     UsbKeyboard();
 
 public:
-    void processKey(uint8_t keyCode, KeyState state);
-    void processModifier(uint8_t modifier, KeyState state);
+    void processKey(uint8_t keyCode, bool pressed);
     void update();
     
 private:

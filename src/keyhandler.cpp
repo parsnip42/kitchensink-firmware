@@ -47,13 +47,13 @@ void KeyHandler::poll(EventQueue& eventQueue)
     {
         auto keyId(mLayerStack.at(event.row, event.column));
 
-        if (event.state == KeyState::kPressed)
+        if (event.pressed)
         {
             mTapping.processKey(keyId);
         }
         
         eventQueue.pushBack(KeyEvent(keyId,
-                                     event.state,
+                                     event.pressed,
                                      mTapping.count(keyId)));
     });
 }
@@ -73,10 +73,7 @@ void KeyHandler::pressLayer(int index, EventQueue& eventQueue)
                 if (current != next)
                 {    
                     eventQueue.pushBack(KeyEvent(current,
-                                                 KeyState::kReleased,
-                                                 0));
-                    eventQueue.pushBack(KeyEvent(next,
-                                                 KeyState::kPressed,
+                                                 false,
                                                  0));
                 }
             }
@@ -99,10 +96,7 @@ void KeyHandler::releaseLayer(int index, EventQueue& eventQueue)
                 if (current != next)
                 {    
                     eventQueue.pushBack(KeyEvent(current,
-                                                 KeyState::kReleased,
-                                                 0));
-                    eventQueue.pushBack(KeyEvent(next,
-                                                 KeyState::kPressed,
+                                                 false,
                                                  0));
                 }
             }            

@@ -1,29 +1,27 @@
 #ifndef INCLUDED_KEYMATRIXEVENT_H
 #define INCLUDED_KEYMATRIXEVENT_H
 
-#include "keystate.h"
-
 class KeyMatrixEvent
 {
 public:
-    KeyMatrixEvent(int      nRow,
-                   int      nColumn,
-                   KeyState nState);
+    KeyMatrixEvent(int  nRow,
+                   int  nColumn,
+                   bool nPressed);
     
 public:
-    int      row;
-    int      column;
-    KeyState state;
+    int  row;
+    int  column;
+    bool pressed;
 };
 
 
 inline
-KeyMatrixEvent::KeyMatrixEvent(int      nRow,
-                               int      nColumn,
-                               KeyState nState)
+KeyMatrixEvent::KeyMatrixEvent(int  nRow,
+                               int  nColumn,
+                               bool nPressed)
     : row(nRow)
     , column(nColumn)
-    , state(nState)
+    , pressed(nPressed)
 { }
 
 #endif

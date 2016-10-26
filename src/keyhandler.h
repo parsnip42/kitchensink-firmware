@@ -3,7 +3,6 @@
 
 #include "keyevent.h"
 #include "keyid.h"
-#include "keystate.h"
 #include "kskeyboard.h"
 #include "layerstack.h"
 #include "tapping.h"
@@ -23,6 +22,8 @@ public:
     void setLayer(int index, bool enabled, EventQueue& eventQueue);
     bool layerEnabled(int index) const;
 
+    const LayerStack& layerStack() const;
+    
 private:
     void pressLayer(int index, EventQueue& eventQueue);
     void releaseLayer(int index, EventQueue& eventQueue);
@@ -36,5 +37,12 @@ private:
     KeyHandler(const KeyHandler&) = delete;
     KeyHandler& operator=(const KeyHandler&) = delete;
 };
+
+
+inline
+const LayerStack& KeyHandler::layerStack() const
+{
+    return mLayerStack;
+}
 
 #endif

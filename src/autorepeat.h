@@ -2,7 +2,6 @@
 #define INCLUDED_AUTOREPEAT_H
 
 #include "keyid.h"
-#include "keystate.h"
 
 #include <cstdint>
 
@@ -13,9 +12,9 @@ public:
 
 public:
     void processKey(const KeyId& keyId,
-                    KeyState     state);
+                    bool         pressed);
 
-    KeyId activeKey() const;
+    KeyId activeKey();
     
 private:
     const uint32_t mRepeatDelay;

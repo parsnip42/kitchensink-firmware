@@ -1,36 +1,33 @@
 #include "modifier.h"
 
-Modifier::Modifier()
-    : mState(false)
-    , mSingleTrigger(false)
+#include "eventqueue.h"
+
+Modifier::Modifier(const KeyId& keyId)
+    : mKeyId(keyId)
+    , mLocked(false)
+    , mHeld(false)
 { }
 
-bool Modifier::processEvent(const KeyEvent& keyEvent)
+bool Modifier::processEvent(const KeyEvent& keyEvent,
+                            EventQueue&     eventQueue)
 {
     const auto& keyId(keyEvent.keyId);
-    const auto& keyState(keyEvent.state);
+    const auto& pressed(keyEvent.pressed);
     
     switch (keyId.modifierType())
     {
     case KeyId::ModifierType::kToggle:
-        if (keyState == KeyState::kPressed)
+        if (pressed)
         {
-            mState = !mState;
+            mLocked = !mLocked;
         }
         break;
 
     default:
-        if (keyState == KeyState::kPressed)
-        {
-            mState = true;
-        }
-        else if (keyState == KeyState::kReleased)
-        {
-            mState = false;
-        }
+        mHeld = pressed;
         break;
 
     }
 
-    return mState;
+    return mHeld || mLocked;
 }

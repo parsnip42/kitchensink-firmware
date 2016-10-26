@@ -10,7 +10,7 @@ bool ActionManager::processEvent(const KeyEvent& event, EventQueue&)
     if (event.keyId.type() == KeyId::kAction)
     {
         fireAction(event.keyId.value(),
-                   ActionContext(event.state,
+                   ActionContext(event.pressed,
                                  event.taps));
         
         return true;

@@ -3,7 +3,6 @@
 
 #include "keymask.h"
 #include "keymatrixevent.h"
-#include "keystate.h"
 
 #include <array>
 #include <initializer_list>
@@ -61,12 +60,9 @@ void EventDispatcher::dispatch(const KeyMask& stateMask,
         {
             if (delta[0])
             {
-                KeyState keyState(
-                    static_cast<KeyState>(((int)state[0]) + 1));
-                    
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],
-                                        keyState));
+                                        state[0]));
             }
             
             state >>= 1;
@@ -93,7 +89,7 @@ void EventDispatcher::pressed(const KeyMask& stateMask,
             {
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],
-                                        KeyState::kPressed));
+                                        true));
             }
             
             state >>= 1;

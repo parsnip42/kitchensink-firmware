@@ -18,30 +18,15 @@ UsbKeyboard::UsbKeyboard()
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
-void UsbKeyboard::processKey(uint8_t keyCode, KeyState state)
+void UsbKeyboard::processKey(uint8_t keyCode, bool pressed)
 {
-    if (state == KeyState::kPressed)
+    if (pressed)
     {
         pressKey(keyCode);
     }
-    else if (state == KeyState::kReleased)
+    else
     {
         releaseKey(keyCode);
-    }
-}
-
-void UsbKeyboard::processModifier(uint8_t modifier, KeyState state)
-{
-    uint8_t active(state == KeyState::kPressed);
-    uint8_t set(active << modifier);
-    uint8_t clear(~(1 << modifier));
-    
-    auto nextMask((keyboard_modifier_keys & clear) | set);
-
-    if (nextMask != keyboard_modifier_keys)
-    {
-        keyboard_modifier_keys = nextMask;
-        mDirty = true;
     }
 }
 
@@ -59,23 +44,39 @@ void UsbKeyboard::pressKey(uint8_t keyCode)
     if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
          && (mKeyNum < 6))
     {
-        keyboard_keys[mKeyNum++] = keyCode;
-        mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
+        if (keyCode < 0xe0)
+        {
+            keyboard_keys[mKeyNum++] = keyCode;
+            mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
+        }
+        else
+        {
+            keyboard_modifier_keys |= (1 << (keyCode - 0xe0));
+        }
+        
         mDirty = true;
     }
 }
 
 void UsbKeyboard::releaseKey(uint8_t keyCode)
 {
-    for (int i = 0; i < mKeyNum; ++i)
+    if (keyCode < 0xe0)
     {
-        if (keyboard_keys[i] == keyCode)
+        for (int i = 0; i < mKeyNum; ++i)
         {
-            keyboard_keys[i] = keyboard_keys[--mKeyNum];
-            keyboard_keys[mKeyNum] = 0;
-            mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
-            mDirty = true;
-            break;
+            if (keyboard_keys[i] == keyCode)
+            {
+                keyboard_keys[i] = keyboard_keys[--mKeyNum];
+                keyboard_keys[mKeyNum] = 0;
+                mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
+                mDirty = true;
+                break;
+            }
         }
+    }
+    else
+    {
+        keyboard_modifier_keys &= ~(1 << (keyCode - 0xe0));
+        mDirty = true;
     }
 }

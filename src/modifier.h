@@ -5,17 +5,21 @@
 
 #include <cstdint>
 
+class EventQueue;
+
 class Modifier
 {
 public:
-    Modifier();
+    explicit Modifier(const KeyId& keyId = KeyId::None);
 
 public:
-    bool processEvent(const KeyEvent& keyEvent);
+    bool processEvent(const KeyEvent& keyEvent,
+                      EventQueue&     eventQueue);
     
 private:
-    bool mState;
-    bool mSingleTrigger;
+    KeyId mKeyId;
+    bool  mLocked;
+    bool  mHeld;
 };
 
 #endif

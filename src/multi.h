@@ -1,8 +1,9 @@
 #ifndef INCLUDED_MULTI_H
 #define INCLUDED_MULTI_H
 
-#include "modifierid.h"
+#include "keyid.h"
 
+#include <array>
 #include <cstdint>
 
 class EventQueue;
@@ -10,18 +11,16 @@ class EventQueue;
 class Multi
 {
 public:
-    Multi();
-
-    Multi(ModifierId modifier,
-          int        keyId);
+    explicit Multi(const KeyId& key0 = KeyId::None,
+                   const KeyId& key1 = KeyId::None,
+                   const KeyId& key2 = KeyId::None,
+                   const KeyId& key3 = KeyId::None);
     
 public:
-    void press(EventQueue& eventQueue);
-    void release(EventQueue& eventQueue);
+    void processEvent(bool pressed, EventQueue& eventQueue);
     
 private:
-    uint8_t mModifierMask;
-    uint8_t mKeyId;
+    std::array<KeyId, 4> mKeys;
 };
 
 #endif

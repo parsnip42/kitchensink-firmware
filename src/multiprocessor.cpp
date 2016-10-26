@@ -17,14 +17,7 @@ bool MultiProcessor::processEvent(const KeyEvent& event,
 
         if (entry < 30)
         {
-            if (event.state == KeyState::kPressed)
-            {
-                mMulti[entry].press(eventQueue);
-            }
-            else if (event.state == KeyState::kReleased)
-            {
-                mMulti[entry].release(eventQueue);
-            }
+            mMulti[entry].processEvent(event.pressed, eventQueue);
             
             return true;
         }

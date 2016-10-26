@@ -3,6 +3,7 @@
 
 #include "modifier.h"
 #include "modifierid.h"
+#include "modifierset.h"
 #include "keyhandler.h"
 
 #include <array>
@@ -20,8 +21,8 @@ public:
                       EventQueue&     eventQueue);
 
 private:
-    KeyHandler&              mKeyHandler;
-    std::array<Modifier, 30> mLayers; 
+    KeyHandler& mKeyHandler;
+    ModifierSet mModifierSet;
 };
 
 #endif

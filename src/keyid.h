@@ -21,9 +21,9 @@ public:
 
     enum class ModifierType : uint8_t
     {
-        kHold   = 0,
-        kToggle = 1,
-        kSingle = 2
+        kHold    = 0,
+        kToggle  = 1,
+        kSingle  = 2
     };
     
 public:

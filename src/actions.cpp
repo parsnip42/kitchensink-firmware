@@ -1,7 +1,6 @@
 #include "actions.h"
 #include "actioncontext.h"
 #include "keyid.h"
-#include "keystate.h"
 #include "kskeyboard.h"
 #include "usbkeyboard.h"
 

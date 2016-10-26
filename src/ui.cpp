@@ -1,13 +1,15 @@
 #include "ui.h"
-
+/*
 #include "autorepeat.h"
 #include "display.h"
 #include "kskeyboard.h"
 #include "keyhandler.h"
 #include "keymap.h"
+#include "layerstack.h"
 
 #include <core_pins.h>
 #include <string.h>
+#include <cmath>
 
 namespace
 {
@@ -42,6 +44,7 @@ void UI::paintText(int         x,
         uint8_t(fg | (bg << 4)),
         uint8_t(fg | (fg << 4)),
     };
+    
     
     for (int line(0); line < kCharHeight; ++line)
     {
@@ -78,11 +81,185 @@ void UI::paintTextLine(const char*   begin,
     }   
 }
 
+void UI::paintMenu(UIMenu::Data& dataSource, int point, uint8_t fgBase, int selected)
+{
+    uint8_t bg(0);
+
+    int len(30);
+
+    mDisplay.initRegion(28, 0, len << 3, 64);
+
+    const uint8_t invColorMap[] =
+    {
+        uint8_t(fgBase | (fgBase << 4)),
+        uint8_t(fgBase | (bg << 4)),
+        uint8_t(bg | (fgBase << 4)),
+        uint8_t(bg | (bg << 4)),
+    };
+
+    for (auto offset(point); offset < point + 64; ++offset)
+    {
+        int f(32-std::abs(32-(offset-point)));
+        uint8_t fg(f < fgBase ? f : fgBase);
+
+        const uint8_t colorMap[] =
+        {
+            uint8_t(bg | (bg << 4)),
+            uint8_t(bg | (fg << 4)),
+            uint8_t(fg | (bg << 4)),
+            uint8_t(fg | (fg << 4)),
+        };
+
+        auto index((point + offset) / 14);
+        auto line((point + offset) % 14);
+
+        const char* text(dataSource.entry(index % dataSource.size()).text);
+
+        if ((index % dataSource.size()) == (selected % dataSource.size()))
+        {
+            paintTextLine(text, text+len, line, invColorMap);
+        }
+        else
+        {
+            paintTextLine(text, text+len, line, colorMap);
+        }
+    }
+}
+
+int UI::scrollMenu(UIMenu::Data& dataSource, int point, int direction)
+{
+    uint8_t fg(0xf);
+    uint8_t bg(0);
+
+    const uint8_t colorMap[] =
+    {
+        uint8_t(bg | (bg << 4)),
+        uint8_t(bg | (fg << 4)),
+        uint8_t(fg | (bg << 4)),
+        uint8_t(fg | (fg << 4)),
+    };
+
+    int len(30);
+
+    mDisplay.scroll((point + direction) % 64);
+
+    auto yStart(point + 64);
+
+    if (direction > 0)
+    {
+        mDisplay.initRegion(28, yStart % 64, len << 3, direction);
+    
+        for (auto offset(yStart); offset < yStart + direction; ++offset)
+        {
+            auto index(offset / 14);
+            auto line(offset % 14);
+
+            const char* text(dataSource.entry(index % dataSource.size()).text);
+            paintTextLine(text, text+len, line, colorMap);
+        }
+    }
+    else
+    {
+        mDisplay.initRegion(28, (yStart - direction) % 64, len << 3, direction);
+    
+        for (auto offset(yStart - direction); offset < yStart; ++offset)
+        {
+            auto index(offset / 14);
+            auto line(offset % 14);
+
+            const char* text(dataSource.entry(index % dataSource.size()).text);
+            paintTextLine(text, text+len, line, colorMap);
+        }
+    }
+
+    return direction;
+}
+
+void UI::main(const LayerStack& layerStack)
+{
+    for (int i = 1; i < 10; ++i)
+    {
+        const char* text(layerStack.enabled(i) ? layerStack[i].name() : "          ");
+
+        paintText(28+((i&1) * 20), (i >> 1) * 14, text, 0xf, 0);
+    }
+}
+
 void UI::menu(UIMenu::Data& dataSource,
               KeyHandler& keyHandler,
               EventQueue& eventQueue)
 {
     mDisplay.clear();
+
+    int selected(2);
+    
+    for (uint8_t i(0); i <= 0xf; ++i)
+    {
+        paintMenu(dataSource, 0, i, selected);
+        delay(12);
+    }
+    AutoRepeat autoRepeat(500);
+    int offset(3);
+    bool quit(false);
+    while (!quit)
+    {    
+        keyHandler.poll(eventQueue);
+        
+        while (!eventQueue.empty())
+        {
+            auto event(eventQueue.pop());
+            autoRepeat.processKey(event.keyId, event.state);
+
+            if (event.keyId.value() == 41 && event.state == KeyState::kPressed)
+            {
+                quit = true;
+            }
+        }
+
+        auto activeKey(autoRepeat.activeKey());
+        
+        if (activeKey.value() == 82)
+        {
+            --selected;
+            for (int i(0); i < 7; ++i)
+            {
+                keyHandler.poll(eventQueue);
+                paintMenu(dataSource, --offset, 0xf, selected);
+                delay(8);
+            }
+        }
+
+        if (activeKey.value() == 81)
+        {
+            ++selected;
+            for (int i(0); i < 7; ++i)
+            {
+                keyHandler.poll(eventQueue);
+                paintMenu(dataSource, ++offset, 0xf, selected);
+                delay(8);
+            }
+        }
+    }
+
+    // for (uint8_t i(0xf); i >=0; --i)
+    // {
+    //     paintMenu(dataSource, offset, i);
+    //     delay(12);
+    // }
+    
+    mDisplay.clear();
+
+    // int offset(0);
+    // offset += scrollMenu(dataSource, offset, 64);
+    
+    // for (int i(0); i < 200; ++i)
+    // {
+    //     offset += scrollMenu(dataSource, offset, 1);
+    //     delay(12);
+    // }
+
+
+
 
     bool quit(false);
     std::size_t selected(0);
@@ -105,7 +282,6 @@ void UI::menu(UIMenu::Data& dataSource,
     }
 
     int counter(0);
-    mDisplay.scroll(counter);
 
     while (!quit)
     {    
@@ -145,7 +321,7 @@ void UI::menu(UIMenu::Data& dataSource,
                 for (int i = 0; i < 14; i++)
                 {
                     counter--;
-                    mDisplay.scroll(counter);
+                    // mDisplay.scroll(counter);
                     delay(10);
                 }
 
@@ -181,7 +357,7 @@ void UI::menu(UIMenu::Data& dataSource,
                 for (int i = 0; i < 14; i++)
                 {
                     counter++;
-                    mDisplay.scroll(counter);
+                    // mDisplay.scroll(counter);
                     delay(10);
                 }
                 
@@ -248,10 +424,12 @@ void UI::menu(UIMenu::Data& dataSource,
         // paintText(28, 0, str);
     // }
     
-    mDisplay.clear();
+    // mDisplay.clear();
 }
 
 void UI::clear()
 {
     mDisplay.clear();
 }
+
+*/

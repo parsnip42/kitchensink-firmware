@@ -55,21 +55,21 @@ void Display::init()
     writeInst(0xAE); /*DISPLAY OFF*/
     writeInst(0xB3); /*DISPLAYDIVIDE CLOCKRADIO/OSCILLATAR FREQUANCY*/
     writeData(0x91); /*multiplex ratio*/
+    writeInst(0xCA);
     writeData(0x3F); /*duty = 1/64*/
     writeInst(0xA2); /*set offset*/
     writeData(0x00);
     writeInst(0xA1); /*start line*/
     writeData(0x00);
+
     writeInst(0xA0); /*set remap*/
     writeData(0x14); writeData(0x11);
-    //writeData(0x0); writeData(0x0);
 
     writeInst(0xAB); /*funtion selection*/
     writeData(0x01); /* selection external vdd */
     writeInst(0xB4);
     writeData(0xA0); writeData(0xFD);
     writeInst(0xC1); /*set contrast current */
-
     writeData(0x7f);
 
     writeInst(0xC7); /*master contrast current control*/
@@ -160,6 +160,6 @@ void Display::initRegion(int x, int y, int w, int h)
 
 void Display::scroll(uint8_t value)
 {
-    writeInst(0xa2);
+    writeInst(0xa1);
     writeData(value);
 }
