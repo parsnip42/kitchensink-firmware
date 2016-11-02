@@ -5,8 +5,11 @@
 
 class Debounce
 {
+private:
+    static constexpr unsigned int kLatency = 5;
+    
 public:
-    explicit Debounce(unsigned int latency);
+    constexpr Debounce();
 
 public:
     bool process(const KeyMask& next);
@@ -15,16 +18,20 @@ public:
     const KeyMask& delta() const;
     
 private:
-    const unsigned int mLatency;
-    unsigned int       mCounter;
-    KeyMask            mCurrent;
-    KeyMask            mState;
-    KeyMask            mDelta;
+    unsigned int mCounter;
+    KeyMask      mCurrent;
+    KeyMask      mState;
+    KeyMask      mDelta;
     
 private:
     Debounce(const Debounce&) = delete;
     Debounce& operator=(const Debounce&) = delete;
 };
+
+inline
+constexpr Debounce::Debounce()
+    : mCounter(0)
+{ }
 
 inline
 const KeyMask& Debounce::state() const

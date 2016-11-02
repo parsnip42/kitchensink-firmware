@@ -6,7 +6,7 @@
 class KeyId
 {
 public:
-    enum Type
+    enum class Type : uint8_t
     {
         kKey      = 0,
         kLayer    = 1,
@@ -26,22 +26,21 @@ public:
     
 public:
     static const KeyId None;
-    static KeyId Action(int actionId);
-    static KeyId Layer(int layerId);
-    static KeyId Multi(int multiId);
-    static KeyId Modifier(ModifierType modifierType,
-                          int          modifierId);
+    static constexpr KeyId Action(int actionId);
+    static constexpr KeyId Layer(int layerId);
+    static constexpr KeyId Multi(int multiId);
+    static constexpr KeyId Modifier(ModifierType modifierType,
+                                    int          modifierId);
     
 public:
-    KeyId();
-    KeyId(int keyCode);
+    constexpr KeyId(int keyCode = 0);
     
 private:
-    KeyId(uint8_t type, uint8_t value);
-    KeyId(uint8_t type, uint8_t subType, uint8_t value);
+    constexpr KeyId(Type type, uint8_t value);
+    constexpr KeyId(Type type, uint8_t subType, uint8_t value);
 
 public:
-    uint8_t type() const;
+    Type type() const;
     uint8_t subType() const;
     uint8_t value() const;
 
@@ -69,60 +68,55 @@ bool operator!=(const KeyId& lhs, const KeyId& rhs)
 
 
 inline
-KeyId KeyId::Action(int actionId)
+constexpr KeyId KeyId::Action(int actionId)
 {
-    return KeyId(kAction, actionId);
+    return KeyId(Type::kAction, actionId);
 }
 
 inline
-KeyId KeyId::Layer(int layerId)
+constexpr KeyId KeyId::Layer(int layerId)
 {
-    return KeyId(kLayer, layerId);
+    return KeyId(Type::kLayer, layerId);
 }
 
 inline
-KeyId KeyId::Multi(int multiId)
+constexpr KeyId KeyId::Multi(int multiId)
 {
-    return KeyId(kMulti, multiId);
+    return KeyId(Type::kMulti, multiId);
 }
 
 inline
-KeyId KeyId::Modifier(ModifierType modifierType,
-                      int          modifierId)
+constexpr KeyId KeyId::Modifier(ModifierType modifierType,
+                                int          modifierId)
 {
-    return KeyId(kModifier,
+    return KeyId(Type::kModifier,
                  static_cast<uint8_t>(modifierType),
                  modifierId);
 }
 
 inline
-KeyId::KeyId()
-    : mData(0)
-{ }
-
-inline
-KeyId::KeyId(int keyCode)
+constexpr KeyId::KeyId(int keyCode)
     : mData(keyCode & 0xff)
 { }
 
 inline
-KeyId::KeyId(uint8_t type, uint8_t value)
-    : mData((type & 0xf) << 12 |
+constexpr KeyId::KeyId(Type type, uint8_t value)
+    : mData((static_cast<uint8_t>(type) & 0xf) << 12 |
             (value & 0xff))
 { }
 
 inline
-KeyId::KeyId(uint8_t type, uint8_t subType, uint8_t value)
-    : mData((type & 0xf) << 12 |
+constexpr KeyId::KeyId(Type type, uint8_t subType, uint8_t value)
+    : mData((static_cast<uint8_t>(type) & 0xf) << 12 |
             (subType & 0xf) << 8 |
             value)
 { }
 
 
 inline
-uint8_t KeyId::type() const
+KeyId::Type KeyId::type() const
 {
-    return (mData >> 12) & 0xf;
+    return Type((mData >> 12) & 0xf);
 }
 
 inline

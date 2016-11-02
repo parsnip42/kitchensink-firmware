@@ -2,12 +2,9 @@
 
 #include "actioncontext.h"
 
-ActionManager::ActionManager()
-{ }
-
 bool ActionManager::processEvent(const KeyEvent& event, EventQueue&)
 {
-    if (event.keyId.type() == KeyId::kAction)
+    if (event.keyId.type() == KeyId::Type::kAction)
     {
         fireAction(event.keyId.value(),
                    ActionContext(event.pressed,

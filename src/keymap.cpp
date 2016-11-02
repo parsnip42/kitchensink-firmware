@@ -3,13 +3,13 @@
 namespace KeyMap
 {
 
-Entry::Entry()
+constexpr Entry::Entry()
     : dflt("?")
     , shift("?")
 { }
 
-Entry::Entry(const char* nDflt,
-             const char* nShift)
+constexpr Entry::Entry(const char* nDflt,
+                       const char* nShift)
     : dflt(nDflt)
     , shift(nShift)
 { }
@@ -17,7 +17,7 @@ Entry::Entry(const char* nDflt,
 namespace
 {
 
-const std::array<Entry, 0xff> tableData{{
+constexpr std::array<Entry, 0xff> tableData{{
     Entry(),
     Entry(),
     Entry(),

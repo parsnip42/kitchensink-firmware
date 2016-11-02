@@ -11,14 +11,14 @@ template <std::size_t Width, std::size_t Height>
 class Bitmask2d
 {
 public:
-    static const std::size_t kRows    = Height;
-    static const std::size_t kColumns = Width;
+    static constexpr std::size_t kRows    = Height;
+    static constexpr std::size_t kColumns = Width;
 
 public:
     typedef Bitmask<Width> Row;
     
 public:
-    Bitmask2d();
+    constexpr Bitmask2d() = default;
 
 public:
     bool empty() const;
@@ -46,12 +46,6 @@ public:
     iterator end();
 };
 
-
-template <std::size_t Width, std::size_t Height>
-inline
-Bitmask2d<Width, Height>::Bitmask2d()
-    : mRows()
-{ }
 
 template <std::size_t Width, std::size_t Height>
 inline

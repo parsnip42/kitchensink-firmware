@@ -13,8 +13,8 @@ public:
     typedef typename BitmaskAttributes<Size>::Data Data;
     
 public:
-    Bitmask();
-    explicit Bitmask(const Data& data);
+    constexpr Bitmask();
+    explicit constexpr Bitmask(const Data& data);
     
 public:
     bool empty() const;
@@ -58,13 +58,13 @@ bool operator!=(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
 
 template <std::size_t Size>
 inline
-Bitmask<Size>::Bitmask()
+constexpr Bitmask<Size>::Bitmask()
     : mData(0)
 { }
 
 template <std::size_t Size>
 inline
-Bitmask<Size>::Bitmask(const Data& data)
+constexpr Bitmask<Size>::Bitmask(const Data& data)
     : mData(data)
 { }
 

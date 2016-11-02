@@ -11,7 +11,7 @@ class KeyEvent;
 class MultiProcessor
 {
 public:
-    MultiProcessor();
+    constexpr MultiProcessor() = default;
 
 public:
     bool processEvent(const KeyEvent& event,

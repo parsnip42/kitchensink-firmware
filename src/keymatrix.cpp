@@ -2,24 +2,13 @@
 
 #include <Wire.h>
 
-void KeyMatrix::init()
+void KeyMatrix::setup()
 {
     Wire.begin();
     Wire.setClock(1000000);
 }
 
-KeyMatrix::KeyMatrix(const int      addr,
-                     const uint16_t rowMask,
-                     const uint16_t colMask)
-    : mAddr(addr)
-    , mRowMask(rowMask)
-    , mColMask(colMask)
-    , mState()
-{
-    config();
-}
-
-void KeyMatrix::config()
+void KeyMatrix::init()
 {
     Wire.beginTransmission(mAddr);
     Wire.write(0x00);

@@ -1,6 +1,5 @@
 #include "actioncontext.h"
 #include "actionmanager.h"
-#include "actions.h"
 #include "ctrlutil.h"
 #include "defaultlayers.h"
 #include "display.h"
@@ -75,7 +74,7 @@ namespace
 SdFat sd;
 
 void setup() {
-    KeyMatrix::init();
+    KeyMatrix::setup();
 }
 
 void loop() {
@@ -89,6 +88,8 @@ void loop() {
 
     KsKeyboard keyboard;
 
+    keyboard.init();
+    
     surface.paintText(30, 14, "Config");
 
     if (!sd.begin(10, SPI_HALF_SPEED)) {
@@ -200,11 +201,11 @@ void loop() {
 
             const auto& keyId(event.keyId);
 
-            if (keyId.type() == KeyId::kKey)
+            if (keyId.type() == KeyId::Type::kKey)
             {
                 usbKeyboard.processKey(keyId.value(), event.pressed);
             }
-            else if (keyId.type() == KeyId::kLayer)
+            else if (keyId.type() == KeyId::Type::kLayer)
             {
                 keyHandler.setLayer(keyId.value(), event.pressed, eventQueue);
             }

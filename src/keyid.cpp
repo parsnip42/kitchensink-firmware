@@ -1,3 +1,3 @@
 #include "keyid.h"
 
-const KeyId KeyId::None(0);
+const KeyId KeyId::None;

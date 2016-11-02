@@ -8,11 +8,11 @@
 class KeyEvent
 {
 public:
-    KeyEvent();
+    constexpr KeyEvent();
 
-    explicit KeyEvent(const KeyId& nKeyId,
-                      bool         nPressed = true,
-                      uint8_t      nTaps = 0);
+    explicit constexpr KeyEvent(const KeyId& nKeyId,
+                                bool         nPressed = true,
+                                uint8_t      nTaps = 0);
     
 public:
     KeyId   keyId;
@@ -21,16 +21,16 @@ public:
 };
 
 inline
-KeyEvent::KeyEvent()
-    : keyId(KeyId::None)
+constexpr KeyEvent::KeyEvent()
+    : keyId()
     , pressed(false)
     , taps(0)
 { }
 
 inline
-KeyEvent::KeyEvent(const KeyId& nKeyId,
-                   bool         nPressed,
-                   uint8_t      nTaps)
+constexpr KeyEvent::KeyEvent(const KeyId& nKeyId,
+                             bool         nPressed,
+                             uint8_t      nTaps)
     : keyId(nKeyId)
     , pressed(nPressed)
     , taps(nTaps)

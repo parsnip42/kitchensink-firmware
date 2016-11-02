@@ -13,8 +13,8 @@ class KeyMatrixEvent;
 class EventDispatcher
 {
 public:
-    EventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                    const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
+    constexpr EventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                              const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
     
 public:
     template <typename Callback>
@@ -37,8 +37,8 @@ private:
 
 
 inline
-EventDispatcher::EventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                                 const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
+constexpr EventDispatcher::EventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                                           const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
     : mRowMapping(rowMapping)
     , mColumnMapping(columnMapping)
 { }

@@ -11,7 +11,7 @@ bool ModifierProcessor::processEvent(const KeyEvent& event,
 {
     const auto& keyId(event.keyId);
     
-    if (keyId.type() == KeyId::kModifier)
+    if (keyId.type() == KeyId::Type::kModifier)
     {
         auto& modifier(mModifierSet[keyId.value()]);
 

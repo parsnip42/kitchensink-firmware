@@ -11,10 +11,10 @@ class EventQueue;
 class Multi
 {
 public:
-    explicit Multi(const KeyId& key0 = KeyId::None,
-                   const KeyId& key1 = KeyId::None,
-                   const KeyId& key2 = KeyId::None,
-                   const KeyId& key3 = KeyId::None);
+    explicit constexpr Multi(const KeyId& key0 = KeyId::None,
+                             const KeyId& key1 = KeyId::None,
+                             const KeyId& key2 = KeyId::None,
+                             const KeyId& key3 = KeyId::None);
     
 public:
     void processEvent(bool pressed, EventQueue& eventQueue);
@@ -22,5 +22,14 @@ public:
 private:
     std::array<KeyId, 4> mKeys;
 };
+
+
+inline
+constexpr Multi::Multi(const KeyId& key0,
+                       const KeyId& key1,
+                       const KeyId& key2,
+                       const KeyId& key3)
+    : mKeys{{ key0, key1, key2, key3 }}
+{ }
 
 #endif

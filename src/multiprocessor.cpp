@@ -3,15 +3,12 @@
 #include "eventqueue.h"
 #include "keyevent.h"
 
-MultiProcessor::MultiProcessor()
-{ }
-
 bool MultiProcessor::processEvent(const KeyEvent& event,
                                   EventQueue&     eventQueue)
 {
     const auto& keyId(event.keyId);
 
-    if (keyId.type() == KeyId::kMulti)
+    if (keyId.type() == KeyId::Type::kMulti)
     {
         size_t entry(keyId.value());
 

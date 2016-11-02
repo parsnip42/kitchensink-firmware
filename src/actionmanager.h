@@ -13,13 +13,13 @@ class EventQueue;
 class ActionManager
 {
 public:
-    static const int kMaxActions = 10;
+    static constexpr int kMaxActions = 10;
     
 public:
     typedef std::function<void(const ActionContext&)> Func;
     
 public:
-    ActionManager();
+    ActionManager() = default;
 
 public:
     bool processEvent(const KeyEvent& event, EventQueue&);

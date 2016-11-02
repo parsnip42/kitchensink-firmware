@@ -10,21 +10,19 @@
 class KeyMatrix
 {
 public:
-    static void init();
+    static void setup();
     
 public:
-    KeyMatrix(const int      addr,
-              const uint16_t rowMask,
-              const uint16_t colMask);
+    constexpr KeyMatrix(const int      addr,
+                        const uint16_t rowMask,
+                        const uint16_t colMask);
 
 public:
+    void init();
     void scan();
     
     const KeyMask& state() const;
-    
-private:
-    void config();
-    
+        
 private:
     const int      mAddr;
     const uint16_t mRowMask;
@@ -37,6 +35,16 @@ private:
     KeyMatrix& operator=(const KeyMatrix&) = delete;
 };
 
+
+inline
+constexpr KeyMatrix::KeyMatrix(const int      addr,
+                               const uint16_t rowMask,
+                               const uint16_t colMask)
+    : mAddr(addr)
+    , mRowMask(rowMask)
+    , mColMask(colMask)
+    , mState()
+{ }
 
 inline
 const KeyMask& KeyMatrix::state() const

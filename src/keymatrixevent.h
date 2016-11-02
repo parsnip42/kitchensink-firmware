@@ -4,9 +4,9 @@
 class KeyMatrixEvent
 {
 public:
-    KeyMatrixEvent(int  nRow,
-                   int  nColumn,
-                   bool nPressed);
+    constexpr KeyMatrixEvent(int  nRow,
+                             int  nColumn,
+                             bool nPressed);
     
 public:
     int  row;
@@ -16,9 +16,9 @@ public:
 
 
 inline
-KeyMatrixEvent::KeyMatrixEvent(int  nRow,
-                               int  nColumn,
-                               bool nPressed)
+constexpr KeyMatrixEvent::KeyMatrixEvent(int  nRow,
+                                         int  nColumn,
+                                         bool nPressed)
     : row(nRow)
     , column(nColumn)
     , pressed(nPressed)

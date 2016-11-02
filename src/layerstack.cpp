@@ -3,9 +3,6 @@
 
 #include <algorithm>
 
-LayerStack::LayerStack()
-{ }
-
 KeyId LayerStack::at(int row, int column) const
 {
     auto data(mLayerMask);

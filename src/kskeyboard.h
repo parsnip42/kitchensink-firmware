@@ -15,6 +15,9 @@ public:
     KsKeyboard();
 
 public:
+    void init();
+    
+public:
     template <typename Callback>
     void poll(const Callback& callback); 
 

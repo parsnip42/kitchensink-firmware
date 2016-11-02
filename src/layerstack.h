@@ -10,10 +10,10 @@
 class LayerStack
 {
 public:
-    static const int MaxLayers = 10;
+    static constexpr int MaxLayers = 10;
 
 public:
-    LayerStack();
+    constexpr LayerStack() = default;
 
 public:
     KeyId at(int row, int column) const;

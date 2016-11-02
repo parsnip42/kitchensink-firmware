@@ -10,10 +10,10 @@ namespace KeyMap
 class Entry
 {
 public:
-    Entry();
+    constexpr Entry();
     
-    Entry(const char* nDflt,
-          const char* nShift);
+    constexpr Entry(const char* nDflt,
+                    const char* nShift);
 
 public:
     const char* dflt;

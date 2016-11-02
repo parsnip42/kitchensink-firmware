@@ -4,8 +4,8 @@
 class ActionContext
 {
 public:
-    ActionContext(bool nPressed,
-                  int  nTaps);
+    constexpr ActionContext(bool nPressed,
+                            int  nTaps);
 
 public:
     bool pressed;
@@ -13,8 +13,8 @@ public:
 };
 
 inline
-ActionContext::ActionContext(bool nPressed,
-                             int  nTaps)
+constexpr ActionContext::ActionContext(bool nPressed,
+                                       int  nTaps)
     : pressed(nPressed)
     , taps(nTaps)
 { }

@@ -12,9 +12,11 @@ public:
     KeyboardPlate(const int                                     matrixAddr,
                   const uint16_t                                matrixRowMask,
                   const uint16_t                                matrixColMask,
-                  const int                                     debounceLatency,
                   const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
                   const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
+
+public:
+    void init();
 
 public:
     template <typename Callback>

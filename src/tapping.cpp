@@ -4,7 +4,7 @@
 
 Tapping::Tapping(uint32_t tapDelay)
     : mTapDelay(tapDelay)
-    , mKeyId(KeyId::None)
+    , mKeyId()
     , mLastTap(0)
     , mCount(1)
 { }

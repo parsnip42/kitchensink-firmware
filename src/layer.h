@@ -9,18 +9,17 @@
 class Layer
 {
 public:
-    static const int kRows    = 5;
-    static const int kColumns = 20;
+    static constexpr int kRows    = 5;
+    static constexpr int kColumns = 20;
     
 public:
-    Layer();
+    constexpr Layer() = default;
     explicit Layer(const std::initializer_list<std::initializer_list<KeyId>>& list);
 
 public:
     KeyId at(int row, int column) const;
     
 private:
-    const char*                                    mName;
     std::array<std::array<KeyId, kColumns>, kRows> mMapping;
 };
 
