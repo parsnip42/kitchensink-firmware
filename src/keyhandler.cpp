@@ -36,11 +36,6 @@ void KeyHandler::setLayer(int         index,
     }
 }
 
-bool KeyHandler::layerEnabled(int index) const
-{
-    return mLayerStack.enabled(index);
-}
-
 void KeyHandler::poll(EventQueue& eventQueue)
 {
     mKeyboard.poll([&](const KsKeyboard::Event& event)

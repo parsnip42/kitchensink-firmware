@@ -14,7 +14,10 @@ public:
                       const KeyId& keyId = KeyId::None);
 
 public:
-    void processEvent(const KeyEvent& keyEvent,
+    bool processEvent(const KeyEvent& keyEvent,
+                      EventQueue&     eventQueue);
+
+    bool clearTrigger(const KeyEvent& keyEvent,
                       EventQueue&     eventQueue);
 
     const char* name() const;
@@ -25,6 +28,7 @@ private:
     KeyId       mKeyId;
     bool        mLocked;
     bool        mHeld;
+    bool        mTrigger;
 };
 
 
@@ -37,7 +41,7 @@ const char* Modifier::name() const
 inline
 bool Modifier::active() const
 {
-    return mLocked || mHeld;
+    return mLocked || mHeld || mTrigger;
 }
 
 #endif

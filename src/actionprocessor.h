@@ -1,5 +1,5 @@
-#ifndef INCLUDED_ACTIONMANAGER_H
-#define INCLUDED_ACTIONMANAGER_H
+#ifndef INCLUDED_ACTIONPROCESSOR_H
+#define INCLUDED_ACTIONPROCESSOR_H
 
 #include "keyevent.h"
 #include "eventqueue.h"
@@ -10,7 +10,7 @@
 class ActionContext;
 class EventQueue;
 
-class ActionManager
+class ActionProcessor
 {
 public:
     static constexpr int kMaxActions = 10;
@@ -19,7 +19,7 @@ public:
     typedef std::function<void(const ActionContext&)> Func;
     
 public:
-    ActionManager() = default;
+    ActionProcessor() = default;
 
 public:
     bool processEvent(const KeyEvent& event, EventQueue&);
@@ -32,8 +32,8 @@ private:
     std::array<Func, kMaxActions> mActions;
 
 private:
-    ActionManager(const ActionManager&) = delete;
-    ActionManager& operator=(const ActionManager&) = delete;
+    ActionProcessor(const ActionProcessor&) = delete;
+    ActionProcessor& operator=(const ActionProcessor&) = delete;
 };
 
 #endif

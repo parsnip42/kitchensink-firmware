@@ -2,7 +2,6 @@
 #define INCLUDED_DISPLAY_H
 
 #include <cstdint>
-#include <core_pins.h>
 
 class Display
 {

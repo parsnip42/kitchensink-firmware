@@ -19,9 +19,13 @@ public:
 
     enum class ModifierType : uint8_t
     {
-        kHold    = 0,
-        kToggle  = 1,
-        kSingle  = 2
+        kHold              = 0,
+        kToggle            = 1,
+        kDoubleLock        = 2,
+        kTripleLock        = 3,
+        kSingle            = 4,
+        kSingleHold        = 5,
+        kSingleHoldRelease = 6,
     };
     
 public:

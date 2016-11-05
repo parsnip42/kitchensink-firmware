@@ -1,5 +1,5 @@
 #include "actioncontext.h"
-#include "actionmanager.h"
+#include "actionprocessor.h"
 #include "ctrlutil.h"
 #include "defaultlayers.h"
 #include "display.h"
@@ -129,11 +129,11 @@ void loop() {
     DefaultLayers::init(keyHandler);
 
     UsbKeyboard usbKeyboard;
-    ActionManager actionManager;
+    ActionProcessor actionProcessor;
 
     EventQueue eventQueue;
     
-    actionManager.registerAction(
+    actionProcessor.registerAction(
         2,
         [&](const ActionContext& context)
         {
@@ -143,7 +143,7 @@ void loop() {
             }
         });
     
-    actionManager.registerAction(
+    actionProcessor.registerAction(
         5,
         [&](const ActionContext& context)
         {
@@ -154,7 +154,7 @@ void loop() {
             }
         });
 
-    actionManager.registerAction(
+    actionProcessor.registerAction(
         9,
         [&](const ActionContext& context)
         {
@@ -175,6 +175,8 @@ void loop() {
     modifierProcessor.modifierSet()[0] = Modifier("Gm0", KeyId::Layer(3));
     modifierProcessor.modifierSet()[1] = Modifier("Gm1", KeyId::Layer(4));
     modifierProcessor.modifierSet()[2] = Modifier("Gm2", KeyId::Layer(5));
+    
+    modifierProcessor.modifierSet()[5] = Modifier("Shift", 0xe1);
 
     MultiProcessor multiProcessor;
 
@@ -212,12 +214,12 @@ void loop() {
             else
             {
                 multiProcessor.processEvent(event, eventQueue);
-                actionManager.processEvent(event, eventQueue);
-                
-                if (modifierProcessor.processEvent(event, eventQueue))
-                {
-                    home.update();
-                }
+                actionProcessor.processEvent(event, eventQueue);   
+            }
+            
+            if (modifierProcessor.processEvent(event, eventQueue))
+            {
+                home.update();
             }
         }
 

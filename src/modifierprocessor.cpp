@@ -15,9 +15,18 @@ bool ModifierProcessor::processEvent(const KeyEvent& event,
     {
         auto& modifier(mModifierSet[keyId.value()]);
 
-        modifier.processEvent(event, eventQueue);
+        return modifier.processEvent(event, eventQueue);
+    }
+    else if (keyId.type() == KeyId::Type::kKey && !event.pressed)
+    {
+        bool processed(false);
+        
+        for (auto& modifier : mModifierSet)
+        {
+            processed |= modifier.clearTrigger(event, eventQueue);
+        }
 
-        return true;
+        return processed;
     }
     
     return false;

@@ -20,9 +20,6 @@ public:
 public:
     void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled, EventQueue& eventQueue);
-    bool layerEnabled(int index) const;
-
-    const LayerStack& layerStack() const;
     
 private:
     void pressLayer(int index, EventQueue& eventQueue);
@@ -37,12 +34,5 @@ private:
     KeyHandler(const KeyHandler&) = delete;
     KeyHandler& operator=(const KeyHandler&) = delete;
 };
-
-
-inline
-const LayerStack& KeyHandler::layerStack() const
-{
-    return mLayerStack;
-}
 
 #endif

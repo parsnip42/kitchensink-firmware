@@ -1,8 +1,8 @@
-#include "actionmanager.h"
+#include "actionprocessor.h"
 
 #include "actioncontext.h"
 
-bool ActionManager::processEvent(const KeyEvent& event, EventQueue&)
+bool ActionProcessor::processEvent(const KeyEvent& event, EventQueue&)
 {
     if (event.keyId.type() == KeyId::Type::kAction)
     {
@@ -16,7 +16,7 @@ bool ActionManager::processEvent(const KeyEvent& event, EventQueue&)
     return false;
 }
 
-void ActionManager::fireAction(int action, const ActionContext& context) const
+void ActionProcessor::fireAction(int action, const ActionContext& context) const
 {
     if (action >= 0 && action < kMaxActions)
     {
@@ -29,7 +29,7 @@ void ActionManager::fireAction(int action, const ActionContext& context) const
     }
 }
 
-void ActionManager::registerAction(int action, const Func& func)
+void ActionProcessor::registerAction(int action, const Func& func)
 {
     if (action >= 0 && action < kMaxActions)
     {
