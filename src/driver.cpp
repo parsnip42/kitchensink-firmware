@@ -176,7 +176,8 @@ void loop() {
     modifierProcessor.modifierSet()[1] = Modifier("Gm1", KeyId::Layer(4));
     modifierProcessor.modifierSet()[2] = Modifier("Gm2", KeyId::Layer(5));
     
-    modifierProcessor.modifierSet()[5] = Modifier("Shift", 0xe1);
+    modifierProcessor.modifierSet()[5] = Modifier("LShft", 0xe1);
+    modifierProcessor.modifierSet()[6] = Modifier("RShft", 0xe5);
 
     MultiProcessor multiProcessor;
 

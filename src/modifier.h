@@ -22,6 +22,7 @@ public:
 
     const char* name() const;
     bool active() const;
+    bool locked() const;
     
 private:
     const char* mName;
@@ -42,6 +43,12 @@ inline
 bool Modifier::active() const
 {
     return mLocked || mHeld || mTrigger;
+}
+
+inline
+bool Modifier::locked() const
+{
+    return mLocked;
 }
 
 #endif
