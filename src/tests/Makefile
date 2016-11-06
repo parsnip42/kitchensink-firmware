@@ -1,6 +1,6 @@
 AR = ar
 CPP = clang++
-CPP_FLAGS = -std=c++11 -Wall -Werror -I. -I..
+CPP_FLAGS = -g -std=c++11 -Wall -Werror -I. -I..
 CPP_FILES = $(wildcard *.cpp)
 O_FILES = $(CPP_FILES:.cpp=.o)
 TARGET = tests

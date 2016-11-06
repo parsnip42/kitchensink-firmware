@@ -7,7 +7,6 @@ TEST(Bitmask, Default)
     Bitmask<5> b;
 
     ASSERT_TRUE(b.empty());
-    ASSERT_EQ(b.size(), 5);
     ASSERT_FALSE(b[0]);
     ASSERT_FALSE(b[1]);
     ASSERT_FALSE(b[2]);

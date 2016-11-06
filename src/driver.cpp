@@ -7,6 +7,7 @@
 #include "keyhandler.h"
 #include "kskeyboard.h"
 #include "layer.h"
+#include "macroprocessor.h"
 #include "modifierprocessor.h"
 #include "multiprocessor.h"
 #include "usbkeyboard.h"
@@ -191,6 +192,8 @@ void loop() {
     multiProcessor.assign(10, Multi(0xe1, KEY_MINUS));
     multiProcessor.assign(11, Multi(0xe0, KEY_SPACE));
 
+    MacroProcessor macroProcessor;
+    
     UI::Home home(surface,
                   modifierProcessor.modifierSet());
     
@@ -207,6 +210,7 @@ void loop() {
             if (keyId.type() == KeyId::Type::kKey)
             {
                 usbKeyboard.processKey(keyId.value(), event.pressed);
+                usbKeyboard.update();
             }
             else if (keyId.type() == KeyId::Type::kLayer)
             {
@@ -215,7 +219,8 @@ void loop() {
             else
             {
                 multiProcessor.processEvent(event, eventQueue);
-                actionProcessor.processEvent(event, eventQueue);   
+                actionProcessor.processEvent(event, eventQueue);
+                macroProcessor.processEvent(event, eventQueue);
             }
             
             if (modifierProcessor.processEvent(event, eventQueue))
@@ -224,7 +229,6 @@ void loop() {
             }
         }
 
-        usbKeyboard.update();
         home.paint();
     }
 }

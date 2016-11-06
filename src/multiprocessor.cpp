@@ -10,9 +10,9 @@ bool MultiProcessor::processEvent(const KeyEvent& event,
 
     if (keyId.type() == KeyId::Type::kMulti)
     {
-        size_t entry(keyId.value());
+        std::size_t entry(keyId.value());
 
-        if (entry < 30)
+        if (entry < 40)
         {
             mMulti[entry].processEvent(event.pressed, eventQueue);
             

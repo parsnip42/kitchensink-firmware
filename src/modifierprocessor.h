@@ -2,7 +2,6 @@
 #define INCLUDED_MODIFIERPROCESSOR_H
 
 #include "modifier.h"
-#include "modifierid.h"
 #include "modifierset.h"
 #include "keyhandler.h"
 

@@ -2,7 +2,6 @@
 
 #include "keyhandler.h"
 #include "keyid.h"
-#include "modifierid.h"
 
 #include <keylayouts.h>
 
@@ -27,7 +26,7 @@ void init(KeyHandler& keyHandler)
                 { KEY_ESC,KeyId::Multi(10),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
                     KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
                 
-                {0,KeyId::Layer(2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
+                {0,KeyId::Layer(2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,KeyId::Macro(0),0,
                     KEY_F6,KEY_F5, 0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
                 
                 {0,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 5),KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KEY_DELETE,KeyId::Action(5),KeyId::Action(2),
