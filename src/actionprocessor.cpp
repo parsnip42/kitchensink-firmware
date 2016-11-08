@@ -1,14 +1,15 @@
 #include "actionprocessor.h"
 
-#include "actioncontext.h"
+#include "eventqueue.h"
 
-bool ActionProcessor::processEvent(const KeyEvent& event, EventQueue&)
+bool ActionProcessor::processEvent(const KeyEvent& event,
+                                   EventQueue&     eventQueue)
 {
     if (event.keyId.type() == KeyId::Type::kAction)
     {
         fireAction(event.keyId.value(),
-                   ActionContext(event.pressed,
-                                 event.taps));
+                   event,
+                   eventQueue);
         
         return true;
     }
@@ -16,7 +17,9 @@ bool ActionProcessor::processEvent(const KeyEvent& event, EventQueue&)
     return false;
 }
 
-void ActionProcessor::fireAction(int action, const ActionContext& context) const
+void ActionProcessor::fireAction(int             action,
+                                 const KeyEvent& event,
+                                 EventQueue&     eventQueue) const
 {
     if (action >= 0 && action < kMaxActions)
     {
@@ -24,12 +27,13 @@ void ActionProcessor::fireAction(int action, const ActionContext& context) const
 
         if (func)
         {
-            func(context);
+            func(event, eventQueue);
         }
     }
 }
 
-void ActionProcessor::registerAction(int action, const Func& func)
+void ActionProcessor::registerAction(int         action,
+                                     const Func& func)
 {
     if (action >= 0 && action < kMaxActions)
     {

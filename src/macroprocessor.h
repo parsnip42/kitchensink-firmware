@@ -2,7 +2,6 @@
 #define INCLUDED_MACROPROCESSOR_H
 
 #include "arraypool.h"
-#include "macroelement.h"
 #include "keyevent.h"
 
 #include <array>
@@ -19,7 +18,7 @@ public:
                       EventQueue&     eventQueue);
     
 private:
-    ArrayPool<std::array<MacroElement, 1024>, 10> mMacroSet;
+    ArrayPool<std::array<KeyEvent, 1024>, 10> mMacroSet;
 
 private:
     MacroProcessor(const MacroProcessor&) = delete;

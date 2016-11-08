@@ -8,7 +8,7 @@ void Multi::processEvent(bool pressed, EventQueue& eventQueue)
     {
         if (keyId != KeyId::None)
         {
-            eventQueue.pushBack(KeyEvent(keyId, pressed));
+            eventQueue.pushFront(KeyEvent(keyId, pressed));
         }
     }
 }

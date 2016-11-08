@@ -10,7 +10,6 @@ public:
 
 public:
     void processKey(uint8_t keyCode, bool pressed);
-    void update();
     
 private:
     void pressKey(uint8_t keyCode);

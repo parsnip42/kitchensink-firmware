@@ -29,7 +29,7 @@ constexpr Multi::Multi(const KeyId& key0,
                        const KeyId& key1,
                        const KeyId& key2,
                        const KeyId& key3)
-    : mKeys{{ key0, key1, key2, key3 }}
+    : mKeys{{ key3, key2, key1, key0 }}
 { }
 
 #endif

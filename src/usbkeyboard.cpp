@@ -28,10 +28,7 @@ void UsbKeyboard::processKey(uint8_t keyCode, bool pressed)
     {
         releaseKey(keyCode);
     }
-}
 
-void UsbKeyboard::update()
-{
     if (mDirty)
     {
         usb_keyboard_send();
@@ -41,42 +38,46 @@ void UsbKeyboard::update()
 
 void UsbKeyboard::pressKey(uint8_t keyCode)
 {
-    if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
-         && (mKeyNum < 6))
+    if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7))))
     {
-        if (keyCode < 0xe0)
-        {
-            keyboard_keys[mKeyNum++] = keyCode;
-            mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
-        }
-        else
+        if (keyCode >= 0xe0)
         {
             keyboard_modifier_keys |= (1 << (keyCode - 0xe0));
+            mDirty = true;
+        }
+        else if (mKeyNum < 6)
+        {
+            keyboard_keys[mKeyNum++] = keyCode;
+            mDirty = true;
         }
         
-        mDirty = true;
+        mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
     }
 }
 
 void UsbKeyboard::releaseKey(uint8_t keyCode)
 {
-    if (keyCode < 0xe0)
+    if (mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
     {
-        for (int i = 0; i < mKeyNum; ++i)
+        if (keyCode >= 0xe0)
         {
-            if (keyboard_keys[i] == keyCode)
+            keyboard_modifier_keys &= ~(1 << (keyCode - 0xe0));
+            mDirty = true;
+        }
+        else
+        {
+            for (int i = 0; i < mKeyNum; ++i)
             {
-                keyboard_keys[i] = keyboard_keys[--mKeyNum];
-                keyboard_keys[mKeyNum] = 0;
-                mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
-                mDirty = true;
-                break;
+                if (keyboard_keys[i] == keyCode)
+                {
+                    keyboard_keys[i] = keyboard_keys[--mKeyNum];
+                    keyboard_keys[mKeyNum] = 0;
+                    mDirty = true;
+                    break;
+                }
             }
         }
-    }
-    else
-    {
-        keyboard_modifier_keys &= ~(1 << (keyCode - 0xe0));
-        mDirty = true;
+        
+        mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
     }
 }

@@ -6,7 +6,6 @@
 KeyHandler::KeyHandler(KsKeyboard& keyboard)
     : mKeyboard(keyboard)
     , mLayerStack()
-    , mTapping(250)
 {
     mLayerStack.setLayer(0, true);
 }
@@ -42,14 +41,8 @@ void KeyHandler::poll(EventQueue& eventQueue)
     {
         auto keyId(mLayerStack.at(event.row, event.column));
 
-        if (event.pressed)
-        {
-            mTapping.processKey(keyId);
-        }
-        
         eventQueue.pushBack(KeyEvent(keyId,
-                                     event.pressed,
-                                     mTapping.count(keyId)));
+                                     event.pressed));
     });
 }
 
@@ -68,8 +61,7 @@ void KeyHandler::pressLayer(int index, EventQueue& eventQueue)
                 if (current != next)
                 {    
                     eventQueue.pushBack(KeyEvent(current,
-                                                 false,
-                                                 0));
+                                                 false));
                 }
             }
         }
@@ -91,8 +83,7 @@ void KeyHandler::releaseLayer(int index, EventQueue& eventQueue)
                 if (current != next)
                 {    
                     eventQueue.pushBack(KeyEvent(current,
-                                                 false,
-                                                 0));
+                                                 false));
                 }
             }            
         }

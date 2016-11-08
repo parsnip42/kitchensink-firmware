@@ -3,37 +3,30 @@
 
 #include "keyid.h"
 
-#include <cstdint>
-
 class KeyEvent
 {
 public:
     constexpr KeyEvent();
 
     explicit constexpr KeyEvent(const KeyId& nKeyId,
-                                bool         nPressed = true,
-                                uint8_t      nTaps = 0);
+                                bool         nPressed = true);
     
 public:
-    KeyId   keyId;
-    bool    pressed;
-    uint8_t taps;
+    KeyId keyId;
+    bool  pressed;
 };
 
 inline
 constexpr KeyEvent::KeyEvent()
     : keyId()
     , pressed(false)
-    , taps(0)
 { }
 
 inline
 constexpr KeyEvent::KeyEvent(const KeyId& nKeyId,
-                             bool         nPressed,
-                             uint8_t      nTaps)
+                             bool         nPressed)
     : keyId(nKeyId)
     , pressed(nPressed)
-    , taps(nTaps)
 { }
 
 #endif

@@ -15,6 +15,7 @@ public:
 
 public:
     bool processEvent(const KeyEvent& keyEvent,
+                      uint8_t         taps,
                       EventQueue&     eventQueue);
 
     bool clearTrigger(const KeyEvent& keyEvent,

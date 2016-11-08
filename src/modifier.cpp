@@ -12,6 +12,7 @@ Modifier::Modifier(const char*  name,
 { }
 
 bool Modifier::processEvent(const KeyEvent& keyEvent,
+                            uint8_t         taps,
                             EventQueue&     eventQueue)
 {
     auto originalState(active());
@@ -30,12 +31,12 @@ bool Modifier::processEvent(const KeyEvent& keyEvent,
         
     case KeyId::ModifierType::kDoubleLock:
         mHeld = pressed;
-        mLocked = (keyEvent.taps == 2);
+        mLocked = (taps == 2);
         break;
         
     case KeyId::ModifierType::kTripleLock:
         mHeld = pressed;
-        mLocked = (keyEvent.taps == 3);
+        mLocked = (taps == 3);
         break;
 
     case KeyId::ModifierType::kSingle:
@@ -68,7 +69,7 @@ bool Modifier::processEvent(const KeyEvent& keyEvent,
     
     if (originalState != currentState)
     {
-        eventQueue.pushBack(KeyEvent(mKeyId, currentState));
+        eventQueue.pushFront(KeyEvent(mKeyId, currentState));
 
         return true;
     }
@@ -89,7 +90,7 @@ bool Modifier::clearTrigger(const KeyEvent& keyEvent,
         
         if (originalState != currentState)
         {
-            eventQueue.pushBack(KeyEvent(mKeyId, currentState));
+            eventQueue.pushFront(KeyEvent(mKeyId, currentState));
 
             return true;
         }

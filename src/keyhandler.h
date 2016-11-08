@@ -28,7 +28,6 @@ private:
 private:
     KsKeyboard& mKeyboard;
     LayerStack  mLayerStack;
-    Tapping     mTapping;
     
 private:
     KeyHandler(const KeyHandler&) = delete;

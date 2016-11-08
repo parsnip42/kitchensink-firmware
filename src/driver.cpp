@@ -1,4 +1,3 @@
-#include "actioncontext.h"
 #include "actionprocessor.h"
 #include "ctrlutil.h"
 #include "defaultlayers.h"
@@ -136,9 +135,10 @@ void loop() {
     
     actionProcessor.registerAction(
         2,
-        [&](const ActionContext& context)
+        [&](const KeyEvent& event,
+            EventQueue&     eventQueue)
         {
-            if (context.pressed)
+            if (event.pressed)
             {
                 display.clear();
             }
@@ -146,30 +146,22 @@ void loop() {
     
     actionProcessor.registerAction(
         5,
-        [&](const ActionContext& context)
+        [&](const KeyEvent& event,
+            EventQueue&     eventQueue)
         {
-            if (context.pressed)
-            {
-                // MainMenu mainMenu;
-                // surface.menu(mainMenu, keyHandler, eventQueue);
-            }
         });
 
     actionProcessor.registerAction(
         9,
-        [&](const ActionContext& context)
+        [&](const KeyEvent& event,
+            EventQueue&     eventQueue)
         {
-            if (context.taps == 2)
+            if (event.pressed)
             {
                 surface.clear();
                 CtrlUtil::bootloader();
             }
         });
-
-    auto callback([&](const KeyEvent& event)
-    {
-        eventQueue.pushBack(event);
-    });
 
     ModifierProcessor modifierProcessor(keyHandler);
 
@@ -200,19 +192,14 @@ void loop() {
     while (1)
     {
         keyHandler.poll(eventQueue);
-
-        while (!eventQueue.empty())
+        
+        if (!eventQueue.empty())
         {
             auto event(eventQueue.pop());
 
             const auto& keyId(event.keyId);
 
-            if (keyId.type() == KeyId::Type::kKey)
-            {
-                usbKeyboard.processKey(keyId.value(), event.pressed);
-                usbKeyboard.update();
-            }
-            else if (keyId.type() == KeyId::Type::kLayer)
+            if (keyId.type() == KeyId::Type::kLayer)
             {
                 keyHandler.setLayer(keyId.value(), event.pressed, eventQueue);
             }
@@ -227,8 +214,13 @@ void loop() {
             {
                 home.update();
             }
-        }
 
+            if (keyId.type() == KeyId::Type::kKey)
+            {
+                usbKeyboard.processKey(keyId.value(), event.pressed);
+            }
+        }
+        
         home.paint();
     }
 }

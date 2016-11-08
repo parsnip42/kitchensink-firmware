@@ -4,6 +4,7 @@
 #include "modifier.h"
 #include "modifierset.h"
 #include "keyhandler.h"
+#include "tapping.h"
 
 #include <array>
 
@@ -24,6 +25,7 @@ public:
 
 private:
     KeyHandler& mKeyHandler;
+    Tapping     mTapping;
     ModifierSet mModifierSet;
 };
 
