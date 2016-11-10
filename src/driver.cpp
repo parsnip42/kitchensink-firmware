@@ -8,7 +8,6 @@
 #include "layer.h"
 #include "macroprocessor.h"
 #include "modifierprocessor.h"
-#include "multiprocessor.h"
 #include "usbkeyboard.h"
 
 #include "ui/surface.h"
@@ -172,18 +171,6 @@ void loop() {
     modifierProcessor.modifierSet()[5] = Modifier("LShft", 0xe1);
     modifierProcessor.modifierSet()[6] = Modifier("RShft", 0xe5);
 
-    MultiProcessor multiProcessor;
-
-    multiProcessor.assign(0, Multi(0xe1, KEY_LEFT_BRACE));
-    multiProcessor.assign(1, Multi(0xe1, KEY_RIGHT_BRACE));
-    multiProcessor.assign(2, Multi(0xe1, KEY_9));
-    multiProcessor.assign(3, Multi(0xe1, KEY_0));
-    multiProcessor.assign(4, Multi(0xe1, KEY_COMMA));
-    multiProcessor.assign(5, Multi(0xe1, KEY_PERIOD));
-    
-    multiProcessor.assign(10, Multi(0xe1, KEY_MINUS));
-    multiProcessor.assign(11, Multi(0xe0, KEY_SPACE));
-
     MacroProcessor macroProcessor;
     
     UI::Home home(surface,
@@ -205,7 +192,6 @@ void loop() {
             }
             else
             {
-                multiProcessor.processEvent(event, eventQueue);
                 actionProcessor.processEvent(event, eventQueue);
                 macroProcessor.processEvent(event, eventQueue);
             }

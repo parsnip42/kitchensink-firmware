@@ -27,7 +27,14 @@ public:
         kSingleHold        = 5,
         kSingleHoldRelease = 6,
     };
-    
+
+    enum class MacroType : uint8_t
+    {
+        kSync   = 0,
+        kASync  = 1,
+        kInvert = 2
+    };
+
 public:
     static const KeyId None;
     static constexpr KeyId Action(int actionId);
@@ -35,7 +42,8 @@ public:
     static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Modifier(ModifierType modifierType,
                                     int          modifierId);
-    static constexpr KeyId Macro(int macroId);
+    static constexpr KeyId Macro(MacroType macroType,
+                                 int       macroId);
     
 public:
     constexpr KeyId(int keyCode = 0);
@@ -50,6 +58,7 @@ public:
     uint8_t value() const;
 
     ModifierType modifierType() const;
+    MacroType macroType() const;
     
 private:
     uint16_t mData;
@@ -100,9 +109,12 @@ constexpr KeyId KeyId::Modifier(ModifierType modifierType,
 }
 
 inline
-constexpr KeyId KeyId::Macro(int macroId)
+constexpr KeyId KeyId::Macro(MacroType macroType,
+                             int       macroId)
 {
-    return KeyId(Type::kMacro, macroId);
+    return KeyId(Type::kMacro,
+                 static_cast<uint8_t>(macroType),
+                 macroId);
 }
 
 inline
@@ -146,6 +158,12 @@ inline
 KeyId::ModifierType KeyId::modifierType() const
 {
     return static_cast<KeyId::ModifierType>(subType());
+}
+
+inline
+KeyId::MacroType KeyId::macroType() const
+{
+    return static_cast<KeyId::MacroType>(subType());
 }
 
 #endif

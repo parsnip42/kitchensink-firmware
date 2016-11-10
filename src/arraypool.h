@@ -36,14 +36,15 @@ public:
         auto newSize(std::distance(begin, end));
         auto shift(int32_t(newSize) - int32_t(currentSize));
 
-        if (shift == 0)
+        if (currentSize == 0)
         {
             auto newBegin(mPoolSize);
             auto newEnd(newBegin + newSize);
 
             std::copy(begin, end, mPool.begin() + newBegin);
             mPoolSize += newSize;
-            mIndex[index] = Entry(newBegin, newEnd);
+            entry.begin = newBegin;
+            entry.end = newEnd;
         }
         else
         {
@@ -53,7 +54,7 @@ public:
             shiftPool(point, shift);
 
             std::copy(begin, end, mPool.begin() + entry.begin);
-            mIndex[index].end += shift;
+            entry.end += shift;
         }
     }
 
@@ -88,7 +89,7 @@ private:
         mPoolSize += shift;
     }
     
-private:
+public:
     class Entry
     {
     public:
@@ -122,14 +123,32 @@ private:
     std::size_t mPoolSize;
 
 public:
-    typedef typename Pool::const_iterator const_iterator;
+    typedef typename Pool::const_iterator         const_iterator;
+    typedef typename Pool::const_reverse_iterator const_reverse_iterator;
 
-    std::pair<const_iterator, const_iterator> operator[](int index) const
+    const_iterator begin() const
     {
-        auto& entry(mIndex[index]);
+        return mPool.begin();
+    }
 
-        return std::make_pair(mPool.begin() + entry.begin,
-                              mPool.begin() + entry.end);
+    const_iterator end() const
+    {
+        return mPool.end();
+    }
+    
+    const_reverse_iterator rbegin() const
+    {
+        return mPool.rbegin();
+    }
+
+    const_reverse_iterator rend() const
+    {
+        return mPool.rend();
+    }
+
+    Entry operator[](int index) const
+    {
+        return mIndex[index];
     }
 };
 

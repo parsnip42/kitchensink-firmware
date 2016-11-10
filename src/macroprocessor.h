@@ -1,11 +1,9 @@
 #ifndef INCLUDED_MACROPROCESSOR_H
 #define INCLUDED_MACROPROCESSOR_H
 
-#include "arraypool.h"
-#include "keyevent.h"
+#include "macroset.h"
 
-#include <array>
-
+class KeyEvent;
 class EventQueue;
 
 class MacroProcessor
@@ -18,8 +16,8 @@ public:
                       EventQueue&     eventQueue);
     
 private:
-    ArrayPool<std::array<KeyEvent, 1024>, 10> mMacroSet;
-
+    MacroSet mMacroSet;
+    
 private:
     MacroProcessor(const MacroProcessor&) = delete;
     MacroProcessor& operator=(const MacroProcessor&) = delete;
