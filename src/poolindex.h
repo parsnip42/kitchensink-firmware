@@ -12,8 +12,6 @@ class PoolIndex
 private:
     typedef std::array<PoolIndexEntry, Capacity> Index;
 
-    Index mIndex;
-    
 public:
     constexpr PoolIndex() = default;
 
@@ -23,6 +21,9 @@ public:
 public:
     const PoolIndexEntry& operator[](int index) const;
     PoolIndexEntry& operator[](int index);
+
+private:
+    Index mIndex;
 };
 
 
