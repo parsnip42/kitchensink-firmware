@@ -9,28 +9,21 @@
 
 class MacroSet
 {
-public:
-    constexpr MacroSet() = default;
-    
-public:
-    void setMacro(int index, const std::initializer_list<KeyEvent>& press);
-
 private:
     typedef ArrayPool<std::array<KeyEvent, 1024>, 20> MacroPool;
-    
-    MacroPool mMacroPool;
-    
+
 public:
     class Macro
     {
+    public:
+        typedef MacroPool::const_iterator         const_iterator;
+        typedef MacroPool::const_reverse_iterator const_reverse_iterator;
+
     public:
         constexpr Macro(const MacroSet&            macroSet,
                         MacroSet::MacroPool::Entry entry);
         
     public:
-        typedef MacroPool::const_iterator         const_iterator;
-        typedef MacroPool::const_reverse_iterator const_reverse_iterator;
-
         const_iterator begin() const;
         const_iterator end() const;
 
@@ -42,6 +35,15 @@ public:
         MacroSet::MacroPool::Entry mEntry;
     };
 
+public:
+    constexpr MacroSet() = default;
+    
+public:
+    void setMacro(int index, const std::initializer_list<KeyEvent>& press);
+
+private:
+    MacroPool mMacroPool;
+    
 public:
     Macro operator[](int index) const;
     
