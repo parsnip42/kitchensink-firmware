@@ -1,6 +1,8 @@
 #ifndef INCLUDED_ARRAYPOOL_H
 #define INCLUDED_ARRAYPOOL_H
 
+#include "poolindex.h"
+
 #include <algorithm>
 #include <array>
 #include <cstdint>
@@ -50,7 +52,7 @@ public:
         {
             auto point(entry.end);
 
-            shiftIndex(point, shift);
+            mIndex.shift(point, shift);
             shiftPool(point, shift);
 
             std::copy(begin, end, mPool.begin() + entry.begin);
@@ -59,18 +61,6 @@ public:
     }
 
 private:
-    void shiftIndex(uint32_t point, int32_t shift)
-    {
-        for (auto& entry : mIndex)
-        {
-            if (entry.begin > point)
-            {
-                entry.begin += shift;
-                entry.end += shift;
-            }
-        }
-    }
-
     void shiftPool(uint32_t point, int32_t shift)
     {
         if (shift < 0)
@@ -89,34 +79,8 @@ private:
         mPoolSize += shift;
     }
     
-public:
-    class Entry
-    {
-    public:
-        Entry()
-            : begin(0)
-            , end(0)
-        { }
-        
-        Entry(std::size_t nBegin,
-              std::size_t nEnd)
-            : begin(nBegin)
-            , end(nEnd)
-        { }
-
-    public:
-        bool empty() const
-        {
-            return (begin == end);
-        }
-        
-    public:
-        std::size_t begin;
-        std::size_t end;
-    };
-    
 private:
-    typedef std::array<Entry, IndexCapacity> Index;
+    typedef PoolIndex<IndexCapacity> Index;
     
     Pool        mPool;
     Index       mIndex;
@@ -125,7 +89,8 @@ private:
 public:
     typedef typename Pool::const_iterator         const_iterator;
     typedef typename Pool::const_reverse_iterator const_reverse_iterator;
-
+    typedef PoolIndexEntry                        Entry;
+    
     const_iterator begin() const
     {
         return mPool.begin();

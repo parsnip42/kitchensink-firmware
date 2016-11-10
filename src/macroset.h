@@ -24,48 +24,63 @@ public:
     class Macro
     {
     public:
-        Macro(const MacroSet&            macroSet,
-              MacroSet::MacroPool::Entry entry)
-            : mMacroSet(macroSet)
-            , mEntry(entry)
-        { }
+        constexpr Macro(const MacroSet&            macroSet,
+                        MacroSet::MacroPool::Entry entry);
         
     public:
         typedef MacroPool::const_iterator         const_iterator;
         typedef MacroPool::const_reverse_iterator const_reverse_iterator;
 
-        const_iterator begin()
-        {
-            return mMacroSet.mMacroPool.begin() + mEntry.begin;
-        }
+        const_iterator begin() const;
+        const_iterator end() const;
 
-        const_iterator end()
-        {
-            return mMacroSet.mMacroPool.begin() + mEntry.end;
-        }
-
-        const_reverse_iterator rbegin()
-        {
-            return const_reverse_iterator(end());
-        }
-
-        const_reverse_iterator rend()
-        {
-            return const_reverse_iterator(begin());
-        }
-        
+        const_reverse_iterator rbegin() const;
+        const_reverse_iterator rend() const;        
 
     private:
         const MacroSet&            mMacroSet;
         MacroSet::MacroPool::Entry mEntry;
     };
-    
+
+public:
     Macro operator[](int index) const;
     
 private:
     MacroSet(const MacroSet&) = delete;
     MacroSet& operator=(const MacroSet&) = delete;
 };
+
+
+inline
+constexpr MacroSet::Macro::Macro(const MacroSet&            macroSet,
+                                 MacroSet::MacroPool::Entry entry)
+    : mMacroSet(macroSet)
+    , mEntry(entry)
+{ }
+
+inline
+MacroSet::Macro::const_iterator MacroSet::Macro::begin() const
+{
+    return mMacroSet.mMacroPool.begin() + mEntry.begin;
+}
+
+inline
+MacroSet::Macro::const_iterator MacroSet::Macro::end() const
+{
+    return mMacroSet.mMacroPool.begin() + mEntry.end;
+}
+
+inline
+MacroSet::Macro::const_reverse_iterator MacroSet::Macro::rbegin() const
+{
+    return const_reverse_iterator(end());
+}
+
+inline
+MacroSet::Macro::const_reverse_iterator MacroSet::Macro::rend() const
+{
+    return const_reverse_iterator(begin());
+}
 
 
 inline
