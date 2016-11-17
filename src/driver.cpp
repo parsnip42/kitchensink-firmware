@@ -12,6 +12,7 @@
 
 #include "ui/surface.h"
 #include "ui/home.h"
+#include "ui/menu.h"
 
 #include <SdFat.h>
 
@@ -148,6 +149,19 @@ void loop() {
         [&](const KeyEvent& event,
             EventQueue&     eventQueue)
         {
+            UI::Menu menu(surface);
+
+            constexpr UI::Menu::Item items[] =
+            {
+                UI::Menu::Item("ABCD", KeyId(0xe1)),
+                UI::Menu::Item("EFGH", KeyId(0xe1)),
+                UI::Menu::Item("IJKL", KeyId(0xe1)),
+                UI::Menu::Item("MNOP", KeyId(0xe1)),
+                UI::Menu::Item("QRST", KeyId(0xe1))
+
+            };
+            
+            menu.createMenu(keyHandler, eventQueue, items, items + 5, items + 1);
         });
 
     actionProcessor.registerAction(
@@ -167,7 +181,8 @@ void loop() {
     modifierProcessor.modifierSet()[0] = Modifier("Gm0", KeyId::Layer(3));
     modifierProcessor.modifierSet()[1] = Modifier("Gm1", KeyId::Layer(4));
     modifierProcessor.modifierSet()[2] = Modifier("Gm2", KeyId::Layer(5));
-    
+    modifierProcessor.modifierSet()[3] = Modifier("KSP", KeyId::Layer(6));
+
     modifierProcessor.modifierSet()[5] = Modifier("LShft", 0xe1);
     modifierProcessor.modifierSet()[6] = Modifier("RShft", 0xe5);
 

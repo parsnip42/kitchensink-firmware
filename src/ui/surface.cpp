@@ -46,6 +46,11 @@ void Surface::paintText(int         x,
     }
 }
 
+void Surface::initRegion(int x, int y, int w, int h)
+{
+    mDisplay.initRegion(x, y, w, h);
+}
+
 void Surface::paintTextLine(const char*   begin,
                             const char*   end,
                             const int     line,

@@ -20,11 +20,13 @@ public:
                    uint8_t     fg = 0xf,
                    uint8_t     bg = 0);
 
+    void initRegion(int x, int y, int w, int h);
+
     void paintTextLine(const char*   begin,
                        const char*   end,
                        const int     line,
                        const uint8_t (&colorMap)[4]);
-    
+        
     void clear();
 
 private:

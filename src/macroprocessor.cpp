@@ -7,18 +7,6 @@
 
 MacroProcessor::MacroProcessor()
 {
-    // mMacroSet.setMacro(0, {
-    //         KeyEvent(KeyId(KEY_T), false),
-    //         KeyEvent(KeyId(KEY_T)),
-    //         KeyEvent(KeyId(KEY_S), false),
-    //         KeyEvent(KeyId(KEY_S)),
-    //         KeyEvent(KeyId(KEY_E), false),
-    //         KeyEvent(KeyId(KEY_E)),
-    //         KeyEvent(KeyId(KEY_T), false),
-    //         KeyEvent(KeyId(KEY_T)),
-    //         });
-
-    
     mMacroSet.setMacro(0, {
             KeyEvent(KeyId(KEY_LEFT_BRACE)),
             KeyEvent(KeyId(0xe1)),
@@ -57,7 +45,29 @@ MacroProcessor::MacroProcessor()
     mMacroSet.setMacro(11, {
             KeyEvent(KeyId(KEY_MINUS)),
             KeyEvent(KeyId(0xe1)),
+            });
+
+    mMacroSet.setMacro(15, {
+            KeyEvent(KeyId(KEY_COMMA)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    mMacroSet.setMacro(16, {
+            KeyEvent(KeyId(KEY_PERIOD)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    mMacroSet.setMacro(17, {
+            KeyEvent(KeyId(KEY_L)),
+            KeyEvent(KeyId(0xe2)),
             });    
+    mMacroSet.setMacro(18, {
+            KeyEvent(KeyId(KEY_F5)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    mMacroSet.setMacro(19, {
+            KeyEvent(KeyId(KEY_F9)),
+            KeyEvent(KeyId(0xe2)),
+            });
+
 }
 
 bool MacroProcessor::processEvent(const KeyEvent& event,
