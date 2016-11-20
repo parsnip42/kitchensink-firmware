@@ -1,7 +1,7 @@
 #ifndef INCLUDED_AUTOREPEAT_H
 #define INCLUDED_AUTOREPEAT_H
 
-#include "keyid.h"
+#include "keyevent.h"
 
 #include <cstdint>
 
@@ -11,8 +11,7 @@ public:
     explicit AutoRepeat(uint32_t repeatDelay);
 
 public:
-    void processKey(const KeyId& keyId,
-                    bool         pressed);
+    void processEvent(const KeyEvent& keyEvent);
 
     KeyId activeKey();
     

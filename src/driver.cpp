@@ -16,61 +16,6 @@
 
 #include <SdFat.h>
 
-namespace
-{
-
-// class MainMenu : public UIMenu::Data
-// {
-// public:
-//     virtual UIMenu::Entry entry(std::size_t n)
-//     {
-//         UIMenu::Entry entries[] = {
-//             UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
-//             UIMenu::Entry("              Macros            ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 0             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 1             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 2             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 3             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 4             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 5             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 6             ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             Test 7             ", KeyEvent(KeyId::Action(5)))
-//         };
-
-//         return entries[n];
-//     }
-    
-//     virtual std::size_t size()
-//     {
-//         return 12;
-//     }
-// };
-
-// class MenuB : public UIMenu::Data
-// {
-// public:
-//     virtual UIMenu::Entry entry(std::size_t n)
-//     {
-//         UIMenu::Entry entries[] = {
-//             UIMenu::Entry("            Bootloader          ", KeyEvent(KeyId::Action(9), KeyState::kPressed, 2)),
-//             UIMenu::Entry("             Display            ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("          Configuration         ", KeyEvent(KeyId::Action(5))),
-//             UIMenu::Entry("             System             ", KeyEvent(KeyId::Action(5)))
-//         };
-
-//         return entries[n];
-//     }
-    
-//     virtual std::size_t size()
-//     {
-//         return 4;
-//     }
-// };
-
-}
-
 SdFat sd;
 
 void setup() {
@@ -134,17 +79,6 @@ void loop() {
     EventQueue eventQueue;
     
     actionProcessor.registerAction(
-        2,
-        [&](const KeyEvent& event,
-            EventQueue&     eventQueue)
-        {
-            if (event.pressed)
-            {
-                display.clear();
-            }
-        });
-    
-    actionProcessor.registerAction(
         5,
         [&](const KeyEvent& event,
             EventQueue&     eventQueue)
@@ -153,15 +87,15 @@ void loop() {
 
             constexpr UI::Menu::Item items[] =
             {
-                UI::Menu::Item("ABCD", KeyId(0xe1)),
-                UI::Menu::Item("EFGH", KeyId(0xe1)),
-                UI::Menu::Item("IJKL", KeyId(0xe1)),
-                UI::Menu::Item("MNOP", KeyId(0xe1)),
-                UI::Menu::Item("QRST", KeyId(0xe1))
+                UI::Menu::Item("Macros", KeyId(4)),
+                UI::Menu::Item("Layers", KeyId(5)),
+                UI::Menu::Item("Display", KeyId(6)),
+                UI::Menu::Item("System", KeyId(7)),
+                UI::Menu::Item("Bootloader", KeyId::Action(9))
 
             };
-            
-            menu.createMenu(keyHandler, eventQueue, items, items + 5, items + 1);
+            auto dataSource(UI::Menu::ArrayDataSource(items, items+5));
+            menu.createMenu(dataSource, keyHandler, eventQueue);
         });
 
     actionProcessor.registerAction(

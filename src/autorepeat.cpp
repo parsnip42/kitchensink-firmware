@@ -6,12 +6,11 @@ AutoRepeat::AutoRepeat(uint32_t repeatDelay)
     : mRepeatDelay(repeatDelay)
 { }
 
-void AutoRepeat::processKey(const KeyId& keyId,
-                            bool         pressed)
+void AutoRepeat::processEvent(const KeyEvent& keyEvent)
 {
-    if (pressed)
+    if (keyEvent.pressed)
     {
-        mKeyId = keyId;
+        mKeyId = keyEvent.keyId;
         mHeldTime = 0;
     }
     else

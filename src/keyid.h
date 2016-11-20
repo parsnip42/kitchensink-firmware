@@ -34,6 +34,12 @@ public:
         kASync  = 1,
         kInvert = 2
     };
+    
+    enum class ActionType : uint8_t
+    {
+        kBuiltin = 0,
+        kMenu    = 1
+    };
 
 public:
     static const KeyId None;

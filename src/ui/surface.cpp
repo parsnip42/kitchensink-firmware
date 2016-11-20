@@ -80,6 +80,39 @@ void Surface::paintTextLine(const char*   begin,
     }   
 }
 
+void Surface::paintTextLineC(const char*   text,
+                             const int     width,
+                             const int     line,
+                             const uint8_t (&colorMap)[4])
+{
+    auto hWidth(width / 2);
+    
+    int prePad(0);
+    int textLen(strlen(text) * 4);
+
+    if (hWidth > textLen)
+    {
+        prePad = (hWidth - textLen) / 2;
+    }
+
+    for (int i(0); i < prePad; ++i)
+    {
+        mDisplay.writeData(colorMap[0]);
+    }
+
+    paintTextLine(text, text + strlen(text), line, colorMap);
+
+    for (int i(0); i < (hWidth - (textLen + prePad)); ++i)
+    {
+        mDisplay.writeData(colorMap[0]);
+    }
+}
+
+void Surface::scroll(uint8_t value)
+{
+    mDisplay.scroll(value);
+}
+
 void Surface::clear()
 {
     mDisplay.clear();

@@ -11,6 +11,12 @@ namespace UI
 class Surface
 {
 public:
+    static constexpr int kHeight = 64;
+    static constexpr int kWidth = 240;
+    static constexpr int kFontHeight = 14;
+    static constexpr uint8_t kScrollMax = 127;
+
+public:
     explicit Surface(Display& display);
 
 public:
@@ -26,7 +32,13 @@ public:
                        const char*   end,
                        const int     line,
                        const uint8_t (&colorMap)[4]);
-        
+    
+    void paintTextLineC(const char*   text,
+                        const int     width,
+                        const int     line,
+                        const uint8_t (&colorMap)[4]);
+
+    void scroll(uint8_t value);
     void clear();
 
 private:
