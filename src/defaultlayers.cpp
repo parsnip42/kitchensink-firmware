@@ -29,8 +29,8 @@ void init(KeyHandler& keyHandler)
                 {0,KeyId::Layer(2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,KeyId::Macro(KeyId::MacroType::kSync, 9),0,
                     KEY_F6,KEY_F5, 0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
                 
-                {0,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 5),KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KEY_DELETE,KeyId::Action(5),KeyId::Action(2),
-                    KeyId::Action(9),0,KEY_QUOTE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 6) },
+                {0,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 5),KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KEY_DELETE,KeyId::Action(KeyId::ActionType::kMenu, 0),0,
+                    KeyId::Action(KeyId::ActionType::kBuiltIn, 0),0,KEY_QUOTE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 6) },
                 
                 {0,KEY_LGUI,0,0,0,0,KEY_LCTRL,KeyId::Layer(1),KEY_LALT,0,
                     0,KEY_LALT,KEY_SPACE,KEY_RCTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }

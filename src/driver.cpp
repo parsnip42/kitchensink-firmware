@@ -1,5 +1,4 @@
 #include "actionprocessor.h"
-#include "ctrlutil.h"
 #include "defaultlayers.h"
 #include "display.h"
 #include "eventqueue.h"
@@ -12,7 +11,6 @@
 
 #include "ui/surface.h"
 #include "ui/home.h"
-#include "ui/menu.h"
 
 #include <SdFat.h>
 
@@ -74,42 +72,11 @@ void loop() {
     DefaultLayers::init(keyHandler);
 
     UsbKeyboard usbKeyboard;
-    ActionProcessor actionProcessor;
+    ActionProcessor actionProcessor(keyHandler,
+                                    surface);
 
     EventQueue eventQueue;
     
-    actionProcessor.registerAction(
-        5,
-        [&](const KeyEvent& event,
-            EventQueue&     eventQueue)
-        {
-            UI::Menu menu(surface);
-
-            constexpr UI::Menu::Item items[] =
-            {
-                UI::Menu::Item("Macros", KeyId(4)),
-                UI::Menu::Item("Layers", KeyId(5)),
-                UI::Menu::Item("Display", KeyId(6)),
-                UI::Menu::Item("System", KeyId(7)),
-                UI::Menu::Item("Bootloader", KeyId::Action(9))
-
-            };
-            auto dataSource(UI::Menu::ArrayDataSource(items, items+5));
-            menu.createMenu(dataSource, keyHandler, eventQueue);
-        });
-
-    actionProcessor.registerAction(
-        9,
-        [&](const KeyEvent& event,
-            EventQueue&     eventQueue)
-        {
-            if (event.pressed)
-            {
-                surface.clear();
-                CtrlUtil::bootloader();
-            }
-        });
-
     ModifierProcessor modifierProcessor(keyHandler);
 
     modifierProcessor.modifierSet()[0] = Modifier("Gm0", KeyId::Layer(3));

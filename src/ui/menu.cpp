@@ -11,9 +11,9 @@ Menu::Menu(Surface& surface)
     : mSurface(surface)
 { }
 
-void Menu::createMenu(DataSource& dataSource,
-                      KeyHandler& keyHandler,
-                      EventQueue& eventQueue)
+void Menu::createMenu(const DataSource& dataSource,
+                      KeyHandler&       keyHandler,
+                      EventQueue&       eventQueue)
 {
     const int selectionOffset(20);
     AutoRepeat autoRepeat(500);
@@ -115,11 +115,11 @@ void Menu::createMenu(DataSource& dataSource,
     }
 }
 
-KeyId Menu::paintMenu(DataSource& dataSource,
-                      int         selected,
-                      int         offset,
-                      uint8_t     fg,
-                      uint8_t     bg)
+KeyId Menu::paintMenu(const DataSource& dataSource,
+                      int               selected,
+                      int               offset,
+                      uint8_t           fg,
+                      uint8_t           bg)
 {
     return paintMenu(dataSource,
                      selected,
@@ -130,13 +130,13 @@ KeyId Menu::paintMenu(DataSource& dataSource,
                      bg);
 }
 
-KeyId Menu::paintMenu(DataSource& dataSource,
-                      int         selected,
-                      int         offset,
-                      int         start,
-                      int         height,
-                      uint8_t     fg,
-                      uint8_t     bg)
+KeyId Menu::paintMenu(const DataSource& dataSource,
+                      int               selected,
+                      int               offset,
+                      int               start,
+                      int               height,
+                      uint8_t           fg,
+                      uint8_t           bg)
 {
     int len(240);
     

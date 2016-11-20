@@ -1,15 +1,34 @@
 #include "actionprocessor.h"
-
+#include "ctrlutil.h"
 #include "eventqueue.h"
+#include "menudefinitions.h"
+
+
+ActionProcessor::ActionProcessor(KeyHandler&  keyHandler,
+                                 UI::Surface& surface)
+    : mKeyHandler(keyHandler)
+    , mSurface(surface)
+{ }
 
 bool ActionProcessor::processEvent(const KeyEvent& event,
                                    EventQueue&     eventQueue)
 {
-    if (event.keyId.type() == KeyId::Type::kAction)
+    const auto& keyId(event.keyId);
+    
+    if (keyId.type() == KeyId::Type::kAction)
     {
-        fireAction(event.keyId.value(),
-                   event,
-                   eventQueue);
+        switch (keyId.actionType())
+        {
+        case KeyId::ActionType::kBuiltIn:
+            fireBuiltIn(event.keyId.value(),
+                        event,
+                        eventQueue);
+
+        case KeyId::ActionType::kMenu:
+            fireMenu(event.keyId.value(),
+                     event,
+                     eventQueue);
+        }
         
         return true;
     }
@@ -17,26 +36,21 @@ bool ActionProcessor::processEvent(const KeyEvent& event,
     return false;
 }
 
-void ActionProcessor::fireAction(int             action,
-                                 const KeyEvent& event,
-                                 EventQueue&     eventQueue) const
+void ActionProcessor::fireBuiltIn(int             action,
+                                  const KeyEvent& event,
+                                  EventQueue&     eventQueue) const
 {
-    if (action >= 0 && action < kMaxActions)
-    {
-        const auto& func(mActions[action]);
-
-        if (func)
-        {
-            func(event, eventQueue);
-        }
-    }
+    CtrlUtil::bootloader();
 }
 
-void ActionProcessor::registerAction(int         action,
-                                     const Func& func)
+void ActionProcessor::fireMenu(int             action,
+                               const KeyEvent& event,
+                               EventQueue&     eventQueue) const
 {
-    if (action >= 0 && action < kMaxActions)
-    {
-        mActions[action] = func;
-    }
+    UI::Menu menu(mSurface);
+
+    menu.createMenu(MenuDefinitions::getDataSource(action),
+                    mKeyHandler,
+                    eventQueue);
 }
+

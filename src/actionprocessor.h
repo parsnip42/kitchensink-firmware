@@ -5,9 +5,11 @@
 #include "eventqueue.h"
 
 #include <array>
-#include <functional>
 
 class EventQueue;
+class KeyHandler;
+
+namespace UI { class Surface; };
 
 class ActionProcessor
 {
@@ -15,25 +17,25 @@ public:
     static constexpr int kMaxActions = 10;
     
 public:
-    typedef std::function<void(const KeyEvent&, EventQueue&)> Func;
-    
-public:
-    ActionProcessor() = default;
+    explicit ActionProcessor(KeyHandler&  keyHandler,
+                             UI::Surface& surface);
 
 public:
     bool processEvent(const KeyEvent& event,
                       EventQueue&     eventQueue);
     
-    void registerAction(int         action,
-                        const Func& func);
-    
 private:
-    void fireAction(int             action,
-                    const KeyEvent& event,
-                    EventQueue&     eventQueue) const;
+    void fireBuiltIn(int             action,
+                     const KeyEvent& event,
+                     EventQueue&     eventQueue) const;
     
+    void fireMenu(int             action,
+                  const KeyEvent& event,
+                  EventQueue&     eventQueue) const;
+
 private:
-    std::array<Func, kMaxActions> mActions;
+    KeyHandler&  mKeyHandler;
+    UI::Surface& mSurface;
 
 private:
     ActionProcessor(const ActionProcessor&) = delete;

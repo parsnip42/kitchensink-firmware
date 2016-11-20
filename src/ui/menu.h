@@ -22,10 +22,7 @@ public:
     {
     public:
         constexpr Item(const char*  nText,
-                       const KeyId& nKeyId)
-            : text(nText)
-            , keyId(nKeyId)
-        { }
+                       const KeyId& nKeyId);
 
     public:
         const char* text;
@@ -36,59 +33,33 @@ public:
     class DataSource
     {
     public:
-        virtual Item getItem(std::size_t index) = 0;
-        virtual std::size_t getItemCount() = 0;
-    };
-    
-public:
-    class ArrayDataSource : public DataSource
-    {
-    public:
-        ArrayDataSource(const Item* begin,
-                        const Item* end)
-            : mBegin(begin)
-            , mEnd(end)
-        { }
-
-    public:
-        virtual Item getItem(std::size_t index)
-        {
-            return *(mBegin + index);
-        }
-
-        virtual std::size_t getItemCount()
-        {
-            return (mEnd - mBegin);   
-        }
-
-    private:
-        const Item* mBegin;
-        const Item* mEnd;
+        virtual Item getItem(std::size_t index) const = 0;
+        virtual std::size_t getItemCount() const = 0;
     };
 
 public:
     explicit Menu(Surface& surface);
 
 public:
-    void createMenu(DataSource& dataSource,
-                    KeyHandler& keyHandler,
-                    EventQueue& eventQueue);
+    void createMenu(const DataSource& dataSource,
+                    KeyHandler&       keyHandler,
+                    EventQueue&       eventQueue);
 
 private:
-    KeyId paintMenu(DataSource& dataSource,
-                    int         selected,
-                    int         offset,
-                    uint8_t     fg,
-                    uint8_t     bg);
+    KeyId paintMenu(const DataSource& dataSource,
+                    int               selected,
+                    int               offset,
+                    uint8_t           fg,
+                    uint8_t           bg);
     
 
-    KeyId paintMenu(DataSource& dataSource,
-                    int         selected,
-                    int         offset,
-                    int         start,
-                    int         end,
-                    uint8_t     fg,
-                    uint8_t     bg);
+    KeyId paintMenu(const DataSource& dataSource,
+                    int               selected,
+                    int               offset,
+                    int               start,
+                    int               end,
+                    uint8_t           fg,
+                    uint8_t           bg);
     
 private:
     Surface& mSurface;
@@ -98,6 +69,13 @@ private:
     Menu& operator=(const Menu&) = delete;
 };
 
+
+inline
+constexpr Menu::Item::Item(const char*  nText,
+                           const KeyId& nKeyId)
+    : text(nText)
+    , keyId(nKeyId)
+{ }
 
 }
 

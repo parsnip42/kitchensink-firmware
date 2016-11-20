@@ -37,13 +37,14 @@ public:
     
     enum class ActionType : uint8_t
     {
-        kBuiltin = 0,
+        kBuiltIn = 0,
         kMenu    = 1
     };
 
 public:
     static const KeyId None;
-    static constexpr KeyId Action(int actionId);
+    static constexpr KeyId Action(ActionType actionType,
+                                  int        actionId);
     static constexpr KeyId Layer(int layerId);
     static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Modifier(ModifierType modifierType,
@@ -63,6 +64,7 @@ public:
     uint8_t subType() const;
     uint8_t value() const;
 
+    ActionType actionType() const;
     ModifierType modifierType() const;
     MacroType macroType() const;
     
@@ -88,9 +90,12 @@ bool operator!=(const KeyId& lhs, const KeyId& rhs)
 
 
 inline
-constexpr KeyId KeyId::Action(int actionId)
+constexpr KeyId KeyId::Action(ActionType actionType,
+                              int actionId)
 {
-    return KeyId(Type::kAction, actionId);
+    return KeyId(Type::kAction,
+                 static_cast<uint8_t>(actionType),
+                 actionId);
 }
 
 inline
@@ -158,6 +163,12 @@ inline
 uint8_t KeyId::value() const
 {
     return (mData & 0xff);
+}
+
+inline
+KeyId::ActionType KeyId::actionType() const
+{
+    return static_cast<KeyId::ActionType>(subType());
 }
 
 inline
