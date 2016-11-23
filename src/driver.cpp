@@ -1,12 +1,9 @@
 #include "actionprocessor.h"
 #include "defaultlayers.h"
 #include "display.h"
-#include "eventqueue.h"
-#include "keyhandler.h"
+#include "keydispatcher.h"
 #include "kskeyboard.h"
-#include "layer.h"
-#include "macroprocessor.h"
-#include "modifierprocessor.h"
+#include "keyprocessor.h"
 #include "usbkeyboard.h"
 
 #include "ui/surface.h"
@@ -67,62 +64,41 @@ void loop() {
 
     display.clear();
 
-    KeyHandler keyHandler(keyboard);
+    KeyDispatcher keyDispatcher(keyboard);
     
-    DefaultLayers::init(keyHandler);
+    DefaultLayers::init(keyDispatcher);
 
     UsbKeyboard usbKeyboard;
-    ActionProcessor actionProcessor(keyHandler,
+
+    // UI::Home home(surface,
+    //               modifierProcessor.modifierSet());
+
+    KeyProcessor keyProcessor(keyDispatcher);
+
+    ActionProcessor actionProcessor(keyProcessor,
                                     surface);
 
-    EventQueue eventQueue;
-    
-    ModifierProcessor modifierProcessor(keyHandler);
-
-    modifierProcessor.modifierSet()[0] = Modifier("Gm0", KeyId::Layer(3));
-    modifierProcessor.modifierSet()[1] = Modifier("Gm1", KeyId::Layer(4));
-    modifierProcessor.modifierSet()[2] = Modifier("Gm2", KeyId::Layer(5));
-    modifierProcessor.modifierSet()[3] = Modifier("KSP", KeyId::Layer(6));
-
-    modifierProcessor.modifierSet()[5] = Modifier("LShft", 0xe1);
-    modifierProcessor.modifierSet()[6] = Modifier("RShft", 0xe5);
-
-    MacroProcessor macroProcessor;
-    
-    UI::Home home(surface,
-                  modifierProcessor.modifierSet());
-    
     while (1)
     {
-        keyHandler.poll(eventQueue);
+        keyProcessor.poll();
         
-        if (!eventQueue.empty())
+        if (keyProcessor.hasEvent())
         {
-            auto event(eventQueue.pop());
+            auto event(keyProcessor.popEvent());
 
             const auto& keyId(event.keyId);
-
-            if (keyId.type() == KeyId::Type::kLayer)
-            {
-                keyHandler.setLayer(keyId.value(), event.pressed, eventQueue);
-            }
-            else
-            {
-                actionProcessor.processEvent(event, eventQueue);
-                macroProcessor.processEvent(event, eventQueue);
-            }
-            
-            if (modifierProcessor.processEvent(event, eventQueue))
-            {
-                home.update();
-            }
 
             if (keyId.type() == KeyId::Type::kKey)
             {
                 usbKeyboard.processKey(keyId.value(), event.pressed);
             }
+            else if (keyId.type() == KeyId::Type::kAction)
+            {
+                actionProcessor.processEvent(event);
+            }
         }
         
-        home.paint();
+        // home.update();
+        // home.paint();
     }
 }

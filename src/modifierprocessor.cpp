@@ -2,12 +2,8 @@
 
 #include "keyevent.h"
 
-ModifierProcessor::ModifierProcessor(KeyHandler& keyHandler)
-    : mKeyHandler(keyHandler)
-    , mTapping(500)
-{ }
-
-bool ModifierProcessor::processEvent(const KeyEvent& event,
+bool ModifierProcessor::processEvent(ModifierSet&    modifierSet,
+                                     const KeyEvent& event,
                                      EventQueue&     eventQueue)
 {
     const auto& keyId(event.keyId);
@@ -19,17 +15,22 @@ bool ModifierProcessor::processEvent(const KeyEvent& event,
     
     if (keyId.type() == KeyId::Type::kModifier)
     {
-        auto& modifier(mModifierSet[keyId.value()]);
+        auto modifierIndex(keyId.value());
 
-        return modifier.processEvent(event,
-                                     mTapping.count(keyId),
-                                     eventQueue);
+        if (modifierIndex < modifierSet.size())
+        {
+            auto& modifier(modifierSet[modifierIndex]);
+            
+            return modifier.processEvent(event,
+                                         mTapping.count(keyId),
+                                         eventQueue);
+        }
     }
     else if (keyId.type() == KeyId::Type::kKey && !event.pressed)
     {
         bool processed(false);
         
-        for (auto& modifier : mModifierSet)
+        for (auto& modifier : modifierSet)
         {
             processed |= modifier.clearTrigger(event, eventQueue);
         }

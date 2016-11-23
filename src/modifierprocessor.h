@@ -3,7 +3,6 @@
 
 #include "modifier.h"
 #include "modifierset.h"
-#include "keyhandler.h"
 #include "tapping.h"
 
 #include <array>
@@ -14,32 +13,21 @@ class KeyEvent;
 class ModifierProcessor
 {
 public:
-    explicit ModifierProcessor(KeyHandler& keyHandler);
+    constexpr ModifierProcessor();
 
 public:
-    bool processEvent(const KeyEvent& event,
+    bool processEvent(ModifierSet&    modifierSet,
+                      const KeyEvent& event,
                       EventQueue&     eventQueue);
 
-    const ModifierSet& modifierSet() const;
-    ModifierSet& modifierSet();
-
 private:
-    KeyHandler& mKeyHandler;
-    Tapping     mTapping;
-    ModifierSet mModifierSet;
+    Tapping mTapping;
 };
 
 
 inline
-const ModifierSet& ModifierProcessor::modifierSet() const
-{
-    return mModifierSet;
-}
-
-inline
-ModifierSet& ModifierProcessor::modifierSet()
-{
-    return mModifierSet;
-}
+constexpr ModifierProcessor::ModifierProcessor()
+    : mTapping(500)
+{ }
 
 #endif

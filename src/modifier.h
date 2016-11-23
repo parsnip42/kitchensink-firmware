@@ -10,8 +10,8 @@ class EventQueue;
 class Modifier
 {
 public:
-    explicit Modifier(const char*  name  = "",
-                      const KeyId& keyId = KeyId::None);
+    explicit constexpr Modifier(const char*  name  = "",
+                                const KeyId& keyId = KeyId::None);
 
 public:
     bool processEvent(const KeyEvent& keyEvent,
@@ -33,6 +33,16 @@ private:
     bool        mTrigger;
 };
 
+
+inline
+constexpr Modifier::Modifier(const char*  name,
+                             const KeyId& keyId)
+    : mName(name)
+    , mKeyId(keyId)
+    , mLocked(false)
+    , mHeld(false)
+    , mTrigger(false)
+{ }
 
 inline
 const char* Modifier::name() const

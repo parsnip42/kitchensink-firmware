@@ -8,7 +8,7 @@
 class Tapping
 {
 public:
-    explicit Tapping(uint32_t tapDelay);
+    explicit constexpr Tapping(uint32_t tapDelay);
 
 public:
     void processKey(const KeyId& keyId);
@@ -23,6 +23,14 @@ private:
     uint8_t  mCount;
 };
 
+
+inline
+constexpr Tapping::Tapping(uint32_t tapDelay)
+    : mTapDelay(tapDelay)
+    , mKeyId()
+    , mLastTap(0)
+    , mCount(1)
+{ }
 
 inline
 uint8_t Tapping::count(const KeyId& keyId)

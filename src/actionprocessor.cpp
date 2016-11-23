@@ -3,15 +3,13 @@
 #include "eventqueue.h"
 #include "menudefinitions.h"
 
-
-ActionProcessor::ActionProcessor(KeyHandler&  keyHandler,
-                                 UI::Surface& surface)
-    : mKeyHandler(keyHandler)
+ActionProcessor::ActionProcessor(KeyProcessor& keyProcessor,
+                                 UI::Surface&   surface)
+    : mKeyProcessor(keyProcessor)
     , mSurface(surface)
 { }
 
-bool ActionProcessor::processEvent(const KeyEvent& event,
-                                   EventQueue&     eventQueue)
+bool ActionProcessor::processEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
     
@@ -21,13 +19,11 @@ bool ActionProcessor::processEvent(const KeyEvent& event,
         {
         case KeyId::ActionType::kBuiltIn:
             fireBuiltIn(event.keyId.value(),
-                        event,
-                        eventQueue);
+                        event);
 
         case KeyId::ActionType::kMenu:
             fireMenu(event.keyId.value(),
-                     event,
-                     eventQueue);
+                     event);
         }
         
         return true;
@@ -37,20 +33,17 @@ bool ActionProcessor::processEvent(const KeyEvent& event,
 }
 
 void ActionProcessor::fireBuiltIn(int             action,
-                                  const KeyEvent& event,
-                                  EventQueue&     eventQueue) const
+                                  const KeyEvent& event) const
 {
     CtrlUtil::bootloader();
 }
 
 void ActionProcessor::fireMenu(int             action,
-                               const KeyEvent& event,
-                               EventQueue&     eventQueue) const
+                               const KeyEvent& event) const
 {
     UI::Menu menu(mSurface);
 
     menu.createMenu(MenuDefinitions::getDataSource(action),
-                    mKeyHandler,
-                    eventQueue);
+                    mKeyProcessor);
 }
 

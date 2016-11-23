@@ -2,13 +2,6 @@
 
 #include <elapsedMillis.h>
 
-Tapping::Tapping(uint32_t tapDelay)
-    : mTapDelay(tapDelay)
-    , mKeyId()
-    , mLastTap(0)
-    , mCount(1)
-{ }
-
 void Tapping::processKey(const KeyId& keyId)
 {
     auto tapTime(millis());

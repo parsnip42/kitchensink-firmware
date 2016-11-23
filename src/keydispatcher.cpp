@@ -1,21 +1,21 @@
-#include "keyhandler.h"
+#include "keydispatcher.h"
 
 #include "eventqueue.h"
 #include "kskeyboard.h"
 
-KeyHandler::KeyHandler(KsKeyboard& keyboard)
+KeyDispatcher::KeyDispatcher(KsKeyboard& keyboard)
     : mKeyboard(keyboard)
     , mLayerStack()
 {
     mLayerStack.setLayer(0, true);
 }
 
-void KeyHandler::assignLayer(int index, const Layer& layer)
+void KeyDispatcher::assignLayer(int index, const Layer& layer)
 {
     mLayerStack.assignLayer(index, layer);
 }
 
-void KeyHandler::setLayer(int         index,
+void KeyDispatcher::setLayer(int         index,
                           bool        enabled,
                           EventQueue& eventQueue)
 {
@@ -35,7 +35,7 @@ void KeyHandler::setLayer(int         index,
     }
 }
 
-void KeyHandler::poll(EventQueue& eventQueue)
+void KeyDispatcher::poll(EventQueue& eventQueue)
 {
     mKeyboard.poll([&](const KsKeyboard::Event& event)
     {
@@ -46,7 +46,7 @@ void KeyHandler::poll(EventQueue& eventQueue)
     });
 }
 
-void KeyHandler::pressLayer(int index, EventQueue& eventQueue)
+void KeyDispatcher::pressLayer(int index, EventQueue& eventQueue)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
@@ -68,7 +68,7 @@ void KeyHandler::pressLayer(int index, EventQueue& eventQueue)
     });
 }
 
-void KeyHandler::releaseLayer(int index, EventQueue& eventQueue)
+void KeyDispatcher::releaseLayer(int index, EventQueue& eventQueue)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {

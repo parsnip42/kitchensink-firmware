@@ -1,12 +1,12 @@
 #ifndef INCLUDED_DEFAULTLAYERS_H
 #define INCLUDED_DEFAULTLAYERS_H
 
-class KeyHandler;
+class KeyDispatcher;
 
 namespace DefaultLayers
 {
 
-void init(KeyHandler& keyHandler);
+void init(KeyDispatcher& keyDispatcher);
 
 }
 

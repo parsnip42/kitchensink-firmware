@@ -1,13 +1,10 @@
 #ifndef INCLUDED_ACTIONPROCESSOR_H
 #define INCLUDED_ACTIONPROCESSOR_H
 
-#include "keyevent.h"
-#include "eventqueue.h"
-
 #include <array>
 
-class EventQueue;
-class KeyHandler;
+class KeyEvent;
+class KeyProcessor;
 
 namespace UI { class Surface; };
 
@@ -17,25 +14,22 @@ public:
     static constexpr int kMaxActions = 10;
     
 public:
-    explicit ActionProcessor(KeyHandler&  keyHandler,
-                             UI::Surface& surface);
+    explicit ActionProcessor(KeyProcessor& keyProcessor,
+                             UI::Surface&  surface);
 
 public:
-    bool processEvent(const KeyEvent& event,
-                      EventQueue&     eventQueue);
+    bool processEvent(const KeyEvent& event);
     
 private:
     void fireBuiltIn(int             action,
-                     const KeyEvent& event,
-                     EventQueue&     eventQueue) const;
+                     const KeyEvent& event) const;
     
     void fireMenu(int             action,
-                  const KeyEvent& event,
-                  EventQueue&     eventQueue) const;
+                  const KeyEvent& event) const;
 
 private:
-    KeyHandler&  mKeyHandler;
-    UI::Surface& mSurface;
+    KeyProcessor& mKeyProcessor;
+    UI::Surface&   mSurface;
 
 private:
     ActionProcessor(const ActionProcessor&) = delete;

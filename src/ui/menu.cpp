@@ -1,4 +1,5 @@
 #include "ui/menu.h"
+#include "ui/keys.h"
 #include "autorepeat.h"
 #include "timed.h"
 
@@ -12,8 +13,7 @@ Menu::Menu(Surface& surface)
 { }
 
 void Menu::createMenu(const DataSource& dataSource,
-                      KeyHandler&       keyHandler,
-                      EventQueue&       eventQueue)
+                      KeyProcessor&     keyProcessor)
 {
     const int selectionOffset(20);
     AutoRepeat autoRepeat(500);
@@ -43,27 +43,27 @@ void Menu::createMenu(const DataSource& dataSource,
 
     while (1)
     {
-        keyHandler.poll(eventQueue);
+        keyProcessor.poll();
         
-        if (!eventQueue.empty())
+        if (keyProcessor.hasEvent())
         {
-            autoRepeat.processEvent(eventQueue.pop());
+            autoRepeat.processEvent(keyProcessor.popEvent());
         }
 
         auto keyId(autoRepeat.activeKey());
                 
-        if (keyId == KeyId(82))
+        if (Keys::up(keyId))
         {
             for (int i(0); i < Surface::kFontHeight; ++i)
             {
-                Timed(10,
+                Timed(8,
                       [&]()
                       {
                           mSurface.scroll(Surface::kScrollMax - i);
                       },
                       [&]()
                       {
-                          keyHandler.poll(eventQueue);
+                          keyProcessor.poll();
                       });
             }
 
@@ -71,19 +71,18 @@ void Menu::createMenu(const DataSource& dataSource,
             mSurface.scroll(0);
             redraw();
         }
-
-        if (keyId == KeyId(81))
+        else if (Keys::down(keyId))
         {
             for (int i(0); i < Surface::kFontHeight; ++i)
             {
-                Timed(10,
+                Timed(8,
                       [&]()
                       {
                           mSurface.scroll(i);
                       },
                       [&]()
                       {
-                          keyHandler.poll(eventQueue);
+                          keyProcessor.poll();
                       });
             }
 
@@ -91,18 +90,17 @@ void Menu::createMenu(const DataSource& dataSource,
             mSurface.scroll(0);
             redraw();
         }
-        
-        if (keyId == KeyId(41))
+        else if (Keys::ok(keyId))
+        {
+            // eventQueue.pushBack(KeyEvent(selectedKeyId, true));
+            // eventQueue.pushBack(KeyEvent(selectedKeyId, false));
+            break;
+        }
+        else if (Keys::cancel(keyId))
         {
             break;
         }
 
-        if (keyId == KeyId(40))
-        {
-            eventQueue.pushBack(KeyEvent(selectedKeyId, true));
-            eventQueue.pushBack(KeyEvent(selectedKeyId, false));
-            break;
-        }
     }
 
     for (auto fg(0xf); fg >= 0; --fg)

@@ -1,5 +1,5 @@
-#ifndef INCLUDED_EVENTDISPATCHER_H
-#define INCLUDED_EVENTDISPATCHER_H
+#ifndef INCLUDED_KEYMATRIXDISPATCHER_H
+#define INCLUDED_KEYMATRIXDISPATCHER_H
 
 #include "keymask.h"
 #include "keymatrixevent.h"
@@ -10,44 +10,44 @@
 class KeyMatrix;
 class KeyMatrixEvent;
 
-class EventDispatcher
+class KeyMatrixDispatcher
 {
 public:
-    constexpr EventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                              const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
+    constexpr KeyMatrixDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                                  const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
     
 public:
     template <typename Callback>
-    void dispatch(const KeyMask& stateMask,
-                  const KeyMask& deltaMask,
-                  const Callback&        callback);
+    void dispatch(const KeyMask&  stateMask,
+                  const KeyMask&  deltaMask,
+                  const Callback& callback);
     
     template <typename Callback>
-    void pressed(const KeyMask& stateMask,
-                 const Callback&        callback);
+    void pressed(const KeyMask&  stateMask,
+                 const Callback& callback);
 
 private:
     const std::array<uint8_t, KeyMask::kRows>    mRowMapping;
     const std::array<uint8_t, KeyMask::kColumns> mColumnMapping;
 
 private:
-    EventDispatcher(const EventDispatcher&) = delete;
-    EventDispatcher& operator=(const EventDispatcher&) = delete;
+    KeyMatrixDispatcher(const KeyMatrixDispatcher&) = delete;
+    KeyMatrixDispatcher& operator=(const KeyMatrixDispatcher&) = delete;
 };
 
 
 inline
-constexpr EventDispatcher::EventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                                           const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
+constexpr KeyMatrixDispatcher::KeyMatrixDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                                                   const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
     : mRowMapping(rowMapping)
     , mColumnMapping(columnMapping)
 { }
 
 template <typename Func>
 inline
-void EventDispatcher::dispatch(const KeyMask& stateMask,
-                               const KeyMask& deltaMask,
-                               const Func&    callback)
+void KeyMatrixDispatcher::dispatch(const KeyMask& stateMask,
+                                   const KeyMask& deltaMask,
+                                   const Func&    callback)
 {
     for (std::size_t row(0); row < KeyMask::kRows; ++row)
     {
@@ -74,8 +74,8 @@ void EventDispatcher::dispatch(const KeyMask& stateMask,
 
 template <typename Func>
 inline
-void EventDispatcher::pressed(const KeyMask& stateMask,
-                              const Func&    callback)
+void KeyMatrixDispatcher::pressed(const KeyMask& stateMask,
+                                  const Func&    callback)
 {
     for (std::size_t row(0); row < KeyMask::kRows; ++row)
     {

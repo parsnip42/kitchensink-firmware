@@ -4,7 +4,7 @@
 #include "keymask.h"
 #include "keymatrix.h"
 #include "debounce.h"
-#include "eventdispatcher.h"
+#include "keymatrixdispatcher.h"
 
 class KeyboardPlate
 {
@@ -26,9 +26,9 @@ public:
     void pressed(const Callback& callback);
     
 private:
-    KeyMatrix       mMatrix;
-    Debounce        mDebounce;
-    EventDispatcher mDispatcher;
+    KeyMatrix           mMatrix;
+    Debounce            mDebounce;
+    KeyMatrixDispatcher mDispatcher;
 
 private:
     KeyboardPlate(const KeyboardPlate&);

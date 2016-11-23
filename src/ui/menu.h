@@ -1,14 +1,15 @@
 #ifndef INCLUDED_UI_MENU_H
 #define INCLUDED_UI_MENU_H
 
-#include "eventqueue.h"
-#include "keyhandler.h"
 #include "keyid.h"
-
+#include "keyprocessor.h"
 #include "ui/surface.h"
+
 #include <elapsedMillis.h>
 
 #include <cstdint>
+
+class KeyProcessor;
 
 namespace UI
 {
@@ -42,8 +43,7 @@ public:
 
 public:
     void createMenu(const DataSource& dataSource,
-                    KeyHandler&       keyHandler,
-                    EventQueue&       eventQueue);
+                    KeyProcessor&     keyProcessor);
 
 private:
     KeyId paintMenu(const DataSource& dataSource,

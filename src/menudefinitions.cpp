@@ -9,7 +9,7 @@ class ArrayDataSource : public UI::Menu::DataSource
 {
 public:
     template <std::size_t Size>
-    ArrayDataSource(const UI::Menu::Item (&menu)[Size]);
+    constexpr ArrayDataSource(const UI::Menu::Item (&menu)[Size]);
 
 public:
     virtual UI::Menu::Item getItem(std::size_t index) const;
@@ -23,7 +23,7 @@ private:
 
 template <std::size_t Size>
 inline
-ArrayDataSource::ArrayDataSource(const UI::Menu::Item (&menu)[Size])
+constexpr ArrayDataSource::ArrayDataSource(const UI::Menu::Item (&menu)[Size])
     : mBegin(menu)
     , mEnd(menu + Size)
 { }

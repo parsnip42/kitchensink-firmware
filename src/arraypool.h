@@ -18,6 +18,11 @@ public:
     { }
 
 public:
+    std::size_t size() const
+    {
+        return IndexCapacity;
+    }
+
     std::size_t poolSize() const
     {
         return mPoolSize;

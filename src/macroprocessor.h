@@ -1,22 +1,19 @@
 #ifndef INCLUDED_MACROPROCESSOR_H
 #define INCLUDED_MACROPROCESSOR_H
 
-#include "macroset.h"
-
 class KeyEvent;
 class EventQueue;
+class MacroSet;
 
 class MacroProcessor
 {
 public:
-    MacroProcessor();
+    constexpr MacroProcessor() = default;
 
 public:
-    bool processEvent(const KeyEvent& event,
+    bool processEvent(const MacroSet& macroSet,
+                      const KeyEvent& event,
                       EventQueue&     eventQueue);
-    
-private:
-    MacroSet mMacroSet;
     
 private:
     MacroProcessor(const MacroProcessor&) = delete;

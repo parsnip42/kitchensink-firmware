@@ -1,5 +1,5 @@
-#ifndef INCLUDED_KEYHANDLER_H
-#define INCLUDED_KEYHANDLER_H
+#ifndef INCLUDED_KEYDISPATCHER_H
+#define INCLUDED_KEYDISPATCHER_H
 
 #include "keyevent.h"
 #include "keyid.h"
@@ -9,10 +9,10 @@
 
 class EventQueue;
 
-class KeyHandler
+class KeyDispatcher
 {
 public:
-    explicit KeyHandler(KsKeyboard& keyboard);
+    explicit KeyDispatcher(KsKeyboard& keyboard);
 
 public:
     void poll(EventQueue& eventQueue);
@@ -30,8 +30,8 @@ private:
     LayerStack  mLayerStack;
     
 private:
-    KeyHandler(const KeyHandler&) = delete;
-    KeyHandler& operator=(const KeyHandler&) = delete;
+    KeyDispatcher(const KeyDispatcher&) = delete;
+    KeyDispatcher& operator=(const KeyDispatcher&) = delete;
 };
 
 #endif

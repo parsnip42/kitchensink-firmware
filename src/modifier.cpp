@@ -2,15 +2,6 @@
 
 #include "eventqueue.h"
 
-Modifier::Modifier(const char*  name,
-                   const KeyId& keyId)
-    : mName(name)
-    , mKeyId(keyId)
-    , mLocked(false)
-    , mHeld(false)
-    , mTrigger(false)
-{ }
-
 bool Modifier::processEvent(const KeyEvent& keyEvent,
                             uint8_t         taps,
                             EventQueue&     eventQueue)

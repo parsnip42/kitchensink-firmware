@@ -40,7 +40,8 @@ public:
     
 public:
     void setMacro(int index, const std::initializer_list<KeyEvent>& press);
-
+    std::size_t size() const;
+    
 private:
     MacroPool mMacroPool;
     
@@ -59,6 +60,12 @@ constexpr MacroSet::Macro::Macro(const MacroSet&            macroSet,
     : mMacroSet(macroSet)
     , mEntry(entry)
 { }
+
+inline
+std::size_t MacroSet::size() const
+{
+    return mMacroPool.size();
+}
 
 inline
 MacroSet::Macro::const_iterator MacroSet::Macro::begin() const
