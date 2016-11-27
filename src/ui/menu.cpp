@@ -157,7 +157,7 @@ KeyId Menu::paintMenu(const DataSource& dataSource,
 
         auto line(point % Surface::kFontHeight);
 
-        mSurface.initRegion(28, y, Surface::kWidth, 1);
+        mSurface.initRegion(0, y, Surface::kWidth, 1);
         mSurface.paintTextLineC(text, Surface::kWidth, line, colors);
     }
 

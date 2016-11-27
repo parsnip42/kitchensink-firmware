@@ -69,7 +69,7 @@ void Home::paint()
         const char* text(mModifierSet[i].name());
 
         auto offset(i);
-        mSurface.paintText(28+((offset&3) * 16), 52-((offset >> 2) * 14),
+        mSurface.paintText(((offset&3) * 16), 52-((offset >> 2) * 14),
                            text, mPaintState[i], 0);
     }
 }

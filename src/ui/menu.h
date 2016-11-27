@@ -14,8 +14,6 @@ class KeyProcessor;
 namespace UI
 {
 
-class Surface;
-
 class Menu
 {
 public:

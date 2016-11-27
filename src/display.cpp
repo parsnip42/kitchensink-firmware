@@ -148,6 +148,9 @@ void Display::writeData(uint8_t data)
 
 void Display::initRegion(int x, int y, int w, int h)
 {
+    // Physical display region starts at 28.
+    x += 28;
+    
     writeInst(0x15);
     writeData(x);
     writeData(x + (w >> 2) -1);

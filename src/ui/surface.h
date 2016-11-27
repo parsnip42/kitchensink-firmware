@@ -13,6 +13,7 @@ class Surface
 public:
     static constexpr int kHeight = 64;
     static constexpr int kWidth = 240;
+    static constexpr int kFontWidth = 8;
     static constexpr int kFontHeight = 14;
     static constexpr uint8_t kScrollMax = 128;
 
@@ -64,8 +65,8 @@ inline constexpr
 Surface::ColorMap::ColorMap(uint8_t fg, uint8_t bg)
     : data {
         uint8_t(bg | (bg << 4)),
-        uint8_t(bg | (fg << 4)),
         uint8_t(fg | (bg << 4)),
+        uint8_t(bg | (fg << 4)),
         uint8_t(fg | (fg << 4))
     }
 { }

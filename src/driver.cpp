@@ -8,6 +8,7 @@
 
 #include "ui/surface.h"
 #include "ui/home.h"
+#include "ui/text.h"
 
 #include <SdFat.h>
 
@@ -23,32 +24,34 @@ void loop() {
     display.init();
 
     UI::Surface surface(display);
-    
-    surface.paintText(30, 0, "Start");
 
+    UI::Text initLog(surface);
+
+    initLog.appendLine("Start");
+    
     KsKeyboard keyboard;
 
     keyboard.init();
-    
-    surface.paintText(30, 14, "Config");
+
+    initLog.appendLine("Configure");
 
     if (!sd.begin(10, SPI_HALF_SPEED)) {
         if (sd.card()->errorCode()) {
             char sderr[48];
             sprintf(sderr,"SD Failed : 0x%x", sd.card()->errorCode());
-            surface.paintText(30, 28, sderr);
+            initLog.appendLine(sderr);
         }
     }
     else
     {
         char sdinfo[48];
         sprintf(sdinfo, "SD OK : %dMB / FAT%d", (int)(0.000512 * sd.card()->cardSize() + 0.5), sd.vol()->fatType());
-        surface.paintText(30, 28, sdinfo);
+        initLog.appendLine(sdinfo);
 
         SdBaseFile myFile;
 
         if (!myFile.open("test.cfg", O_READ)) {
-            surface.paintText(30, 42, "Couldn't open file");
+            initLog.appendLine("Couldn't open file");
         }
         else
         {
@@ -56,14 +59,14 @@ void loop() {
 
             myFile.fgets(data, sizeof(data));
             
-            surface.paintText(30, 42, data);
+            initLog.appendLine(data);
 
             myFile.close();
         }
     }
-
-    display.clear();
-
+    
+    surface.clear();
+    
     KeyDispatcher keyDispatcher(keyboard);
     
     DefaultLayers::init(keyDispatcher);
