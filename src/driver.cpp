@@ -70,35 +70,111 @@ void loop() {
 
     UsbKeyboard usbKeyboard;
 
-    // UI::Home home(surface,
-    //               modifierProcessor.modifierSet());
+    Profile profile;
+    
+    profile.modifierSet[0] = Modifier("Gm0", KeyId::Layer(3));
+    profile.modifierSet[1] = Modifier("Gm1", KeyId::Layer(4));
+    profile.modifierSet[2] = Modifier("Gm2", KeyId::Layer(5));
+    profile.modifierSet[3] = Modifier("KSP", KeyId::Layer(6));
+    profile.modifierSet[5] = Modifier("LShft", 0xe1);
+    profile.modifierSet[6] = Modifier("RShft", 0xe5);
 
-    KeyProcessor keyProcessor(keyDispatcher);
+    profile.macroSet.setMacro(0, {
+            KeyEvent(KeyId(KEY_LEFT_BRACE)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(1, {
+            KeyEvent(KeyId(KEY_RIGHT_BRACE)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(2, {
+            KeyEvent(KeyId(KEY_9)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(3, {
+            KeyEvent(KeyId(KEY_0)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(4, {
+            KeyEvent(KeyId(KEY_COMMA)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(5, {
+            KeyEvent(KeyId(KEY_PERIOD)),
+            KeyEvent(KeyId(0xe1)),
+            });
+    
+    profile.macroSet.setMacro(6, {
+            KeyEvent(KeyId(KEY_SPACE)),
+            KeyEvent(KeyId(0xe0)),
+            });
+
+    profile.macroSet.setMacro(10, {
+            KeyEvent(KeyId(KEY_MINUS)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(11, {
+            KeyEvent(KeyId(KEY_MINUS)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    profile.macroSet.setMacro(15, {
+            KeyEvent(KeyId(KEY_COMMA)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    profile.macroSet.setMacro(16, {
+            KeyEvent(KeyId(KEY_PERIOD)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    profile.macroSet.setMacro(17, {
+            KeyEvent(KeyId(KEY_L)),
+            KeyEvent(KeyId(0xe2)),
+            });    
+    profile.macroSet.setMacro(18, {
+            KeyEvent(KeyId(KEY_F5)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    profile.macroSet.setMacro(19, {
+            KeyEvent(KeyId(KEY_F9)),
+            KeyEvent(KeyId(0xe2)),
+            });
+
+    UI::Home home(surface,
+                  profile.modifierSet);
+
+    KeyProcessor keyProcessor(keyDispatcher,
+                              profile);
 
     ActionProcessor actionProcessor(keyProcessor,
                                     surface);
 
     while (1)
     {
-        keyProcessor.poll();
-        
-        if (keyProcessor.hasEvent())
-        {
-            auto event(keyProcessor.popEvent());
-
-            const auto& keyId(event.keyId);
-
-            if (keyId.type() == KeyId::Type::kKey)
+        keyProcessor.poll(
+            [&](const KeyEvent& event)
             {
-                usbKeyboard.processKey(keyId.value(), event.pressed);
-            }
-            else if (keyId.type() == KeyId::Type::kAction)
+                const auto& keyId(event.keyId);
+
+                if (keyId.type() == KeyId::Type::kKey)
+                {
+                    usbKeyboard.processKey(keyId.value(), event.pressed);
+                }
+                else if (keyId.type() == KeyId::Type::kAction)
+                {
+                    actionProcessor.processEvent(event);
+                }
+            },
+            [&]()
             {
-                actionProcessor.processEvent(event);
-            }
-        }
+                home.update();
+            });
         
-        // home.update();
-        // home.paint();
+        home.paint();
     }
 }

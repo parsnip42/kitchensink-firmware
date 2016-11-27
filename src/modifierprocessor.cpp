@@ -28,14 +28,10 @@ bool ModifierProcessor::processEvent(ModifierSet&    modifierSet,
     }
     else if (keyId.type() == KeyId::Type::kKey && !event.pressed)
     {
-        bool processed(false);
-        
         for (auto& modifier : modifierSet)
         {
-            processed |= modifier.clearTrigger(event, eventQueue);
+            modifier.clearTrigger(event, eventQueue);
         }
-
-        return processed;
     }
     
     return false;

@@ -13,7 +13,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
     
-    if (keyId.type() == KeyId::Type::kAction)
+    if (event.pressed && (keyId.type() == KeyId::Type::kAction))
     {
         switch (keyId.actionType())
         {

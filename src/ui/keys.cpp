@@ -21,12 +21,14 @@ bool down(const KeyId& keyId)
 
 bool ok(const KeyId& keyId)
 {
-    return (keyId == KeyId(KEY_ENTER)) || (keyId == KeyId(KEY_SPACE));
+    return ((keyId == KeyId(KEY_ENTER)) ||
+            (keyId == KeyId(KEY_SPACE)));
 }
     
 bool cancel(const KeyId& keyId)
 {
-    return keyId == KeyId(KEY_ESC);
+    return ((keyId == KeyId(KEY_ESC)) ||
+            (keyId == KeyId::Action(KeyId::ActionType::kMenu, 0)));
 }
 
 }

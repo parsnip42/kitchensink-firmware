@@ -1,7 +1,6 @@
 #include "ui/menu.h"
 #include "ui/keys.h"
 #include "autorepeat.h"
-#include "timed.h"
 
 #include <cstdint>
 
@@ -20,112 +19,111 @@ void Menu::createMenu(const DataSource& dataSource,
     int selected(0);
 
     KeyId selectedKeyId;
-    
-    auto redraw([&](uint8_t fg = 0xf)
-    {
-        selectedKeyId = paintMenu(
-            dataSource,
-            selected,
-            (selected * Surface::kFontHeight) - selectionOffset,
-            fg,
-            0);
-    });
 
+    uint8_t scrollPos(0);    
+
+    auto redraw(
+        [&](uint8_t fg = 0xf)
+        {
+            selectedKeyId = paintMenu(
+                dataSource,
+                selected,
+                (selected * Surface::kFontHeight) - selectionOffset - scrollPos,
+                scrollPos,
+                Surface::kHeight,
+                fg,
+                0);                    
+        });
+
+    mSurface.clear();
+    
     for (auto fg(0); fg <= 0xf; ++fg)
     {
-        Timed(10,
-              [&]()
-              {
-                  redraw(fg);
-              });
+         keyProcessor.delay(
+             [&]()
+             {
+                 redraw(fg);
+             }, 8);
     }
-
 
     while (1)
     {
-        keyProcessor.poll();
-        
-        if (keyProcessor.hasEvent())
-        {
-            autoRepeat.processEvent(keyProcessor.popEvent());
-        }
+        keyProcessor.poll(
+            [&](const KeyEvent& event)
+            {
+                autoRepeat.processEvent(event);
+            });
 
         auto keyId(autoRepeat.activeKey());
                 
         if (Keys::up(keyId))
         {
+            paintMenu(
+                dataSource,
+                selected,
+                (selected * Surface::kFontHeight) - selectionOffset - scrollPos,
+                scrollPos - Surface::kFontHeight,
+                Surface::kFontHeight,
+                0xf,
+                0);                       
+
             for (int i(0); i < Surface::kFontHeight; ++i)
             {
-                Timed(8,
-                      [&]()
-                      {
-                          mSurface.scroll(Surface::kScrollMax - i);
-                      },
-                      [&]()
-                      {
-                          keyProcessor.poll();
-                      });
+                keyProcessor.delay(
+                    [&]()
+                    {
+                        --scrollPos;
+                        mSurface.scroll(scrollPos);
+                    }, 8);
             }
 
             --selected;
-            mSurface.scroll(0);
             redraw();
         }
         else if (Keys::down(keyId))
         {
+            paintMenu(
+                dataSource,
+                selected,
+                (selected * Surface::kFontHeight) - selectionOffset - scrollPos,
+                Surface::kHeight + scrollPos,
+                Surface::kFontHeight,
+                0xf,
+                0);
+
             for (int i(0); i < Surface::kFontHeight; ++i)
             {
-                Timed(8,
-                      [&]()
-                      {
-                          mSurface.scroll(i);
-                      },
-                      [&]()
-                      {
-                          keyProcessor.poll();
-                      });
+                keyProcessor.delay(
+                    [&]()
+                    {
+                        ++scrollPos;
+                        mSurface.scroll(scrollPos);
+                    }, 8);
             }
-
+            
             ++selected;
-            mSurface.scroll(0);
             redraw();
         }
         else if (Keys::ok(keyId))
         {
-            // eventQueue.pushBack(KeyEvent(selectedKeyId, true));
-            // eventQueue.pushBack(KeyEvent(selectedKeyId, false));
+            keyProcessor.pushEvent(KeyEvent(selectedKeyId, true));
+            keyProcessor.pushEvent(KeyEvent(selectedKeyId, false));
             break;
         }
         else if (Keys::cancel(keyId))
         {
             break;
         }
-
     }
 
     for (auto fg(0xf); fg >= 0; --fg)
     {
-        Timed(10,
-              [&]()
-              {
-                  redraw(fg);
-              });
+        keyProcessor.delay(
+            [&]()
+            {
+                redraw(fg);
+            }, 8);
     }
-}
-
-KeyId Menu::paintMenu(const DataSource& dataSource,
-                      int               selected,
-                      int               offset,
-                      uint8_t           fg,
-                      uint8_t           bg)
-{
-    return paintMenu(dataSource,
-                     selected,
-                     offset,
-                     0,
-                     64,
-                     fg,
-                     bg);
 }
 
 KeyId Menu::paintMenu(const DataSource& dataSource,
@@ -136,28 +134,11 @@ KeyId Menu::paintMenu(const DataSource& dataSource,
                       uint8_t           fg,
                       uint8_t           bg)
 {
-    int len(240);
-    
-    const uint8_t colorMap[] =
-    {
-        uint8_t(bg | (bg << 4)),
-        uint8_t(bg | (fg << 4)),
-        uint8_t(fg | (bg << 4)),
-        uint8_t(fg | (fg << 4)),
-    };
-    
-    const uint8_t invColorMap[] =
-    {
-        uint8_t(fg | (fg << 4)),
-        uint8_t(fg | (bg << 4)),
-        uint8_t(bg | (fg << 4)),
-        uint8_t(bg | (bg << 4)),
-    };
+    const Surface::ColorMap colorMap(fg, bg);
+    const Surface::ColorMap invColorMap(bg, fg);
 
-    mSurface.initRegion(28, start, len, height);
-
-    int itemCount(dataSource.getItemCount());
-    int pointRange(itemCount * Surface::kFontHeight);
+    const int itemCount(dataSource.getItemCount());
+    const int pointRange(itemCount * Surface::kFontHeight);
     
     selected = (itemCount + (selected % itemCount)) % itemCount;
 
@@ -175,8 +156,9 @@ KeyId Menu::paintMenu(const DataSource& dataSource,
         auto text(entry.text);
 
         auto line(point % Surface::kFontHeight);
-        
-        mSurface.paintTextLineC(text, len, line, colors);
+
+        mSurface.initRegion(28, y, Surface::kWidth, 1);
+        mSurface.paintTextLineC(text, Surface::kWidth, line, colors);
     }
 
     return dataSource.getItem(selected).keyId;

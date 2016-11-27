@@ -14,8 +14,18 @@ public:
     static constexpr int kHeight = 64;
     static constexpr int kWidth = 240;
     static constexpr int kFontHeight = 14;
-    static constexpr uint8_t kScrollMax = 127;
+    static constexpr uint8_t kScrollMax = 128;
 
+public:
+    class ColorMap
+    {
+    public:
+        constexpr ColorMap(uint8_t fg, uint8_t bg);
+        
+    public:
+        uint8_t data[4];
+    };
+    
 public:
     explicit Surface(Display& display);
 
@@ -28,15 +38,15 @@ public:
 
     void initRegion(int x, int y, int w, int h);
 
-    void paintTextLine(const char*   begin,
-                       const char*   end,
-                       const int     line,
-                       const uint8_t (&colorMap)[4]);
+    void paintTextLine(const char*     begin,
+                       const char*     end,
+                       const int       line,
+                       const ColorMap& colorMap);
     
-    void paintTextLineC(const char*   text,
-                        const int     width,
-                        const int     line,
-                        const uint8_t (&colorMap)[4]);
+    void paintTextLineC(const char*     text,
+                        const int       width,
+                        const int       line,
+                        const ColorMap& colorMap);
 
     void scroll(uint8_t value);
     void clear();
@@ -48,6 +58,17 @@ private:
     Surface(const Surface&) = delete;
     Surface& operator=(const Surface&) = delete;
 };
+
+
+inline constexpr
+Surface::ColorMap::ColorMap(uint8_t fg, uint8_t bg)
+    : data {
+        uint8_t(bg | (bg << 4)),
+        uint8_t(bg | (fg << 4)),
+        uint8_t(fg | (bg << 4)),
+        uint8_t(fg | (fg << 4))
+    }
+{ }
 
 }
 

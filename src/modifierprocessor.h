@@ -1,11 +1,8 @@
 #ifndef INCLUDED_MODIFIERPROCESSOR_H
 #define INCLUDED_MODIFIERPROCESSOR_H
 
-#include "modifier.h"
 #include "modifierset.h"
 #include "tapping.h"
-
-#include <array>
 
 class EventQueue;
 class KeyEvent;

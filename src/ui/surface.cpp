@@ -31,14 +31,7 @@ void Surface::paintText(int         x,
     
     mDisplay.initRegion(x, y, len << 3, kCharHeight);
 
-    const uint8_t colorMap[] =
-    {
-        uint8_t(bg | (bg << 4)),
-        uint8_t(bg | (fg << 4)),
-        uint8_t(fg | (bg << 4)),
-        uint8_t(fg | (fg << 4)),
-    };
-    
+    const ColorMap colorMap(fg, bg);
     
     for (int line(0); line < kCharHeight; ++line)
     {
@@ -51,10 +44,10 @@ void Surface::initRegion(int x, int y, int w, int h)
     mDisplay.initRegion(x, y, w, h);
 }
 
-void Surface::paintTextLine(const char*   begin,
-                            const char*   end,
-                            const int     line,
-                            const uint8_t (&colorMap)[4])
+void Surface::paintTextLine(const char*     begin,
+                            const char*     end,
+                            const int       line,
+                            const ColorMap& colorMap)
 {
     for (auto it(begin); it != end; ++it)
     {
@@ -62,28 +55,28 @@ void Surface::paintTextLine(const char*   begin,
         
         if (chr > 32 && chr < 127)
         {
-            uint8_t data(charset[chr - 33 + (line * 94)]);
+            const auto data(charset[chr - 33 + (line * 94)]);
             
-            mDisplay.writeData(colorMap[data & 0x3]);
-            mDisplay.writeData(colorMap[(data >> 2) & 0x3]);
-            mDisplay.writeData(colorMap[(data >> 4) & 0x3]);
-            mDisplay.writeData(colorMap[(data >> 6) & 0x3]);
+            mDisplay.writeData(colorMap.data[data & 0x3]);
+            mDisplay.writeData(colorMap.data[(data >> 2) & 0x3]);
+            mDisplay.writeData(colorMap.data[(data >> 4) & 0x3]);
+            mDisplay.writeData(colorMap.data[(data >> 6) & 0x3]);
 
         }
         else if (chr == 32)
         {
-            mDisplay.writeData(colorMap[0]);
-            mDisplay.writeData(colorMap[0]);
-            mDisplay.writeData(colorMap[0]);
-            mDisplay.writeData(colorMap[0]);
+            mDisplay.writeData(colorMap.data[0]);
+            mDisplay.writeData(colorMap.data[0]);
+            mDisplay.writeData(colorMap.data[0]);
+            mDisplay.writeData(colorMap.data[0]);
         }
     }   
 }
 
-void Surface::paintTextLineC(const char*   text,
-                             const int     width,
-                             const int     line,
-                             const uint8_t (&colorMap)[4])
+void Surface::paintTextLineC(const char*     text,
+                             const int       width,
+                             const int       line,
+                             const ColorMap& colorMap)
 {
     auto hWidth(width / 2);
     
@@ -97,14 +90,14 @@ void Surface::paintTextLineC(const char*   text,
 
     for (int i(0); i < prePad; ++i)
     {
-        mDisplay.writeData(colorMap[0]);
+        mDisplay.writeData(colorMap.data[0]);
     }
 
     paintTextLine(text, text + strlen(text), line, colorMap);
 
     for (int i(0); i < (hWidth - (textLen + prePad)); ++i)
     {
-        mDisplay.writeData(colorMap[0]);
+        mDisplay.writeData(colorMap.data[0]);
     }
 }
 
@@ -116,6 +109,7 @@ void Surface::scroll(uint8_t value)
 void Surface::clear()
 {
     mDisplay.clear();
+    mDisplay.scroll(0);
 }
 
 }

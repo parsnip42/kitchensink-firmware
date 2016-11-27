@@ -49,7 +49,7 @@ void init(KeyDispatcher& keyDispatcher)
                     0, 0, 0, KEY_PAGE_DOWN, 0, 0, 0, 0, 0, 0 },
                 
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                    0, 0, KeyId::Macro(KeyId::MacroType::kInvert, 11), 0, 0, 0, 0, 0, 0, 0 }
+                    0, 0, KeyId::Macro(KeyId::MacroType::kInvert, 6), 0, 0, 0, 0, 0, 0, 0 }
             }));
     
     keyDispatcher.assignLayer(2, Layer({

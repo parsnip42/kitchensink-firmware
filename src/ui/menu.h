@@ -49,13 +49,6 @@ private:
     KeyId paintMenu(const DataSource& dataSource,
                     int               selected,
                     int               offset,
-                    uint8_t           fg,
-                    uint8_t           bg);
-    
-
-    KeyId paintMenu(const DataSource& dataSource,
-                    int               selected,
-                    int               offset,
                     int               start,
                     int               end,
                     uint8_t           fg,
