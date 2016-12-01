@@ -5,7 +5,6 @@
 #include "layerprocessor.h"
 #include "macroprocessor.h"
 #include "modifierprocessor.h"
-#include "profile.h"
 #include "timed.h"
 
 class KsKeyboard;

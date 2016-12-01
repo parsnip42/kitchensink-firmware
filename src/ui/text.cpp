@@ -1,6 +1,8 @@
 #include "text.h"
 #include "timed.h"
 
+#include <cstring>
+
 namespace UI
 {
 
