@@ -3,18 +3,20 @@
 
 #include "eventqueue.h"
 #include "keydispatcher.h"
+#include "layerprocessor.h"
 #include "macroprocessor.h"
 #include "modifierprocessor.h"
 #include "profile.h"
 #include "timed.h"
 
-class KeyDispatcher;
+class KsKeyboard;
+class KeyboardState;
 
 class KeyProcessor
 {
 public:
-    KeyProcessor(KeyDispatcher& keyDispatcher,
-                 Profile&       profile);
+    KeyProcessor(KsKeyboard&    keyboard,
+                 KeyboardState& keyboardState);
 
 public:
     void pushEvent(const KeyEvent& event);
@@ -45,9 +47,10 @@ private:
     Consumed consumeEvent(const KeyEvent& event);
     
 private:
-    KeyDispatcher&    mKeyDispatcher;
-    Profile&          mProfile;
+    KsKeyboard&       mKeyboard;
+    KeyboardState&    mKeyboardState;
     EventQueue        mEventQueue;
+    LayerProcessor    mLayerProcessor;
     ModifierProcessor mModifierProcessor;
     MacroProcessor    mMacroProcessor;
     
@@ -61,12 +64,6 @@ inline
 void KeyProcessor::pushEvent(const KeyEvent& event)
 {
     mEventQueue.pushBack(event);
-}
-
-inline
-void KeyProcessor::poll()
-{
-    mKeyDispatcher.poll(mEventQueue);
 }
 
 template <typename EventCallback>

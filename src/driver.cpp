@@ -1,8 +1,8 @@
 #include "actionprocessor.h"
 #include "defaultlayers.h"
 #include "display.h"
-#include "keydispatcher.h"
 #include "kskeyboard.h"
+#include "keyboardstate.h"
 #include "keyprocessor.h"
 #include "usbkeyboard.h"
 
@@ -65,94 +65,91 @@ void loop() {
         }
     }
     
-    surface.clear();
     
-    KeyDispatcher keyDispatcher(keyboard);
-    
-    DefaultLayers::init(keyDispatcher);
-
     UsbKeyboard usbKeyboard;
 
-    Profile profile;
-    
-    profile.modifierSet[0] = Modifier("Gm0", KeyId::Layer(3));
-    profile.modifierSet[1] = Modifier("Gm1", KeyId::Layer(4));
-    profile.modifierSet[2] = Modifier("Gm2", KeyId::Layer(5));
-    profile.modifierSet[3] = Modifier("KSP", KeyId::Layer(6));
-    profile.modifierSet[5] = Modifier("LShft", 0xe1);
-    profile.modifierSet[6] = Modifier("RShft", 0xe5);
+    KeyboardState keyboardState;
 
-    profile.macroSet.setMacro(0, {
+    DefaultLayers::init(keyboardState.layerStack);
+    
+    keyboardState.modifierSet[0] = Modifier("Gm0", KeyId::Layer(3));
+    keyboardState.modifierSet[1] = Modifier("Gm1", KeyId::Layer(4));
+    keyboardState.modifierSet[2] = Modifier("Gm2", KeyId::Layer(5));
+    keyboardState.modifierSet[3] = Modifier("KSP", KeyId::Layer(6));
+    keyboardState.modifierSet[5] = Modifier("LShft", 0xe1);
+    keyboardState.modifierSet[6] = Modifier("RShft", 0xe5);
+
+    keyboardState.macroSet.setMacro(0, {
             KeyEvent(KeyId(KEY_LEFT_BRACE)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(1, {
+    keyboardState.macroSet.setMacro(1, {
             KeyEvent(KeyId(KEY_RIGHT_BRACE)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(2, {
+    keyboardState.macroSet.setMacro(2, {
             KeyEvent(KeyId(KEY_9)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(3, {
+    keyboardState.macroSet.setMacro(3, {
             KeyEvent(KeyId(KEY_0)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(4, {
+    keyboardState.macroSet.setMacro(4, {
             KeyEvent(KeyId(KEY_COMMA)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(5, {
+    keyboardState.macroSet.setMacro(5, {
             KeyEvent(KeyId(KEY_PERIOD)),
             KeyEvent(KeyId(0xe1)),
             });
     
-    profile.macroSet.setMacro(6, {
+    keyboardState.macroSet.setMacro(6, {
             KeyEvent(KeyId(KEY_SPACE)),
             KeyEvent(KeyId(0xe0)),
             });
 
-    profile.macroSet.setMacro(10, {
+    keyboardState.macroSet.setMacro(10, {
             KeyEvent(KeyId(KEY_MINUS)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(11, {
+    keyboardState.macroSet.setMacro(11, {
             KeyEvent(KeyId(KEY_MINUS)),
             KeyEvent(KeyId(0xe1)),
             });
 
-    profile.macroSet.setMacro(15, {
+    keyboardState.macroSet.setMacro(15, {
             KeyEvent(KeyId(KEY_COMMA)),
             KeyEvent(KeyId(0xe2)),
             });
-    profile.macroSet.setMacro(16, {
+    keyboardState.macroSet.setMacro(16, {
             KeyEvent(KeyId(KEY_PERIOD)),
             KeyEvent(KeyId(0xe2)),
             });
-    profile.macroSet.setMacro(17, {
+    keyboardState.macroSet.setMacro(17, {
             KeyEvent(KeyId(KEY_L)),
             KeyEvent(KeyId(0xe2)),
             });    
-    profile.macroSet.setMacro(18, {
+    keyboardState.macroSet.setMacro(18, {
             KeyEvent(KeyId(KEY_F5)),
             KeyEvent(KeyId(0xe2)),
             });
-    profile.macroSet.setMacro(19, {
+    keyboardState.macroSet.setMacro(19, {
             KeyEvent(KeyId(KEY_F9)),
             KeyEvent(KeyId(0xe2)),
             });
 
     UI::Home home(surface,
-                  profile.modifierSet);
+                  keyboardState.modifierSet);
 
-    KeyProcessor keyProcessor(keyDispatcher,
-                              profile);
+    KeyProcessor keyProcessor(keyboard,
+                              keyboardState);
 
     ActionProcessor actionProcessor(keyProcessor,
                                     surface);
@@ -162,6 +159,7 @@ void loop() {
         keyProcessor.poll(
             [&](const KeyEvent& event)
             {
+                initLog.appendLine("event");
                 const auto& keyId(event.keyId);
 
                 if (keyId.type() == KeyId::Type::kKey)
@@ -175,9 +173,11 @@ void loop() {
             },
             [&]()
             {
+                initLog.appendLine("state");
                 home.update();
             });
-        
-        home.paint();
+        initLog.appendLine("null");
+                        
+//        home.paint();
     }
 }

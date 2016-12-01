@@ -1,6 +1,6 @@
 #include "defaultlayers.h"
 
-#include "keydispatcher.h"
+#include "layerstack.h"
 #include "keyid.h"
 
 #include <keylayouts.h>
@@ -17,9 +17,11 @@
 namespace DefaultLayers
 {
 
-void init(KeyDispatcher& keyDispatcher)
+void init(LayerStack& layerStack)
 {
-    keyDispatcher.assignLayer(0, Layer({
+    layerStack.setLayer(0, true);
+
+    layerStack.assignLayer(0, Layer({
                 { KEY_TILDE,KEY_NON_US_NUM,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_BS,KeyId::Modifier(KeyId::ModifierType::kToggle, 0),KeyId::Modifier(KeyId::ModifierType::kToggle, 1),
                     KEY_F1,KEY_F2,0,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
@@ -36,7 +38,7 @@ void init(KeyDispatcher& keyDispatcher)
                     0,KEY_LALT,KEY_SPACE,KEY_RCTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
             }));
 
-    keyDispatcher.assignLayer(1, Layer({
+    layerStack.assignLayer(1, Layer({
                 { },
                 
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -52,7 +54,7 @@ void init(KeyDispatcher& keyDispatcher)
                     0, 0, KeyId::Macro(KeyId::MacroType::kInvert, 6), 0, 0, 0, 0, 0, 0, 0 }
             }));
     
-    keyDispatcher.assignLayer(2, Layer({
+    layerStack.assignLayer(2, Layer({
                 { },
                 
                 { 0, 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, 0, 0, 0,
@@ -68,7 +70,7 @@ void init(KeyDispatcher& keyDispatcher)
                     0, 0, 0, 0, KEY_0, 0, 0, 0, 0, 0 }
             }));
     
-    keyDispatcher.assignLayer(3, Layer({
+    layerStack.assignLayer(3, Layer({
                 { },
                 
                 { KEY_ESC,0,KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
@@ -85,7 +87,7 @@ void init(KeyDispatcher& keyDispatcher)
             }));
 
 
-    keyDispatcher.assignLayer(4, Layer({
+    layerStack.assignLayer(4, Layer({
                 { },
                 
                 { KEY_ESC,0,KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
@@ -101,7 +103,7 @@ void init(KeyDispatcher& keyDispatcher)
                     0,KEY_LALT,KEY_SPACE,KEY_RCTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
             }));
 
-        keyDispatcher.assignLayer(5, Layer({
+        layerStack.assignLayer(5, Layer({
                 { },
                 
                 { KEY_ESC,0,0,0,KEY_UP,0,0,KEY_TAB,0,0,
@@ -115,7 +117,7 @@ void init(KeyDispatcher& keyDispatcher)
                 { }
             }));
 
-        keyDispatcher.assignLayer(6, Layer({
+        layerStack.assignLayer(6, Layer({
                 { KeyId::Macro(KeyId::MacroType::kInvert, 15),KeyId::Macro(KeyId::MacroType::kInvert, 16),KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_U,0,0,
                     KEY_F1,KEY_F2,0,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 

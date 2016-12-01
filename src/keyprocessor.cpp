@@ -1,37 +1,45 @@
 #include "keyprocessor.h"
 
-#include "keydispatcher.h"
+#include "kskeyboard.h"
+#include "keyboardstate.h"
 
 #include <keylayouts.h>
 
-KeyProcessor::KeyProcessor(KeyDispatcher& keyDispatcher,
-                           Profile&       profile)
-    : mKeyDispatcher(keyDispatcher)
-    , mProfile(profile)
+KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
+                           KeyboardState& keyboardState)
+    : mKeyboard(keyboard)
+    , mKeyboardState(keyboardState)
+    , mEventQueue()
+    , mLayerProcessor(keyboard)
+    , mModifierProcessor()
+    , mMacroProcessor()
 { }
+
+void KeyProcessor::poll()
+{
+    mKeyboard.poll([&](const KsKeyboard::Event& event)
+    {
+        auto keyId(mKeyboardState.layerStack.at(event.row, event.column));
+        
+        mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
+    });
+}
 
 KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
 {
-    const auto& keyId(event.keyId);
+    mLayerProcessor.processEvent(mKeyboardState.layerStack,
+                                 event,
+                                 mEventQueue);
 
-    if (keyId.type() == KeyId::Type::kLayer)
-    {
-        mKeyDispatcher.setLayer(keyId.value(), event.pressed, mEventQueue);
-        
-        return Consumed::kConsumed;
-    }
-    else
-    {
-        mMacroProcessor.processEvent(mProfile.macroSet,
-                                     event,
-                                     mEventQueue);
+    mMacroProcessor.processEvent(mKeyboardState.macroSet,
+                                 event,
+                                 mEventQueue);
             
-        if (mModifierProcessor.processEvent(mProfile.modifierSet,
-                                            event,
-                                            mEventQueue))
-        {
-            return Consumed::kStateChanged;
-        }
+    if (mModifierProcessor.processEvent(mKeyboardState.modifierSet,
+                                        event,
+                                        mEventQueue))
+    {
+        return Consumed::kStateChanged;
     }
 
     return Consumed::kIgnored;

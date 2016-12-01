@@ -1,12 +1,12 @@
 #ifndef INCLUDED_DEFAULTLAYERS_H
 #define INCLUDED_DEFAULTLAYERS_H
 
-class KeyDispatcher;
+class LayerStack;
 
 namespace DefaultLayers
 {
 
-void init(KeyDispatcher& keyDispatcher);
+void init(LayerStack& layerStack);
 
 }
 
