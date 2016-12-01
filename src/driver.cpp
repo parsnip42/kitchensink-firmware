@@ -159,7 +159,6 @@ void loop() {
         keyProcessor.poll(
             [&](const KeyEvent& event)
             {
-                initLog.appendLine("event");
                 const auto& keyId(event.keyId);
 
                 if (keyId.type() == KeyId::Type::kKey)
@@ -173,11 +172,9 @@ void loop() {
             },
             [&]()
             {
-                initLog.appendLine("state");
                 home.update();
             });
-        initLog.appendLine("null");
-                        
+                                
 //        home.paint();
     }
 }
