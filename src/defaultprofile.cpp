@@ -1,7 +1,7 @@
-#include "defaultlayers.h"
+#include "defaultprofile.h"
 
-#include "layerstack.h"
 #include "keyid.h"
+#include "keyboardstate.h"
 
 #include <keylayouts.h>
 
@@ -14,11 +14,86 @@
 #define KEY_RALT   0xe6
 #define KEY_RGUI   0xe7
 
-namespace DefaultLayers
+namespace DefaultProfile
 {
 
-void init(LayerStack& layerStack)
+void init(KeyboardState& keyboardState)
 {
+    keyboardState.modifierSet[0] = Modifier("Gm0", KeyId::Layer(3));
+    keyboardState.modifierSet[1] = Modifier("Gm1", KeyId::Layer(4));
+    keyboardState.modifierSet[2] = Modifier("Gm2", KeyId::Layer(5));
+    keyboardState.modifierSet[3] = Modifier("KSP", KeyId::Layer(6));
+    keyboardState.modifierSet[5] = Modifier("LShft", 0xe1);
+    keyboardState.modifierSet[6] = Modifier("RShft", 0xe5);
+
+    keyboardState.macroSet.setMacro(0, {
+            KeyEvent(KeyId(KEY_LEFT_BRACE)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(1, {
+            KeyEvent(KeyId(KEY_RIGHT_BRACE)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(2, {
+            KeyEvent(KeyId(KEY_9)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(3, {
+            KeyEvent(KeyId(KEY_0)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(4, {
+            KeyEvent(KeyId(KEY_COMMA)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(5, {
+            KeyEvent(KeyId(KEY_PERIOD)),
+            KeyEvent(KeyId(0xe1)),
+            });
+    
+    keyboardState.macroSet.setMacro(6, {
+            KeyEvent(KeyId(KEY_SPACE)),
+            KeyEvent(KeyId(0xe0)),
+            });
+
+    keyboardState.macroSet.setMacro(10, {
+            KeyEvent(KeyId(KEY_MINUS)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(11, {
+            KeyEvent(KeyId(KEY_MINUS)),
+            KeyEvent(KeyId(0xe1)),
+            });
+
+    keyboardState.macroSet.setMacro(15, {
+            KeyEvent(KeyId(KEY_COMMA)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    keyboardState.macroSet.setMacro(16, {
+            KeyEvent(KeyId(KEY_PERIOD)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    keyboardState.macroSet.setMacro(17, {
+            KeyEvent(KeyId(KEY_L)),
+            KeyEvent(KeyId(0xe2)),
+            });    
+    keyboardState.macroSet.setMacro(18, {
+            KeyEvent(KeyId(KEY_F5)),
+            KeyEvent(KeyId(0xe2)),
+            });
+    keyboardState.macroSet.setMacro(19, {
+            KeyEvent(KeyId(KEY_F9)),
+            KeyEvent(KeyId(0xe2)),
+            });
+
+    auto& layerStack(keyboardState.layerStack);
+    
     layerStack.setLayer(0, true);
 
     layerStack.assignLayer(0, Layer({

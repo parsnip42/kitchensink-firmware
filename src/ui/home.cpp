@@ -1,6 +1,6 @@
 #include "ui/home.h"
 
-#include "modifierset.h"
+#include "keyboardstate.h"
 #include "ui/surface.h"
 
 #include <algorithm>
@@ -10,10 +10,10 @@
 namespace UI
 {
 
-Home::Home(Surface&           surface,
-           const ModifierSet& modifierSet)
+Home::Home(Surface&             surface,
+           const KeyboardState& keyboardState)
     : mSurface(surface)
-    , mModifierSet(modifierSet)
+    , mKeyboardState(keyboardState)
     , mDirty(false)
     , mLastUpdate(0)
 {
@@ -47,15 +47,17 @@ void Home::paint()
     // char tempStr[12];
     // snprintf(tempStr, sizeof(tempStr), "%lu", mLastUpdate);
     // mSurface.paintText(28, 0, tempStr);
-                       
+
+    const auto& modifierSet(mKeyboardState.modifierSet);
+    
     for (int i = 0; i < 10; ++i)
     {
-        if (mModifierSet[i].locked() && (mPaintState[i] == 0))
+        if (modifierSet[i].locked() && (mPaintState[i] == 0))
         {
             mPaintState[i] = 1;
             mDirty = true;
         }
-        else if (!mModifierSet[i].locked() && (mPaintState[i] > 0))
+        else if (!modifierSet[i].locked() && (mPaintState[i] > 0))
         {
             mPaintState[i] = 0;
             mDirty = true;
@@ -66,7 +68,7 @@ void Home::paint()
             mDirty = true;
         }
         
-        const char* text(mModifierSet[i].name());
+        const char* text(modifierSet[i].name());
 
         auto offset(i);
         mSurface.paintText(((offset&3) * 16), 52-((offset >> 2) * 14),

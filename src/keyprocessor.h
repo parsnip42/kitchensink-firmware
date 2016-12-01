@@ -2,7 +2,6 @@
 #define INCLUDED_KEYPROCESSOR_H
 
 #include "eventqueue.h"
-#include "keydispatcher.h"
 #include "layerprocessor.h"
 #include "macroprocessor.h"
 #include "modifierprocessor.h"
