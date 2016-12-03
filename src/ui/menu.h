@@ -5,8 +5,6 @@
 #include "keyprocessor.h"
 #include "ui/surface.h"
 
-#include <elapsedMillis.h>
-
 #include <cstdint>
 
 class KeyProcessor;

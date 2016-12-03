@@ -1,7 +1,6 @@
 #ifndef INCLUDED_MENUDEFINITIONS_H
 #define INCLUDED_MENUDEFINITIONS_H
 
-#include "keyboardstate.h"
 #include "ui/menu.h"
 
 class KeyboardState;

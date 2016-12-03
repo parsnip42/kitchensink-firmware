@@ -1,5 +1,6 @@
 #include "menudefinitions.h"
 
+#include "keyboardstate.h"
 #include "keyid.h"
 
 namespace
@@ -123,7 +124,10 @@ ModifierDataSource modifierDataSource;
 
 MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
-{ }
+{
+    layerDataSource.state = &mKeyboardState;
+    modifierDataSource.state = &mKeyboardState;
+}
 
 const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
 {
@@ -132,10 +136,8 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
     case 0:
         return mainMenuSource;
     case 2:
-        layerDataSource.state = &mKeyboardState;
         return layerDataSource;
     case 3:
-        modifierDataSource.state = &mKeyboardState;
         return modifierDataSource;
     case 4:
         return configMenuSource;
