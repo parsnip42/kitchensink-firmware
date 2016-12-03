@@ -27,20 +27,24 @@ void KeyProcessor::poll()
 
 KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
 {
-    mLayerProcessor.processEvent(mKeyboardState.layerStack,
-                                 event,
-                                 mEventQueue);
+    if (mLayerProcessor.processEvent(mKeyboardState.layerStack,
+                                     event,
+                                     mEventQueue))
+    {
+        return Consumed::kStateChanged;
+    }
 
-    mMacroProcessor.processEvent(mKeyboardState.macroSet,
-                                 event,
-                                 mEventQueue);
-            
     if (mModifierProcessor.processEvent(mKeyboardState.modifierSet,
                                         event,
                                         mEventQueue))
     {
         return Consumed::kStateChanged;
     }
+    
+    mMacroProcessor.processEvent(mKeyboardState.macroSet,
+                                 event,
+                                 mEventQueue);
+            
 
     return Consumed::kIgnored;
 }

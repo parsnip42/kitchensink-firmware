@@ -49,6 +49,7 @@ public:
     static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Modifier(ModifierType modifierType,
                                     int          modifierId);
+    static constexpr KeyId Modifier(int modifierId);
     static constexpr KeyId Macro(MacroType macroType,
                                  int       macroId);
     
@@ -108,6 +109,14 @@ inline
 constexpr KeyId KeyId::Multi(int multiId)
 {
     return KeyId(Type::kMulti, multiId);
+}
+
+inline
+constexpr KeyId KeyId::Modifier(int modifierId)
+{
+    return KeyId(Type::kModifier,
+                 static_cast<uint8_t>(ModifierType::kHold),
+                 modifierId);
 }
 
 inline

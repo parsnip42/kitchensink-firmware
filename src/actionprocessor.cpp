@@ -3,10 +3,13 @@
 #include "eventqueue.h"
 #include "menudefinitions.h"
 
-ActionProcessor::ActionProcessor(KeyProcessor& keyProcessor,
+ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
+                                 KeyboardState& keyboardState,
                                  UI::Surface&   surface)
     : mKeyProcessor(keyProcessor)
+    , mKeyboardState(keyboardState)
     , mSurface(surface)
+    , mMenuDefinitions(keyboardState)
 { }
 
 bool ActionProcessor::processEvent(const KeyEvent& event)
@@ -43,7 +46,7 @@ void ActionProcessor::fireMenu(int             action,
 {
     UI::Menu menu(mSurface);
 
-    menu.createMenu(MenuDefinitions::getDataSource(action),
+    menu.createMenu(mMenuDefinitions.getDataSource(action),
                     mKeyProcessor);
 }
 

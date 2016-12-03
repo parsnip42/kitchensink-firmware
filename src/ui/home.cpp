@@ -50,14 +50,14 @@ void Home::paint()
 
     const auto& modifierSet(mKeyboardState.modifierSet);
     
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 12; ++i)
     {
-        if (modifierSet[i].locked() && (mPaintState[i] == 0))
+        if (modifierSet[i].active() && (mPaintState[i] == 0))
         {
             mPaintState[i] = 1;
             mDirty = true;
         }
-        else if (!modifierSet[i].locked() && (mPaintState[i] > 0))
+        else if (!modifierSet[i].active() && (mPaintState[i] > 0))
         {
             mPaintState[i] = 0;
             mDirty = true;

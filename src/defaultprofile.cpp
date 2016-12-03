@@ -17,14 +17,33 @@
 namespace DefaultProfile
 {
 
+namespace
+{
+constexpr int kLCtrl  = 0;
+constexpr int kLShift = 1;
+constexpr int kLAlt   = 2;
+constexpr int kLGui   = 3;
+constexpr int kRCtrl  = 4;
+constexpr int kRShift = 5;
+constexpr int kRAlt   = 6;
+constexpr int kRGui   = 7;
+}
+
 void init(KeyboardState& keyboardState)
 {
-    keyboardState.modifierSet[0] = Modifier("Gm0", KeyId::Layer(3));
-    keyboardState.modifierSet[1] = Modifier("Gm1", KeyId::Layer(4));
-    keyboardState.modifierSet[2] = Modifier("Gm2", KeyId::Layer(5));
-    keyboardState.modifierSet[3] = Modifier("KSP", KeyId::Layer(6));
-    keyboardState.modifierSet[5] = Modifier("LShft", 0xe1);
-    keyboardState.modifierSet[6] = Modifier("RShft", 0xe5);
+    keyboardState.modifierSet[kLCtrl]  = Modifier("LCtrl",  KEY_LCTRL);
+    keyboardState.modifierSet[kLShift] = Modifier("LShift", KEY_LSHIFT);
+    keyboardState.modifierSet[kLAlt]   = Modifier("LAlt",   KEY_LALT);
+    keyboardState.modifierSet[kLGui]   = Modifier("LGui",   KEY_LGUI);
+    keyboardState.modifierSet[kRCtrl]  = Modifier("RCtrl",  KEY_RCTRL);
+    keyboardState.modifierSet[kRShift] = Modifier("RShift", KEY_RSHIFT);
+    keyboardState.modifierSet[kRAlt]   = Modifier("RAlt",   KEY_RALT);
+    keyboardState.modifierSet[kRGui]   = Modifier("RGui",   KEY_RGUI);
+
+    keyboardState.modifierSet[8]  = Modifier("Gm0", KeyId::Layer(3));
+    keyboardState.modifierSet[9]  = Modifier("Gm1", KeyId::Layer(4));
+    keyboardState.modifierSet[10] = Modifier("Gm2", KeyId::Layer(5));
+    keyboardState.modifierSet[11] = Modifier("KSP", KeyId::Layer(6));
 
     keyboardState.macroSet.setMacro(0, {
             KeyEvent(KeyId(KEY_LEFT_BRACE)),
@@ -96,24 +115,24 @@ void init(KeyboardState& keyboardState)
     
     layerStack.setLayer(0, true);
 
-    layerStack.assignLayer(0, Layer({
-                { KEY_TILDE,KEY_NON_US_NUM,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_BS,KeyId::Modifier(KeyId::ModifierType::kToggle, 0),KeyId::Modifier(KeyId::ModifierType::kToggle, 1),
+    layerStack.assignLayer(0, Layer("Default", {
+                { KEY_TILDE,KEY_NON_US_NUM,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_BS,KeyId::Modifier(KeyId::ModifierType::kToggle, 8),KeyId::Modifier(KeyId::ModifierType::kToggle, 9),
                     KEY_F1,KEY_F2,0,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
-                { KEY_ESC,KeyId::Macro(KeyId::MacroType::kInvert, 10),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,KeyId::Modifier(KeyId::ModifierType::kToggle, 3),0,
+                { KEY_ESC,KeyId::Macro(KeyId::MacroType::kInvert, 10),KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,KeyId::Modifier(KeyId::ModifierType::kToggle, 11),0,
                     KEY_F3,KEY_F4,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
                 
                 {0,KeyId::Layer(2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,KeyId::Macro(KeyId::MacroType::kSync, 9),0,
                     KEY_F6,KEY_F5, 0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
                 
-                {0,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 5),KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KEY_DELETE,KeyId::Action(KeyId::ActionType::kMenu, 0),0,
-                    KeyId::Action(KeyId::ActionType::kBuiltIn, 0),0,KEY_QUOTE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 6) },
+                {0,KeyId::Modifier(kLShift),KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KEY_DELETE,KeyId::Action(KeyId::ActionType::kMenu, 0),0,
+                    KeyId::Action(KeyId::ActionType::kBuiltIn, 0),0,KEY_QUOTE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,KeyId::Modifier(kRShift) },
                 
-                {0,KEY_LGUI,0,0,0,0,KEY_LCTRL,KeyId::Layer(1),KEY_LALT,0,
-                    0,KEY_LALT,KEY_SPACE,KEY_RCTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
+                {0,KeyId::Modifier(kLGui),KeyId::Modifier(kRAlt),0,0,0,KeyId::Modifier(kLCtrl),KeyId::Layer(1),KeyId::Modifier(kLAlt),0,
+                    0,KeyId::Modifier(kLAlt),KEY_SPACE,KeyId::Modifier(kRCtrl),KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
             }));
 
-    layerStack.assignLayer(1, Layer({
+    layerStack.assignLayer(1, Layer("Navigation", {
                 { },
                 
                 { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,7 +148,7 @@ void init(KeyboardState& keyboardState)
                     0, 0, KeyId::Macro(KeyId::MacroType::kInvert, 6), 0, 0, 0, 0, 0, 0, 0 }
             }));
     
-    layerStack.assignLayer(2, Layer({
+    layerStack.assignLayer(2, Layer("Number", {
                 { },
                 
                 { 0, 0, KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, 0, 0, 0,
@@ -145,7 +164,7 @@ void init(KeyboardState& keyboardState)
                     0, 0, 0, 0, KEY_0, 0, 0, 0, 0, 0 }
             }));
     
-    layerStack.assignLayer(3, Layer({
+    layerStack.assignLayer(3, Layer("Game 0", {
                 { },
                 
                 { KEY_ESC,0,KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
@@ -162,13 +181,13 @@ void init(KeyboardState& keyboardState)
             }));
 
 
-    layerStack.assignLayer(4, Layer({
+    layerStack.assignLayer(4, Layer("Game 1", {
                 { },
                 
                 { KEY_ESC,0,KEY_Q,KEY_W,KEY_E,KEY_R,KEY_T,KEY_TAB,0,0,
                     0,0,KEY_BACKSPACE,KEY_Y,KEY_U,KEY_I,KEY_O,KEY_P,KEY_LEFT_BRACE,KEY_RIGHT_BRACE },
                 
-                {0,KeyId::Modifier(KeyId::ModifierType::kToggle, 2),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
+                {0,KeyId::Modifier(KeyId::ModifierType::kToggle, 10),KEY_A,KEY_S,KEY_D,KEY_F,KEY_G,0,0,0,
                     0,0,0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
                 
                 {0,KEY_LSHIFT,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,0,0,0,
@@ -178,7 +197,7 @@ void init(KeyboardState& keyboardState)
                     0,KEY_LALT,KEY_SPACE,KEY_RCTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }
             }));
 
-        layerStack.assignLayer(5, Layer({
+    layerStack.assignLayer(5, Layer("Game 2", {
                 { },
                 
                 { KEY_ESC,0,0,0,KEY_UP,0,0,KEY_TAB,0,0,
@@ -192,7 +211,7 @@ void init(KeyboardState& keyboardState)
                 { }
             }));
 
-        layerStack.assignLayer(6, Layer({
+    layerStack.assignLayer(6, Layer("Kerbal Space Program", {
                 { KeyId::Macro(KeyId::MacroType::kInvert, 15),KeyId::Macro(KeyId::MacroType::kInvert, 16),KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_U,0,0,
                     KEY_F1,KEY_F2,0,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 
@@ -203,7 +222,7 @@ void init(KeyboardState& keyboardState)
                     KeyId::Macro(KeyId::MacroType::kInvert, 19),0,0,KEY_H,KEY_J,KEY_K,KEY_L,KEY_SEMICOLON,KEY_ENTER },
                 
                 {0,KEY_T,KEY_Z,KEY_X,KEY_C,KEY_V,KEY_B,KeyId::Macro(KeyId::MacroType::kInvert, 17),KEY_ESC,KEY_F5,
-                    KEY_F9,0,KEY_QUOTE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,KeyId::Modifier(KeyId::ModifierType::kSingleHold, 6) },
+                    KEY_F9,0,KEY_QUOTE,KEY_N,KEY_M,KEY_COMMA,KEY_PERIOD,KEY_SLASH,KeyId::Modifier(6) },
                 
                 {0,KEY_R,0,0,0,KEY_LALT,KEY_LSHIFT,KEY_LCTRL,KEY_X,0,
                     0,KEY_LALT,KEY_SPACE,KEY_RCTRL,KEY_END,KEY_LEFT,KEY_UP,KEY_DOWN,KEY_RIGHT }

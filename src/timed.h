@@ -6,8 +6,10 @@
 // Arduino headers mess with std C++ libs
 namespace TimedImpl
 {
+
 uint32_t nowMs();
 void delayMs(uint32_t ms);
+
 }
 
 template <typename Func>

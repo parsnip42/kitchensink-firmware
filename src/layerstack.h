@@ -24,7 +24,7 @@ public:
     void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled);
     bool enabled(int index) const;
-
+    
 public:
     const Layer& operator[](int index) const;
     

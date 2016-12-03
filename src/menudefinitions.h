@@ -1,13 +1,21 @@
 #ifndef INCLUDED_MENUDEFINITIONS_H
 #define INCLUDED_MENUDEFINITIONS_H
 
+#include "keyboardstate.h"
 #include "ui/menu.h"
 
-namespace MenuDefinitions
+class KeyboardState;
+
+class MenuDefinitions
 {
+public:
+    explicit MenuDefinitions(KeyboardState& keyboardState);
 
-const UI::Menu::DataSource& getDataSource(int id);
+public:
+    const UI::Menu::DataSource& getDataSource(int id) const;
 
-}
+private:
+    KeyboardState& mKeyboardState;
+};
 
 #endif

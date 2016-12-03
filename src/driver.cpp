@@ -80,6 +80,7 @@ void loop() {
                               keyboardState);
 
     ActionProcessor actionProcessor(keyProcessor,
+                                    keyboardState,
                                     surface);
 
     while (1)
