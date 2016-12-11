@@ -2,6 +2,9 @@
 #include "ctrlutil.h"
 #include "eventqueue.h"
 #include "menudefinitions.h"
+#include "ui/menu.h"
+#include "ui/text.h"
+#include "ui/textentry.h"
 
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
                                  KeyboardState& keyboardState,
@@ -23,10 +26,12 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
         case KeyId::ActionType::kBuiltIn:
             fireBuiltIn(event.keyId.value(),
                         event);
-
+            break;
+            
         case KeyId::ActionType::kMenu:
             fireMenu(event.keyId.value(),
                      event);
+            break;
         }
         
         return true;
@@ -38,7 +43,25 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 void ActionProcessor::fireBuiltIn(int             action,
                                   const KeyEvent& event) const
 {
-    CtrlUtil::bootloader();
+    switch (action)
+    {
+    case 0:
+        CtrlUtil::bootloader();
+        break;
+        
+    case 1:
+        UI::Text text(mSurface);
+
+        Types::StrBuf<20> line("Free Memory: ");
+
+        line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
+        
+        text.appendLine(line);
+        mKeyProcessor.untilKeyPress();
+        mSurface.clear();
+        
+        break;
+    }
 }
 
 void ActionProcessor::fireMenu(int             action,
@@ -50,3 +73,9 @@ void ActionProcessor::fireMenu(int             action,
                     mKeyProcessor);
 }
 
+void ActionProcessor::fireEdit() const
+{
+    UI::TextEntry foo(mSurface, mKeyProcessor, " Rename Layout #0 ");
+
+    foo.create();
+}

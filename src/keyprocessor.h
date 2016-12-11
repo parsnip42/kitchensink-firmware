@@ -33,6 +33,8 @@ public:
     void delay(const Func& func,
                uint32_t    timeMs);
 
+    void untilKeyPress();
+    
 private:
     enum class Consumed
     {

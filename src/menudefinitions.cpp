@@ -46,7 +46,7 @@ const UI::Menu::Item mainMenuItems[] =
     UI::Menu::Item("Layers", KeyId::Action(KeyId::ActionType::kMenu, 2)),
     UI::Menu::Item("Modifiers", KeyId::Action(KeyId::ActionType::kMenu, 3)),
     UI::Menu::Item("Configuration", KeyId::Action(KeyId::ActionType::kMenu, 4)),
-    UI::Menu::Item("System", KeyId(8)),
+    UI::Menu::Item("System", KeyId::Action(KeyId::ActionType::kBuiltIn, 1)),
     UI::Menu::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
 };
 
@@ -93,7 +93,7 @@ public:
 };
 
 LayerDataSource layerDataSource;
-};
+}
 
 namespace
 {
@@ -119,8 +119,7 @@ public:
 };
 
 ModifierDataSource modifierDataSource;
-};
-
+}
 
 MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)

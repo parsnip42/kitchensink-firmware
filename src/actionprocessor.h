@@ -31,6 +31,8 @@ private:
     void fireMenu(int             action,
                   const KeyEvent& event) const;
 
+    void fireEdit() const;
+
 private:
     KeyProcessor&   mKeyProcessor;
     KeyboardState&  mKeyboardState;

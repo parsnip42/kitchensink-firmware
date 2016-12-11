@@ -44,10 +44,6 @@ void Home::paint()
     mLastUpdate = now;
     mDirty = false;
 
-    // char tempStr[12];
-    // snprintf(tempStr, sizeof(tempStr), "%lu", mLastUpdate);
-    // mSurface.paintText(28, 0, tempStr);
-
     const auto& modifierSet(mKeyboardState.modifierSet);
     
     for (int i = 0; i < 12; ++i)
@@ -68,11 +64,10 @@ void Home::paint()
             mDirty = true;
         }
         
-        const char* text(modifierSet[i].name());
-
-        auto offset(i);
-        mSurface.paintText(((offset&3) * 16), 52-((offset >> 2) * 14),
-                           text, mPaintState[i], 0);
+        mSurface.paintText(((i & 3) * 16),
+                           52-((i >> 2) * 14),
+                           modifierSet[i].name(),
+                           mPaintState[i], 0);
     }
 }
 

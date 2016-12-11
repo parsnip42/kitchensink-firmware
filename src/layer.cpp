@@ -1,6 +1,6 @@
 #include "layer.h"
 
-Layer::Layer(const char* name,
+Layer::Layer(const Types::StrRef&                                       name,
              const std::initializer_list<std::initializer_list<KeyId>>& list)
     : mName(name)
 {

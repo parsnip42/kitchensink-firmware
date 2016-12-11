@@ -3,6 +3,7 @@
 
 #include "keyid.h"
 #include "keyprocessor.h"
+#include "types/strref.h"
 #include "ui/surface.h"
 
 #include <cstdint>
@@ -18,12 +19,12 @@ public:
     class Item
     {
     public:
-        constexpr Item(const char*  nText,
-                       const KeyId& nKeyId);
+        constexpr Item(const Types::StrRef& nText,
+                       const KeyId&         nKeyId);
 
     public:
-        const char* text;
-        KeyId       keyId;
+        Types::StrRef text;
+        KeyId         keyId;
     };
 
 public:
@@ -60,8 +61,8 @@ private:
 
 
 inline
-constexpr Menu::Item::Item(const char*  nText,
-                           const KeyId& nKeyId)
+constexpr Menu::Item::Item(const Types::StrRef& nText,
+                           const KeyId&         nKeyId)
     : text(nText)
     , keyId(nKeyId)
 { }

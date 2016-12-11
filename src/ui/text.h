@@ -3,10 +3,11 @@
 
 #include "ui/surface.h"
 
+namespace Types { class StrRef; }
+namespace UI { class Surface; }
+
 namespace UI
 {
-
-class Surface;
 
 class Text
 {
@@ -14,7 +15,7 @@ public:
     explicit Text(Surface& surface);
 
 public:
-    void appendLine(const char* text);
+    void appendLine(const Types::StrRef& text);
 
 private:
     Surface& mSurface;

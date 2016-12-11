@@ -11,10 +11,9 @@ public:
         kKey      = 0,
         kLayer    = 1,
         kModifier = 2,
-        kMulti    = 3,
-        kMacro    = 4,
-        kSMacro   = 5,
-        kAction   = 6
+        kMacro    = 3,
+        kSMacro   = 4,
+        kAction   = 5
     };
 
     enum class ModifierType : uint8_t
@@ -37,8 +36,12 @@ public:
     
     enum class ActionType : uint8_t
     {
-        kBuiltIn = 0,
-        kMenu    = 1
+        kBuiltIn        = 0,
+        kMenu           = 1,
+        // kRenameLayer    = 2,
+        // kRenameModifier = 3,
+        // kRenameMacro    = 4,
+        // kRenameSMacro   = 5
     };
 
 public:
@@ -46,7 +49,6 @@ public:
     static constexpr KeyId Action(ActionType actionType,
                                   int        actionId);
     static constexpr KeyId Layer(int layerId);
-    static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Modifier(ModifierType modifierType,
                                     int          modifierId);
     static constexpr KeyId Modifier(int modifierId);
@@ -103,12 +105,6 @@ inline
 constexpr KeyId KeyId::Layer(int layerId)
 {
     return KeyId(Type::kLayer, layerId);
-}
-
-inline
-constexpr KeyId KeyId::Multi(int multiId)
-{
-    return KeyId(Type::kMulti, multiId);
 }
 
 inline

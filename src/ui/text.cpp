@@ -1,7 +1,7 @@
 #include "text.h"
 #include "timed.h"
 
-#include <cstring>
+#include "types/strref.h"
 
 namespace UI
 {
@@ -13,14 +13,14 @@ Text::Text(Surface& surface)
     mSurface.clear();
 }
 
-void Text::appendLine(const char* text)
+void Text::appendLine(const Types::StrRef& text)
 {
     const Surface::ColorMap colors(0xf, 0);
 
     for (int y(0); y < Surface::kFontHeight; ++y)
     {
-        mSurface.initRegion(0, y + (mLines * Surface::kFontHeight), Surface::kFontWidth * strlen(text), 1);
-        mSurface.paintTextLine(text, text + strlen(text), y, colors);
+        mSurface.initRegion(0, y + (mLines * Surface::kFontHeight), Surface::kFontWidth * text.size(), 1);
+        mSurface.paintTextLine(text, y, colors);
     }
 
     int scrollStart((mLines * Surface::kFontHeight) - Surface::kHeight);

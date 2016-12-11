@@ -41,7 +41,7 @@ def main():
         'bracketright', 'asciicircum', 'underscore', 'grave', 'a', 'b', 'c', 'd', 'e', 'f',
         'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
         'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-        'braceleft', 'bar', 'braceright', 'asciitilde'
+        'braceleft', 'bar', 'braceright', 'asciitilde', 'uni2714'
     ]
     
     for y in range(0, 14):

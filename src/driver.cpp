@@ -10,6 +10,8 @@
 #include "ui/home.h"
 #include "ui/text.h"
 
+#include "types/strbuf.h"
+
 #include <SdFat.h>
 
 SdFat sd;
@@ -60,6 +62,10 @@ void loop() {
             myFile.close();
         }
     }
+
+    Types::StrBuf<5> str;
+
+    initLog.appendLine(str);
 
     surface.clear();
     

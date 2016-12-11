@@ -2,6 +2,8 @@
 #define INCLUDED_LAYER_H
 
 #include "keyid.h"
+#include "types/strbuf.h"
+#include "types/strref.h"
 
 #include <array>
 #include <initializer_list>
@@ -13,26 +15,21 @@ public:
     static constexpr int kColumns = 20;
     
 public:
-    constexpr Layer();
-    explicit Layer(const char* name,
+    constexpr Layer() = default;
+    explicit Layer(const Types::StrRef&                                       name,
                    const std::initializer_list<std::initializer_list<KeyId>>& list);
 
 public:
-    const char* name() const;
+    Types::StrRef name() const;
     KeyId at(int row, int column) const;
     
 private:
-    const char*                                    mName;
+    Types::StrBuf<12>                              mName;
     std::array<std::array<KeyId, kColumns>, kRows> mMapping;
 };
 
 inline
-constexpr Layer::Layer()
-    : mName("")
-{ }
-
-inline
-const char* Layer::name() const
+Types::StrRef Layer::name() const
 {
     return mName;
 }

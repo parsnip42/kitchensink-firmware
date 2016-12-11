@@ -2,8 +2,12 @@
 
 #include <elapsedMillis.h>
 
-AutoRepeat::AutoRepeat(uint32_t repeatDelay)
+AutoRepeat::AutoRepeat(uint32_t repeatDelay,
+                       uint32_t repeatRate)
     : mRepeatDelay(repeatDelay)
+    , mRepeatRate(repeatRate)
+    , mKeyId()
+    , mNextTime(0)
 { }
 
 void AutoRepeat::processEvent(const KeyEvent& keyEvent)
@@ -11,7 +15,7 @@ void AutoRepeat::processEvent(const KeyEvent& keyEvent)
     if (keyEvent.pressed)
     {
         mKeyId = keyEvent.keyId;
-        mHeldTime = 0;
+        mNextTime = 0;
     }
     else
     {             
@@ -21,16 +25,17 @@ void AutoRepeat::processEvent(const KeyEvent& keyEvent)
 
 KeyId AutoRepeat::activeKey()
 {
-    if (mHeldTime == 0 && mKeyId != KeyId::None)
+    if (mNextTime == 0 && mKeyId != KeyId::None)
     {
-        mHeldTime = millis();
+        mNextTime = millis() + mRepeatDelay;
         return mKeyId;
     }
+
+    auto now(millis());
     
-    auto held(millis() - mHeldTime);
-    
-    if (held > mRepeatDelay)
+    if (mNextTime <= now)
     {
+        mNextTime = now + mRepeatRate;
         return mKeyId;
     }
     else

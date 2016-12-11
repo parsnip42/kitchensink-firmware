@@ -14,8 +14,8 @@ Menu::Menu(Surface& surface)
 void Menu::createMenu(const DataSource& dataSource,
                       KeyProcessor&     keyProcessor)
 {
-    const int selectionOffset(20);
-    AutoRepeat autoRepeat(500);
+    constexpr int selectionOffset(((Surface::kHeight % Surface::kFontHeight) / 2) + Surface::kFontHeight);
+    AutoRepeat autoRepeat;
     int selected(0);
 
     KeyId selectedKeyId;

@@ -49,3 +49,20 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
     return Consumed::kIgnored;
 }
 
+void KeyProcessor::untilKeyPress()
+{
+    while (true)
+    {
+        poll();
+
+        if (!mEventQueue.empty())
+        {
+            auto event(mEventQueue.pop());
+
+            if (event.pressed)
+            {
+                break;
+            }
+        }
+    }
+};

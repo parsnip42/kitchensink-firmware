@@ -5,6 +5,8 @@
 
 class Display;
 
+namespace Types { class StrRef; }
+
 namespace UI
 {
 
@@ -31,23 +33,22 @@ public:
     explicit Surface(Display& display);
 
 public:
-    void paintText(int         x,
-                   int         y,
-                   const char* str,
-                   uint8_t     fg = 0xf,
-                   uint8_t     bg = 0);
+    void paintText(int                  x,
+                   int                  y,
+                   const Types::StrRef& text,
+                   uint8_t              fg = 0xf,
+                   uint8_t              bg = 0);
 
     void initRegion(int x, int y, int w, int h);
 
-    void paintTextLine(const char*     begin,
-                       const char*     end,
-                       const int       line,
-                       const ColorMap& colorMap);
+    void paintTextLine(const Types::StrRef& text,
+                       const int            line,
+                       const ColorMap&      colorMap);
     
-    void paintTextLineC(const char*     text,
-                        const int       width,
-                        const int       line,
-                        const ColorMap& colorMap);
+    void paintTextLineC(const Types::StrRef& text,
+                        const int            width,
+                        const int            line,
+                        const ColorMap&      colorMap);
 
     void scroll(uint8_t value);
     void clear();
@@ -61,8 +62,8 @@ private:
 };
 
 
-inline constexpr
-Surface::ColorMap::ColorMap(uint8_t fg, uint8_t bg)
+inline
+constexpr Surface::ColorMap::ColorMap(uint8_t fg, uint8_t bg)
     : data {
         uint8_t(bg | (bg << 4)),
         uint8_t(fg | (bg << 4)),

@@ -115,7 +115,7 @@ void init(KeyboardState& keyboardState)
     
     layerStack.setLayer(0, true);
 
-    layerStack.assignLayer(0, Layer("Default", {
+    layerStack.assignLayer(0, Layer("Default \x7f", {
                 { KEY_TILDE,KEY_NON_US_NUM,KEY_1,KEY_2,KEY_3,KEY_4,KEY_5,KEY_NON_US_BS,KeyId::Modifier(KeyId::ModifierType::kToggle, 8),KeyId::Modifier(KeyId::ModifierType::kToggle, 9),
                     KEY_F1,KEY_F2,0,KEY_6,KEY_7,KEY_8,KEY_9,KEY_0,KEY_MINUS,KEY_EQUAL },
                 

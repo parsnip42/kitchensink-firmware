@@ -8,7 +8,8 @@
 class AutoRepeat
 {
 public:
-    explicit AutoRepeat(uint32_t repeatDelay);
+    explicit AutoRepeat(uint32_t repeatDelay = 660,
+                        uint32_t repeatRate = 40);
 
 public:
     void processEvent(const KeyEvent& keyEvent);
@@ -17,8 +18,9 @@ public:
     
 private:
     const uint32_t mRepeatDelay;
+    const uint32_t mRepeatRate;
     KeyId          mKeyId;
-    uint32_t       mHeldTime;
+    uint32_t       mNextTime;
 
 };
 
