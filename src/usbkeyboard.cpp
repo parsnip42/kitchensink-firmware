@@ -1,5 +1,7 @@
 #include "usbkeyboard.h"
 
+#include "keycodes.h"
+
 #include <usb_keyboard.h>
 #include <cstring>
 
@@ -40,9 +42,9 @@ void UsbKeyboard::pressKey(uint8_t keyCode)
 {
     if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7))))
     {
-        if (keyCode >= 0xe0)
+        if (keyCode >= KeyCodes::ModifierOffset)
         {
-            keyboard_modifier_keys |= (1 << (keyCode - 0xe0));
+            keyboard_modifier_keys |= (1 << (keyCode - KeyCodes::ModifierOffset));
             mDirty = true;
         }
         else if (mKeyNum < 6)
@@ -59,9 +61,9 @@ void UsbKeyboard::releaseKey(uint8_t keyCode)
 {
     if (mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
     {
-        if (keyCode >= 0xe0)
+        if (keyCode >= KeyCodes::ModifierOffset)
         {
-            keyboard_modifier_keys &= ~(1 << (keyCode - 0xe0));
+            keyboard_modifier_keys &= ~(1 << (keyCode - KeyCodes::ModifierOffset));
             mDirty = true;
         }
         else

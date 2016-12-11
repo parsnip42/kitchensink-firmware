@@ -3,17 +3,6 @@
 namespace KeyMap
 {
 
-constexpr Entry::Entry()
-    : dflt("?")
-    , shift("?")
-{ }
-
-constexpr Entry::Entry(const char* nDflt,
-                       const char* nShift)
-    : dflt(nDflt)
-    , shift(nShift)
-{ }
-
 namespace
 {
 
@@ -71,9 +60,9 @@ constexpr std::array<Entry, 0xff> tableData{{
 
 }
 
-const std::array<Entry, 0xff>& table()
+const Entry& getEntry(uint8_t n)
 {
-    return tableData;
+    return tableData[n];
 }
 
 }

@@ -32,9 +32,9 @@ public:
 private:
     Types::StrBuf<12> mName;
     KeyId             mKeyId;
-    bool              mLocked:1;
-    bool              mHeld:1;
-    bool              mTrigger:1;
+    bool              mLocked;
+    bool              mHeld;
+    bool              mTrigger;
 };
 
 

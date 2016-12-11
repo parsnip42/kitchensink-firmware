@@ -96,7 +96,7 @@ void Surface::paintText(int                  x,
     
     auto len(text.size());
     
-    initRegion(x, y, len << 3, kCharHeight);
+    initRegion(x, y, len * kFontWidth, kCharHeight);
 
     const ColorMap colorMap(fg, bg);
     

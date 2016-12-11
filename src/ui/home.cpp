@@ -48,12 +48,12 @@ void Home::paint()
     
     for (int i = 0; i < 12; ++i)
     {
-        if (modifierSet[i].active() && (mPaintState[i] == 0))
+        if (modifierSet[i].locked() && (mPaintState[i] == 0))
         {
             mPaintState[i] = 1;
             mDirty = true;
         }
-        else if (!modifierSet[i].active() && (mPaintState[i] > 0))
+        else if (!modifierSet[i].locked() && (mPaintState[i] > 0))
         {
             mPaintState[i] = 0;
             mDirty = true;

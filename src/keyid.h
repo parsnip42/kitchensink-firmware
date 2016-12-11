@@ -18,13 +18,13 @@ public:
 
     enum class ModifierType : uint8_t
     {
-        kHold              = 0,
-        kToggle            = 1,
-        kDoubleLock        = 2,
-        kTripleLock        = 3,
-        kSingle            = 4,
-        kSingleHold        = 5,
-        kSingleHoldRelease = 6,
+        kHold              = 0, // Standard hold/release
+        kToggle            = 1, // Toggle on/off
+        kDoubleLock        = 2, // Hold and double tap to lock
+        kTripleLock        = 3, // Hold and triple tap to lock
+        kSingle            = 4, // Single tap to hold, auto release
+        kSingleHold        = 5, // Single tap for one key, hold/release
+        kSingleHoldRelease = 6, // Single tap for one key, hold/release for one key
     };
 
     enum class MacroType : uint8_t

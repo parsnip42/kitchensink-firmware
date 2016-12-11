@@ -8,13 +8,13 @@ bool ModifierProcessor::processEvent(ModifierSet&    modifierSet,
 {
     const auto& keyId(event.keyId);
 
-    if (event.pressed)
-    {
-        mTapping.processKey(keyId);
-    }
-    
     if (keyId.type() == KeyId::Type::kModifier)
     {
+        if (event.pressed)
+        {
+            mTapping.processKey(keyId);
+        }
+    
         auto modifierIndex(keyId.value());
 
         if (modifierIndex < modifierSet.size())

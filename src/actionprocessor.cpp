@@ -46,10 +46,13 @@ void ActionProcessor::fireBuiltIn(int             action,
     switch (action)
     {
     case 0:
+    {
         CtrlUtil::bootloader();
         break;
-        
+    }
+    
     case 1:
+    {
         UI::Text text(mSurface);
 
         Types::StrBuf<20> line("Free Memory: ");
@@ -61,6 +64,17 @@ void ActionProcessor::fireBuiltIn(int             action,
         mSurface.clear();
         
         break;
+    }
+    
+    case 2:
+    {
+        UI::TextEntry entry(mSurface,
+                            mKeyProcessor,
+                            "Test");
+
+        entry.create();
+        break;
+    }
     }
 }
 

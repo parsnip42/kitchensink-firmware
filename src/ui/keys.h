@@ -1,17 +1,43 @@
 #ifndef INCLUDED_UI_KEYS_H
 #define INCLUDED_UI_KEYS_H
 
-class KeyId;
+#include "keycodes.h"
+#include "keyid.h"
 
 namespace UI
 {
 namespace Keys
 {
 
-bool up(const KeyId& keyId);
-bool down(const KeyId& keyId);
-bool ok(const KeyId& keyId);
-bool cancel(const KeyId& keyId);
+inline
+bool up(const KeyId& keyId)
+{
+    return (keyId == KeyId(KeyCodes::Up) ||
+            keyId == KeyId(KeyCodes::E) ||
+            keyId == KeyId(KeyCodes::I));
+}
+
+inline
+bool down(const KeyId& keyId)
+{
+    return (keyId == KeyId(KeyCodes::Down) ||
+            keyId == KeyId(KeyCodes::D) ||
+            keyId == KeyId(KeyCodes::K));
+}
+
+inline
+bool ok(const KeyId& keyId)
+{
+    return ((keyId == KeyId(KeyCodes::Enter)) ||
+            (keyId == KeyId(KeyCodes::Space)));
+}
+
+inline
+bool cancel(const KeyId& keyId)
+{
+    return ((keyId == KeyId(KeyCodes::Esc)) ||
+            (keyId == KeyId::Action(KeyId::ActionType::kMenu, 0)));
+}
 
 }
 }
