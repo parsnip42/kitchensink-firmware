@@ -35,7 +35,7 @@ private:
     
 private:
     RecordMacro(const RecordMacro&) = delete;
-    RecordMacro& operator=(const RecordMacro&) = Delete;
+    RecordMacro& operator=(const RecordMacro&) = delete;
 };
 
 
