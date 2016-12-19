@@ -39,8 +39,12 @@ public:
     constexpr MacroSet() = default;
     
 public:
-    void setMacro(int index, const std::initializer_list<KeyEvent>& press);
-    std::size_t size() const;
+    constexpr std::size_t size() const;
+    
+    template <typename Iterator>
+    void setMacro(std::size_t index, Iterator begin, Iterator end);
+    
+    void setMacro(std::size_t index, const std::initializer_list<KeyEvent>& press);
     
 private:
     MacroPool mMacroPool;
@@ -62,9 +66,22 @@ constexpr MacroSet::Macro::Macro(const MacroSet&            macroSet,
 { }
 
 inline
-std::size_t MacroSet::size() const
+constexpr std::size_t MacroSet::size() const
 {
     return mMacroPool.size();
+}
+
+template <typename Iterator>
+inline
+void MacroSet::setMacro(std::size_t index, Iterator begin, Iterator end)
+{
+    mMacroPool.insert(index, begin, end);
+}
+
+inline
+void MacroSet::setMacro(std::size_t index, const std::initializer_list<KeyEvent>& press)
+{
+    setMacro(index, press.begin(), press.end());
 }
 
 inline

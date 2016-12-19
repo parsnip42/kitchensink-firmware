@@ -13,7 +13,8 @@ public:
         kLock   = 2,
         kMacro  = 3,
         kSMacro = 4,
-        kAction = 5
+        kAction = 5,
+        kDelay  = 6
     };
 
     enum class LockType : uint8_t
@@ -53,7 +54,8 @@ public:
     static constexpr KeyId Lock(int lockId);
     static constexpr KeyId Macro(MacroType macroType,
                                  int       macroId);
-    
+    static constexpr KeyId Delay(uint32_t delayMs);
+
 public:
     constexpr KeyId(int keyCode = 0);
     
@@ -71,8 +73,9 @@ public:
     constexpr MacroType macroType() const;
     
 private:
-    uint16_t mData;
-
+    uint8_t mType;
+    uint8_t mValue;
+    
 private:
     friend bool operator==(const KeyId& lhs, const KeyId& rhs);
 };
@@ -81,7 +84,7 @@ private:
 inline
 bool operator==(const KeyId& lhs, const KeyId& rhs)
 {
-    return (lhs.mData == rhs.mData);
+    return (lhs.mType == rhs.mType) && (lhs.mValue == rhs.mValue);
 }
 
 inline
@@ -133,40 +136,48 @@ constexpr KeyId KeyId::Macro(MacroType macroType,
 }
 
 inline
+constexpr KeyId KeyId::Delay(uint32_t delayMs)
+{
+    return KeyId(Type::kDelay,
+                 (delayMs >> 8) & 0xf,
+                 delayMs & 0xff);
+}
+
+inline
 constexpr KeyId::KeyId(int keyCode)
-    : mData(keyCode & 0xff)
+    : mType(0)
+    , mValue(keyCode & 0xff)
 { }
 
 inline
 constexpr KeyId::KeyId(Type type, uint8_t value)
-    : mData((static_cast<uint8_t>(type) & 0xf) << 12 |
-            (value & 0xff))
+    : mType((static_cast<uint8_t>(type) & 0xf) << 4)
+    , mValue(value)
 { }
 
 inline
 constexpr KeyId::KeyId(Type type, uint8_t subType, uint8_t value)
-    : mData((static_cast<uint8_t>(type) & 0xf) << 12 |
-            (subType & 0xf) << 8 |
-            value)
+    : mType((static_cast<uint8_t>(type) & 0xf) << 4 | (subType & 0xf))
+    , mValue(value)
 { }
 
 
 inline
 constexpr KeyId::Type KeyId::type() const
 {
-    return Type((mData >> 12) & 0xf);
+    return Type((mType >> 4) & 0xf);
 }
 
 inline
 constexpr uint8_t KeyId::subType() const
 {
-    return (mData >> 8) & 0xf;
+    return mType & 0xf;
 }
 
 inline
 constexpr uint8_t KeyId::value() const
 {
-    return (mData & 0xff);
+    return mValue;
 }
 
 inline

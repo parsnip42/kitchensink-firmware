@@ -113,8 +113,8 @@ void init(KeyboardState& keyboardState)
             { Esc, KeyId::Macro(KeyId::MacroType::kInvert, 10), Q, W, E, R, T, Tab, KeyId::Lock(KeyId::LockType::kToggle, 11),0,
               F3, F4, Backspace, Y, U, I, O, P, LBrace, RBrace },
             
-            { 0, KeyId::Layer(2), A, S, D, F, G, 0, KeyId::Macro(KeyId::MacroType::kSync, 9), 0,
-              0, KeyId::Action(KeyId::ActionType::kBuiltIn, 2), 0, H, J, K, L, Semicolon, Enter },
+            { 0, KeyId::Layer(2), A, S, D, F, G, 0, 0, 0,
+              KeyId::Macro(KeyId::MacroType::kSync, 9), KeyId::Action(KeyId::ActionType::kBuiltIn, 2), 0, H, J, K, L, Semicolon, Enter },
             
             { 0, KeyId::Lock(KeyId::LockType::kTripleLock, kLShift), Z, X, C, V, B, Delete, 0, 0,
               KeyId::Action(KeyId::ActionType::kBuiltIn, 0),KeyId::Action(KeyId::ActionType::kMenu, 0), Quote, N, M, Comma, Dot, Slash, KeyId::Lock(kRShift) },

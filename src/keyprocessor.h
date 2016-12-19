@@ -28,7 +28,9 @@ public:
               typename StateCallback>
     void poll(const EventCallback& eventCallback,
               const StateCallback& stateCallback);
-    
+
+    void delay(uint32_t timeMs);
+
     template <typename Func>
     void delay(const Func& func,
                uint32_t    timeMs);
@@ -113,5 +115,6 @@ void KeyProcessor::delay(const Func& func,
     
     Timed(timeMs, func, pollFunc);
 }
+
 
 #endif

@@ -25,8 +25,25 @@ void KeyProcessor::poll()
     });
 }
 
+void KeyProcessor::delay(uint32_t timeMs)
+{
+    auto pollFunc([&]()
+    {
+        poll();
+    });
+    
+    Timed(timeMs, pollFunc);
+}
+
 KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
 {
+    auto keyId(event.keyId);
+
+    if (keyId.type() == KeyId::Type::kDelay)
+    {
+        delay((keyId.subType()) << 8 | (keyId.value()));
+    }
+
     if (mLayerProcessor.processEvent(mKeyboardState.layerStack,
                                      event,
                                      mEventQueue))

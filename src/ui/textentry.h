@@ -14,8 +14,8 @@ namespace UI
 class TextEntry
 {
 public:
-    constexpr TextEntry(Surface&             surface,
-                        KeyProcessor&        keyProcessor);
+    constexpr TextEntry(Surface&      surface,
+                        KeyProcessor& keyProcessor);
 
 public:
     bool create(const Types::StrRef& title,

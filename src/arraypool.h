@@ -18,12 +18,12 @@ public:
     { }
 
 public:
-    std::size_t size() const
+    constexpr std::size_t size() const
     {
         return IndexCapacity;
     }
 
-    std::size_t poolSize() const
+    constexpr std::size_t poolSize() const
     {
         return mPoolSize;
     }
@@ -96,27 +96,27 @@ public:
     typedef typename Pool::const_reverse_iterator const_reverse_iterator;
     typedef PoolIndexEntry                        Entry;
     
-    const_iterator begin() const
+    constexpr const_iterator begin() const
     {
         return mPool.begin();
     }
 
-    const_iterator end() const
+    constexpr const_iterator end() const
     {
         return mPool.end();
     }
     
-    const_reverse_iterator rbegin() const
+    constexpr const_reverse_iterator rbegin() const
     {
         return mPool.rbegin();
     }
 
-    const_reverse_iterator rend() const
+    constexpr const_reverse_iterator rend() const
     {
         return mPool.rend();
     }
 
-    Entry operator[](int index) const
+    constexpr Entry operator[](int index) const
     {
         return mIndex[index];
     }

@@ -5,8 +5,6 @@
 #include "keymap.h"
 #include "keyprocessor.h"
 #include "modifierstate.h"
-
-#include "types/strbuf.h"
 #include "ui/keys.h"
 #include "ui/surface.h"
 
@@ -20,10 +18,10 @@ bool TextEntry::create(const Types::StrRef& title,
     
     mSurface.clear();
 
-    mSurface.paintText(0, 0, title, 0, 0xf);
+    mSurface.paintText(0, 0, title, 0xf, 0);
 
-    mSurface.paintText(0, 20, mText, 0xf, 0);
-    mSurface.paintText(mText.size() * 2, 20, "< ", 0xf, 0);
+    mSurface.paintText(0, 20, mText, 0x7, 0);
+    mSurface.paintText(mText.size() * 2, 20, "< ", 0x7, 0);
 
     AutoRepeat autoRepeat;
     ModifierState modifierState;
@@ -71,8 +69,8 @@ bool TextEntry::create(const Types::StrRef& title,
                 }
             }
             
-            mSurface.paintText(0, 20, mText, 0xf, 0);
-            mSurface.paintText(mText.size() * 2, 20, "< ", 0xf, 0);
+            mSurface.paintText(0, 20, mText, 0x7, 0);
+            mSurface.paintText(mText.size() * 2, 20, "< ", 0x7, 0);
         }
     }
 

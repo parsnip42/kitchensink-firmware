@@ -6,6 +6,7 @@
 #include "ui/menu.h"
 #include "ui/text.h"
 #include "ui/textentry.h"
+#include "ui/recordmacro.h"
 
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
                                  KeyboardState& keyboardState,
@@ -20,7 +21,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
     
-    if (event.pressed && (keyId.type() == KeyId::Type::kAction))
+    if (keyId.type() == KeyId::Type::kAction)
     {
         switch (keyId.actionType())
         {
@@ -54,29 +55,43 @@ void ActionProcessor::fireBuiltIn(int             action,
     
     case 1:
     {
-        UI::Text text(mSurface);
-
-        Types::StrBuf<20> line("Free Memory: ");
-
-        line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
-        
-        text.appendLine(line);
-        mKeyProcessor.untilKeyPress();
-        mSurface.clear();
+        if (event.pressed)
+        {
+            UI::Text text(mSurface);
+            
+            Types::StrBuf<20> line("Free Memory: ");
+            
+            line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
+            
+            text.appendLine(line);
+            mKeyProcessor.untilKeyPress();
+            mSurface.clear();
+        }
         break;
     }
     
     case 2:
     {
-        UI::TextEntry entry(mSurface,
-                            mKeyProcessor);
+        // UI::TextEntry entry(mSurface,
+        //                     mKeyProcessor);
 
-        if (entry.create(" Rename Layout #1 ",
-                         mKeyboardState.layerStack[1].name))
+        // if (entry.create(" Rename Layout #1 ",
+        //                  mKeyboardState.layerStack[1].name))
+        // {
+        //     mKeyboardState.layerStack[1].name = entry.text();
+        // }
+
+        if (!event.pressed)
         {
-            mKeyboardState.layerStack[1].name = entry.text();
+            UI::RecordMacro record(mSurface,
+                                   mKeyProcessor);
+            
+            record.create("Recording Macro #9", true);
+            
+            const auto& macro(record.macro());
+            
+            mKeyboardState.macroSet.setMacro(9, macro.rbegin(), macro.rend());
         }
-        
         break;
     }
     }
@@ -85,10 +100,13 @@ void ActionProcessor::fireBuiltIn(int             action,
 void ActionProcessor::fireMenu(int             action,
                                const KeyEvent& event) const
 {
-    UI::Menu menu(mSurface);
-
-    menu.createMenu(mMenuDefinitions.getDataSource(action),
-                    mKeyProcessor);
+    if (event.pressed)
+    {
+        UI::Menu menu(mSurface);
+        
+        menu.createMenu(mMenuDefinitions.getDataSource(action),
+                        mKeyProcessor);
+    }
 }
 
 void ActionProcessor::fireEdit() const
