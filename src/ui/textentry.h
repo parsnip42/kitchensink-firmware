@@ -1,6 +1,7 @@
 #ifndef INCLUDED_UI_TEXTENTRY_H
 #define INCLUDED_UI_TEXTENTRY_H
 
+#include "types/strbuf.h"
 #include "types/strref.h"
 
 class KeyProcessor;
@@ -14,16 +15,18 @@ class TextEntry
 {
 public:
     constexpr TextEntry(Surface&             surface,
-                        KeyProcessor&        keyProcessor,
-                        const Types::StrRef& title);
+                        KeyProcessor&        keyProcessor);
 
 public:
-    void create();
-    
+    bool create(const Types::StrRef& title,
+                const Types::StrRef& text = "");
+
+    constexpr Types::StrRef text() const;
+
 private:
-    Surface&      mSurface;
-    KeyProcessor& mKeyProcessor;
-    Types::StrRef mTitle;
+    Surface&          mSurface;
+    KeyProcessor&     mKeyProcessor;
+    Types::StrBuf<30> mText;
 
 private:
     TextEntry(const TextEntry&) = delete;
@@ -32,13 +35,18 @@ private:
 
 
 inline
-constexpr TextEntry::TextEntry(Surface&             surface,
-                               KeyProcessor&        keyProcessor,
-                               const Types::StrRef& title)
+constexpr TextEntry::TextEntry(Surface&      surface,
+                               KeyProcessor& keyProcessor)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
-    , mTitle(title)
 { }
+
+inline
+constexpr Types::StrRef TextEntry::text() const
+{
+    return mText;
+}
+
 
 }
 

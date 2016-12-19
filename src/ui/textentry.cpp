@@ -13,18 +13,22 @@
 namespace UI
 {
 
-void TextEntry::create()
+bool TextEntry::create(const Types::StrRef& title,
+                       const Types::StrRef& text)
 {
+    mText = text;
+    
     mSurface.clear();
 
-    mSurface.paintText(0, 0, mTitle, 0, 0xf);
+    mSurface.paintText(0, 0, title, 0, 0xf);
 
-    Types::StrBuf<30> text;
-    
-    mSurface.paintText(0, 20, text, 0xf, 0);
+    mSurface.paintText(0, 20, mText, 0xf, 0);
+    mSurface.paintText(mText.size() * 2, 20, "< ", 0xf, 0);
 
     AutoRepeat autoRepeat;
     ModifierState modifierState;
+
+    bool entered(false);
     
     while (1)
     {
@@ -41,36 +45,40 @@ void TextEntry::create()
 
         if (Keys::cancel(keyId))
         {
+            entered = false;
             break;
         }
         else if (keyId.type() == KeyId::Type::kKey && keyId.value() != 0)
         {
             if (keyId.value() == KeyCodes::Backspace)
             {
-                text.popEnd();
+                mText.popEnd();
             }
             else if (keyId.value() == KeyCodes::Enter)
             {
+                entered = true;
                 break;
             }
             else
             {
                 if (modifierState.shift())
                 {
-                    text.appendChar(KeyMap::getEntry(keyId.value()).shift.begin()[0]);
+                    mText.appendChar(KeyMap::getEntry(keyId.value()).shift);
                 }
                 else
                 {
-                    text.appendChar(KeyMap::getEntry(keyId.value()).dflt.begin()[0]);                    
+                    mText.appendChar(KeyMap::getEntry(keyId.value()).dflt);                    
                 }
             }
             
-            mSurface.paintText(0, 20, text, 0xf, 0);
-            mSurface.paintText(text.size()*2, 20, "< ", 0xf, 0);
+            mSurface.paintText(0, 20, mText, 0xf, 0);
+            mSurface.paintText(mText.size() * 2, 20, "< ", 0xf, 0);
         }
     }
 
     mSurface.clear();
+
+    return entered;
 }
 
 }

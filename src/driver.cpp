@@ -16,11 +16,13 @@
 
 SdFat sd;
 
-void setup() {
+void setup()
+{
     KeyMatrix::setup();
 }
 
-void loop() {
+void loop()
+{
     Display display;
 
     display.init();

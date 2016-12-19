@@ -14,23 +14,23 @@ class Entry
 public:
     constexpr Entry();
     
-    constexpr Entry(const Types::StrRef& nDflt,
-                    const Types::StrRef& nShift);
+    constexpr Entry(char nDflt,
+                    char nShift);
 
 public:
-    const Types::StrRef dflt;
-    const Types::StrRef shift;
+    const char dflt;
+    const char shift;
 };
 
 inline
 constexpr Entry::Entry()
-    : dflt("?")
-    , shift("?")
+    : dflt('?')
+    , shift('?')
 { }
 
 inline
-constexpr Entry::Entry(const Types::StrRef& nDflt,
-                       const Types::StrRef& nShift)
+constexpr Entry::Entry(char nDflt,
+                       char nShift)
     : dflt(nDflt)
     , shift(nShift)
 { }

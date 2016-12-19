@@ -117,30 +117,21 @@ void Surface::paintTextLine(const Types::StrRef& text,
 {
     for (const auto chr : text)
     {
+        uint8_t data(0xff);
+        
         if (chr > 32 && chr <= 32 + kCharsetCount)
         {
-            const auto data(charset[chr - 33 + (line * kCharsetCount)]);
-            
-            mDisplay.writeData(colorMap.data[(data >> 6) & 0x3]);
-            mDisplay.writeData(colorMap.data[(data >> 4) & 0x3]);
-            mDisplay.writeData(colorMap.data[(data >> 2) & 0x3]);
-            mDisplay.writeData(colorMap.data[data & 0x3]);
-
+            data = charset[chr - 33 + (line * kCharsetCount)];
         }
         else if (chr == 32)
         {
-            mDisplay.writeData(colorMap.data[0]);
-            mDisplay.writeData(colorMap.data[0]);
-            mDisplay.writeData(colorMap.data[0]);
-            mDisplay.writeData(colorMap.data[0]);
+            data = 0;
         }
-        else
-        {
-            mDisplay.writeData(colorMap.data[3]);
-            mDisplay.writeData(colorMap.data[3]);
-            mDisplay.writeData(colorMap.data[3]);
-            mDisplay.writeData(colorMap.data[3]);
-        }
+
+        mDisplay.writeData(colorMap.data[(data >> 6) & 0x3]);
+        mDisplay.writeData(colorMap.data[(data >> 4) & 0x3]);
+        mDisplay.writeData(colorMap.data[(data >> 2) & 0x3]);
+        mDisplay.writeData(colorMap.data[data & 0x3]);
     }   
 }
 

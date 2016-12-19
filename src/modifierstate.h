@@ -25,6 +25,7 @@ public:
     constexpr bool ctrl() const;
     constexpr bool shift() const;
     constexpr bool alt() const;
+    constexpr bool altGr() const;
     constexpr bool gui() const;
 
     bool processEvent(const KeyEvent& event);
@@ -50,6 +51,12 @@ inline
 constexpr bool ModifierState::alt() const
 {
     return keyState[kLAlt] || keyState[kRAlt];
+}
+
+inline
+constexpr bool ModifierState::altGr() const
+{
+    return keyState[kRAlt];
 }
 
 inline

@@ -1,6 +1,7 @@
 #include "actionprocessor.h"
 #include "ctrlutil.h"
 #include "eventqueue.h"
+#include "keyboardstate.h"
 #include "menudefinitions.h"
 #include "ui/menu.h"
 #include "ui/text.h"
@@ -62,17 +63,20 @@ void ActionProcessor::fireBuiltIn(int             action,
         text.appendLine(line);
         mKeyProcessor.untilKeyPress();
         mSurface.clear();
-        
         break;
     }
     
     case 2:
     {
         UI::TextEntry entry(mSurface,
-                            mKeyProcessor,
-                            "Test");
+                            mKeyProcessor);
 
-        entry.create();
+        if (entry.create(" Rename Layout #1 ",
+                         mKeyboardState.layerStack[1].name))
+        {
+            mKeyboardState.layerStack[1].name = entry.text();
+        }
+        
         break;
     }
     }
@@ -89,7 +93,7 @@ void ActionProcessor::fireMenu(int             action,
 
 void ActionProcessor::fireEdit() const
 {
-    UI::TextEntry foo(mSurface, mKeyProcessor, " Rename Layout #0 ");
+    UI::TextEntry foo(mSurface, mKeyProcessor);
 
-    foo.create();
+    foo.create(" Rename Layout #0 ");
 }
