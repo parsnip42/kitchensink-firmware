@@ -44,16 +44,16 @@ void Home::paint()
     mLastUpdate = now;
     mDirty = false;
 
-    const auto& modifierSet(mKeyboardState.modifierSet);
+    const auto& lockSet(mKeyboardState.lockSet);
     
     for (int i = 0; i < 12; ++i)
     {
-        if (modifierSet[i].locked() && (mPaintState[i] == 0))
+        if (lockSet[i].locked() && (mPaintState[i] == 0))
         {
             mPaintState[i] = 1;
             mDirty = true;
         }
-        else if (!modifierSet[i].locked() && (mPaintState[i] > 0))
+        else if (!lockSet[i].locked() && (mPaintState[i] > 0))
         {
             mPaintState[i] = 0;
             mDirty = true;
@@ -66,7 +66,7 @@ void Home::paint()
         
         mSurface.paintText(((i & 3) * 16),
                            52-((i >> 2) * 14),
-                           modifierSet[i].name(),
+                           lockSet[i].name(),
                            mPaintState[i], 0);
     }
 }

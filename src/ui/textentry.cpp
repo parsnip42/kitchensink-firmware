@@ -4,6 +4,7 @@
 #include "keycodes.h"
 #include "keymap.h"
 #include "keyprocessor.h"
+#include "modifierstate.h"
 
 #include "types/strbuf.h"
 #include "ui/keys.h"
@@ -23,13 +24,17 @@ void TextEntry::create()
     mSurface.paintText(0, 20, text, 0xf, 0);
 
     AutoRepeat autoRepeat;
-
+    ModifierState modifierState;
+    
     while (1)
     {
         mKeyProcessor.poll(
             [&](const KeyEvent& event)
             {
-                autoRepeat.processEvent(event);
+                if (!modifierState.processEvent(event))
+                {
+                    autoRepeat.processEvent(event);
+                }
             });
 
         auto keyId(autoRepeat.activeKey());
@@ -50,11 +55,18 @@ void TextEntry::create()
             }
             else
             {
-                text.appendChar(KeyMap::getEntry(keyId.value()).dflt.begin()[0]);
+                if (modifierState.shift())
+                {
+                    text.appendChar(KeyMap::getEntry(keyId.value()).shift.begin()[0]);
+                }
+                else
+                {
+                    text.appendChar(KeyMap::getEntry(keyId.value()).dflt.begin()[0]);                    
+                }
             }
             
             mSurface.paintText(0, 20, text, 0xf, 0);
-            mSurface.paintText(text.size()*2, 20, " ", 0xf, 0);
+            mSurface.paintText(text.size()*2, 20, "< ", 0xf, 0);
         }
     }
 

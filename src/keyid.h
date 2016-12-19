@@ -8,15 +8,15 @@ class KeyId
 public:
     enum class Type : uint8_t
     {
-        kKey      = 0,
-        kLayer    = 1,
-        kModifier = 2,
-        kMacro    = 3,
-        kSMacro   = 4,
-        kAction   = 5
+        kKey    = 0,
+        kLayer  = 1,
+        kLock   = 2,
+        kMacro  = 3,
+        kSMacro = 4,
+        kAction = 5
     };
 
-    enum class ModifierType : uint8_t
+    enum class LockType : uint8_t
     {
         kHold              = 0, // Standard hold/release
         kToggle            = 1, // Toggle on/off
@@ -48,9 +48,9 @@ public:
     static constexpr KeyId Action(ActionType actionType,
                                   int        actionId);
     static constexpr KeyId Layer(int layerId);
-    static constexpr KeyId Modifier(ModifierType modifierType,
-                                    int          modifierId);
-    static constexpr KeyId Modifier(int modifierId);
+    static constexpr KeyId Lock(LockType lockType,
+                                int          lockId);
+    static constexpr KeyId Lock(int lockId);
     static constexpr KeyId Macro(MacroType macroType,
                                  int       macroId);
     
@@ -67,7 +67,7 @@ public:
     constexpr uint8_t value() const;
 
     constexpr ActionType actionType() const;
-    constexpr ModifierType modifierType() const;
+    constexpr LockType lockType() const;
     constexpr MacroType macroType() const;
     
 private:
@@ -107,20 +107,20 @@ constexpr KeyId KeyId::Layer(int layerId)
 }
 
 inline
-constexpr KeyId KeyId::Modifier(int modifierId)
+constexpr KeyId KeyId::Lock(int lockId)
 {
-    return KeyId(Type::kModifier,
-                 static_cast<uint8_t>(ModifierType::kHold),
-                 modifierId);
+    return KeyId(Type::kLock,
+                 static_cast<uint8_t>(LockType::kHold),
+                 lockId);
 }
 
 inline
-constexpr KeyId KeyId::Modifier(ModifierType modifierType,
-                                int          modifierId)
+constexpr KeyId KeyId::Lock(LockType lockType,
+                                int          lockId)
 {
-    return KeyId(Type::kModifier,
-                 static_cast<uint8_t>(modifierType),
-                 modifierId);
+    return KeyId(Type::kLock,
+                 static_cast<uint8_t>(lockType),
+                 lockId);
 }
 
 inline
@@ -176,9 +176,9 @@ constexpr KeyId::ActionType KeyId::actionType() const
 }
 
 inline
-constexpr KeyId::ModifierType KeyId::modifierType() const
+constexpr KeyId::LockType KeyId::lockType() const
 {
-    return static_cast<KeyId::ModifierType>(subType());
+    return static_cast<KeyId::LockType>(subType());
 }
 
 inline

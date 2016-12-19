@@ -1,43 +1,43 @@
-#include "modifier.h"
+#include "lock.h"
 
 #include "eventqueue.h"
 
-bool Modifier::processEvent(const KeyEvent& keyEvent,
-                            uint8_t         taps,
-                            EventQueue&     eventQueue)
+bool Lock::processEvent(const KeyEvent& keyEvent,
+                        uint8_t         taps,
+                        EventQueue&     eventQueue)
 {
     auto originalState(active());
     
     const auto& keyId(keyEvent.keyId);
     const auto& pressed(keyEvent.pressed);
     
-    switch (keyId.modifierType())
+    switch (keyId.lockType())
     {
-    case KeyId::ModifierType::kToggle:
+    case KeyId::LockType::kToggle:
         if (pressed)
         {
             mLocked = !mLocked;
         }
         break;
         
-    case KeyId::ModifierType::kDoubleLock:
+    case KeyId::LockType::kDoubleLock:
         mHeld = pressed;
         mLocked = (taps == 2);
         break;
         
-    case KeyId::ModifierType::kTripleLock:
+    case KeyId::LockType::kTripleLock:
         mHeld = pressed;
         mLocked = (taps == 3);
         break;
 
-    case KeyId::ModifierType::kSingle:
+    case KeyId::LockType::kSingle:
         if (pressed)
         {
             mTrigger = !mTrigger;
         }
         break;
         
-    case KeyId::ModifierType::kSingleHold:
+    case KeyId::LockType::kSingleHold:
         if (pressed)
         {
             mTrigger = !mTrigger;
@@ -45,7 +45,7 @@ bool Modifier::processEvent(const KeyEvent& keyEvent,
         mHeld = pressed;
         break;
         
-    case KeyId::ModifierType::kSingleHoldRelease:
+    case KeyId::LockType::kSingleHoldRelease:
         mTrigger = pressed;
         break;
         
@@ -68,8 +68,8 @@ bool Modifier::processEvent(const KeyEvent& keyEvent,
     return false;
 }
 
-bool Modifier::clearTrigger(const KeyEvent& keyEvent,
-                            EventQueue&     eventQueue)
+bool Lock::clearTrigger(const KeyEvent& keyEvent,
+                        EventQueue&     eventQueue)
 {
     if (mTrigger && keyEvent.keyId != mKeyId)
     {

@@ -18,8 +18,7 @@ public:
     
 public:
     constexpr bool empty() const;
-    void set(const std::size_t n);
-    void clear(const std::size_t n);
+    void set(const std::size_t n, bool state);
     
 public:
     constexpr bool operator[](std::size_t n) const;
@@ -77,16 +76,11 @@ constexpr bool Bitmask<Size>::empty() const
 
 template <std::size_t Size>
 inline
-void Bitmask<Size>::set(const std::size_t n)
+void Bitmask<Size>::set(const std::size_t n, bool state)
 {
-    mData |= (Data)1 << n;
-}
-
-template <std::size_t Size>
-inline
-void Bitmask<Size>::clear(const std::size_t n)
-{
-    mData &= ~((Data)1 << n);
+    auto mask(Data(1) << n);
+              
+    mData = (mData & ~mask) | (-state & mask);
 }
 
 template <std::size_t Size>

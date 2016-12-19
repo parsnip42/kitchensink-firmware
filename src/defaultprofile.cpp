@@ -23,17 +23,17 @@ void init(KeyboardState& keyboardState)
 {
     using namespace KeyCodes;
     
-    keyboardState.modifierSet[kLCtrl]  = Modifier("LCtrl",  LCtrl);
-    keyboardState.modifierSet[kLShift] = Modifier("LShift", LShift);
-    keyboardState.modifierSet[kLAlt]   = Modifier("LAlt",   LAlt);
-    keyboardState.modifierSet[kLGui]   = Modifier("LGui",   LGui);
-    keyboardState.modifierSet[kRCtrl]  = Modifier("RCtrl",  RCtrl);
-    keyboardState.modifierSet[kRShift] = Modifier("RShift", RShift);
-    keyboardState.modifierSet[kRAlt]   = Modifier("RAlt",   RAlt);
-    keyboardState.modifierSet[kRGui]   = Modifier("RGui",   RGui);
+    keyboardState.lockSet[kLCtrl]  = Lock("LCtrl",  LCtrl);
+    keyboardState.lockSet[kLShift] = Lock("LShift", LShift);
+    keyboardState.lockSet[kLAlt]   = Lock("LAlt",   LAlt);
+    keyboardState.lockSet[kLGui]   = Lock("LGui",   LGui);
+    keyboardState.lockSet[kRCtrl]  = Lock("RCtrl",  RCtrl);
+    keyboardState.lockSet[kRShift] = Lock("RShift", RShift);
+    keyboardState.lockSet[kRAlt]   = Lock("RAlt",   RAlt);
+    keyboardState.lockSet[kRGui]   = Lock("RGui",   RGui);
 
-    keyboardState.modifierSet[8]  = Modifier("Gm0", KeyId::Layer(3));
-    keyboardState.modifierSet[11] = Modifier("KSP", KeyId::Layer(4));
+    keyboardState.lockSet[8]  = Lock("Gm0", KeyId::Layer(3));
+    keyboardState.lockSet[11] = Lock("KSP", KeyId::Layer(4));
 
     keyboardState.macroSet.setMacro(0, {
             KeyEvent(KeyId(LBrace)),
@@ -107,20 +107,20 @@ void init(KeyboardState& keyboardState)
 
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
-            { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, KeyId::Modifier(KeyId::ModifierType::kToggle, 8), KeyId::Modifier(KeyId::ModifierType::kToggle, 9),
+            { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, KeyId::Lock(KeyId::LockType::kToggle, 8), KeyId::Lock(KeyId::LockType::kToggle, 9),
               F1, F2, 0, K6, K7, K8, K9, K0, Minus, Equal },
                 
-            { Esc, KeyId::Macro(KeyId::MacroType::kInvert, 10), Q, W, E, R, T, Tab, KeyId::Modifier(KeyId::ModifierType::kToggle, 11),0,
+            { Esc, KeyId::Macro(KeyId::MacroType::kInvert, 10), Q, W, E, R, T, Tab, KeyId::Lock(KeyId::LockType::kToggle, 11),0,
               F3, F4, Backspace, Y, U, I, O, P, LBrace, RBrace },
             
             { 0, KeyId::Layer(2), A, S, D, F, G, 0, KeyId::Macro(KeyId::MacroType::kSync, 9), 0,
               0, KeyId::Action(KeyId::ActionType::kBuiltIn, 2), 0, H, J, K, L, Semicolon, Enter },
             
-            { 0, KeyId::Modifier(KeyId::ModifierType::kTripleLock, kLShift), Z, X, C, V, B, Delete, 0, 0,
-              KeyId::Action(KeyId::ActionType::kBuiltIn, 0),KeyId::Action(KeyId::ActionType::kMenu, 0), Quote, N, M, Comma, Dot, Slash, KeyId::Modifier(kRShift) },
+            { 0, KeyId::Lock(KeyId::LockType::kTripleLock, kLShift), Z, X, C, V, B, Delete, 0, 0,
+              KeyId::Action(KeyId::ActionType::kBuiltIn, 0),KeyId::Action(KeyId::ActionType::kMenu, 0), Quote, N, M, Comma, Dot, Slash, KeyId::Lock(kRShift) },
             
-            { 0, KeyId::Modifier(kLGui), KeyId::Modifier(kRAlt), 0, 0, 0, KeyId::Modifier(kLCtrl),KeyId::Layer(1),KeyId::Modifier(kLAlt),0,
-              0, KeyId::Modifier(kLAlt), Space, KeyId::Modifier(kRCtrl), End, Left, Up, Down, Right }
+            { 0, KeyId::Lock(kLGui), KeyId::Lock(kRAlt), 0, 0, 0, KeyId::Lock(kLCtrl),KeyId::Layer(1),KeyId::Lock(kLAlt),0,
+              0, KeyId::Lock(kLAlt), Space, KeyId::Lock(kRCtrl), End, Left, Up, Down, Right }
         } };
     
     layerStack[1].name = "Navigation";
@@ -174,7 +174,7 @@ void init(KeyboardState& keyboardState)
               KeyId::Macro(KeyId::MacroType::kInvert, 19), 0, 0, H, J, K, L, Semicolon, Enter },
             
             { 0, T, Z, X, C, V, B, KeyId::Macro(KeyId::MacroType::kInvert, 17), Esc, F5,
-              F9, 0, Quote, N, M, Comma, Dot, Slash, KeyId::Modifier(6) },
+              F9, 0, Quote, N, M, Comma, Dot, Slash, KeyId::Lock(6) },
             
             { 0, R, 0, 0, 0, LAlt, LShift, LCtrl, X, 0,
               0, LAlt, Space, RCtrl, End, Left, Up, Down, Right }

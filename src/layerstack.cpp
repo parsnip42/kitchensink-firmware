@@ -62,14 +62,7 @@ KeyId LayerStack::atIndex(int index, int row, int column) const
 
 void LayerStack::setLayer(int index, bool enabled)
 {
-    if (enabled)
-    {
-        mLayerMask.set(index);
-    }
-    else
-    {
-        mLayerMask.clear(index);
-    }
+    mLayerMask.set(index, enabled);
 }
 
 bool LayerStack::enabled(int index) const

@@ -11,7 +11,7 @@ KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
     , mKeyboardState(keyboardState)
     , mEventQueue()
     , mLayerProcessor(keyboard)
-    , mModifierProcessor()
+    , mLockProcessor()
     , mMacroProcessor()
 { }
 
@@ -34,9 +34,9 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
         return Consumed::kStateChanged;
     }
 
-    if (mModifierProcessor.processEvent(mKeyboardState.modifierSet,
-                                        event,
-                                        mEventQueue))
+    if (mLockProcessor.processEvent(mKeyboardState.lockSet,
+                                    event,
+                                    mEventQueue))
     {
         return Consumed::kStateChanged;
     }

@@ -59,16 +59,16 @@ LayerDataSource layerDataSource;
 
 namespace
 {
-class ModifierDataSource : public UI::Menu::DataSource
+class LockDataSource : public UI::Menu::DataSource
 {
 public:
-    ModifierDataSource() {}
+    LockDataSource() {}
 
 public:
     virtual UI::Menu::Item getItem(std::size_t index) const
     {
-        return UI::Menu::Item(state->modifierSet[index].name(),
-                              KeyId::Modifier(KeyId::ModifierType::kToggle, index));
+        return UI::Menu::Item(state->lockSet[index].name(),
+                              KeyId::Lock(KeyId::LockType::kToggle, index));
     }
     
     virtual std::size_t getItemCount() const
@@ -80,7 +80,7 @@ public:
     KeyboardState* state;
 };
 
-ModifierDataSource modifierDataSource;
+LockDataSource lockDataSource;
 }
 
 MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
@@ -90,7 +90,7 @@ MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
     , mEmptyMenuSource(emptyMenuItems)
 {
     layerDataSource.state = &mKeyboardState;
-    modifierDataSource.state = &mKeyboardState;
+    lockDataSource.state = &mKeyboardState;
 }
 
 const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
@@ -102,7 +102,7 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
     case 2:
         return layerDataSource;
     case 3:
-        return modifierDataSource;
+        return lockDataSource;
     case 4:
         return mConfigMenuSource;
     default:

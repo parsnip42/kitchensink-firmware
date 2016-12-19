@@ -3,7 +3,7 @@
 
 #include "layerstack.h"
 #include "macroset.h"
-#include "modifierset.h"
+#include "lockset.h"
 
 class KeyboardState
 {
@@ -11,9 +11,9 @@ public:
     constexpr KeyboardState() = default;
 
 public:
-    LayerStack  layerStack;
-    MacroSet    macroSet;
-    ModifierSet modifierSet;
+    LayerStack layerStack;
+    MacroSet   macroSet;
+    LockSet    lockSet;
     
 private:
     KeyboardState(const KeyboardState&);

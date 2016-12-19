@@ -4,7 +4,7 @@
 #include "eventqueue.h"
 #include "layerprocessor.h"
 #include "macroprocessor.h"
-#include "modifierprocessor.h"
+#include "lockprocessor.h"
 #include "timed.h"
 
 class KsKeyboard;
@@ -47,12 +47,12 @@ private:
     Consumed consumeEvent(const KeyEvent& event);
     
 private:
-    KsKeyboard&       mKeyboard;
-    KeyboardState&    mKeyboardState;
-    EventQueue        mEventQueue;
-    LayerProcessor    mLayerProcessor;
-    ModifierProcessor mModifierProcessor;
-    MacroProcessor    mMacroProcessor;
+    KsKeyboard&    mKeyboard;
+    KeyboardState& mKeyboardState;
+    EventQueue     mEventQueue;
+    LayerProcessor mLayerProcessor;
+    LockProcessor  mLockProcessor;
+    MacroProcessor mMacroProcessor;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;

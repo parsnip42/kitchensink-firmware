@@ -1,5 +1,5 @@
-#ifndef INCLUDED_MODIFIER_H
-#define INCLUDED_MODIFIER_H
+#ifndef INCLUDED_LOCK_H
+#define INCLUDED_LOCK_H
 
 #include "keyevent.h"
 #include "types/strbuf.h"
@@ -9,13 +9,13 @@
 
 class EventQueue;
 
-class Modifier
+class Lock
 {
 public:
-    constexpr Modifier();
+    constexpr Lock();
 
-    Modifier(const Types::StrRef& name,
-             const KeyId&         keyId);
+    Lock(const Types::StrRef& name,
+         const KeyId&         keyId);
     
 public:
     bool processEvent(const KeyEvent& keyEvent,
@@ -39,7 +39,7 @@ private:
 
 
 inline
-constexpr Modifier::Modifier()
+constexpr Lock::Lock()
     : mName()
     , mKeyId()
     , mLocked(false)
@@ -48,8 +48,8 @@ constexpr Modifier::Modifier()
 { }
 
 inline
-Modifier::Modifier(const Types::StrRef& name,
-                   const KeyId&         keyId)
+Lock::Lock(const Types::StrRef& name,
+           const KeyId&         keyId)
     : mName(name)
     , mKeyId(keyId)
     , mLocked(false)
@@ -58,19 +58,19 @@ Modifier::Modifier(const Types::StrRef& name,
 { }
 
 inline
-Types::StrRef Modifier::name() const
+Types::StrRef Lock::name() const
 {
     return mName;
 }
 
 inline
-bool Modifier::active() const
+bool Lock::active() const
 {
     return mLocked || mHeld || mTrigger;
 }
 
 inline
-bool Modifier::locked() const
+bool Lock::locked() const
 {
     return mLocked;
 }
