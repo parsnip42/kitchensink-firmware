@@ -11,16 +11,18 @@ class StrRef
 {
 public:
     typedef const char* const_iterator;
-
     
 public:
-    constexpr StrRef(const char* str = "");
+    constexpr StrRef(const char* str);
     
 public:
     constexpr const_iterator begin() const;
-    const_iterator end() const;
-    std::size_t size() const;
-    
+    constexpr const_iterator end() const;
+    constexpr std::size_t size() const;
+
+private:
+    constexpr std::size_t size(const char* data) const;
+
 private:
     const char* mData;
 };
@@ -38,15 +40,21 @@ constexpr StrRef::const_iterator StrRef::begin() const
 }
 
 inline
-StrRef::const_iterator StrRef::end() const
+constexpr StrRef::const_iterator StrRef::end() const
 {
     return mData + size();
 }
 
 inline
-std::size_t StrRef::size() const
+constexpr std::size_t StrRef::size() const
 {
-    return strlen(mData);
+    return size(mData);
+}
+
+inline
+constexpr std::size_t StrRef::size(const char* data) const
+{
+    return (data[0] == '\0') ? 0 : (1 + size(data + 1));
 }
 
 }

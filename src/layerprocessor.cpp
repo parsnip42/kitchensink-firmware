@@ -55,7 +55,7 @@ void LayerProcessor::pressLayer(LayerStack& layerStack,
         {
             auto next(layerStack.atIndex(index, event.row, event.column));
             
-            if (next != KeyId::None)
+            if (next != KeyId())
             {
                 auto current(layerStack.at(event.row, event.column));
                 
@@ -79,7 +79,7 @@ void LayerProcessor::releaseLayer(LayerStack& layerStack,
         {
             auto current(layerStack.atIndex(index, event.row, event.column));
 
-            if (current != KeyId::None)
+            if (current != KeyId())
             {
                 auto next(layerStack.at(event.row, event.column));
                 

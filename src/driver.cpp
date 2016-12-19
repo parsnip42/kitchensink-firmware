@@ -33,22 +33,33 @@ void loop() {
     
     initLog.appendLine("Configure");
 
-    if (!sd.begin(10, SPI_HALF_SPEED)) {
-        if (sd.card()->errorCode()) {
-            char sderr[48];
-            sprintf(sderr,"SD Failed : 0x%x", sd.card()->errorCode());
-            initLog.appendLine(sderr);
+    if (!sd.begin(10, SPI_HALF_SPEED))
+    {
+        if (sd.card()->errorCode())
+        {
+            Types::StrBuf<48> sdErr;
+
+            sdErr.appendStr("SD Failed : ")
+                 .appendInt(sd.card()->errorCode());
+            
+            initLog.appendLine(sdErr);
         }
     }
     else
     {
-        char sdinfo[48];
-        sprintf(sdinfo, "SD OK : %dMB / FAT%d", (int)(0.000512 * sd.card()->cardSize() + 0.5), sd.vol()->fatType());
-        initLog.appendLine(sdinfo);
+        Types::StrBuf<48> sdInfo;
+
+        sdInfo.appendStr("SD OK : ")
+              .appendInt(static_cast<int>((0.000512 * sd.card()->cardSize() + 0.5)))
+              .appendStr("MB / FAT")
+              .appendInt(sd.vol()->fatType());
+        
+        initLog.appendLine(sdInfo);
 
         SdBaseFile myFile;
 
-        if (!myFile.open("test.cfg", O_READ)) {
+        if (!myFile.open("test.cfg", O_READ))
+        {
             initLog.appendLine("Couldn't open file");
         }
         else

@@ -6,40 +6,6 @@
 namespace
 {
 
-class ArrayDataSource : public UI::Menu::DataSource
-{
-public:
-    template <std::size_t Size>
-    constexpr ArrayDataSource(const UI::Menu::Item (&menu)[Size]);
-
-public:
-    virtual UI::Menu::Item getItem(std::size_t index) const;
-    virtual std::size_t getItemCount() const;
-
-private:
-    const UI::Menu::Item* mBegin;
-    const UI::Menu::Item* mEnd;
-};
-
-
-template <std::size_t Size>
-inline
-constexpr ArrayDataSource::ArrayDataSource(const UI::Menu::Item (&menu)[Size])
-    : mBegin(menu)
-    , mEnd(menu + Size)
-{ }
-
-UI::Menu::Item ArrayDataSource::getItem(std::size_t index) const
-{
-    return *(mBegin + index);
-}
-
-std::size_t ArrayDataSource::getItemCount() const
-{
-    return (mEnd - mBegin);
-}
-
-
 const UI::Menu::Item mainMenuItems[] =
 {
     UI::Menu::Item("Macros", KeyId(4)),
@@ -64,10 +30,6 @@ const UI::Menu::Item emptyMenuItems[] =
     UI::Menu::Item("--", KeyId()),
 };
 
-
-const ArrayDataSource mainMenuSource(mainMenuItems);
-const ArrayDataSource configMenuSource(configMenuItems);
-const ArrayDataSource emptyMenuSource(emptyMenuItems);
 }
 
 namespace
@@ -80,7 +42,7 @@ public:
 public:
     virtual UI::Menu::Item getItem(std::size_t index) const
     {
-        return UI::Menu::Item(state->layerStack[index].name(), KeyId(8));
+        return UI::Menu::Item(state->layerStack[index].name, KeyId(8));
     }
     
     virtual std::size_t getItemCount() const
@@ -123,6 +85,9 @@ ModifierDataSource modifierDataSource;
 
 MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
+    , mMainMenuSource(mainMenuItems)
+    , mConfigMenuSource(configMenuItems)
+    , mEmptyMenuSource(emptyMenuItems)
 {
     layerDataSource.state = &mKeyboardState;
     modifierDataSource.state = &mKeyboardState;
@@ -133,15 +98,15 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
     switch (id)
     {
     case 0:
-        return mainMenuSource;
+        return mMainMenuSource;
     case 2:
         return layerDataSource;
     case 3:
         return modifierDataSource;
     case 4:
-        return configMenuSource;
+        return mConfigMenuSource;
     default:
-        return emptyMenuSource;
+        return mEmptyMenuSource;
     }
 }
 

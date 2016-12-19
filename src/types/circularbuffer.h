@@ -4,15 +4,18 @@
 #include <array>
 #include <cstdint>
 
+namespace Types
+{
+
 template <typename T, std::size_t Capacity>
 class CircularBuffer
 {
 public:
-    CircularBuffer();
+    constexpr CircularBuffer();
 
 public:
-    std::size_t size() const;
-    bool empty() const;
+    constexpr std::size_t size() const;
+    constexpr bool empty() const;
     void pushBack(const T& value);
     void pushFront(const T& value);
     T pop();
@@ -27,7 +30,7 @@ private:
 
 template <typename T, std::size_t Capacity>
 inline
-CircularBuffer<T, Capacity>::CircularBuffer()
+constexpr CircularBuffer<T, Capacity>::CircularBuffer()
     : mStart(0)
     , mEnd(0)
     , mFull(false)
@@ -67,27 +70,22 @@ T CircularBuffer<T, Capacity>::pop()
 
 template <typename T, std::size_t Capacity>
 inline
-bool CircularBuffer<T, Capacity>::empty() const
+constexpr bool CircularBuffer<T, Capacity>::empty() const
 {
     return !mFull && (mStart == mEnd);   
 }
 
 template <typename T, std::size_t Capacity>
 inline
-std::size_t CircularBuffer<T, Capacity>::size() const
+constexpr std::size_t CircularBuffer<T, Capacity>::size() const
 {
-    if (mFull)
-    {
-        return Capacity;
-    }
-    else if (mStart <= mEnd) 
-    {
-        return mEnd - mStart;
-    }
-    else
-    {
-        return (Capacity - mStart) + mEnd;
-    }
+    return mFull ?
+        Capacity :
+        ((mStart <= mEnd) ?
+            (mEnd - mStart) :
+            ((Capacity - mStart) + mEnd));
+}
+
 }
 
 #endif

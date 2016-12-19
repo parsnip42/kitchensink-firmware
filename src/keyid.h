@@ -45,7 +45,6 @@ public:
     };
 
 public:
-    static const KeyId None;
     static constexpr KeyId Action(ActionType actionType,
                                   int        actionId);
     static constexpr KeyId Layer(int layerId);
@@ -63,13 +62,13 @@ private:
     constexpr KeyId(Type type, uint8_t subType, uint8_t value);
 
 public:
-    Type type() const;
-    uint8_t subType() const;
-    uint8_t value() const;
+    constexpr Type type() const;
+    constexpr uint8_t subType() const;
+    constexpr uint8_t value() const;
 
-    ActionType actionType() const;
-    ModifierType modifierType() const;
-    MacroType macroType() const;
+    constexpr ActionType actionType() const;
+    constexpr ModifierType modifierType() const;
+    constexpr MacroType macroType() const;
     
 private:
     uint16_t mData;
@@ -153,37 +152,37 @@ constexpr KeyId::KeyId(Type type, uint8_t subType, uint8_t value)
 
 
 inline
-KeyId::Type KeyId::type() const
+constexpr KeyId::Type KeyId::type() const
 {
     return Type((mData >> 12) & 0xf);
 }
 
 inline
-uint8_t KeyId::subType() const
+constexpr uint8_t KeyId::subType() const
 {
     return (mData >> 8) & 0xf;
 }
 
 inline
-uint8_t KeyId::value() const
+constexpr uint8_t KeyId::value() const
 {
     return (mData & 0xff);
 }
 
 inline
-KeyId::ActionType KeyId::actionType() const
+constexpr KeyId::ActionType KeyId::actionType() const
 {
     return static_cast<KeyId::ActionType>(subType());
 }
 
 inline
-KeyId::ModifierType KeyId::modifierType() const
+constexpr KeyId::ModifierType KeyId::modifierType() const
 {
     return static_cast<KeyId::ModifierType>(subType());
 }
 
 inline
-KeyId::MacroType KeyId::macroType() const
+constexpr KeyId::MacroType KeyId::macroType() const
 {
     return static_cast<KeyId::MacroType>(subType());
 }

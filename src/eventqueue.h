@@ -1,10 +1,10 @@
 #ifndef INCLUDED_EVENTQUEUE_H
 #define INCLUDED_EVENTQUEUE_H
 
-#include "circularbuffer.h"
+#include "types/circularbuffer.h"
 #include "keyevent.h"
 
-class EventQueue : public CircularBuffer<KeyEvent, 100>
+class EventQueue : public Types::CircularBuffer<KeyEvent, 100>
 {
 public:
     EventQueue();

@@ -13,26 +13,21 @@ class Layer
 public:
     static constexpr int kRows    = 5;
     static constexpr int kColumns = 20;
+
+public:
+    typedef std::array<KeyId, kColumns> Row;
+    typedef std::array<Row, kRows>      Mapping;
     
 public:
     constexpr Layer() = default;
-    explicit Layer(const Types::StrRef&                                       name,
-                   const std::initializer_list<std::initializer_list<KeyId>>& list);
 
 public:
-    Types::StrRef name() const;
     KeyId at(int row, int column) const;
     
-private:
-    Types::StrBuf<12>                              mName;
-    std::array<std::array<KeyId, kColumns>, kRows> mMapping;
+public:
+    Types::StrBuf<12> name;
+    Mapping           mapping;
 };
-
-inline
-Types::StrRef Layer::name() const
-{
-    return mName;
-}
 
 inline
 KeyId Layer::at(int row, int column) const
@@ -40,11 +35,11 @@ KeyId Layer::at(int row, int column) const
     if ((row >= 0) && (row < kRows)
         && (column >= 0) && (column < kColumns))
     {
-        return mMapping[row][column];
+        return mapping[row][column];
     }
     else
     {
-        return KeyId::None;
+        return KeyId();
     }
 }
 

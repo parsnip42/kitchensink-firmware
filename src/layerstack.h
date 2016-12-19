@@ -6,6 +6,7 @@
 #include "layer.h"
 
 #include <array>
+#include <cstdint>
 
 class LayerStack
 {
@@ -21,13 +22,13 @@ public:
     KeyId atIndex(int index, int row, int column) const;
     
 public:
-    void assignLayer(int index, const Layer& layer);
     void setLayer(int index, bool enabled);
     bool enabled(int index) const;
     
 public:
-    const Layer& operator[](int index) const;
-    
+    const Layer& operator[](std::size_t n) const;
+    Layer& operator[](std::size_t n);
+
 private:
     std::array<Layer, MaxLayers> mLayers;
     Bitmask<MaxLayers>           mLayerMask;
@@ -35,9 +36,15 @@ private:
 
 
 inline
-const Layer& LayerStack::operator[](int index) const
+const Layer& LayerStack::operator[](std::size_t n) const
 {
-    return mLayers[index];
+    return mLayers[n];
+}
+
+inline
+Layer& LayerStack::operator[](std::size_t n)
+{
+    return mLayers[n];
 }
 
 #endif

@@ -16,7 +16,7 @@ KeyId LayerStack::at(int row, int column) const
         {
             auto next(mLayers[index].at(row, column));
 
-            if (next != KeyId::None)
+            if (next != KeyId())
             {
                 keyId = next;
             }
@@ -42,7 +42,7 @@ int LayerStack::activeLayer(int row, int column) const
         {
             auto next(mLayers[index].at(row, column));
 
-            if (next != KeyId::None)
+            if (next != KeyId())
             {
                 activeIndex = index;
             }
@@ -58,11 +58,6 @@ int LayerStack::activeLayer(int row, int column) const
 KeyId LayerStack::atIndex(int index, int row, int column) const
 {
     return mLayers[index].at(row, column);
-}
-
-void LayerStack::assignLayer(int index, const Layer& layer)
-{
-    mLayers[index] = layer;
 }
 
 void LayerStack::setLayer(int index, bool enabled)

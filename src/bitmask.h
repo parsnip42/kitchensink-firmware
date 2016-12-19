@@ -17,12 +17,12 @@ public:
     explicit constexpr Bitmask(const Data& data);
     
 public:
-    bool empty() const;
+    constexpr bool empty() const;
     void set(const std::size_t n);
     void clear(const std::size_t n);
     
 public:
-    bool operator[](std::size_t n) const;
+    constexpr bool operator[](std::size_t n) const;
 
     void operator=(const Data& data);
 
@@ -70,7 +70,7 @@ constexpr Bitmask<Size>::Bitmask(const Data& data)
 
 template <std::size_t Size>
 inline
-bool Bitmask<Size>::empty() const
+constexpr bool Bitmask<Size>::empty() const
 {
     return (mData == 0);
 }
@@ -91,7 +91,7 @@ void Bitmask<Size>::clear(const std::size_t n)
 
 template <std::size_t Size>
 inline
-bool Bitmask<Size>::operator[](const std::size_t n) const
+constexpr bool Bitmask<Size>::operator[](const std::size_t n) const
 {
     return (mData >> n) & 1;
 }

@@ -19,13 +19,13 @@ void AutoRepeat::processEvent(const KeyEvent& keyEvent)
     }
     else
     {             
-        mKeyId = KeyId::None;
+        mKeyId = KeyId();
     }
 }
 
 KeyId AutoRepeat::activeKey()
 {
-    if (mNextTime == 0 && mKeyId != KeyId::None)
+    if (mNextTime == 0 && mKeyId != KeyId())
     {
         mNextTime = millis() + mRepeatDelay;
         return mKeyId;
@@ -40,6 +40,6 @@ KeyId AutoRepeat::activeKey()
     }
     else
     {
-        return KeyId::None;
+        return KeyId();
     }
 }
