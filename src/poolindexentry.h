@@ -12,7 +12,7 @@ public:
                              std::size_t nEnd);
 
 public:
-    bool empty() const;
+    constexpr bool empty() const;
         
 public:
     std::size_t begin;
@@ -34,7 +34,7 @@ constexpr PoolIndexEntry::PoolIndexEntry(std::size_t nBegin,
 { }
 
 inline
-bool PoolIndexEntry::empty() const
+constexpr bool PoolIndexEntry::empty() const
 {
     return (begin == end);
 }

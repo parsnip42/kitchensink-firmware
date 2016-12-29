@@ -2,9 +2,9 @@
 
 #include "autorepeat.h"
 #include "keycodes.h"
-#include "keymap.h"
 #include "keyprocessor.h"
 #include "modifierstate.h"
+#include "keymap/keymap.h"
 #include "ui/keys.h"
 #include "ui/surface.h"
 

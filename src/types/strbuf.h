@@ -23,7 +23,7 @@ public:
 public:
     StrBuf<Size>& appendStr(const StrRef& str);
     StrBuf<Size>& appendChar(char c);
-    StrBuf<Size>& appendInt(int n);
+    StrBuf<Size>& appendInt(int n, const char* fmt = "%d");
     StrBuf<Size>& popEnd();
     
 public:
@@ -87,11 +87,11 @@ StrBuf<Size>& StrBuf<Size>::appendChar(char c)
 
 template <std::size_t Size>
 inline
-StrBuf<Size>& StrBuf<Size>::appendInt(int n)
+StrBuf<Size>& StrBuf<Size>::appendInt(int n, const char* fmt)
 {
     auto currentSize(size());
 
-    snprintf(mData + currentSize, Size - currentSize, "%d", n);
+    snprintf(mData + currentSize, Size - currentSize, fmt, n);
 
     return *this;
 }

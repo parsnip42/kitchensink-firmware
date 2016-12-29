@@ -21,7 +21,9 @@ bool RecordMacro::create(const Types::StrRef& title,
     bool quit(false);
 
     uint32_t lastMs(0);
-    
+
+    Types::StrBuf<30> macroText;
+
     while (!quit)
     {
         mKeyProcessor.poll(
@@ -39,14 +41,17 @@ bool RecordMacro::create(const Types::StrRef& title,
                 
                 if (macroSize < mMacro.size() - 1)
                 {
-                    auto nowMs(millis());
-                    
-                    if (lastMs != 0)
+                    if (realtime)
                     {
-                        mMacro[macroSize++] = KeyEvent(KeyId::Delay(nowMs - lastMs));    
+                        auto nowMs(millis());
+                        
+                        if (lastMs != 0)
+                        {
+                            mMacro[macroSize++] = KeyEvent(KeyId::Delay(nowMs - lastMs));    
+                        }
+                        
+                        lastMs = nowMs;
                     }
-                    
-                    lastMs = nowMs;
                     
                     mMacro[macroSize++] = event;
                 }

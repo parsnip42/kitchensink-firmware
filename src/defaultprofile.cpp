@@ -35,22 +35,22 @@ void init(KeyboardState& keyboardState)
     keyboardState.lockSet[8]  = Lock("Gm0", KeyId::Layer(3));
     keyboardState.lockSet[11] = Lock("KSP", KeyId::Layer(4));
 
-    keyboardState.macroSet.setMacro(0, {
+    keyboardState.macroSet.setMacro(0, "{", {
             KeyEvent(KeyId(LBrace)),
             KeyEvent(KeyId(LShift)),
             });
 
-    keyboardState.macroSet.setMacro(1, {
+    keyboardState.macroSet.setMacro(1, "{",{
             KeyEvent(KeyId(RBrace)),
             KeyEvent(KeyId(LShift)),
             });
 
-    keyboardState.macroSet.setMacro(2, {
+    keyboardState.macroSet.setMacro(2, "(",{
             KeyEvent(KeyId(K9)),
             KeyEvent(KeyId(LShift)),
             });
 
-    keyboardState.macroSet.setMacro(3, {
+    keyboardState.macroSet.setMacro(3, ")",{
             KeyEvent(KeyId(K0)),
             KeyEvent(KeyId(LShift)),
             });
@@ -108,15 +108,15 @@ void init(KeyboardState& keyboardState)
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
             { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, KeyId::Lock(KeyId::LockType::kToggle, 8), KeyId::Lock(KeyId::LockType::kToggle, 9),
-              F1, F2, 0, K6, K7, K8, K9, K0, Minus, Equal },
+              KeyId::Macro(KeyId::MacroType::kSync, 20), KeyId::Macro(KeyId::MacroType::kSync, 21), KeyId::Layer(5), K6, K7, K8, K9, K0, Minus, Equal },
                 
             { Esc, KeyId::Macro(KeyId::MacroType::kInvert, 10), Q, W, E, R, T, Tab, KeyId::Lock(KeyId::LockType::kToggle, 11),0,
-              F3, F4, Backspace, Y, U, I, O, P, LBrace, RBrace },
+              KeyId::Macro(KeyId::MacroType::kSync, 22), KeyId::Macro(KeyId::MacroType::kSync, 23), Backspace, Y, U, I, O, P, LBrace, RBrace },
             
             { 0, KeyId::Layer(2), A, S, D, F, G, 0, 0, 0,
-              KeyId::Macro(KeyId::MacroType::kSync, 9), KeyId::Action(KeyId::ActionType::kBuiltIn, 2), 0, H, J, K, L, Semicolon, Enter },
+              KeyId::Macro(KeyId::MacroType::kSync, 24), KeyId::Macro(KeyId::MacroType::kSync, 25), 0, H, J, K, L, Semicolon, Enter },
             
-            { 0, KeyId::Lock(KeyId::LockType::kTripleLock, kLShift), Z, X, C, V, B, Delete, 0, 0,
+            { 0, KeyId::Lock(kLShift), Z, X, C, V, B, Delete, 0, 0,
               KeyId::Action(KeyId::ActionType::kBuiltIn, 0),KeyId::Action(KeyId::ActionType::kMenu, 0), Quote, N, M, Comma, Dot, Slash, KeyId::Lock(kRShift) },
             
             { 0, KeyId::Lock(kLGui), KeyId::Lock(kRAlt), 0, 0, 0, KeyId::Lock(kLCtrl),KeyId::Layer(1),KeyId::Lock(kLAlt),0,
@@ -178,6 +178,24 @@ void init(KeyboardState& keyboardState)
             
             { 0, R, 0, 0, 0, LAlt, LShift, LCtrl, X, 0,
               0, LAlt, Space, RCtrl, End, Left, Up, Down, Right }
+        } };
+    
+    layerStack[5].name = "Edit";
+    layerStack[5].mapping = { {
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              KeyId::Action(KeyId::ActionType::kEditMacro, 20), KeyId::Action(KeyId::ActionType::kEditMacro, 21), 0, 0, 0, 0, 0, 0, 0, 0 },
+
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              KeyId::Action(KeyId::ActionType::kEditMacro, 22), KeyId::Action(KeyId::ActionType::kEditMacro, 23), 0, 0, 0, 0, 0, 0, 0, 0 },
+            
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              KeyId::Action(KeyId::ActionType::kEditMacro, 24), KeyId::Action(KeyId::ActionType::kEditMacro, 25), 0, 0, 0, 0, 0, 0, 0, 0 },
+            
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+              0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         } };
 
 }

@@ -37,12 +37,9 @@ public:
     
     enum class ActionType : uint8_t
     {
-        kBuiltIn        = 0,
-        kMenu           = 1,
-        // kRenameLayer    = 2,
-        // kRenameModifier = 3,
-        // kRenameMacro    = 4,
-        // kRenameSMacro   = 5
+        kBuiltIn   = 0,
+        kMenu      = 1,
+        kEditMacro = 2
     };
 
 public:

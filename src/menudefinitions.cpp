@@ -8,7 +8,7 @@ namespace
 
 const UI::Menu::Item mainMenuItems[] =
 {
-    UI::Menu::Item("Macros", KeyId(4)),
+    UI::Menu::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
     UI::Menu::Item("Layers", KeyId::Action(KeyId::ActionType::kMenu, 2)),
     UI::Menu::Item("Modifiers", KeyId::Action(KeyId::ActionType::kMenu, 3)),
     UI::Menu::Item("Configuration", KeyId::Action(KeyId::ActionType::kMenu, 4)),
@@ -83,6 +83,33 @@ public:
 LockDataSource lockDataSource;
 }
 
+
+namespace
+{
+class MacroDataSource : public UI::Menu::DataSource
+{
+public:
+    MacroDataSource() {}
+
+public:
+    virtual UI::Menu::Item getItem(std::size_t index) const
+    {
+        return UI::Menu::Item(state->macroSet[index].name,
+                              KeyId::Macro(KeyId::MacroType::kSync, index));
+    }
+    
+    virtual std::size_t getItemCount() const
+    {
+        return state->macroSet.size();
+    }
+
+public:
+    KeyboardState* state;
+};
+
+MacroDataSource macroDataSource;
+}
+
 MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
     , mMainMenuSource(mainMenuItems)
@@ -91,6 +118,7 @@ MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
 {
     layerDataSource.state = &mKeyboardState;
     lockDataSource.state = &mKeyboardState;
+    macroDataSource.state = &mKeyboardState;
 }
 
 const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
@@ -99,6 +127,8 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
     {
     case 0:
         return mMainMenuSource;
+    case 1:
+        return macroDataSource;
     case 2:
         return layerDataSource;
     case 3:

@@ -19,13 +19,19 @@ public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
     constexpr std::size_t size() const;
-
+    
 private:
     constexpr std::size_t size(const char* data) const;
 
 private:
     const char* mData;
+
+private:
+    friend bool operator==(const StrRef& lhs, const StrRef& rhs);
 };
+
+bool operator==(const StrRef& lhs, const StrRef& rhs);
+bool operator!=(const StrRef& lhs, const StrRef& rhs);
 
 
 inline
@@ -55,6 +61,18 @@ inline
 constexpr std::size_t StrRef::size(const char* data) const
 {
     return (data[0] == '\0') ? 0 : (1 + size(data + 1));
+}
+
+inline
+bool operator==(const StrRef& lhs, const StrRef& rhs)
+{
+    return strcmp(lhs.mData, rhs.mData) == 0;
+}
+
+inline
+bool operator!=(const StrRef& lhs, const StrRef& rhs)
+{
+    return !(lhs == rhs);
 }
 
 }

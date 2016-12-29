@@ -9,6 +9,12 @@
 template <typename std::size_t Capacity>
 class PoolIndex
 {
+public:
+    static constexpr std::size_t kCapacity = Capacity;
+
+public:
+    typedef PoolIndexEntry Entry;
+    
 private:
     typedef std::array<PoolIndexEntry, Capacity> Index;
 
