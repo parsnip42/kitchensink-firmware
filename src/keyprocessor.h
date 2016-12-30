@@ -37,6 +37,8 @@ public:
 
     void untilKeyPress();
     
+    void untilIdle();
+
 private:
     enum class Consumed
     {

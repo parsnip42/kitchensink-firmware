@@ -25,14 +25,16 @@ public:
     template <typename Callback>
     void pressed(const Callback& callback);
     
+    bool any() const;
+
 private:
     KeyMatrix           mMatrix;
     Debounce            mDebounce;
     KeyMatrixDispatcher mDispatcher;
 
 private:
-    KeyboardPlate(const KeyboardPlate&);
-    KeyboardPlate& operator=(const KeyboardPlate&);
+    KeyboardPlate(const KeyboardPlate&) = delete;
+    KeyboardPlate& operator=(const KeyboardPlate&) = delete;
 };
 
 
@@ -51,11 +53,19 @@ void KeyboardPlate::poll(const Callback& callback)
 }
 
 template <typename Callback>
+inline
 void KeyboardPlate::pressed(const Callback& callback)
 {
-    mDispatcher.pressed(mDebounce.state(),
-                        callback);
+    mDispatcher.dispatch(KeyMask(),
+                         mDebounce.state(),
+                         callback);
+
 }
 
+inline
+bool KeyboardPlate::any() const
+{
+    return !mDebounce.state().empty() || !mDebounce.delta().empty();
+}
 
 #endif

@@ -21,10 +21,6 @@ public:
     void dispatch(const KeyMask&  stateMask,
                   const KeyMask&  deltaMask,
                   const Callback& callback);
-    
-    template <typename Callback>
-    void pressed(const KeyMask&  stateMask,
-                 const Callback& callback);
 
 private:
     const std::array<uint8_t, KeyMask::kRows>    mRowMapping;
@@ -67,32 +63,6 @@ void KeyMatrixDispatcher::dispatch(const KeyMask& stateMask,
             
             state >>= 1;
             delta >>= 1;
-            ++column;
-        }
-    }
-}
-
-template <typename Func>
-inline
-void KeyMatrixDispatcher::pressed(const KeyMask& stateMask,
-                                  const Func&    callback)
-{
-    for (std::size_t row(0); row < KeyMask::kRows; ++row)
-    {
-        auto state(stateMask[row]);
-
-        std::size_t column(0);
-        
-        while (!state.empty() && column < KeyMask::kColumns)
-        {
-            if (state[0])
-            {
-                callback(KeyMatrixEvent(mRowMapping[row],
-                                        mColumnMapping[column],
-                                        true));
-            }
-            
-            state >>= 1;
             ++column;
         }
     }

@@ -22,7 +22,9 @@ public:
     void poll(const Callback& callback); 
 
     template <typename Callback>
-    void pressed(const Callback& callback); 
+    void pressed(const Callback& callback);
+    
+    bool any() const;
 
 private:
     KeyboardPlate mLeft;
@@ -48,6 +50,12 @@ void KsKeyboard::pressed(const Callback& callback)
 {
     mLeft.pressed(callback);
     mRight.pressed(callback);
+}
+
+inline
+bool KsKeyboard::any() const
+{
+    return mLeft.any() || mRight.any();
 }
 
 #endif

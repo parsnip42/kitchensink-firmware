@@ -24,6 +24,8 @@ bool RecordMacro::create(const Types::StrRef& title,
 
     Types::StrBuf<30> macroText;
 
+    mKeyProcessor.untilIdle();
+
     while (!quit)
     {
         mKeyProcessor.poll(

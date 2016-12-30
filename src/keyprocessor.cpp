@@ -82,4 +82,21 @@ void KeyProcessor::untilKeyPress()
             }
         }
     }
-};
+}
+
+void KeyProcessor::untilIdle()
+{
+    while (true)
+    {
+        poll();
+        
+        if (!mEventQueue.empty())
+        {
+            mEventQueue.pop();
+        }
+        else if (!mKeyboard.any())
+        {
+            break;
+        }
+    }
+}
