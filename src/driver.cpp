@@ -99,6 +99,7 @@ void loop()
                               keyboardState);
 
     ActionProcessor actionProcessor(keyProcessor,
+                                    usbKeyboard,
                                     keyboardState,
                                     surface);
 

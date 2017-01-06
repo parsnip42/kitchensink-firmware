@@ -2,6 +2,7 @@
 #define INCLUDED_ACTIONPROCESSOR_H
 
 #include "menudefinitions.h"
+#include "usbkeyboard.h"
 
 #include <array>
 
@@ -18,6 +19,7 @@ public:
     
 public:
     explicit ActionProcessor(KeyProcessor&  keyProcessor,
+                             UsbKeyboard&   usbKeyboard,
                              KeyboardState& keyboardState,
                              UI::Surface&   surface);
 
@@ -35,6 +37,7 @@ private:
 
 private:
     KeyProcessor&   mKeyProcessor;
+    UsbKeyboard&    mUsbKeyboard;
     KeyboardState&  mKeyboardState;
     UI::Surface&    mSurface;
     MenuDefinitions mMenuDefinitions;

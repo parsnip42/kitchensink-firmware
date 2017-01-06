@@ -7,6 +7,7 @@
 #include <array>
 
 class KeyProcessor;
+class UsbKeyboard;
 
 namespace UI { class Surface; }
 
@@ -20,7 +21,8 @@ public:
     
 public:
     constexpr RecordMacro(Surface&      surface,
-                          KeyProcessor& keyProcessor);
+                          KeyProcessor& keyProcessor,
+                          UsbKeyboard&  usbKeyboard);
 
 public:
     bool create(const Types::StrRef& title,
@@ -31,6 +33,7 @@ public:
 private:
     Surface&      mSurface;
     KeyProcessor& mKeyProcessor;
+    UsbKeyboard&  mUsbKeyboard;
     Macro         mMacro;
     
 private:
@@ -41,9 +44,11 @@ private:
 
 inline
 constexpr RecordMacro::RecordMacro(Surface&      surface,
-                                   KeyProcessor& keyProcessor)
+                                   KeyProcessor& keyProcessor,
+                                   UsbKeyboard&  usbKeyboard)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
+    , mUsbKeyboard(usbKeyboard)
 { }
 
 inline

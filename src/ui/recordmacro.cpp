@@ -1,6 +1,7 @@
 #include "ui/recordmacro.h"
 
 #include "keyprocessor.h"
+#include "usbkeyboard.h"
 #include "ui/surface.h"
 
 #include <elapsedMillis.h>
@@ -31,7 +32,9 @@ bool RecordMacro::create(const Types::StrRef& title,
         mKeyProcessor.poll(
             [&](const KeyEvent& event)
             {
-                if (event.keyId == KeyId::Action(KeyId::ActionType::kMenu, 0))
+                const auto& keyId(event.keyId);
+
+                if (keyId == KeyId::Action(KeyId::ActionType::kMenu, 0))
                 {
                     if (!event.pressed)
                     {
@@ -41,6 +44,11 @@ bool RecordMacro::create(const Types::StrRef& title,
                     return;
                 }
                 
+                if (keyId.type() == KeyId::Type::kKey)
+                {
+                    mUsbKeyboard.processKey(keyId.value(), event.pressed);
+                }
+
                 if (macroSize < mMacro.size() - 1)
                 {
                     if (realtime)

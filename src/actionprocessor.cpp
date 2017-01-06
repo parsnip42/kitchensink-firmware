@@ -10,9 +10,11 @@
 #include "types/strbuf.h"
 
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
+                                 UsbKeyboard&   usbKeyboard,
                                  KeyboardState& keyboardState,
                                  UI::Surface&   surface)
     : mKeyProcessor(keyProcessor)
+    , mUsbKeyboard(usbKeyboard)
     , mKeyboardState(keyboardState)
     , mSurface(surface)
     , mMenuDefinitions(keyboardState)
@@ -58,7 +60,8 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                         recordStr.appendInt(macroIndex);
                         
                         UI::RecordMacro record(mSurface,
-                                               mKeyProcessor);
+                                               mKeyProcessor,
+                                               mUsbKeyboard);
                         
                         record.create(recordStr, false);
                         
