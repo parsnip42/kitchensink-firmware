@@ -3,6 +3,7 @@
 
 #include "types/strref.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdint>
 #include <cstring>
@@ -15,7 +16,8 @@ class StrBuf
 {
 public:
     typedef const char* const_iterator;
-    
+    typedef char*       iterator;
+
 public:
     constexpr StrBuf();
     StrBuf(const StrRef& strRef);
@@ -24,11 +26,16 @@ public:
     StrBuf<Size>& appendStr(const StrRef& str);
     StrBuf<Size>& appendChar(char c);
     StrBuf<Size>& appendInt(int n, const char* fmt = "%d");
-    StrBuf<Size>& popEnd();
+    StrBuf<Size>& insert(iterator it, char c);
+    StrBuf<Size>& erase(iterator it);
     
 public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
+
+    iterator begin();
+    iterator end();
+    
     constexpr std::size_t size() const;
     constexpr bool empty() const;
 
@@ -54,7 +61,7 @@ template <std::size_t Size>
 inline
 StrBuf<Size>::StrBuf(const StrRef& strRef)
 {
-    strlcpy(mData, strRef.begin(), sizeof(mData));
+    strlcpy(mData, strRef.begin(), std::min(strRef.size() + 1, sizeof(mData)));
 }
 
 template <std::size_t Size>
@@ -65,7 +72,7 @@ StrBuf<Size>& StrBuf<Size>::appendStr(const StrRef& str)
 
     strlcpy(mData + currentSize,
             str.begin(),
-            sizeof(mData) - currentSize);
+            std::min(str.size() + 1, sizeof(mData) - currentSize));
     
     return *this;
 }
@@ -98,12 +105,22 @@ StrBuf<Size>& StrBuf<Size>::appendInt(int n, const char* fmt)
 
 template <std::size_t Size>
 inline
-StrBuf<Size>& StrBuf<Size>::popEnd()
+StrBuf<Size>& StrBuf<Size>::insert(iterator it, char c)
 {
-    if (!empty())
-    {
-        mData[size() - 1] = '\0';
-    }
+    std::move_backward(it, end(), end() + 1);
+
+    *it = c;
+
+    return *this;
+}
+
+template <std::size_t Size>
+inline
+StrBuf<Size>& StrBuf<Size>::erase(iterator it)
+{
+    std::move(it + 1, end(), it);
+
+    *(end() - 1) = '\0';
     
     return *this;
 }
@@ -118,6 +135,20 @@ constexpr typename StrBuf<Size>::const_iterator StrBuf<Size>::begin() const
 template <std::size_t Size>
 inline
 constexpr typename StrBuf<Size>::const_iterator StrBuf<Size>::end() const
+{
+    return mData + size();
+}
+
+template <std::size_t Size>
+inline
+typename StrBuf<Size>::iterator StrBuf<Size>::begin()
+{
+    return mData;
+}
+
+template <std::size_t Size>
+inline
+typename StrBuf<Size>::iterator StrBuf<Size>::end()
 {
     return mData + size();
 }
@@ -140,7 +171,7 @@ template <std::size_t Size>
 inline
 StrBuf<Size>& StrBuf<Size>::operator=(const StrRef& strRef)
 {
-    strlcpy(mData, strRef.begin(), sizeof(mData));
+    strlcpy(mData, strRef.begin(), std::min(strRef.size() + 1, sizeof(mData)));
 
     return *this;
 }

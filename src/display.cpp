@@ -148,18 +148,18 @@ void Display::writeData(uint8_t data)
 
 void Display::initRegion(int x, int y, int w, int h)
 {
-    // Physical display region starts at 28.
-    x += 28;
+    // Physical display region starts at 120.
+    x += 120;
     
     writeInst(0x15);
-    writeData(x);
-    writeData(x + (w >> 2) -1);
+    writeData(x >> 2);
+    writeData(((x + w - 1) >> 2));
 
     writeInst(0x75);
     writeData(y);
     writeData(y + h - 1);
 
-    writeInst(0x5C);
+    writeInst(0x5c);
 }
 
 void Display::scroll(uint8_t value)

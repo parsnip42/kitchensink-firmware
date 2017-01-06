@@ -40,7 +40,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
             {
                 auto macroIndex(keyId.value());
                 
-                Types::StrBuf<20> renameStr("Rename Macro #");
+                Types::StrBuf<20> renameStr{{"Rename Macro #"}};
 
                 renameStr.appendInt(macroIndex);
 
@@ -53,7 +53,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                     mKeyboardState.macroSet[macroIndex].name = entry.text();
                     
                     {
-                        Types::StrBuf<20> recordStr("Recording Macro #");
+                        Types::StrBuf<20> recordStr{{"Recording Macro #"}};
 
                         recordStr.appendInt(macroIndex);
                         
