@@ -28,8 +28,7 @@ bool down(const KeyId& keyId)
 inline
 bool ok(const KeyId& keyId)
 {
-    return ((keyId == KeyId(KeyCodes::Enter)) ||
-            (keyId == KeyId(KeyCodes::Space)));
+    return (keyId == KeyId(KeyCodes::Enter));
 }
 
 inline

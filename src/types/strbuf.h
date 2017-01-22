@@ -107,7 +107,9 @@ template <std::size_t Size>
 inline
 StrBuf<Size>& StrBuf<Size>::insert(iterator it, char c)
 {
-    std::move_backward(it, end(), end() + 1);
+    auto endIt(end());
+    
+    std::move_backward(it, endIt + 1, endIt + 2);
 
     *it = c;
 

@@ -4,6 +4,9 @@
 #include "types/strbuf.h"
 #include "types/strref.h"
 
+#include <cstdint>
+
+class KeyId;
 class KeyProcessor;
 
 namespace UI { class Surface; }
@@ -14,20 +17,26 @@ namespace UI
 class TextEntry
 {
 public:
-    constexpr TextEntry(Surface&      surface,
-                        KeyProcessor& keyProcessor);
+    TextEntry(Surface&             surface,
+              KeyProcessor&        keyProcessor,
+              const Types::StrRef& text);
 
 public:
-    bool create(const Types::StrRef& title,
-                const Types::StrRef& text = "");
+    bool create();
 
-    constexpr Types::StrRef text() const;
+    Types::StrRef text() const;
 
+private:
+    void processKey(const KeyId& keyId);
+    void paintText();
+    void paintCursor(bool visible);
+    
 private:
     Surface&          mSurface;
     KeyProcessor&     mKeyProcessor;
     Types::StrBuf<30> mText;
-
+    std::size_t       mCursorPosition;
+    
 private:
     TextEntry(const TextEntry&) = delete;
     TextEntry& operator=(const TextEntry&) = delete;
@@ -35,18 +44,10 @@ private:
 
 
 inline
-constexpr TextEntry::TextEntry(Surface&      surface,
-                               KeyProcessor& keyProcessor)
-    : mSurface(surface)
-    , mKeyProcessor(keyProcessor)
-{ }
-
-inline
-constexpr Types::StrRef TextEntry::text() const
+Types::StrRef TextEntry::text() const
 {
     return mText;
 }
-
 
 }
 

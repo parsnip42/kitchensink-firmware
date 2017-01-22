@@ -26,9 +26,9 @@ public:
     constexpr std::size_t size() const;
     
     template <typename Iterator>
-    void setMacro(std::size_t index,
-                  Iterator    begin,
-                  Iterator    end);
+    void setMacro(std::size_t     index,
+                  const Iterator& begin,
+                  const Iterator& end);
     
     void setMacro(std::size_t                            index,
                   const std::initializer_list<KeyEvent>& press);
@@ -58,7 +58,9 @@ constexpr std::size_t MacroSet::size() const
 
 template <typename Iterator>
 inline
-void MacroSet::setMacro(std::size_t index, Iterator begin, Iterator end)
+void MacroSet::setMacro(std::size_t     index,
+                        const Iterator& begin,
+                        const Iterator& end)
 {
     mMacroPool.insert(index, begin, end);
 }

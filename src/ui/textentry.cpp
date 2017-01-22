@@ -13,46 +13,20 @@
 namespace UI
 {
 
-bool TextEntry::create(const Types::StrRef& title,
-                       const Types::StrRef& text)
+TextEntry::TextEntry(Surface&             surface,
+                     KeyProcessor&        keyProcessor,
+                     const Types::StrRef& text)
+    : mSurface(surface)
+    , mKeyProcessor(keyProcessor)
+    , mText(text)
+    , mCursorPosition(mText.size())
+{ }
+
+bool TextEntry::create()
 {
-    mText = text;
-    
-    mSurface.clear();
-
-    mSurface.paintText(0, 0, title, 0xf, 0);
-
     mSurface.rectangle(0, 20, (Surface::kFontWidth * 25) + 8, Surface::kFontHeight + 8);
-
-    std::size_t cursorPosition(mText.size());
     
-    auto refresh([&](bool cursor = false)
-    {             
-        mSurface.paintText(4, 24, mText, 0xf, 0);
-        mSurface.paintText(4 + (mText.size() * Surface::kFontWidth),
-                           24, " ", cursor ? 0 : 0xf, cursor ? 0xf : 0);
-    });
-
-    auto paintCursor([&](bool cursor)
-    {
-        auto fg(cursor ? 0 : 0xf);
-        auto bg(cursor ? 0xf : 0);
-        
-        if (cursorPosition < mText.size())
-        {
-            Types::StrRef textRef(mText);
-            auto cursorChar(textRef.substr(cursorPosition, 1));
-            
-            mSurface.paintText(4 + (Surface::kFontWidth * cursorPosition), 24, cursorChar, fg, bg);
-        }
-        else
-        {        
-            mSurface.paintText(4 + (mText.size() * Surface::kFontWidth),
-                               24, " ", fg, bg);
-        }
-    });
-    
-    refresh();
+    paintText();
 
     AutoRepeat autoRepeat;
     ModifierState modifierState;
@@ -70,6 +44,12 @@ bool TextEntry::create(const Types::StrRef& title,
                     autoRepeat.processEvent(event);
                 }
             });
+        
+        if (((millis() >> 9) & 1) ^ flash)
+        {
+            flash = !flash;
+            paintCursor(flash);
+        }
 
         auto keyId(autoRepeat.activeKey());
 
@@ -78,78 +58,122 @@ bool TextEntry::create(const Types::StrRef& title,
             entered = false;
             break;
         }
-        else if (keyId.type() == KeyId::Type::kKey && keyId.value() != 0)
+
+        if (Keys::ok(keyId))
         {
-            if (keyId.value() == KeyCodes::Left)
-            {
-                if (cursorPosition > 0)
-                {
-                    paintCursor(false);
-                    --cursorPosition;
-                    paintCursor(true);
-                }
-            }
-            else if (keyId.value() == KeyCodes::Right)
-            {
-                if (cursorPosition < mText.size())
-                {
-                    paintCursor(false);
-                    ++cursorPosition;
-                    paintCursor(true);
-                }
-            }
-            else if (keyId.value() == KeyCodes::Backspace)
-            {
-                if (cursorPosition > 0)
-                {
-                    paintCursor(false);
-                    mText.erase(mText.begin() + cursorPosition - 1);
-                    refresh();
-                    
-                    --cursorPosition;
-                    paintCursor(true);
-                }
-            }
-            else if (keyId.value() == KeyCodes::Enter)
-            {
-                entered = true;
-                break;
-            }
-            else if (mText.size() < 24)
+            entered = true;
+            break;
+        }
+
+        if (keyId.type() == KeyId::Type::kKey)
+        {
+            if (flash)
             {
                 paintCursor(false);
-
-                char newChar;
+            }
+            
+            switch (keyId.value())
+            {
+            case 0:
+                break;
                 
-                if (modifierState.shift())
+            case KeyCodes::Left:
+                if (mCursorPosition > 0)
                 {
-                    newChar = KeyMap::getEntry(keyId.value()).shift;
+                    --mCursorPosition;
                 }
-                else
+                break;
+                
+            case KeyCodes::Right:
+                if (mCursorPosition < mText.size())
                 {
-                    newChar = KeyMap::getEntry(keyId.value()).dflt; 
+                    ++mCursorPosition;
                 }
+                break;
                 
-                mText.insert(mText.begin() + cursorPosition, newChar);
-
-                refresh();
-
-                ++cursorPosition;
+            case KeyCodes::Home:
+                mCursorPosition = 0;
+                break;
                 
+            case KeyCodes::End:
+                mCursorPosition = mText.size();
+                break;
+
+            case KeyCodes::Backspace:
+                if (mCursorPosition > 0)
+                {
+                    mText.erase(mText.begin() + mCursorPosition - 1);
+                    paintText();
+                    
+                    --mCursorPosition;
+                }
+                break;
+                
+            default:
+                if (mText.size() < 24)
+                {
+                    char newChar;
+                    
+                    if (modifierState.shift())
+                    {
+                        newChar = KeyMap::getEntry(keyId.value()).shift;
+                    }
+                    else
+                    {
+                        newChar = KeyMap::getEntry(keyId.value()).dflt; 
+                    }
+
+                    if (newChar)
+                    {
+                        mText.insert(mText.begin() + mCursorPosition, newChar);
+                        
+                        paintText();
+                        
+                        ++mCursorPosition;
+                    }
+                }
+                break;
+            }    
+
+            if (flash)
+            {
                 paintCursor(true);
             }
         }
-
-        if (((millis() >> 9) & 1) ^ flash)
-        {
-            paintCursor(flash);
-            flash = !flash;
-        }
     }
 
-    mSurface.clear();
-
     return entered;
+}
+
+void TextEntry::processKey(const KeyId& keyId)
+{
+    
+}
+
+void TextEntry::paintText()
+{
+    mSurface.paintText(4, 24, mText, 0xf, 0);
+    mSurface.paintText(4 + (mText.size() * Surface::kFontWidth), 24, " ", 0xf, 0);
+}
+
+void TextEntry::paintCursor(bool visible)
+{
+    auto fg(visible ? 0 : 0xf);
+    auto bg(visible ? 0xf : 0);
+    
+    if (mCursorPosition < mText.size())
+    {
+        Types::StrRef textRef(mText);
+        auto cursorChar(textRef.substr(mCursorPosition, 1));
+        
+        mSurface.paintText(4 + (Surface::kFontWidth * mCursorPosition),
+                           24, cursorChar, fg, bg);
+    }
+    else
+    {        
+        mSurface.paintText(4 + (mText.size() * Surface::kFontWidth),
+                           24, " ", fg, bg);
+    }
 }
 
 }

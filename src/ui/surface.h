@@ -1,6 +1,8 @@
 #ifndef INCLUDED_UI_SURFACE_H
 #define INCLUDED_UI_SURFACE_H
 
+#include "ui/font.h"
+
 #include <cstdint>
 
 class Display;
@@ -15,8 +17,8 @@ class Surface
 public:
     static constexpr int kHeight = 64;
     static constexpr int kWidth = 240;
-    static constexpr int kFontWidth = 8;
-    static constexpr int kFontHeight = 14;
+    static constexpr int kFontWidth = Font::kWidth;
+    static constexpr int kFontHeight = Font::kHeight;
     static constexpr uint8_t kScrollMax = 128;
 
 public:

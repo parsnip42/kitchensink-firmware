@@ -41,16 +41,20 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
             if (event.pressed)
             {
                 auto macroIndex(keyId.value());
-                
-                Types::StrBuf<20> renameStr{{"Rename Macro #"}};
 
-                renameStr.appendInt(macroIndex);
+                mSurface.clear();
+
+                Types::StrBuf<20> title{{"Rename Macro #"}};
+
+                title.appendInt(macroIndex);
+                
+                mSurface.paintText(0, 0, title, 0xf, 0);
 
                 UI::TextEntry entry(mSurface,
-                                    mKeyProcessor);
+                                    mKeyProcessor,
+                                    mKeyboardState.macroSet[macroIndex].name);
                 
-                if (entry.create(renameStr,
-                                 mKeyboardState.macroSet[macroIndex].name))
+                if (entry.create())
                 {
                     mKeyboardState.macroSet[macroIndex].name = entry.text();
                     
@@ -70,6 +74,8 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                         mKeyboardState.macroSet.setMacro(macroIndex, macro.rbegin(), macro.rend());
                     }
                 }
+
+                mSurface.clear();
             }
             break;
         }
@@ -128,7 +134,4 @@ void ActionProcessor::fireMenu(int             action,
 
 void ActionProcessor::fireEdit() const
 {
-    UI::TextEntry foo(mSurface, mKeyProcessor);
-
-    foo.create(" Rename Layout #0 ");
 }
