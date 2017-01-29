@@ -19,6 +19,8 @@ class TextEntry
 public:
     TextEntry(Surface&             surface,
               KeyProcessor&        keyProcessor,
+              int                  x,
+              int                  y,
               const Types::StrRef& text);
 
 public:
@@ -34,6 +36,8 @@ private:
 private:
     Surface&          mSurface;
     KeyProcessor&     mKeyProcessor;
+    int               mX;
+    int               mY;
     Types::StrBuf<30> mText;
     std::size_t       mCursorPosition;
     

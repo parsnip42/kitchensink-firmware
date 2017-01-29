@@ -18,7 +18,7 @@ public:
 public:
     constexpr std::size_t size() const
     {
-        return Index::kCapacity;
+        return mIndex.size();
     }
 
     constexpr std::size_t poolSize() const
@@ -55,7 +55,11 @@ public:
         {
             auto point(entry.end);
 
-            mIndex.shift(point, shift);
+            for (auto& entry : mIndex)
+            {
+                entry.shift(point, shift);
+            }
+            
             shiftPool(point, shift);
 
             std::copy(begin, end, entry.begin);
@@ -90,7 +94,7 @@ private:
 public:
     typedef typename Pool::const_iterator         const_iterator;
     typedef typename Pool::const_reverse_iterator const_reverse_iterator;
-    typedef typename Index::Entry                 Entry;
+    typedef typename Index::value_type            Entry;
     
     constexpr const_iterator begin() const
     {

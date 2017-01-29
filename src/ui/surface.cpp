@@ -16,15 +16,13 @@ void Surface::paintText(int                  x,
                         uint8_t              fg,
                         uint8_t              bg)
 {
-    constexpr int kCharHeight(14);
-    
     auto len(text.size());
     
-    initRegion(x, y, len * kFontWidth, kCharHeight);
+    initRegion(x, y, len * kFontWidth, kFontHeight);
 
     const ColorMap colorMap(fg, bg);
     
-    for (int line(0); line < kCharHeight; ++line)
+    for (int line(0); line < kFontHeight; ++line)
     {
         paintTextLine(text, line, colorMap);
     }

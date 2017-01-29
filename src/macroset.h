@@ -3,8 +3,9 @@
 
 #include "arraypool.h"
 #include "keyevent.h"
-#include "namedpoolindex.h"
 #include "types/strref.h"
+#include "types/strbuf.h"
+#include "poolindexentry.h"
 
 #include <array>
 #include <initializer_list>
@@ -12,9 +13,10 @@
 class MacroSet
 {
 private:
-    typedef std::array<KeyEvent, 1024>         Pool;
-    typedef NamedPoolIndex<Pool::iterator, 30> Index;
-    typedef ArrayPool<Pool, Index>             MacroPool;
+    typedef std::array<KeyEvent, 1024>                         Pool;
+    typedef PoolIndexEntry<Pool::iterator, Types::StrBuf<24> > PoolEntry;
+    typedef std::array<PoolEntry, 30>                          Index;
+    typedef ArrayPool<Pool, Index>                             MacroPool;
 
 public:
     typedef MacroPool::Entry Macro;
@@ -77,7 +79,7 @@ void MacroSet::setMacro(std::size_t                            index,
                         const std::initializer_list<KeyEvent>& press)
 {
     setMacro(index, press.begin(), press.end());
-    mMacroPool[index].name = name;
+    mMacroPool[index].data = name;
 }
 
 inline

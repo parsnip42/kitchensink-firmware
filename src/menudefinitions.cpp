@@ -94,7 +94,7 @@ public:
 public:
     virtual UI::Menu::Item getItem(std::size_t index) const
     {
-        return UI::Menu::Item(state->macroSet[index].name,
+        return UI::Menu::Item(state->macroSet[index].data,
                               KeyId::Macro(KeyId::MacroType::kSync, index));
     }
     

@@ -15,16 +15,20 @@ namespace UI
 
 TextEntry::TextEntry(Surface&             surface,
                      KeyProcessor&        keyProcessor,
+                     int                  x,
+                     int                  y,
                      const Types::StrRef& text)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
+    , mX(x)
+    , mY(y)
     , mText(text)
     , mCursorPosition(mText.size())
 { }
 
 bool TextEntry::create()
 {
-    mSurface.rectangle(0, 20, (Surface::kFontWidth * 25) + 8, Surface::kFontHeight + 8);
+    mSurface.rectangle(mX, mY, (Surface::kFontWidth * 25) + 8, Surface::kFontHeight + 8);
     
     paintText();
 
@@ -65,7 +69,7 @@ bool TextEntry::create()
             break;
         }
 
-        if (keyId.type() == KeyId::Type::kKey)
+        if (keyId.type() == KeyId::Type::kKey && keyId.value())
         {
             if (flash)
             {
@@ -152,8 +156,8 @@ void TextEntry::processKey(const KeyId& keyId)
 
 void TextEntry::paintText()
 {
-    mSurface.paintText(4, 24, mText, 0xf, 0);
-    mSurface.paintText(4 + (mText.size() * Surface::kFontWidth), 24, " ", 0xf, 0);
+    mSurface.paintText(mX + 4, mY + 4, mText, 0xf, 0);
+    mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth), mY + 4, " ", 0xf, 0);
 }
 
 void TextEntry::paintCursor(bool visible)
@@ -166,13 +170,13 @@ void TextEntry::paintCursor(bool visible)
         Types::StrRef textRef(mText);
         auto cursorChar(textRef.substr(mCursorPosition, 1));
         
-        mSurface.paintText(4 + (Surface::kFontWidth * mCursorPosition),
-                           24, cursorChar, fg, bg);
+        mSurface.paintText(mX + 4 + (Surface::kFontWidth * mCursorPosition),
+                           mY + 4, cursorChar, fg, bg);
     }
     else
     {        
-        mSurface.paintText(4 + (mText.size() * Surface::kFontWidth),
-                           24, " ", fg, bg);
+        mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth),
+                           mY + 4, " ", fg, bg);
     }
 }
 

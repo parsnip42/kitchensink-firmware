@@ -52,11 +52,13 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 
                 UI::TextEntry entry(mSurface,
                                     mKeyProcessor,
-                                    mKeyboardState.macroSet[macroIndex].name);
+                                    0,
+                                    20,
+                                    mKeyboardState.macroSet[macroIndex].data);
                 
                 if (entry.create())
                 {
-                    mKeyboardState.macroSet[macroIndex].name = entry.text();
+                    mKeyboardState.macroSet[macroIndex].data = entry.text();
                     
                     {
                         Types::StrBuf<20> recordStr{{"Recording Macro #"}};
