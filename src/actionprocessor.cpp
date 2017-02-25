@@ -9,6 +9,8 @@
 #include "ui/recordmacro.h"
 #include "types/strbuf.h"
 
+#include <elapsedMillis.h>
+
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
                                  UsbKeyboard&   usbKeyboard,
                                  KeyboardState& keyboardState,
@@ -103,14 +105,48 @@ void ActionProcessor::fireBuiltIn(int             action,
         if (event.pressed)
         {
             UI::Text text(mSurface);
+
+            {
+                Types::StrBuf<32> line("Free Memory: ");
             
-            Types::StrBuf<20> line("Free Memory: ");
+                line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
             
-            line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
-            
-            text.appendLine(line);
+                text.appendLine(line);
+            }
+
+            {
+                text.appendLine("Running Benchmark..");
+
+                auto start(millis());
+                for (int i(0); i < 1000; ++i)
+                {
+                    mKeyProcessor.poll();
+                }
+                auto end(millis());
+
+                {
+                    Types::StrBuf<32> line("  1000 polls: ");
+                
+                    line.appendInt(static_cast<int>(end-start));
+                    line.appendStr("ms");
+
+                    text.appendLine(line);
+                }
+
+                {
+                    Types::StrBuf<32> line("  ");
+                
+                    line.appendInt(static_cast<int>(1000000 / (end-start)));
+                    line.appendStr(" polls/s");
+
+                    text.appendLine(line);
+                }
+
+            }
+
             mKeyProcessor.untilKeyPress();
             mSurface.clear();
+
         }
         break;
     }

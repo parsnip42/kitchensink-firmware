@@ -6,7 +6,7 @@
 class Debounce
 {
 private:
-    static constexpr unsigned int kLatency = 10;
+    static constexpr unsigned int kLatency = 3;
     
 public:
     constexpr Debounce();
