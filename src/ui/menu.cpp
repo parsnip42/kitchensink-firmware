@@ -74,7 +74,7 @@ void Menu::createMenu(const DataSource& dataSource,
                     {
                         --scrollPos;
                         mSurface.scroll(scrollPos);
-                    }, 8);
+                    }, 4);
             }
 
             --selected;
@@ -98,7 +98,7 @@ void Menu::createMenu(const DataSource& dataSource,
                     {
                         ++scrollPos;
                         mSurface.scroll(scrollPos);
-                    }, 8);
+                    }, 4);
             }
             
             ++selected;

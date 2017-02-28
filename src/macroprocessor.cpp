@@ -20,16 +20,16 @@ bool MacroProcessor::processEvent(const MacroSet& macroSet,
 
             if (event.pressed)
             {
-                for (auto it(entry.begin); it != entry.end; ++it)
+                for (auto it(std::reverse_iterator<decltype(entry.begin)>(entry.end));
+                     it != std::reverse_iterator<decltype(entry.end)>(entry.begin);
+                     ++it)
                 {
                     eventQueue.pushFront(*it);
                 }
             }
-            else if (keyId.macroType() == KeyId::MacroType::kInvert)
+            else if (entry.data.type == MacroType::kInvert)
             {
-                for (auto it(std::reverse_iterator<decltype(entry.begin)>(entry.end));
-                     it != std::reverse_iterator<decltype(entry.end)>(entry.begin);
-                     ++it)
+                for (auto it(entry.begin); it != entry.end; ++it)
                 {
                     auto event(*it);
                 

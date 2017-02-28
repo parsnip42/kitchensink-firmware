@@ -28,13 +28,6 @@ public:
         kSingleHoldRelease = 6, // Single tap for one key, hold/release for one key
     };
 
-    enum class MacroType : uint8_t
-    {
-        kSync   = 0,
-        kASync  = 1,
-        kInvert = 2
-    };
-    
     enum class ActionType : uint8_t
     {
         kBuiltIn   = 0,
@@ -49,8 +42,7 @@ public:
     static constexpr KeyId Lock(LockType lockType,
                                 int          lockId);
     static constexpr KeyId Lock(int lockId);
-    static constexpr KeyId Macro(MacroType macroType,
-                                 int       macroId);
+    static constexpr KeyId Macro(int macroId);
     static constexpr KeyId Delay(uint32_t delayMs);
 
 public:
@@ -67,7 +59,6 @@ public:
 
     constexpr ActionType actionType() const;
     constexpr LockType lockType() const;
-    constexpr MacroType macroType() const;
     
 private:
     uint8_t mType;
@@ -116,7 +107,7 @@ constexpr KeyId KeyId::Lock(int lockId)
 
 inline
 constexpr KeyId KeyId::Lock(LockType lockType,
-                                int          lockId)
+                            int      lockId)
 {
     return KeyId(Type::kLock,
                  static_cast<uint8_t>(lockType),
@@ -124,12 +115,9 @@ constexpr KeyId KeyId::Lock(LockType lockType,
 }
 
 inline
-constexpr KeyId KeyId::Macro(MacroType macroType,
-                             int       macroId)
+constexpr KeyId KeyId::Macro(int macroId)
 {
-    return KeyId(Type::kMacro,
-                 static_cast<uint8_t>(macroType),
-                 macroId);
+    return KeyId(Type::kMacro, macroId);
 }
 
 inline
@@ -187,12 +175,6 @@ inline
 constexpr KeyId::LockType KeyId::lockType() const
 {
     return static_cast<KeyId::LockType>(subType());
-}
-
-inline
-constexpr KeyId::MacroType KeyId::macroType() const
-{
-    return static_cast<KeyId::MacroType>(subType());
 }
 
 #endif

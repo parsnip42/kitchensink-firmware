@@ -52,31 +52,33 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                 
                 mSurface.paintText(0, 0, title, 0xf, 0);
 
+                const auto& macroData(mKeyboardState.macroSet[macroIndex].data);
+                
                 UI::TextEntry entry(mSurface,
                                     mKeyProcessor,
                                     0,
                                     20,
-                                    mKeyboardState.macroSet[macroIndex].data);
+                                    macroData.name);
                 
                 if (entry.create())
                 {
-                    mKeyboardState.macroSet[macroIndex].data = entry.text();
-                    
-                    {
-                        Types::StrBuf<20> recordStr{{"Recording Macro #"}};
+                    Types::StrBuf<20> recordStr{{"Recording Macro #"}};
 
-                        recordStr.appendInt(macroIndex);
+                    recordStr.appendInt(macroIndex);
                         
-                        UI::RecordMacro record(mSurface,
-                                               mKeyProcessor,
-                                               mUsbKeyboard);
+                    UI::RecordMacro record(mSurface,
+                                           mKeyProcessor,
+                                           mUsbKeyboard);
                         
-                        record.create(recordStr, false);
+                    record.create(recordStr, false);
                         
-                        const auto& macro(record.macro());
-                        
-                        mKeyboardState.macroSet.setMacro(macroIndex, macro.rbegin(), macro.rend());
-                    }
+                    const auto& macro(record.macro());
+
+                    mKeyboardState.macroSet.setMacro(macroIndex,
+                                                     MacroType::kSync,
+                                                     entry.text(),
+                                                     macro.begin(),
+                                                     macro.begin() + record.macroSize());
                 }
 
                 mSurface.clear();

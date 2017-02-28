@@ -29,12 +29,14 @@ public:
                 bool                 realtime);
     
     const Macro& macro() const;
-    
+    std::size_t macroSize() const;
+
 private:
     Surface&      mSurface;
     KeyProcessor& mKeyProcessor;
     UsbKeyboard&  mUsbKeyboard;
     Macro         mMacro;
+    std::size_t   mMacroSize;
     
 private:
     RecordMacro(const RecordMacro&) = delete;
@@ -49,12 +51,19 @@ constexpr RecordMacro::RecordMacro(Surface&      surface,
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
     , mUsbKeyboard(usbKeyboard)
+    , mMacroSize(0)
 { }
 
 inline
 const RecordMacro::Macro& RecordMacro::macro() const
 {
     return mMacro;
+}
+
+inline
+std::size_t RecordMacro::macroSize() const
+{
+    return mMacroSize;
 }
 
 }

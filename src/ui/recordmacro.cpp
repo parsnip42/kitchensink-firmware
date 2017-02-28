@@ -17,8 +17,6 @@ bool RecordMacro::create(const Types::StrRef& title,
 
     mSurface.paintText(0, 0, title, 0xf, 0);
 
-    std::size_t macroSize(0);
-
     bool quit(false);
 
     uint32_t lastMs(0);
@@ -49,7 +47,7 @@ bool RecordMacro::create(const Types::StrRef& title,
                     mUsbKeyboard.processKey(keyId.value(), event.pressed);
                 }
 
-                if (macroSize < mMacro.size() - 1)
+                if (mMacroSize < mMacro.size() - 1)
                 {
                     if (realtime)
                     {
@@ -57,13 +55,13 @@ bool RecordMacro::create(const Types::StrRef& title,
                         
                         if (lastMs != 0)
                         {
-                            mMacro[macroSize++] = KeyEvent(KeyId::Delay(nowMs - lastMs));    
+                            mMacro[mMacroSize++] = KeyEvent(KeyId::Delay(nowMs - lastMs));    
                         }
                         
                         lastMs = nowMs;
                     }
-                    
-                    mMacro[macroSize++] = event;
+
+                    mMacro[mMacroSize++] = event;
                 }
                 else
                 {
@@ -72,7 +70,7 @@ bool RecordMacro::create(const Types::StrRef& title,
                 
                 Types::StrBuf<30> text;
 
-                text.appendInt(macroSize)
+                text.appendInt(mMacroSize)
                     .appendStr(" events");
                 
                 mSurface.paintText(0, 20, text, 0x7, 0);
