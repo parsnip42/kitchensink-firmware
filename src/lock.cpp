@@ -8,10 +8,9 @@ bool Lock::processEvent(const KeyEvent& keyEvent,
 {
     auto originalState(active());
     
-    const auto& keyId(keyEvent.keyId);
     const auto& pressed(keyEvent.pressed);
     
-    switch (keyId.lockType())
+    switch (keyEvent.keyId.lockType())
     {
     case KeyId::LockType::kToggle:
         if (pressed)
@@ -60,7 +59,7 @@ bool Lock::processEvent(const KeyEvent& keyEvent,
     
     if (originalState != currentState)
     {
-        eventQueue.pushFront(KeyEvent(mKeyId, currentState));
+        eventQueue.pushFront(KeyEvent(keyId, currentState));
 
         return true;
     }
@@ -71,7 +70,7 @@ bool Lock::processEvent(const KeyEvent& keyEvent,
 bool Lock::clearTrigger(const KeyEvent& keyEvent,
                         EventQueue&     eventQueue)
 {
-    if (mTrigger && keyEvent.keyId != mKeyId)
+    if (mTrigger && keyEvent.keyId != keyId)
     {
         auto originalState(active());
         
@@ -81,7 +80,7 @@ bool Lock::clearTrigger(const KeyEvent& keyEvent,
         
         if (originalState != currentState)
         {
-            eventQueue.pushFront(KeyEvent(mKeyId, currentState));
+            eventQueue.pushFront(KeyEvent(keyId, currentState));
 
             return true;
         }

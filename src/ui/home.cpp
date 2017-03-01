@@ -66,7 +66,7 @@ void Home::paint()
         
         mSurface.paintText(((i & 3) * 16),
                            52-((i >> 2) * 14),
-                           lockSet[i].name(),
+                           lockSet[i].name,
                            mPaintState[i], 0);
     }
 }

@@ -14,8 +14,8 @@ class Lock
 public:
     constexpr Lock();
 
-    Lock(const Types::StrRef& name,
-         const KeyId&         keyId);
+    Lock(const Types::StrRef& nName,
+         const KeyId&         nKeyId);
     
 public:
     bool processEvent(const KeyEvent& keyEvent,
@@ -25,43 +25,38 @@ public:
     bool clearTrigger(const KeyEvent& keyEvent,
                       EventQueue&     eventQueue);
 
-    Types::StrRef name() const;
     bool active() const;
     bool locked() const;
+
+public:
+    Types::StrBuf<12> name;
+    KeyId             keyId;
     
 private:
-    Types::StrBuf<12> mName;
-    KeyId             mKeyId;
-    bool              mLocked;
-    bool              mHeld;
-    bool              mTrigger;
+    bool  mLocked;
+    bool  mHeld;
+    bool  mTrigger;
 };
 
 
 inline
 constexpr Lock::Lock()
-    : mName()
-    , mKeyId()
+    : name()
+    , keyId()
     , mLocked(false)
     , mHeld(false)
     , mTrigger(false)
 { }
 
 inline
-Lock::Lock(const Types::StrRef& name,
-           const KeyId&         keyId)
-    : mName(name)
-    , mKeyId(keyId)
+Lock::Lock(const Types::StrRef& nName,
+           const KeyId&         nKeyId)
+    : name(nName)
+    , keyId(nKeyId)
     , mLocked(false)
     , mHeld(false)
     , mTrigger(false)
 { }
-
-inline
-Types::StrRef Lock::name() const
-{
-    return mName;
-}
 
 inline
 bool Lock::active() const

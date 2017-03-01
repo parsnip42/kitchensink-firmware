@@ -36,6 +36,20 @@ public:
     KeyboardState& mKeyboardState;
 };
 
+
+class LockDataSource : public UI::Menu::DataSource
+{
+public:
+    explicit constexpr LockDataSource(KeyboardState& keyboardState);
+
+public:
+    virtual UI::Menu::Item getItem(std::size_t index) const;
+    virtual std::size_t getItemCount() const;
+
+public:
+    KeyboardState& mKeyboardState;
+};
+
 }
 
 class MenuDefinitions
@@ -50,11 +64,11 @@ private:
     KeyboardState& mKeyboardState;
 
     const UI::ArrayDataSource mMainMenuSource;
-    const UI::ArrayDataSource mConfigMenuSource;
     const UI::ArrayDataSource mEmptyMenuSource;
 
     const Impl::MacroDataSource     mMacroDataSource;
     const Impl::EditMacroDataSource mEditMacroDataSource;
+    const Impl::LockDataSource      mLockDataSource;
 
 private:
     MenuDefinitions(const MenuDefinitions&);
