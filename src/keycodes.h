@@ -182,6 +182,10 @@ constexpr keycode_t RAlt           = 0xe6; // Keyboard RightAlt
 constexpr keycode_t RGui           = 0xe7; // Keyboard Right GUI
 
 constexpr keycode_t ModifierOffset = 0xe0;
+
+extern const char* const Names[];
+extern const std::size_t NameCount;
+
 };
 
 #endif

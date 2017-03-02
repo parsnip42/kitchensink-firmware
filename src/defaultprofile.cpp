@@ -121,7 +121,7 @@ void init(KeyboardState& keyboardState)
             KeyEvent(KeyId(Dot)),
             });
     
-    keyboardState.macroSet.setMacro(6, MacroType::kInvert, "C-Spc", {
+    keyboardState.macroSet.setMacro(6, MacroType::kInvert, "Ctrl+Spc", {
             KeyEvent(KeyId(LCtrl)),
             KeyEvent(KeyId(Space)),
             });

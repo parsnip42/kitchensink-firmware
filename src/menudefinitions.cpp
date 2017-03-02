@@ -2,12 +2,14 @@
 
 #include "keyboardstate.h"
 #include "keyid.h"
+#include "keycodes.h"
 
 namespace
 {
 
 const UI::Menu::Item mainMenuItems[] =
 {
+    UI::Menu::Item("Keys", KeyId::Action(KeyId::ActionType::kMenu, 4)),
     UI::Menu::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
     UI::Menu::Item("Edit Macros", KeyId::Action(KeyId::ActionType::kMenu, 2)),
     UI::Menu::Item("Key Locks", KeyId::Action(KeyId::ActionType::kMenu, 3)),
@@ -72,15 +74,30 @@ std::size_t LockDataSource::getItemCount() const
     return mKeyboardState.lockSet.size();
 }
 
+
+constexpr KeyDataSource::KeyDataSource(KeyboardState& keyboardState)
+    : mKeyboardState(keyboardState)
+{ }
+
+UI::Menu::Item KeyDataSource::getItem(std::size_t index) const
+{
+    return UI::Menu::Item(KeyCodes::Names[index], KeyId(index));
+}
+
+std::size_t KeyDataSource::getItemCount() const
+{
+    return KeyCodes::NameCount;
+}
+
 }
 
 MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
-    : mKeyboardState(keyboardState)
-    , mMainMenuSource(mainMenuItems)
+    : mMainMenuSource(mainMenuItems)
     , mEmptyMenuSource(emptyMenuItems)
     , mMacroDataSource(keyboardState)
     , mEditMacroDataSource(keyboardState)
     , mLockDataSource(keyboardState)
+    , mKeyDataSource(keyboardState)
 { }
 
 const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
@@ -95,6 +112,8 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
         return mEditMacroDataSource;
     case 3:
         return mLockDataSource;
+    case 4:
+        return mKeyDataSource;
     default:
         return mEmptyMenuSource;
     }

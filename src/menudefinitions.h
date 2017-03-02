@@ -20,6 +20,10 @@ public:
 
 public:
     KeyboardState& mKeyboardState;
+
+private:
+    MacroDataSource(const MacroDataSource&) = delete;
+    MacroDataSource& operator=(const MacroDataSource&) = delete;
 };
 
 
@@ -34,6 +38,10 @@ public:
 
 public:
     KeyboardState& mKeyboardState;
+
+private:
+    EditMacroDataSource(const EditMacroDataSource&) = delete;
+    EditMacroDataSource& operator=(const EditMacroDataSource&) = delete;
 };
 
 
@@ -48,6 +56,27 @@ public:
 
 public:
     KeyboardState& mKeyboardState;
+    
+private:
+    LockDataSource(const LockDataSource&) = delete;
+    LockDataSource& operator=(const LockDataSource&) = delete;
+};
+
+class KeyDataSource : public UI::Menu::DataSource
+{
+public:
+    explicit constexpr KeyDataSource(KeyboardState& keyboardState);
+
+public:
+    virtual UI::Menu::Item getItem(std::size_t index) const;
+    virtual std::size_t getItemCount() const;
+
+public:
+    KeyboardState& mKeyboardState;
+
+private:
+    KeyDataSource(const KeyDataSource&) = delete;
+    KeyDataSource& operator=(const KeyDataSource&) = delete;
 };
 
 }
@@ -61,18 +90,17 @@ public:
     const UI::Menu::DataSource& getDataSource(int id) const;
 
 private:
-    KeyboardState& mKeyboardState;
-
     const UI::ArrayDataSource mMainMenuSource;
     const UI::ArrayDataSource mEmptyMenuSource;
 
     const Impl::MacroDataSource     mMacroDataSource;
     const Impl::EditMacroDataSource mEditMacroDataSource;
     const Impl::LockDataSource      mLockDataSource;
+    const Impl::KeyDataSource       mKeyDataSource;
 
 private:
-    MenuDefinitions(const MenuDefinitions&);
-    MenuDefinitions& operator=(const MenuDefinitions&);
+    MenuDefinitions(const MenuDefinitions&) = delete;
+    MenuDefinitions& operator=(const MenuDefinitions&) = delete;
 };
 
 #endif
