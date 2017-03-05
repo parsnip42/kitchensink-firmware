@@ -2,6 +2,8 @@
 
 namespace KeyCodes
 {
+namespace
+{
 
 const char* const Names[] =
 {
@@ -173,5 +175,33 @@ const char* const Names[] =
 };
 
 const std::size_t NameCount(sizeof(Names) / sizeof(*Names));
+}
 
-};
+Types::StrRef keyName(keycode_t keyCode)
+{
+    if (keyCode < NameCount)
+    {
+        return Names[keyCode];
+    }
+
+    return Types::StrRef("");
+}
+
+keycode_t keyCode(const Types::StrRef& keyName)
+{
+    // Intentionally avoiding the use of a lookup table to save
+    // memory. If performance becomes a problem, we should create an
+    // ordered index for a binary search.
+    for (keycode_t i(0); i < NameCount; ++i)
+    {
+        // And this might need to be case-insensitive too.
+        if (keyName == Names[i])
+        {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
+}

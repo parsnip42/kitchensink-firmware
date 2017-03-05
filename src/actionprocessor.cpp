@@ -165,10 +165,11 @@ void ActionProcessor::fireMenu(int             action,
 {
     if (event.pressed)
     {
-        UI::Menu menu(mSurface);
+        UI::Menu menu(mMenuDefinitions.getDataSource(action),
+                      mSurface,
+                      mKeyProcessor);
         
-        menu.createMenu(mMenuDefinitions.getDataSource(action),
-                        mKeyProcessor);
+        menu.createMenu();
     }
 }
 

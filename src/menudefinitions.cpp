@@ -7,19 +7,19 @@
 namespace
 {
 
-const UI::Menu::Item mainMenuItems[] =
+const UI::ArrayDataSource::Item mainMenuItems[] =
 {
-    UI::Menu::Item("Keys", KeyId::Action(KeyId::ActionType::kMenu, 4)),
-    UI::Menu::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
-    UI::Menu::Item("Edit Macros", KeyId::Action(KeyId::ActionType::kMenu, 2)),
-    UI::Menu::Item("Key Locks", KeyId::Action(KeyId::ActionType::kMenu, 3)),
-    UI::Menu::Item("System", KeyId::Action(KeyId::ActionType::kBuiltIn, 1)),
-    UI::Menu::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
+    UI::ArrayDataSource::Item("Keys", KeyId::Action(KeyId::ActionType::kMenu, 4)),
+    UI::ArrayDataSource::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
+    UI::ArrayDataSource::Item("Edit Macros", KeyId::Action(KeyId::ActionType::kMenu, 2)),
+    UI::ArrayDataSource::Item("Key Locks", KeyId::Action(KeyId::ActionType::kMenu, 3)),
+    UI::ArrayDataSource::Item("System", KeyId::Action(KeyId::ActionType::kBuiltIn, 1)),
+    UI::ArrayDataSource::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
 };
 
-const UI::Menu::Item emptyMenuItems[] =
+const UI::ArrayDataSource::Item emptyMenuItems[] =
 {
-    UI::Menu::Item("--", KeyId()),
+    UI::ArrayDataSource::Item("--", KeyId()),
 };
 
 }
@@ -31,10 +31,13 @@ constexpr MacroDataSource::MacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-UI::Menu::Item MacroDataSource::getItem(std::size_t index) const
+void MacroDataSource::getItem(ItemText&   text,
+                              KeyId&      keyId,
+                              std::size_t index) const
+
 {
-    return UI::Menu::Item(mKeyboardState.macroSet[index].data.name,
-                          KeyId::Macro(index));
+    text  = mKeyboardState.macroSet[index].data.name;
+    keyId = KeyId::Macro(index);
 }
 
 std::size_t MacroDataSource::getItemCount() const
@@ -47,10 +50,13 @@ constexpr EditMacroDataSource::EditMacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-UI::Menu::Item EditMacroDataSource::getItem(std::size_t index) const
+void EditMacroDataSource::getItem(ItemText&   text,
+                                  KeyId&      keyId,
+                                  std::size_t index) const
 {
-    return UI::Menu::Item(mKeyboardState.macroSet[index].data.name,
-                          KeyId::Action(KeyId::ActionType::kEditMacro, index));
+    
+    text  = mKeyboardState.macroSet[index].data.name;
+    keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
 }
 
 std::size_t EditMacroDataSource::getItemCount() const
@@ -63,10 +69,13 @@ constexpr LockDataSource::LockDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-UI::Menu::Item LockDataSource::getItem(std::size_t index) const
+void LockDataSource::getItem(ItemText&   text,
+                             KeyId&      keyId,
+                             std::size_t index) const
 {
-    return UI::Menu::Item(mKeyboardState.lockSet[index].name,
-                          KeyId::Lock(KeyId::LockType::kToggle, index));
+    
+    text  = mKeyboardState.lockSet[index].name;
+    keyId = KeyId::Lock(KeyId::LockType::kToggle, index);
 }
 
 std::size_t LockDataSource::getItemCount() const
@@ -79,14 +88,27 @@ constexpr KeyDataSource::KeyDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-UI::Menu::Item KeyDataSource::getItem(std::size_t index) const
+void KeyDataSource::getItem(ItemText&   text,
+                            KeyId&      keyId,
+                            std::size_t index) const
 {
-    return UI::Menu::Item(KeyCodes::Names[index], KeyId(index));
+    auto keyName(KeyCodes::keyName(index));
+
+    if (keyName == "")
+    {
+        keyName = "Reserved";
+    }
+    
+    text.appendInt(index, "0x%2.2x");
+    text.appendStr(" : ");
+    text.appendStr(keyName);
+    
+    keyId = KeyId(index);
 }
 
 std::size_t KeyDataSource::getItemCount() const
 {
-    return KeyCodes::NameCount;
+    return 255;
 }
 
 }

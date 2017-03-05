@@ -1,6 +1,8 @@
 #ifndef INCLUDED_KEYCODES_H
 #define INCLUDED_KEYCODES_H
 
+#include "types/strref.h"
+
 #include <cstdint>
 
 typedef uint8_t keycode_t;
@@ -183,8 +185,8 @@ constexpr keycode_t RGui           = 0xe7; // Keyboard Right GUI
 
 constexpr keycode_t ModifierOffset = 0xe0;
 
-extern const char* const Names[];
-extern const std::size_t NameCount;
+Types::StrRef keyName(keycode_t keyCode);
+keycode_t keyCode(const Types::StrRef& keyName);
 
 };
 

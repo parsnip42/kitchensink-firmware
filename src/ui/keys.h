@@ -28,14 +28,15 @@ bool down(const KeyId& keyId)
 inline
 bool ok(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Enter));
+    return (keyId == KeyId(KeyCodes::Enter) ||
+            keyId == KeyId::Action(KeyId::ActionType::kMenu, 0));
+
 }
 
 inline
 bool cancel(const KeyId& keyId)
 {
-    return ((keyId == KeyId(KeyCodes::Esc)) ||
-            (keyId == KeyId::Action(KeyId::ActionType::kMenu, 0)));
+    return (keyId == KeyId(KeyCodes::Esc));
 }
 
 }

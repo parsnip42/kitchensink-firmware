@@ -3,6 +3,7 @@
 
 #include "keyid.h"
 #include "keyprocessor.h"
+#include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/surface.h"
 
@@ -16,44 +17,40 @@ namespace UI
 class Menu
 {
 public:
-    class Item
-    {
-    public:
-        constexpr Item(const Types::StrRef& nText,
-                       const KeyId&         nKeyId);
-
-    public:
-        Types::StrRef text;
-        KeyId         keyId;
-    };
-
-public:
     class DataSource
     {
     public:
-        virtual Item getItem(std::size_t index) const = 0;
+        typedef Types::StrBuf<20> ItemText;
+        
+    public:
+        virtual void getItem(ItemText&   text,
+                             KeyId&      keyId,
+                             std::size_t index) const = 0;
+        
         virtual std::size_t getItemCount() const = 0;
     };
 
 public:
-    explicit Menu(Surface& surface);
+    constexpr Menu(const DataSource& dataSource,
+                   Surface&          surface,
+                   KeyProcessor&     keyProcessor);
 
 public:
-    void createMenu(const DataSource& dataSource,
-                    KeyProcessor&     keyProcessor);
+    void createMenu();
 
 private:
-    KeyId paintMenu(const DataSource& dataSource,
-                    int               selected,
-                    int               offset,
-                    int               start,
-                    int               end,
-                    uint8_t           fg,
-                    uint8_t           bg);
+    void paintMenu(int     offset,
+                   int     start,
+                   int     end,
+                   uint8_t fg,
+                   uint8_t bg);
     
 private:
-    Surface& mSurface;
-
+    const DataSource& mDataSource;
+    Surface&          mSurface;
+    KeyProcessor&     mKeyProcessor;
+    int               mSelected;
+    
 private:
     Menu(const Menu&) = delete;
     Menu& operator=(const Menu&) = delete;
@@ -61,10 +58,13 @@ private:
 
 
 inline
-constexpr Menu::Item::Item(const Types::StrRef& nText,
-                           const KeyId&         nKeyId)
-    : text(nText)
-    , keyId(nKeyId)
+constexpr Menu::Menu(const DataSource& dataSource,
+                     Surface&          surface,
+                     KeyProcessor&     keyProcessor)
+    : mDataSource(dataSource)
+    , mSurface(surface)
+    , mKeyProcessor(keyProcessor)
+    , mSelected(0)
 { }
 
 }
