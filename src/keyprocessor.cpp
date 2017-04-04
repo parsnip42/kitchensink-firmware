@@ -2,6 +2,7 @@
 
 #include "kskeyboard.h"
 #include "keyboardstate.h"
+#include "keylocation.h"
 
 #include <keylayouts.h>
 
@@ -61,8 +62,7 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
     mMacroProcessor.processEvent(mKeyboardState.macroSet,
                                  event,
                                  mEventQueue);
-            
-
+    
     return Consumed::kIgnored;
 }
 
@@ -99,4 +99,36 @@ void KeyProcessor::untilIdle()
             break;
         }
     }
+}
+
+KeyLocation KeyProcessor::readKeyLocation()
+{
+    KeyLocation keyLocation;
+
+    bool complete(false);
+
+    while (!complete)
+    {
+        mKeyboard.poll([&](const KsKeyboard::Event& event)
+        {
+            if (event.pressed)
+            {
+                keyLocation.row    = event.row;
+                keyLocation.column = event.column;
+                keyLocation.layer  = mKeyboardState.layerStack.activeLayer(event.row, event.column);
+                complete = true;
+            }
+            
+            auto keyId(mKeyboardState.layerStack.at(event.row, event.column));
+            
+            mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
+        });
+
+        while (!mEventQueue.empty())
+        {
+            consumeEvent(mEventQueue.pop());
+        }
+    }
+    
+    return keyLocation;
 }

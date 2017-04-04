@@ -9,6 +9,7 @@
 
 class KsKeyboard;
 class KeyboardState;
+class KeyLocation;
 
 class KeyProcessor
 {
@@ -39,6 +40,8 @@ public:
     
     void untilIdle();
 
+    KeyLocation readKeyLocation();
+    
 private:
     enum class Consumed
     {

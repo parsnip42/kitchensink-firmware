@@ -28,6 +28,23 @@ void Surface::paintText(int                  x,
     }
 }
 
+void Surface::paintTextC(int                  x,
+                         int                  y,
+                         int                  width,
+                         const Types::StrRef& text,
+                         uint8_t              fg,
+                         uint8_t              bg)
+{
+    initRegion(x, y, width, kFontHeight);
+
+    const ColorMap colorMap(fg, bg);
+    
+    for (int line(0); line < kFontHeight; ++line)
+    {
+        paintTextLineC(text, width, line, colorMap);
+    }
+}
+
 void Surface::rectangle(int x, int y, int w, int h)
 {
     mDisplay.initRegion(x, y, w, 1);

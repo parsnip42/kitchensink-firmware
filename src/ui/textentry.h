@@ -21,6 +21,7 @@ public:
               KeyProcessor&        keyProcessor,
               int                  x,
               int                  y,
+              int                  width,
               const Types::StrRef& text);
 
 public:
@@ -38,6 +39,7 @@ private:
     KeyProcessor&     mKeyProcessor;
     int               mX;
     int               mY;
+    int               mWidth;
     Types::StrBuf<30> mText;
     std::size_t       mCursorPosition;
     

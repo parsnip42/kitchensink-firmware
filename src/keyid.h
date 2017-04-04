@@ -65,18 +65,18 @@ private:
     uint8_t mValue;
     
 private:
-    friend bool operator==(const KeyId& lhs, const KeyId& rhs);
+    friend constexpr bool operator==(const KeyId& lhs, const KeyId& rhs);
 };
 
 
 inline
-bool operator==(const KeyId& lhs, const KeyId& rhs)
+constexpr bool operator==(const KeyId& lhs, const KeyId& rhs)
 {
     return (lhs.mType == rhs.mType) && (lhs.mValue == rhs.mValue);
 }
 
 inline
-bool operator!=(const KeyId& lhs, const KeyId& rhs)
+constexpr bool operator!=(const KeyId& lhs, const KeyId& rhs)
 {
     return !(lhs == rhs);
 }

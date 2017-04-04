@@ -1,8 +1,6 @@
 #ifndef INCLUDED_UI_TEXT_H
 #define INCLUDED_UI_TEXT_H
 
-#include "ui/surface.h"
-
 namespace Types { class StrRef; }
 namespace UI { class Surface; }
 

@@ -17,18 +17,20 @@ TextEntry::TextEntry(Surface&             surface,
                      KeyProcessor&        keyProcessor,
                      int                  x,
                      int                  y,
+                     int                  width,
                      const Types::StrRef& text)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
     , mX(x)
     , mY(y)
+    , mWidth(width)
     , mText(text)
     , mCursorPosition(mText.size())
 { }
 
 bool TextEntry::create()
 {
-    mSurface.rectangle(mX, mY, (Surface::kFontWidth * 25) + 8, Surface::kFontHeight + 8);
+    mSurface.rectangle(mX, mY, mWidth, Surface::kFontHeight + 3);
     
     paintText();
 
@@ -156,8 +158,8 @@ void TextEntry::processKey(const KeyId& keyId)
 
 void TextEntry::paintText()
 {
-    mSurface.paintText(mX + 4, mY + 4, mText, 0xf, 0);
-    mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth), mY + 4, " ", 0xf, 0);
+    mSurface.paintText(mX + 4, mY + 2, mText, 0xf, 0);
+    mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth), mY + 2, " ", 0xf, 0);
 }
 
 void TextEntry::paintCursor(bool visible)
@@ -171,12 +173,12 @@ void TextEntry::paintCursor(bool visible)
         auto cursorChar(textRef.substr(mCursorPosition, 1));
         
         mSurface.paintText(mX + 4 + (Surface::kFontWidth * mCursorPosition),
-                           mY + 4, cursorChar, fg, bg);
+                           mY + 2, cursorChar, fg, bg);
     }
     else
     {        
         mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth),
-                           mY + 4, " ", fg, bg);
+                           mY + 2, " ", fg, bg);
     }
 }
 

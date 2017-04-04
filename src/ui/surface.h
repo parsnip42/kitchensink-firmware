@@ -40,6 +40,13 @@ public:
                    const Types::StrRef& text,
                    uint8_t              fg = 0xf,
                    uint8_t              bg = 0);
+    
+    void paintTextC(int                  x,
+                    int                  y,
+                    const int            width,
+                    const Types::StrRef& text,
+                    uint8_t              fg = 0xf,
+                    uint8_t              bg = 0);
 
     void rectangle(int x, int y, int w, int h);
 

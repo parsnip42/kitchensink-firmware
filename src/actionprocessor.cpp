@@ -2,14 +2,50 @@
 #include "ctrlutil.h"
 #include "eventqueue.h"
 #include "keyboardstate.h"
+#include "keylocation.h"
 #include "menudefinitions.h"
+#include "ui/surface.h"
 #include "ui/menu.h"
 #include "ui/text.h"
 #include "ui/textentry.h"
+#include "ui/combo.h"
 #include "ui/recordmacro.h"
 #include "types/strbuf.h"
 
 #include <elapsedMillis.h>
+
+namespace
+{
+
+class MacroTypeDataSource : public UI::Combo::DataSource
+{
+public:
+    virtual void getItem(ItemText&   text,
+                         std::size_t index) const
+    {
+        switch (index)
+        {
+        case 0:
+            text = "Normal";
+            break;
+            
+        case 1:
+            text = "Realtime";
+            break;
+            
+        case 2:
+            text = "Key Combination";
+            break;
+        }
+    }
+    
+    virtual std::size_t getItemCount() const
+    {
+        return 3;
+    }
+};
+
+}
 
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
                                  UsbKeyboard&   usbKeyboard,
@@ -46,11 +82,11 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 
                 mSurface.clear();
 
-                Types::StrBuf<20> title{{"Rename Macro #"}};
+                Types::StrBuf<20> title{{"Macro #"}};
 
                 title.appendInt(macroIndex);
                 
-                mSurface.paintText(0, 0, title, 0xf, 0);
+                mSurface.paintTextC(0, 0, 240, title, 0xf, 0);
 
                 const auto& macroData(mKeyboardState.macroSet[macroIndex].data);
                 
@@ -58,27 +94,43 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                                     mKeyProcessor,
                                     0,
                                     20,
+                                    UI::Surface::kWidth,
                                     macroData.name);
+
+                MacroTypeDataSource ds;
+                
+                UI::Combo combo(mSurface,
+                                mKeyProcessor,
+                                0,
+                                45,
+                                UI::Surface::kWidth,
+                                ds,
+                                0);
                 
                 if (entry.create())
                 {
-                    Types::StrBuf<20> recordStr{{"Recording Macro #"}};
+                    if (combo.create())
+                    {
+                        Types::StrBuf<20> recordStr{{"Recording Macro #"}};
+                        
+                        recordStr.appendInt(macroIndex);
+                        
+                        UI::RecordMacro record(mSurface,
+                                               mKeyProcessor,
+                                               mUsbKeyboard);
+                        
+                        record.create(recordStr, (combo.selectedItem() == 1));
+                        
+                        const auto& macro(record.macro());
 
-                    recordStr.appendInt(macroIndex);
+                        MacroType macroType((combo.selectedItem() == 2) ? MacroType::kInvert : MacroType::kSync);
                         
-                    UI::RecordMacro record(mSurface,
-                                           mKeyProcessor,
-                                           mUsbKeyboard);
-                        
-                    record.create(recordStr, false);
-                        
-                    const auto& macro(record.macro());
-
-                    mKeyboardState.macroSet.setMacro(macroIndex,
-                                                     MacroType::kSync,
-                                                     entry.text(),
-                                                     macro.begin(),
-                                                     macro.begin() + record.macroSize());
+                        mKeyboardState.macroSet.setMacro(macroIndex,
+                                                         macroType,
+                                                         entry.text(),
+                                                         macro.begin(),
+                                                         macro.begin() + record.macroSize());
+                    }
                 }
 
                 mSurface.clear();
@@ -105,7 +157,7 @@ void ActionProcessor::fireBuiltIn(int             action,
     case 1:
     {
         if (event.pressed)
-        {
+        {            
             UI::Text text(mSurface);
 
             {
@@ -148,7 +200,6 @@ void ActionProcessor::fireBuiltIn(int             action,
 
             mKeyProcessor.untilKeyPress();
             mSurface.clear();
-
         }
         break;
     }

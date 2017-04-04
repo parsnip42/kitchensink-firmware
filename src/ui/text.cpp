@@ -1,6 +1,7 @@
 #include "text.h"
 #include "timed.h"
 
+#include "ui/surface.h"
 #include "types/strref.h"
 
 namespace UI

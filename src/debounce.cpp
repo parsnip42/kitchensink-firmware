@@ -13,7 +13,7 @@ bool Debounce::process(const KeyMask& next)
     }
     else
     {
-        mCurrent |= next;
+        mCurrent &= next;
     }
     
     return (mCounter == 0 && !mDelta.empty());

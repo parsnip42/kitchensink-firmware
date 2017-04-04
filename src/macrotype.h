@@ -6,8 +6,7 @@
 enum class MacroType : uint8_t
 {
     kSync   = 0,
-    kASync  = 1,
-    kInvert = 2
+    kInvert = 1,
 };
 
 #endif

@@ -10,7 +10,7 @@ namespace Keys
 {
 
 inline
-bool up(const KeyId& keyId)
+constexpr bool up(const KeyId& keyId)
 {
     return (keyId == KeyId(KeyCodes::Up) ||
             keyId == KeyId(KeyCodes::E) ||
@@ -18,7 +18,7 @@ bool up(const KeyId& keyId)
 }
 
 inline
-bool down(const KeyId& keyId)
+constexpr bool down(const KeyId& keyId)
 {
     return (keyId == KeyId(KeyCodes::Down) ||
             keyId == KeyId(KeyCodes::D) ||
@@ -26,17 +26,29 @@ bool down(const KeyId& keyId)
 }
 
 inline
-bool ok(const KeyId& keyId)
+constexpr bool left(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Enter) ||
-            keyId == KeyId::Action(KeyId::ActionType::kMenu, 0));
+    return (keyId == KeyId(KeyCodes::Left));
+}
+
+inline
+constexpr bool right(const KeyId& keyId)
+{
+    return (keyId == KeyId(KeyCodes::Right));
+}
+
+inline
+constexpr bool ok(const KeyId& keyId)
+{
+    return (keyId == KeyId(KeyCodes::Enter));
 
 }
 
 inline
-bool cancel(const KeyId& keyId)
+constexpr bool cancel(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Esc));
+    return (keyId == KeyId(KeyCodes::Esc) ||
+            keyId == KeyId::Action(KeyId::ActionType::kMenu, 0));
 }
 
 }
