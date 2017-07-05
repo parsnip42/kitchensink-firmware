@@ -16,7 +16,7 @@ public:
     class DataSource
     {
     public:
-        typedef Types::StrBuf<20> ItemText;
+        typedef StrBuf<20> ItemText;
         
     public:
         virtual void getItem(ItemText&   text,

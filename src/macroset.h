@@ -20,8 +20,8 @@ public:
         constexpr Entry();
 
     public:
-        MacroType         type;
-        Types::StrBuf<24> name;
+        MacroType  type;
+        StrBuf<24> name;
     };
     
 private:
@@ -40,11 +40,11 @@ public:
     constexpr std::size_t size() const;
     
     template <typename Iterator>
-    void setMacro(std::size_t          index,
-                  const MacroType&     type,
-                  const Types::StrRef& name,
-                  const Iterator&      begin,
-                  const Iterator&      end);
+    void setMacro(std::size_t      index,
+                  const MacroType& type,
+                  const StrRef&    name,
+                  const Iterator&  begin,
+                  const Iterator&  end);
     
     void setMacro(std::size_t                            index,
                   const MacroType&                       type,
@@ -52,7 +52,7 @@ public:
     
     void setMacro(std::size_t                            index,
                   const MacroType&                       type,
-                  const Types::StrRef&                   name,
+                  const StrRef&                          name,
                   const std::initializer_list<KeyEvent>& press);
 
 private:
@@ -82,11 +82,11 @@ constexpr std::size_t MacroSet::size() const
 
 template <typename Iterator>
 inline
-void MacroSet::setMacro(std::size_t          index,
-                        const MacroType&     type,
-                        const Types::StrRef& name,
-                        const Iterator&      begin,
-                        const Iterator&      end)
+void MacroSet::setMacro(std::size_t      index,
+                        const MacroType& type,
+                        const StrRef&    name,
+                        const Iterator&  begin,
+                        const Iterator&  end)
 {
     auto& data(mMacroPool[index].data);
 
@@ -107,7 +107,7 @@ void MacroSet::setMacro(std::size_t                            index,
 inline
 void MacroSet::setMacro(std::size_t                            index,
                         const MacroType&                       type,
-                        const Types::StrRef&                   name,
+                        const StrRef&                          name,
                         const std::initializer_list<KeyEvent>& press)
 {
     setMacro(index, type, name, press.begin(), press.end());

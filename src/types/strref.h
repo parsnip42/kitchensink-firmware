@@ -5,9 +5,6 @@
 #include <cstdint>
 #include <cstring>
 
-namespace Types
-{
-
 namespace StrRefImpl
 {
 
@@ -99,8 +96,6 @@ inline
 bool operator!=(const StrRef& lhs, const StrRef& rhs)
 {
     return !(lhs == rhs);
-}
-
 }
 
 #endif

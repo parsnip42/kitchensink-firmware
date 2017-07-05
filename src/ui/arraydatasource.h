@@ -14,12 +14,12 @@ public:
     class Item
     {
     public:
-        constexpr Item(const Types::StrRef& nText,
-                       const KeyId&         nKeyId);
+        constexpr Item(const StrRef& nText,
+                       const KeyId&  nKeyId);
 
     public:
-        Types::StrRef text;
-        KeyId         keyId;
+        StrRef text;
+        KeyId  keyId;
     };
 
 public:
@@ -40,8 +40,8 @@ private:
 
 
 inline
-constexpr ArrayDataSource::Item::Item(const Types::StrRef& nText,
-                                      const KeyId&         nKeyId)
+constexpr ArrayDataSource::Item::Item(const StrRef& nText,
+                                      const KeyId&  nKeyId)
     : text(nText)
     , keyId(nKeyId)
 { }

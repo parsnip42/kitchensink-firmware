@@ -25,8 +25,8 @@ public:
                           UsbKeyboard&  usbKeyboard);
 
 public:
-    bool create(const Types::StrRef& title,
-                bool                 realtime);
+    bool create(const StrRef& title,
+                bool          realtime);
     
     const Macro& macro() const;
     std::size_t macroSize() const;

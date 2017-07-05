@@ -13,12 +13,12 @@
 namespace UI
 {
 
-TextEntry::TextEntry(Surface&             surface,
-                     KeyProcessor&        keyProcessor,
-                     int                  x,
-                     int                  y,
-                     int                  width,
-                     const Types::StrRef& text)
+TextEntry::TextEntry(Surface&      surface,
+                     KeyProcessor& keyProcessor,
+                     int           x,
+                     int           y,
+                     int           width,
+                     const StrRef& text)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
     , mX(x)
@@ -169,7 +169,7 @@ void TextEntry::paintCursor(bool visible)
     
     if (mCursorPosition < mText.size())
     {
-        Types::StrRef textRef(mText);
+        StrRef textRef(mText);
         auto cursorChar(textRef.substr(mCursorPosition, 1));
         
         mSurface.paintText(mX + 4 + (Surface::kFontWidth * mCursorPosition),

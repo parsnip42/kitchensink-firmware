@@ -65,7 +65,7 @@ const Entry& getEntry(uint8_t n)
     return tableData[n];
 }
 
-const Entry* getEntry(const Types::StrRef& name)
+const Entry* getEntry(const StrRef& name)
 {
     for (const auto& entry : tableData)
     {

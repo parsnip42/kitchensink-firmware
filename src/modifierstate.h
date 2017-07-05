@@ -1,7 +1,7 @@
 #ifndef INCLUDED_MODIFIERSTATE_H
 #define INCLUDED_MODIFIERSTATE_H
 
-#include "bitmask.h"
+#include "types/bitmask.h"
 #include "keycodes.h"
 
 class KeyEvent;

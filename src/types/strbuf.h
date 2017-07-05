@@ -8,9 +8,6 @@
 #include <cstdint>
 #include <cstring>
 
-namespace Types
-{
-
 template <std::size_t Size>
 class StrBuf
 {
@@ -190,8 +187,6 @@ inline
 constexpr std::size_t StrBuf<Size>::size(const char* data) const
 {
     return (data[0] == '\0') ? 0 : (1 + size(data + 1));
-}
-
 }
 
 #endif

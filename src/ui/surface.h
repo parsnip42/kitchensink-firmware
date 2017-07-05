@@ -5,9 +5,8 @@
 
 #include <cstdint>
 
+class StrRef;
 class Display;
-
-namespace Types { class StrRef; }
 
 namespace UI
 {
@@ -35,31 +34,31 @@ public:
     explicit Surface(Display& display);
 
 public:
-    void paintText(int                  x,
-                   int                  y,
-                   const Types::StrRef& text,
-                   uint8_t              fg = 0xf,
-                   uint8_t              bg = 0);
+    void paintText(int           x,
+                   int           y,
+                   const StrRef& text,
+                   uint8_t       fg = 0xf,
+                   uint8_t       bg = 0);
     
-    void paintTextC(int                  x,
-                    int                  y,
-                    const int            width,
-                    const Types::StrRef& text,
-                    uint8_t              fg = 0xf,
-                    uint8_t              bg = 0);
+    void paintTextC(int           x,
+                    int           y,
+                    const int     width,
+                    const StrRef& text,
+                    uint8_t       fg = 0xf,
+                    uint8_t       bg = 0);
 
     void rectangle(int x, int y, int w, int h);
 
     void initRegion(int x, int y, int w, int h);
 
-    void paintTextLine(const Types::StrRef& text,
-                       const int            line,
-                       const ColorMap&      colorMap);
+    void paintTextLine(const StrRef&   text,
+                       const int       line,
+                       const ColorMap& colorMap);
     
-    void paintTextLineC(const Types::StrRef& text,
-                        const int            width,
-                        const int            line,
-                        const ColorMap&      colorMap);
+    void paintTextLineC(const StrRef&   text,
+                        const int       width,
+                        const int       line,
+                        const ColorMap& colorMap);
 
     void scroll(uint8_t value);
     void clear();

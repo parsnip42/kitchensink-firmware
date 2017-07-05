@@ -4,9 +4,6 @@
 #include <array>
 #include <cstdint>
 
-namespace Types
-{
-
 template <typename T, std::size_t Capacity>
 class CircularBuffer
 {
@@ -84,8 +81,6 @@ constexpr std::size_t CircularBuffer<T, Capacity>::size() const
         ((mStart <= mEnd) ?
             (mEnd - mStart) :
             ((Capacity - mStart) + mEnd));
-}
-
 }
 
 #endif

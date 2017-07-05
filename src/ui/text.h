@@ -1,7 +1,7 @@
 #ifndef INCLUDED_UI_TEXT_H
 #define INCLUDED_UI_TEXT_H
 
-namespace Types { class StrRef; }
+class StrRef;
 namespace UI { class Surface; }
 
 namespace UI
@@ -13,7 +13,7 @@ public:
     explicit Text(Surface& surface);
 
 public:
-    void appendLine(const Types::StrRef& text);
+    void appendLine(const StrRef& text);
 
 private:
     Surface& mSurface;

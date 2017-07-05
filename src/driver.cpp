@@ -39,7 +39,7 @@ void loop()
     {
         if (sd.card()->errorCode())
         {
-            Types::StrBuf<48> sdErr;
+            StrBuf<48> sdErr;
 
             sdErr.appendStr("SD Failed : ")
                  .appendInt(sd.card()->errorCode());
@@ -49,7 +49,7 @@ void loop()
     }
     else
     {
-        Types::StrBuf<48> sdInfo;
+        StrBuf<48> sdInfo;
 
         sdInfo.appendStr("SD OK : ")
               .appendInt(static_cast<int>((0.000512 * sd.card()->cardSize() + 0.5)))
@@ -76,7 +76,7 @@ void loop()
         }
     }
 
-    Types::StrBuf<5> str;
+    StrBuf<5> str;
 
     initLog.appendLine(str);
 

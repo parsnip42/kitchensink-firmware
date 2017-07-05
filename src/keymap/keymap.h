@@ -32,7 +32,7 @@ constexpr Entry::Entry(const char* nName,
 { }
 
 const Entry& getEntry(uint8_t n);
-const Entry* getEntry(const Types::StrRef& name);
+const Entry* getEntry(const StrRef& name);
 
 }
 

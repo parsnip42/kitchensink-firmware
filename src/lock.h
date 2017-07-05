@@ -14,8 +14,8 @@ class Lock
 public:
     constexpr Lock();
 
-    Lock(const Types::StrRef& nName,
-         const KeyId&         nKeyId);
+    Lock(const StrRef& nName,
+         const KeyId&  nKeyId);
     
 public:
     bool processEvent(const KeyEvent& keyEvent,
@@ -29,8 +29,8 @@ public:
     bool locked() const;
 
 public:
-    Types::StrBuf<12> name;
-    KeyId             keyId;
+    StrBuf<12> name;
+    KeyId      keyId;
     
 private:
     bool  mLocked;
@@ -49,8 +49,8 @@ constexpr Lock::Lock()
 { }
 
 inline
-Lock::Lock(const Types::StrRef& nName,
-           const KeyId&         nKeyId)
+Lock::Lock(const StrRef& nName,
+           const KeyId&  nKeyId)
     : name(nName)
     , keyId(nKeyId)
     , mLocked(false)

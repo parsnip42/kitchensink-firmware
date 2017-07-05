@@ -17,17 +17,17 @@ namespace UI
 class TextEntry
 {
 public:
-    TextEntry(Surface&             surface,
-              KeyProcessor&        keyProcessor,
-              int                  x,
-              int                  y,
-              int                  width,
-              const Types::StrRef& text);
+    TextEntry(Surface&      surface,
+              KeyProcessor& keyProcessor,
+              int           x,
+              int           y,
+              int           width,
+              const StrRef& text);
 
 public:
     bool create();
 
-    Types::StrRef text() const;
+    StrRef text() const;
 
 private:
     void processKey(const KeyId& keyId);
@@ -35,13 +35,13 @@ private:
     void paintCursor(bool visible);
     
 private:
-    Surface&          mSurface;
-    KeyProcessor&     mKeyProcessor;
-    int               mX;
-    int               mY;
-    int               mWidth;
-    Types::StrBuf<30> mText;
-    std::size_t       mCursorPosition;
+    Surface&      mSurface;
+    KeyProcessor& mKeyProcessor;
+    int           mX;
+    int           mY;
+    int           mWidth;
+    StrBuf<30>    mText;
+    std::size_t   mCursorPosition;
     
 private:
     TextEntry(const TextEntry&) = delete;
@@ -50,7 +50,7 @@ private:
 
 
 inline
-Types::StrRef TextEntry::text() const
+StrRef TextEntry::text() const
 {
     return mText;
 }

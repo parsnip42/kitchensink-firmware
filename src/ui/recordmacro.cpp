@@ -10,8 +10,8 @@
 namespace UI
 {
 
-bool RecordMacro::create(const Types::StrRef& title,
-                         bool                 realtime)
+bool RecordMacro::create(const StrRef& title,
+                         bool          realtime)
 {
     mSurface.clear();
 
@@ -21,7 +21,7 @@ bool RecordMacro::create(const Types::StrRef& title,
 
     uint32_t lastMs(0);
 
-    Types::StrBuf<30> macroText;
+    StrBuf<30> macroText;
 
     mKeyProcessor.untilIdle();
 
@@ -68,7 +68,7 @@ bool RecordMacro::create(const Types::StrRef& title,
                     mSurface.paintText(0, 40, "Macro Full", 0xf, 0);
                 }
                 
-                Types::StrBuf<30> text;
+                StrBuf<30> text;
 
                 text.appendInt(mMacroSize)
                     .appendStr(" events");

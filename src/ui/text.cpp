@@ -14,7 +14,7 @@ Text::Text(Surface& surface)
     mSurface.clear();
 }
 
-void Text::appendLine(const Types::StrRef& text)
+void Text::appendLine(const StrRef& text)
 {
     const Surface::ColorMap colors(0xf, 0);
 

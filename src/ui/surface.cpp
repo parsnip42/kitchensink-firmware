@@ -10,11 +10,11 @@ Surface::Surface(Display& display)
     : mDisplay(display)
 { }
 
-void Surface::paintText(int                  x,
-                        int                  y,
-                        const Types::StrRef& text,
-                        uint8_t              fg,
-                        uint8_t              bg)
+void Surface::paintText(int           x,
+                        int           y,
+                        const StrRef& text,
+                        uint8_t       fg,
+                        uint8_t       bg)
 {
     auto len(text.size());
     
@@ -28,12 +28,12 @@ void Surface::paintText(int                  x,
     }
 }
 
-void Surface::paintTextC(int                  x,
-                         int                  y,
-                         int                  width,
-                         const Types::StrRef& text,
-                         uint8_t              fg,
-                         uint8_t              bg)
+void Surface::paintTextC(int           x,
+                         int           y,
+                         int           width,
+                         const StrRef& text,
+                         uint8_t       fg,
+                         uint8_t       bg)
 {
     initRegion(x, y, width, kFontHeight);
 
@@ -83,9 +83,9 @@ void Surface::initRegion(int x, int y, int w, int h)
     mDisplay.initRegion(x, y, w, h);
 }
 
-void Surface::paintTextLine(const Types::StrRef& text,
-                            const int            line,
-                            const ColorMap&      colorMap)
+void Surface::paintTextLine(const StrRef&   text,
+                            const int       line,
+                            const ColorMap& colorMap)
 {
     for (const auto chr : text)
     {
@@ -107,10 +107,10 @@ void Surface::paintTextLine(const Types::StrRef& text,
     }   
 }
 
-void Surface::paintTextLineC(const Types::StrRef& text,
-                             const int            width,
-                             const int            line,
-                             const ColorMap&      colorMap)
+void Surface::paintTextLineC(const StrRef&   text,
+                             const int       width,
+                             const int       line,
+                             const ColorMap& colorMap)
 {
     auto hWidth(width / 2);
     

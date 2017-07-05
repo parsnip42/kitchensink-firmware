@@ -25,8 +25,8 @@ public:
     KeyId at(int row, int column) const;
     
 public:
-    Types::StrBuf<12> name;
-    Mapping           mapping;
+    StrBuf<12> name;
+    Mapping    mapping;
 };
 
 inline

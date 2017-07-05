@@ -1,7 +1,7 @@
 #ifndef INCLUDED_LAYERSTACK_H
 #define INCLUDED_LAYERSTACK_H
 
-#include "bitmask.h"
+#include "types/bitmask.h"
 #include "keyid.h"
 #include "layer.h"
 

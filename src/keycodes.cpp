@@ -177,17 +177,17 @@ const char* const Names[] =
 const std::size_t NameCount(sizeof(Names) / sizeof(*Names));
 }
 
-Types::StrRef keyName(keycode_t keyCode)
+StrRef keyName(keycode_t keyCode)
 {
     if (keyCode < NameCount)
     {
         return Names[keyCode];
     }
 
-    return Types::StrRef("");
+    return StrRef("");
 }
 
-keycode_t keyCode(const Types::StrRef& keyName)
+keycode_t keyCode(const StrRef& keyName)
 {
     // Intentionally avoiding the use of a lookup table to save
     // memory. If performance becomes a problem, we should create an

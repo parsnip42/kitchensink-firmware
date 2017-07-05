@@ -185,8 +185,8 @@ constexpr keycode_t RGui           = 0xe7; // Keyboard Right GUI
 
 constexpr keycode_t ModifierOffset = 0xe0;
 
-Types::StrRef keyName(keycode_t keyCode);
-keycode_t keyCode(const Types::StrRef& keyName);
+StrRef keyName(keycode_t keyCode);
+keycode_t keyCode(const StrRef& keyName);
 
 };
 

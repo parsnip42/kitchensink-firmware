@@ -82,7 +82,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 
                 mSurface.clear();
 
-                Types::StrBuf<20> title{{"Macro #"}};
+                StrBuf<20> title{{"Macro #"}};
 
                 title.appendInt(macroIndex);
                 
@@ -111,7 +111,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                 {
                     if (combo.create())
                     {
-                        Types::StrBuf<20> recordStr{{"Recording Macro #"}};
+                        StrBuf<20> recordStr{{"Recording Macro #"}};
                         
                         recordStr.appendInt(macroIndex);
                         
@@ -161,7 +161,7 @@ void ActionProcessor::fireBuiltIn(int             action,
             UI::Text text(mSurface);
 
             {
-                Types::StrBuf<32> line("Free Memory: ");
+                StrBuf<32> line("Free Memory: ");
             
                 line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
             
@@ -179,7 +179,7 @@ void ActionProcessor::fireBuiltIn(int             action,
                 auto end(millis());
 
                 {
-                    Types::StrBuf<32> line("  1000 polls: ");
+                    StrBuf<32> line("  1000 polls: ");
                 
                     line.appendInt(static_cast<int>(end-start));
                     line.appendStr("ms");
@@ -188,7 +188,7 @@ void ActionProcessor::fireBuiltIn(int             action,
                 }
 
                 {
-                    Types::StrBuf<32> line("  ");
+                    StrBuf<32> line("  ");
                 
                     line.appendInt(static_cast<int>(1000000 / (end-start)));
                     line.appendStr(" polls/s");
