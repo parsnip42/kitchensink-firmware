@@ -14,7 +14,7 @@ public:
     static constexpr int MaxLayers = 10;
 
 public:
-    constexpr LayerStack() = default;
+    LayerStack() = default;
 
 public:
     KeyId at(int row, int column) const;

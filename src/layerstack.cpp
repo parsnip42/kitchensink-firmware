@@ -5,25 +5,19 @@
 
 KeyId LayerStack::at(int row, int column) const
 {
-    auto data(mLayerMask);
-    
-    int index(0);
     KeyId keyId;
     
-    while (!data.empty())
+    auto layerIterator(mLayerMask.bitIterator());
+    
+    while (layerIterator.more())
     {
-        if (data[0])
+        auto index(layerIterator.next());
+        auto next(mLayers[index].at(row, column));
+        
+        if (next != KeyId())
         {
-            auto next(mLayers[index].at(row, column));
-
-            if (next != KeyId())
-            {
-                keyId = next;
-            }
+            keyId = next;
         }
-
-        data >>= 1;
-        ++index;
     }
     
     return keyId;
@@ -31,27 +25,21 @@ KeyId LayerStack::at(int row, int column) const
 
 int LayerStack::activeLayer(int row, int column) const
 {
-    auto data(mLayerMask);
-
-    int index(0);
     int activeIndex(0);
-    
-    while (!data.empty())
+
+    auto layerIterator(mLayerMask.bitIterator());
+
+    while (layerIterator.more())
     {
-        if (data[0])
+        auto index(layerIterator.next());
+        auto next(mLayers[index].at(row, column));
+
+        if (next != KeyId())
         {
-            auto next(mLayers[index].at(row, column));
-
-            if (next != KeyId())
-            {
-                activeIndex = index;
-            }
+            activeIndex = index;
         }
-
-        data >>= 1;
-        ++index;
     }
-    
+
     return activeIndex;
 }
 
@@ -62,7 +50,7 @@ KeyId LayerStack::atIndex(int index, int row, int column) const
 
 void LayerStack::setLayer(int index, bool enabled)
 {
-    mLayerMask.set(index, enabled);
+    mLayerMask[index] = enabled;
 }
 
 bool LayerStack::enabled(int index) const

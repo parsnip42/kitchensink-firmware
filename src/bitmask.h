@@ -2,6 +2,7 @@
 #define INCLUDED_BITMASK_H
 
 #include "bitmaskattributes.h"
+#include "bititerator.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -11,17 +12,37 @@ class Bitmask
 {
 public:
     typedef typename BitmaskAttributes<Size>::Data Data;
+
+public:
+    class reference
+    {
+    private:
+        constexpr reference(Data&       data,
+                            std::size_t bit);
+
+    public:
+        constexpr operator bool() const;
+        reference& operator=(bool state);
+        
+    private:
+        Data&       mData;
+        std::size_t mBit;
+
+    private:
+        friend class Bitmask;
+    };
     
 public:
     constexpr Bitmask();
     explicit constexpr Bitmask(const Data& data);
     
 public:
+    constexpr std::size_t size() const;
     constexpr bool empty() const;
-    void set(const std::size_t n, bool state);
     
 public:
     constexpr bool operator[](std::size_t n) const;
+    reference operator[](std::size_t n);
 
     void operator=(const Data& data);
 
@@ -33,7 +54,13 @@ public:
     void operator&=(const Data& data);
     void operator^=(const Data& data);
 
-    void operator>>=(const std::size_t n);
+
+    std::size_t nextSetBit(const std::size_t n) const;
+    
+//private:
+     void operator>>=(const std::size_t n);
+
+    BitIterator<Data> bitIterator() const;
 
 private:
     Data mData;
@@ -57,6 +84,33 @@ bool operator!=(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
 
 template <std::size_t Size>
 inline
+constexpr Bitmask<Size>::reference::reference(Data&       data,
+                                              std::size_t bit)
+    : mData(data)
+    , mBit(bit)
+{ }
+
+template <std::size_t Size>
+inline
+constexpr Bitmask<Size>::reference::operator bool() const
+{
+    return (mData >> mBit) & 1;
+}
+
+template <std::size_t Size>
+inline
+typename Bitmask<Size>::reference& Bitmask<Size>::reference::operator=(bool state)
+{
+    auto mask(Data(1) << mBit);
+              
+    mData = (mData & ~mask) | (-state & mask);
+
+    return *this;
+}
+
+
+template <std::size_t Size>
+inline
 constexpr Bitmask<Size>::Bitmask()
     : mData(0)
 { }
@@ -69,6 +123,13 @@ constexpr Bitmask<Size>::Bitmask(const Data& data)
 
 template <std::size_t Size>
 inline
+constexpr std::size_t Bitmask<Size>::size() const
+{
+    return Size;
+}
+
+template <std::size_t Size>
+inline
 constexpr bool Bitmask<Size>::empty() const
 {
     return (mData == 0);
@@ -76,18 +137,16 @@ constexpr bool Bitmask<Size>::empty() const
 
 template <std::size_t Size>
 inline
-void Bitmask<Size>::set(const std::size_t n, bool state)
+constexpr bool Bitmask<Size>::operator[](const std::size_t n) const
 {
-    auto mask(Data(1) << n);
-              
-    mData = (mData & ~mask) | (-state & mask);
+    return (mData >> n) & 1;
 }
 
 template <std::size_t Size>
 inline
-constexpr bool Bitmask<Size>::operator[](const std::size_t n) const
+typename Bitmask<Size>::reference Bitmask<Size>::operator[](const std::size_t n)
 {
-    return (mData >> n) & 1;
+    return reference(mData, n);
 }
 
 template <std::size_t Size>
@@ -146,4 +205,18 @@ void Bitmask<Size>::operator>>=(const std::size_t n)
     mData >>= n;
 }
 
+template <std::size_t Size>
+inline
+BitIterator<typename Bitmask<Size>::Data> Bitmask<Size>::bitIterator() const
+{
+    return BitIterator<Data>(mData);
+}
+
 #endif
+
+
+
+
+
+
+

@@ -14,7 +14,7 @@ bool ModifierState::processEvent(const KeyEvent& event)
         {
             auto modifier(keyCode - KeyCodes::ModifierOffset);
             
-            keyState.set(modifier, event.pressed);
+            keyState[modifier] = event.pressed;
             
             return true;
         }

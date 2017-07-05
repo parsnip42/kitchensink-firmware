@@ -1,5 +1,5 @@
 #include "WProgram.h"
-
+/*
 extern "C" int main(void)
 {
 // #ifdef USING_MAKEFILE
@@ -26,3 +26,4 @@ extern "C" int main(void)
 // #endif
 }
 
+*/

@@ -12,7 +12,7 @@ TEENSY_CORE_SPEED = 48000000
 #ARDUINO = 10600
 
 # configurable options
-OPTIONS =  -DUSB_KSINK -DLAYOUT_US_ENGLISH
+OPTIONS =  -DUSB_HID -DLAYOUT_US_ENGLISH
 
 # directory to build in
 BUILDDIR = $(abspath $(CURDIR)/build)
@@ -89,7 +89,7 @@ endif
 ifdef ARDUINO
 	CPPFLAGS += -DARDUINO=$(ARDUINO)
 else
-	CPPFLAGS += -DUSING_MAKEFILE
+#	CPPFLAGS += -DUSING_MAKEFILE
 endif
 
 # names for the compiler programs

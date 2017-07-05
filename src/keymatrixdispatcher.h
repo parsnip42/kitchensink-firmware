@@ -47,23 +47,21 @@ void KeyMatrixDispatcher::dispatch(const KeyMask& stateMask,
 {
     for (std::size_t row(0); row < KeyMask::kRows; ++row)
     {
-        auto state(stateMask[row]);
-        auto delta(deltaMask[row]);
+        const auto& state(stateMask[row]);
+        const auto& delta(deltaMask[row]);
 
-        std::size_t column(0);
+        auto deltaIterator(delta.bitIterator());
         
-        while (!delta.empty() && column < KeyMask::kColumns)
+        while (deltaIterator.more())
         {
-            if (delta[0])
+            auto column(deltaIterator.next());
+
+            if (column < KeyMask::kColumns)
             {
                 callback(KeyMatrixEvent(mRowMapping[row],
                                         mColumnMapping[column],
-                                        state[0]));
+                                        state[column]));
             }
-            
-            state >>= 1;
-            delta >>= 1;
-            ++column;
         }
     }
 }

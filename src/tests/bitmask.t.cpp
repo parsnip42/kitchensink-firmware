@@ -18,7 +18,7 @@ TEST(Bitmask, SimpleSetClear)
 {
     Bitmask<5> b;
 
-    b.set(2);
+    b[2] = true;
 
     ASSERT_FALSE(b.empty());
     ASSERT_FALSE(b[0]);
@@ -27,7 +27,7 @@ TEST(Bitmask, SimpleSetClear)
     ASSERT_FALSE(b[3]);
     ASSERT_FALSE(b[4]);
 
-    b.clear(2);
+    b[2] = false;
 
     ASSERT_TRUE(b.empty());
 }
