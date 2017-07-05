@@ -2,7 +2,7 @@
 
 #include "keyboardstate.h"
 #include "keyid.h"
-#include "keycodes.h"
+#include "data/keycodes.h"
 
 namespace
 {

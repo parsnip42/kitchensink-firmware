@@ -1,7 +1,7 @@
 #ifndef INCLUDED_UI_KEYS_H
 #define INCLUDED_UI_KEYS_H
 
-#include "keycodes.h"
+#include "data/keycodes.h"
 #include "keyid.h"
 
 namespace UI

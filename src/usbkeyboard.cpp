@@ -1,6 +1,6 @@
 #include "usbkeyboard.h"
 
-#include "keycodes.h"
+#include "data/keycodes.h"
 
 #include <usb_keyboard.h>
 #include <cstring>

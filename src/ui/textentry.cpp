@@ -1,10 +1,10 @@
 #include "ui/textentry.h"
 
 #include "autorepeat.h"
-#include "keycodes.h"
+#include "data/keycodes.h"
 #include "keyprocessor.h"
 #include "modifierstate.h"
-#include "keymap/keymap.h"
+#include "data/keymap.h"
 #include "ui/keys.h"
 #include "ui/surface.h"
 

@@ -2,7 +2,7 @@
 #define INCLUDED_MODIFIERSTATE_H
 
 #include "types/bitmask.h"
-#include "keycodes.h"
+#include "data/keycodes.h"
 
 class KeyEvent;
 
