@@ -13,31 +13,49 @@
 
 class MacroSet
 {
-public:
-    class Entry
-    {
-    public:
-        constexpr Entry();
+private:
+    typedef std::array<KeyEvent, 1024> Pool;
+    typedef ArrayPool<Pool, 30>        MacroPool;
 
+    class MacroData
+    {
     public:
         MacroType  type;
         StrBuf<24> name;
     };
-    
-private:
-    typedef std::array<KeyEvent, 1024>            Pool;
-    typedef PoolIndexEntry<Pool::iterator, Entry> PoolEntry;
-    typedef std::array<PoolEntry, 30>             Index;
-    typedef ArrayPool<Pool, Index>                MacroPool;
+
+    typedef std::array<MacroData, 30>  Index;
 
 public:
-    typedef MacroPool::Entry Macro;
+    class Macro
+    {
+    public:
+        typedef Range<MacroPool::const_iterator> Content;
+        
+    private:
+        Macro(const Index&     index,
+              const MacroPool& pool,
+              std::size_t      n);
 
-public:
-    constexpr MacroSet() = default;
+    public:
+        StrRef name() const;
+        MacroType type() const;
+        Content content() const;
+        
+    private:
+        const Index&     mIndex;
+        const MacroPool& mPool;
+        std::size_t      mN;
+
+    private:
+        friend class MacroSet;
+    };
     
 public:
-    constexpr std::size_t size() const;
+    MacroSet();
+    
+public:
+    std::size_t size() const;
     
     template <typename Iterator>
     void setMacro(std::size_t      index,
@@ -54,13 +72,15 @@ public:
                   const MacroType&                       type,
                   const StrRef&                          name,
                   const std::initializer_list<KeyEvent>& press);
+    
 
 private:
+    Index     mIndex;
     MacroPool mMacroPool;
     
 public:
-    const Macro& operator[](int index) const;
-    Macro& operator[](int index);
+    const Macro operator[](int index) const;
+    Macro operator[](int index);
     
 private:
     MacroSet(const MacroSet&) = delete;
@@ -69,16 +89,32 @@ private:
 
 
 inline
-constexpr MacroSet::Entry::Entry()
-    : type(MacroType::kSync)
+MacroSet::Macro::Macro(const Index&     index,
+                       const MacroPool& pool,
+                       std::size_t      n)
+    : mIndex(index)
+    , mPool(pool)
+    , mN(n)
 { }
 
+inline
+StrRef MacroSet::Macro::name() const
+{
+    return mIndex[mN].name;
+}
 
 inline
-constexpr std::size_t MacroSet::size() const
+MacroType MacroSet::Macro::type() const
 {
-    return mMacroPool.size();
+    return mIndex[mN].type;
 }
+
+inline
+MacroSet::Macro::Content MacroSet::Macro::content() const
+{
+    return mPool[mN];
+}
+
 
 template <typename Iterator>
 inline
@@ -88,13 +124,20 @@ void MacroSet::setMacro(std::size_t      index,
                         const Iterator&  begin,
                         const Iterator&  end)
 {
-    auto& data(mMacroPool[index].data);
+    auto& macro(mIndex[index]);
 
-    data.type = type;
-    data.name = name;
+    macro.type = type;
+    macro.name = name;
     
     mMacroPool.insert(index, begin, end);
 }
+
+inline
+std::size_t MacroSet::size() const
+{
+    return mMacroPool.size();
+}
+
 
 inline
 void MacroSet::setMacro(std::size_t                            index,
@@ -114,15 +157,15 @@ void MacroSet::setMacro(std::size_t                            index,
 }
 
 inline
-const MacroSet::Macro& MacroSet::operator[](int index) const
+const MacroSet::Macro MacroSet::operator[](int index) const
 {
-    return mMacroPool[index];
+    return Macro(mIndex, mMacroPool, index); 
 }
 
 inline
-MacroSet::Macro& MacroSet::operator[](int index)
+MacroSet::Macro MacroSet::operator[](int index)
 {
-    return mMacroPool[index];
+    return Macro(mIndex, mMacroPool, index); 
 }
 
 #endif

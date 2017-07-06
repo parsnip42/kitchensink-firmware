@@ -62,15 +62,6 @@ void init(KeyboardState& keyboardState)
 {
     using namespace KeyCodes;
 
-    for (std::size_t i(0); i < keyboardState.macroSet.size(); ++i)
-    {
-        StrBuf<12> macroName("Macro ");
-
-        macroName.appendInt(i);
-        
-        keyboardState.macroSet[i].data.name = macroName;
-    }
-    
     for (std::size_t i(0); i < keyboardState.lockSet.size(); ++i)
     {
         StrBuf<12> lockName("Lock ");

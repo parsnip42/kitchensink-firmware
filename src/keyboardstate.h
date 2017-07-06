@@ -8,7 +8,7 @@
 class KeyboardState
 {
 public:
-    constexpr KeyboardState() = default;
+    KeyboardState() = default;
 
 public:
     LayerStack layerStack;

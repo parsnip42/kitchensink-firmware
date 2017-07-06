@@ -36,7 +36,7 @@ void MacroDataSource::getItem(ItemText&   text,
                               std::size_t index) const
 
 {
-    text  = mKeyboardState.macroSet[index].data.name;
+    text  = mKeyboardState.macroSet[index].name();
     keyId = KeyId::Macro(index);
 }
 
@@ -55,7 +55,7 @@ void EditMacroDataSource::getItem(ItemText&   text,
                                   std::size_t index) const
 {
     
-    text  = mKeyboardState.macroSet[index].data.name;
+    text  = mKeyboardState.macroSet[index].name();
     keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
 }
 

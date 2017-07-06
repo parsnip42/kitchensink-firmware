@@ -1,130 +1,114 @@
 #ifndef INCLUDED_ARRAYPOOL_H
 #define INCLUDED_ARRAYPOOL_H
 
+#include "types/range.h"
+
 #include <algorithm>
 #include <array>
 #include <cstdint>
 #include <iterator>
 #include <initializer_list>
 
-template <typename Pool, typename Index>
+template <typename Pool, std::size_t IndexSize>
 class ArrayPool
 {
 public:
-    constexpr ArrayPool()
-        : mPoolSize(0)
-    { }
+    typedef typename Pool::const_iterator         const_iterator;
+    typedef typename Pool::const_reverse_iterator const_reverse_iterator;
 
 public:
-    constexpr std::size_t size() const
-    {
-        return mIndex.size();
-    }
+    ArrayPool();
 
-    constexpr std::size_t poolSize() const
-    {
-        return mPoolSize;
-    }
-    
 public:
-    void insert(int index, const std::initializer_list<typename Pool::value_type>& list)
-    {
-        insert(index, list.begin(), list.end());
-    }
+    constexpr std::size_t size();
+
+public:
+    bool insert(int index, const std::initializer_list<typename Pool::value_type>& list);
 
     template <typename Iterator>
-    void insert(int index, Iterator begin, Iterator end)
-    {
-        auto& entry(mIndex[index]);
+    bool insert(int index, Iterator begin, Iterator end);
 
-        auto currentSize(entry.end - entry.begin);
-        auto newSize(std::distance(begin, end));
-        auto shift(int32_t(newSize) - int32_t(currentSize));
-
-        if (currentSize == 0)
-        {
-            auto newBegin(mPoolSize);
-            auto newEnd(newBegin + newSize);
-
-            std::copy(begin, end, mPool.begin() + newBegin);
-            mPoolSize += newSize;
-            entry.begin = mPool.begin() + newBegin;
-            entry.end = mPool.begin() + newEnd;
-        }
-        else
-        {
-            auto point(entry.end);
-
-            for (auto& entry : mIndex)
-            {
-                entry.shift(point, shift);
-            }
-            
-            shiftPool(point, shift);
-
-            std::copy(begin, end, entry.begin);
-            entry.end += shift;
-        }
-    }
-
+    Range<const_iterator> operator[](int index) const;
 private:
-    void shiftPool(typename Pool::iterator point, int32_t shift)
-    {
-        if (shift < 0)
-        {
-            std::move(point,
-                      mPool.begin() + mPoolSize,
-                      point + shift);
-        }
-        else
-        {
-            std::move_backward(point,
-                               mPool.begin() + mPoolSize,
-                               mPool.begin() + mPoolSize + shift);
-        }
-
-        mPoolSize += shift;
-    }
+    typedef std::array<Range<typename Pool::iterator>, IndexSize> Index;
     
-private:
     Pool        mPool;
     Index       mIndex;
     std::size_t mPoolSize;
-
-public:
-    typedef typename Pool::const_iterator         const_iterator;
-    typedef typename Pool::const_reverse_iterator const_reverse_iterator;
-    typedef typename Index::value_type            Entry;
-    
-    constexpr const_iterator begin() const
-    {
-        return mPool.begin();
-    }
-
-    constexpr const_iterator end() const
-    {
-        return mPool.end();
-    }
-    
-    constexpr const_reverse_iterator rbegin() const
-    {
-        return mPool.rbegin();
-    }
-
-    constexpr const_reverse_iterator rend() const
-    {
-        return mPool.rend();
-    }
-
-    constexpr const Entry& operator[](int index) const
-    {
-        return mIndex[index];
-    }
-
-    Entry& operator[](int index)
-    {
-        return mIndex[index];
-    }
 };
+
+
+template <typename Pool, std::size_t IndexSize>
+inline
+ArrayPool<Pool, IndexSize>::ArrayPool()
+    : mIndex()
+    , mPoolSize(10)
+{
+    for (auto& e : mIndex)
+    {
+        e.begin = mPool.begin();
+        e.end = mPool.begin();
+    }
+}
+
+template <typename Pool, std::size_t IndexSize>
+inline
+constexpr std::size_t ArrayPool<Pool, IndexSize>::size() const
+{
+    return mIndex.size();
+}
+
+template <typename Pool, std::size_t IndexSize>
+inline
+bool ArrayPool<Pool, IndexSize>::insert(int index, const std::initializer_list<typename Pool::value_type>& list)
+{
+    return insert(index, list.begin(), list.end());
+}
+
+template <typename Pool, std::size_t IndexSize>
+template <typename Iterator>
+inline
+bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
+{
+    auto& entry(mIndex[index]);
+
+    auto entrySize(std::distance(entry.begin, entry.end));
+
+    std::move(entry.end,
+              entry.end + mPoolSize,
+              entry.begin);
+
+    mPoolSize -= entrySize;
+
+    for (auto& e : mIndex)
+    {
+        if (e.begin >= entry.end)
+        {
+            e.begin -= entrySize;
+            e.end -= entrySize;
+        }
+    }
+        
+    std::copy(begin,
+              end,
+              mPool.begin() + mPoolSize);
+
+    entry.begin = mPool.begin() + mPoolSize;
+        
+    mPoolSize += std::distance(begin, end);
+
+    entry.end = mPool.begin() + mPoolSize;
+
+    return true;
+}
+
+template <typename Pool, std::size_t IndexSize>
+inline
+Range<typename ArrayPool<Pool, IndexSize>::const_iterator> ArrayPool<Pool, IndexSize>::operator[](int index) const
+{
+    const auto& entry(mIndex[index]);
+    
+    return Range<const_iterator>(entry.begin, entry.end);
+}
 
 #endif

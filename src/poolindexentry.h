@@ -31,7 +31,7 @@ constexpr PoolIndexEntry<Iterator, Data>::PoolIndexEntry()
 template <typename Iterator, typename Data>
 inline
 constexpr PoolIndexEntry<Iterator, Data>::PoolIndexEntry(const Iterator& nBegin,
-                                               const Iterator& nEnd)
+                                                         const Iterator& nEnd)
     : begin(nBegin)
     , end(nEnd)
 { }

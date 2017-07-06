@@ -88,14 +88,14 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                 
                 mSurface.paintTextC(0, 0, 240, title, 0xf, 0);
 
-                const auto& macroData(mKeyboardState.macroSet[macroIndex].data);
+                const auto& macro(mKeyboardState.macroSet[macroIndex]);
                 
                 UI::TextEntry entry(mSurface,
                                     mKeyProcessor,
                                     0,
                                     20,
                                     UI::Surface::kWidth,
-                                    macroData.name);
+                                    macro.name());
 
                 MacroTypeDataSource ds;
                 
