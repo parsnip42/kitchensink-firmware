@@ -16,8 +16,8 @@ public:
     LockSet    lockSet;
     
 private:
-    KeyboardState(const KeyboardState&);
-    KeyboardState& operator=(const KeyboardState&);    
+    KeyboardState(const KeyboardState&) = delete;
+    KeyboardState& operator=(const KeyboardState&) = delete;
 };
 
 #endif

@@ -65,13 +65,8 @@ public:
     
     void setMacro(std::size_t                            index,
                   const MacroType&                       type,
-                  const std::initializer_list<KeyEvent>& press);
-    
-    void setMacro(std::size_t                            index,
-                  const MacroType&                       type,
                   const StrRef&                          name,
                   const std::initializer_list<KeyEvent>& press);
-    
 
 private:
     MacroData mMacroData;
@@ -79,7 +74,6 @@ private:
     
 public:
     const Macro operator[](int index) const;
-    Macro operator[](int index);
     
 private:
     MacroSet(const MacroSet&) = delete;
@@ -137,15 +131,6 @@ std::size_t MacroSet::size() const
     return mMacroPool.size();
 }
 
-
-inline
-void MacroSet::setMacro(std::size_t                            index,
-                        const MacroType&                       type,
-                        const std::initializer_list<KeyEvent>& press)
-{
-    setMacro(index, type, "", press.begin(), press.end());
-}
-
 inline
 void MacroSet::setMacro(std::size_t                            index,
                         const MacroType&                       type,
@@ -157,12 +142,6 @@ void MacroSet::setMacro(std::size_t                            index,
 
 inline
 const MacroSet::Macro MacroSet::operator[](int index) const
-{
-    return Macro(mMacroData, mMacroPool, index); 
-}
-
-inline
-MacroSet::Macro MacroSet::operator[](int index)
 {
     return Macro(mMacroData, mMacroPool, index); 
 }

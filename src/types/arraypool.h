@@ -16,6 +16,9 @@ public:
     typedef typename Pool::const_iterator         const_iterator;
     typedef typename Pool::const_reverse_iterator const_reverse_iterator;
     typedef Range<const_iterator>                 Content;
+
+private:
+    typedef std::array<Range<typename Pool::iterator>, IndexSize> Index;
     
 public:
     ArrayPool();
@@ -30,10 +33,8 @@ public:
     bool insert(int index, Iterator begin, Iterator end);
 
     Content operator[](int index) const;
-    
+
 private:
-    typedef std::array<Range<typename Pool::iterator>, IndexSize> Index;
-    
     Pool        mPool;
     Index       mIndex;
     std::size_t mPoolSize;
