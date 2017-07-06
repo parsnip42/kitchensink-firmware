@@ -25,9 +25,9 @@ bool LayerProcessor::processEvent(LayerStack&     layerStack,
 }
 
 void LayerProcessor::setLayer(LayerStack& layerStack,
-                          int         index,
-                          bool        enabled,
-                          EventQueue& eventQueue)
+                              int         index,
+                              bool        enabled,
+                              EventQueue& eventQueue)
 {
     if (enabled != layerStack.enabled(index))
     {

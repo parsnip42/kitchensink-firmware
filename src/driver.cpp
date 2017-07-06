@@ -6,15 +6,14 @@
 #include "keyprocessor.h"
 #include "usbkeyboard.h"
 
+#include "storage/storage.h"
+
 #include "ui/surface.h"
 #include "ui/home.h"
 #include "ui/text.h"
 
 #include "types/strbuf.h"
 
-#include <SdFat.h>
-
-SdFat sd;
 
 void setup()
 {
@@ -35,52 +34,35 @@ void loop()
     
     initLog.appendLine("Configure");
 
-    if (!sd.begin(10, SPI_HALF_SPEED))
+    Storage storage;
+    
+    if (storage.state())
     {
-        if (sd.card()->errorCode())
-        {
-            StrBuf<48> sdErr;
+        StrBuf<48> sdErr;
+        
+        sdErr.appendStr("SD Failed : ")
+             .appendInt(storage.state());
 
-            sdErr.appendStr("SD Failed : ")
-                 .appendInt(sd.card()->errorCode());
-            
-            initLog.appendLine(sdErr);
-        }
+        initLog.appendLine(sdErr);
     }
     else
     {
         StrBuf<48> sdInfo;
 
         sdInfo.appendStr("SD OK : ")
-              .appendInt(static_cast<int>((0.000512 * sd.card()->cardSize() + 0.5)))
+              .appendInt(storage.capacityMb())
               .appendStr("MB / FAT")
-              .appendInt(sd.vol()->fatType());
+              .appendInt(storage.fatType());
         
         initLog.appendLine(sdInfo);
 
-        SdBaseFile myFile;
-
-        if (!myFile.open("test.cfg", O_READ))
-        {
-            initLog.appendLine("Couldn't open file");
-        }
-        else
-        {
-            char data[48];
-
-            myFile.fgets(data, sizeof(data));
-            
-            initLog.appendLine(data);
-
-            myFile.close();
-        }
     }
 
     StrBuf<5> str;
 
     initLog.appendLine(str);
 
-    surface.clear();
+    //surface.clear();
     
     UsbKeyboard usbKeyboard;
     

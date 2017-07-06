@@ -121,5 +121,4 @@ void KeyProcessor::delay(const Func& func,
     Timed(timeMs, func, pollFunc);
 }
 
-
 #endif

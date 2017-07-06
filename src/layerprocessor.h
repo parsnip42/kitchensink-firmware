@@ -36,7 +36,6 @@ private:
 private:
     LayerProcessor(const LayerProcessor&) = delete;
     LayerProcessor& operator=(const LayerProcessor&) = delete;
-
 };
 
 
