@@ -5,6 +5,7 @@
 #include "keyboardstate.h"
 #include "keyprocessor.h"
 #include "usbkeyboard.h"
+#include "serialize/serializer.h"
 
 #include "storage/storage.h"
 
@@ -57,12 +58,21 @@ void loop()
         initLog.appendLine(sdInfo);
 
     }
+    
+    StrBuf<128> str;
 
-    StrBuf<5> str;
+    {
+        auto iStream(storage.read(Storage::Region::kConfig));
 
-    initLog.appendLine(str);
+        iStream.readLine(str);
+        initLog.appendLine(str);
 
-    //surface.clear();
+        iStream.readLine(str);
+        initLog.appendLine(str);
+    }
+    
+
+    surface.clear();
     
     UsbKeyboard usbKeyboard;
     
@@ -73,7 +83,15 @@ void loop()
     KeyboardState keyboardState;
 
     DefaultProfile::init(keyboardState);
-    
+
+    {
+        auto os(storage.write(Storage::Region::kConfig));
+
+        Serializer<LayerStack> s;
+
+        s.serialize(keyboardState.layerStack, os);
+    }
+
     UI::Home home(surface,
                   keyboardState);
 

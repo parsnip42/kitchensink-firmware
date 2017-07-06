@@ -104,7 +104,7 @@ LCPP_FILES := $(wildcard $(LIBRARYPATH)/*/*.cpp) $(wildcard $(LIBRARYPATH)/*/*/*
 TC_FILES := $(wildcard $(COREPATH)/*.c)
 TCPP_FILES := $(wildcard $(COREPATH)/*.cpp)
 C_FILES := $(wildcard src/*.c)
-CPP_FILES := $(wildcard src/*.cpp) $(wildcard src/ui/*.cpp) $(wildcard src/types/*.cpp) $(wildcard src/data/*.cpp) $(wildcard src/storage/*.cpp)
+CPP_FILES := $(wildcard src/*.cpp) $(wildcard src/ui/*.cpp) $(wildcard src/types/*.cpp) $(wildcard src/data/*.cpp) $(wildcard src/storage/*.cpp) $(wildcard src/serialize/*.cpp)
 INO_FILES := $(wildcard src/*.ino)
 
 # include paths for libraries

@@ -36,6 +36,8 @@ public:
     constexpr std::size_t size() const;
     constexpr bool empty() const;
 
+    char* data();
+    
 public:
     StrBuf<Size>& operator=(const StrRef& strRef);
     constexpr operator StrRef() const;
@@ -164,6 +166,13 @@ inline
 constexpr bool StrBuf<Size>::empty() const
 {
     return (mData[0] == '\0');
+}
+
+template <std::size_t Size>
+inline
+char* StrBuf<Size>::data()
+{
+    return mData;
 }
 
 template <std::size_t Size>

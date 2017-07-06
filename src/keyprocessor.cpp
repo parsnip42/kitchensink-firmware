@@ -11,7 +11,6 @@ KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
     : mKeyboard(keyboard)
     , mKeyboardState(keyboardState)
     , mEventQueue()
-    , mLayerProcessor(keyboard)
     , mLockProcessor()
     , mMacroProcessor()
 { }
@@ -45,10 +44,12 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
         delay((keyId.subType()) << 8 | (keyId.value()));
     }
 
-    if (mLayerProcessor.processEvent(mKeyboardState.layerStack,
-                                     event,
-                                     mEventQueue))
+    if (keyId.type() == KeyId::Type::kLayer)
     {
+        setLayer(mKeyboardState.layerStack,
+                 keyId.value(),
+                 event.pressed);
+        
         return Consumed::kStateChanged;
     }
 
@@ -132,3 +133,70 @@ KeyLocation KeyProcessor::readKeyLocation()
     
     return keyLocation;
 }
+
+void KeyProcessor::setLayer(LayerStack& layerStack,
+                            int         index,
+                            bool        enabled)
+{
+    if (enabled != layerStack.enabled(index))
+    {
+        if (enabled)
+        {
+            pressLayer(layerStack, index);
+            layerStack.setLayer(index, enabled);
+
+        }
+        else
+        {
+            layerStack.setLayer(index, enabled);
+            releaseLayer(layerStack, index);
+        }
+    }
+}
+
+void KeyProcessor::pressLayer(LayerStack& layerStack,
+                              int         index)
+{
+    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    {
+        if (layerStack.activeLayer(event.row, event.column) < index)
+        {
+            auto next(layerStack.atIndex(index, event.row, event.column));
+            
+            if (next != KeyId())
+            {
+                auto current(layerStack.at(event.row, event.column));
+                
+                if (current != next)
+                {    
+                    mEventQueue.pushBack(KeyEvent(current,
+                                                  false));
+                }
+            }
+        }
+    });
+}
+
+void KeyProcessor::releaseLayer(LayerStack& layerStack,
+                                int         index)
+{
+    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    {
+        if (layerStack.activeLayer(event.row, event.column) < index)
+        {
+            auto current(layerStack.atIndex(index, event.row, event.column));
+
+            if (current != KeyId())
+            {
+                auto next(layerStack.at(event.row, event.column));
+                
+                if (current != next)
+                {    
+                    mEventQueue.pushBack(KeyEvent(current,
+                                                  false));
+                }
+            }            
+        }
+    });
+}
+

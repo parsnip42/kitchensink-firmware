@@ -2,7 +2,6 @@
 #define INCLUDED_KEYPROCESSOR_H
 
 #include "eventqueue.h"
-#include "layerprocessor.h"
 #include "macroprocessor.h"
 #include "lockprocessor.h"
 #include "timed.h"
@@ -10,6 +9,7 @@
 class KsKeyboard;
 class KeyboardState;
 class KeyLocation;
+class LayerStack;
 
 class KeyProcessor
 {
@@ -41,7 +41,7 @@ public:
     void untilIdle();
 
     KeyLocation readKeyLocation();
-    
+
 private:
     enum class Consumed
     {
@@ -53,11 +53,20 @@ private:
 private:
     Consumed consumeEvent(const KeyEvent& event);
     
+    void setLayer(LayerStack& layerStack,
+                  int         index,
+                  bool        enabled);
+
+    void pressLayer(LayerStack& layerStack,
+                    int         index);
+
+    void releaseLayer(LayerStack& layerStack,
+                      int         index);
+
 private:
     KsKeyboard&    mKeyboard;
     KeyboardState& mKeyboardState;
     EventQueue     mEventQueue;
-    LayerProcessor mLayerProcessor;
     LockProcessor  mLockProcessor;
     MacroProcessor mMacroProcessor;
     
