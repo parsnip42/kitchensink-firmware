@@ -1,10 +1,9 @@
 #ifndef INCLUDED_MACROSET_H
 #define INCLUDED_MACROSET_H
 
-#include "arraypool.h"
 #include "keyevent.h"
 #include "macrotype.h"
-#include "poolindexentry.h"
+#include "types/arraypool.h"
 #include "types/strref.h"
 #include "types/strbuf.h"
 
@@ -14,17 +13,17 @@
 class MacroSet
 {
 private:
-    typedef std::array<KeyEvent, 1024> Pool;
-    typedef ArrayPool<Pool, 30>        MacroPool;
+    typedef std::array<KeyEvent, 1024> PoolData;
+    typedef ArrayPool<PoolData, 30>    MacroPool;
 
-    class MacroData
+    class MacroDataEntry
     {
     public:
         MacroType  type;
         StrBuf<24> name;
     };
 
-    typedef std::array<MacroData, 30>  Index;
+    typedef std::array<MacroDataEntry, 30> MacroData;
 
 public:
     class Macro
@@ -33,9 +32,9 @@ public:
         typedef Range<MacroPool::const_iterator> Content;
         
     private:
-        Macro(const Index&     index,
+        Macro(const MacroData& data,
               const MacroPool& pool,
-              std::size_t      n);
+              std::size_t      index);
 
     public:
         StrRef name() const;
@@ -43,9 +42,9 @@ public:
         Content content() const;
         
     private:
-        const Index&     mIndex;
+        const MacroData& mData;
         const MacroPool& mPool;
-        std::size_t      mN;
+        std::size_t      mIndex;
 
     private:
         friend class MacroSet;
@@ -75,7 +74,7 @@ public:
     
 
 private:
-    Index     mIndex;
+    MacroData mMacroData;
     MacroPool mMacroPool;
     
 public:
@@ -89,30 +88,30 @@ private:
 
 
 inline
-MacroSet::Macro::Macro(const Index&     index,
+MacroSet::Macro::Macro(const MacroData& data,
                        const MacroPool& pool,
-                       std::size_t      n)
-    : mIndex(index)
+                       std::size_t      index)
+    : mData(data)
     , mPool(pool)
-    , mN(n)
+    , mIndex(index)
 { }
 
 inline
 StrRef MacroSet::Macro::name() const
 {
-    return mIndex[mN].name;
+    return mData[mIndex].name;
 }
 
 inline
 MacroType MacroSet::Macro::type() const
 {
-    return mIndex[mN].type;
+    return mData[mIndex].type;
 }
 
 inline
 MacroSet::Macro::Content MacroSet::Macro::content() const
 {
-    return mPool[mN];
+    return mPool[mIndex];
 }
 
 
@@ -124,7 +123,7 @@ void MacroSet::setMacro(std::size_t      index,
                         const Iterator&  begin,
                         const Iterator&  end)
 {
-    auto& macro(mIndex[index]);
+    auto& macro(mMacroData[index]);
 
     macro.type = type;
     macro.name = name;
@@ -159,13 +158,13 @@ void MacroSet::setMacro(std::size_t                            index,
 inline
 const MacroSet::Macro MacroSet::operator[](int index) const
 {
-    return Macro(mIndex, mMacroPool, index); 
+    return Macro(mMacroData, mMacroPool, index); 
 }
 
 inline
 MacroSet::Macro MacroSet::operator[](int index)
 {
-    return Macro(mIndex, mMacroPool, index); 
+    return Macro(mMacroData, mMacroPool, index); 
 }
 
 #endif

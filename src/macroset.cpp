@@ -2,14 +2,14 @@
 
 MacroSet::MacroSet()
 {
-    for (std::size_t i(0); i < mIndex.size(); ++i)
+    for (std::size_t i(0); i < mMacroData.size(); ++i)
     {
         StrBuf<12> macroName("Macro ");
         
         macroName.appendInt(i);
         
-        mIndex[i].type = MacroType::kSync;
-        mIndex[i].name = macroName;
+        mMacroData[i].type = MacroType::kSync;
+        mMacroData[i].name = macroName;
     }
 }
 

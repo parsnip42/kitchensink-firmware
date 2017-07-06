@@ -15,12 +15,13 @@ class ArrayPool
 public:
     typedef typename Pool::const_iterator         const_iterator;
     typedef typename Pool::const_reverse_iterator const_reverse_iterator;
-
+    typedef Range<const_iterator>                 Content;
+    
 public:
     ArrayPool();
 
 public:
-    constexpr std::size_t size();
+    constexpr std::size_t size() const;
 
 public:
     bool insert(int index, const std::initializer_list<typename Pool::value_type>& list);
@@ -28,7 +29,8 @@ public:
     template <typename Iterator>
     bool insert(int index, Iterator begin, Iterator end);
 
-    Range<const_iterator> operator[](int index) const;
+    Content operator[](int index) const;
+    
 private:
     typedef std::array<Range<typename Pool::iterator>, IndexSize> Index;
     
@@ -73,7 +75,15 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
     auto& entry(mIndex[index]);
 
     auto entrySize(std::distance(entry.begin, entry.end));
+    auto dataSize(std::distance(begin, end));
 
+    // Note that if the size of an entry is bigger than the total used size of
+    // the pool, then we're already in a complete mess.
+    if (((mPoolSize - entrySize) + dataSize) >= mPool.size())
+    {
+        return false;
+    }
+    
     std::move(entry.end,
               entry.end + mPoolSize,
               entry.begin);
@@ -95,7 +105,7 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
 
     entry.begin = mPool.begin() + mPoolSize;
         
-    mPoolSize += std::distance(begin, end);
+    mPoolSize += dataSize;
 
     entry.end = mPool.begin() + mPoolSize;
 
@@ -104,7 +114,7 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
 
 template <typename Pool, std::size_t IndexSize>
 inline
-Range<typename ArrayPool<Pool, IndexSize>::const_iterator> ArrayPool<Pool, IndexSize>::operator[](int index) const
+typename ArrayPool<Pool, IndexSize>::Content ArrayPool<Pool, IndexSize>::operator[](int index) const
 {
     const auto& entry(mIndex[index]);
     
