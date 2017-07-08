@@ -8,6 +8,8 @@
 
 #include <cstdint>
 
+class StrOStream;
+
 class Storage
 {
 public:
@@ -37,14 +39,9 @@ public:
 
     public:
         ~IStream();
-        
-    public:
-        template <std::size_t N>
-        void readToken(StrBuf<N>& str, const StrRef& separators);
 
-    private:
-        void readToken(char*         data,
-                       std::size_t   len,
+    public:
+        void readToken(StrOStream&   ostream,
                        const StrRef& separators);
         
     private:
@@ -75,13 +72,6 @@ public:
 private:
     mutable SdFat mSdFat;
 };
-
-
-template <std::size_t N>
-void Storage::IStream::readToken(StrBuf<N>& str, const StrRef& separators)
-{
-    Storage::IStream::readToken(str.data(), N, separators);
-}
 
 #endif /* INCLUDED_STORAGE_H */
 

@@ -34,11 +34,4 @@ struct Serializer<Layer>
     bool deserialize(Storage::IStream& is, Layer& layer);
 };
 
-template <>
-struct Serializer<KeyEvent>
-{
-    void serialize(const KeyEvent& keyEvent, Storage::OStream& os);
-    bool deserialize(Storage::IStream& is, KeyEvent& keyEvent);
-};
-
 #endif /* INCLUDED_SERIALIZER_H */

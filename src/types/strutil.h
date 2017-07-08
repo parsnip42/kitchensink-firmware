@@ -6,6 +6,9 @@
 namespace StrUtil
 {
 
+bool parseUInt(const StrRef& input,
+               int&          output);
+
 StrRef nextToken(const StrRef& input,
                  const StrRef& delim,
                  const StrRef& last = StrRef());

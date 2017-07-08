@@ -25,13 +25,13 @@ public:
     void clear();
     
 public:
-    constexpr const_iterator begin() const;
-    constexpr const_iterator end() const;
+    const_iterator begin() const;
+    const_iterator end() const;
 
     iterator begin();
     iterator end();
     
-    constexpr std::size_t length() const;
+    std::size_t length() const;
     constexpr bool empty() const;
 
     char* data();
@@ -43,9 +43,6 @@ public:
 
     const char& operator[](std::size_t n) const;
     char& operator[](std::size_t n);
-
-private:
-    constexpr std::size_t length(const char* data) const;
 
 private:
     char mData[Size];
@@ -98,14 +95,14 @@ void StrBuf<Size>::clear()
 
 template <std::size_t Size>
 inline
-constexpr typename StrBuf<Size>::const_iterator StrBuf<Size>::begin() const
+typename StrBuf<Size>::const_iterator StrBuf<Size>::begin() const
 {
     return mData;
 }
 
 template <std::size_t Size>
 inline
-constexpr typename StrBuf<Size>::const_iterator StrBuf<Size>::end() const
+typename StrBuf<Size>::const_iterator StrBuf<Size>::end() const
 {
     return mData + length();
 }
@@ -126,9 +123,9 @@ typename StrBuf<Size>::iterator StrBuf<Size>::end()
 
 template <std::size_t Size>
 inline
-constexpr std::size_t StrBuf<Size>::length() const
+std::size_t StrBuf<Size>::length() const
 {
-    return length(mData);
+    return strlen(mData);
 }
 
 template <std::size_t Size>
@@ -180,13 +177,6 @@ inline
 char& StrBuf<Size>::operator[](std::size_t n)
 {
     return mData[n];
-}
-
-template <std::size_t Size>
-inline
-constexpr std::size_t StrBuf<Size>::length(const char* data) const
-{
-    return (data[0] == '\0') ? 0 : (1 + length(data + 1));
 }
 
 #endif

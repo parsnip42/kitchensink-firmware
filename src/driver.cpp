@@ -97,10 +97,11 @@ void loop()
     
     {
         StrBuf<200> line;
-
+        StrOStream ostream(line);
+        
         auto is(storage.read(Storage::Region::Config));
         
-        is.readToken(line, "\r\n");
+        is.readToken(ostream, "\r\n");
 
         if (line == "[Layer]")
         {
@@ -125,10 +126,12 @@ void loop()
         auto is(storage.read(Storage::Region::Config));
 
         StrBuf<200> line;
-
+        StrOStream ostream(line);
+        
         do
         {
-            is.readToken(line, "\r\n");
+            line.clear();
+            is.readToken(ostream, "\r\n");
             initLog.appendLine(line);
         } while (!line.empty());
     }

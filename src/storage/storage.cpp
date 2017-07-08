@@ -1,5 +1,7 @@
 #include "storage.h"
 
+#include "types/strostream.h"
+
 #include <algorithm>
 
 namespace
@@ -49,32 +51,25 @@ Storage::IStream::~IStream()
     mFileHandle.close();
 }
 
-void Storage::IStream::readToken(char*         data,
-                                 std::size_t   len,
+void Storage::IStream::readToken(StrOStream&   ostream,
                                  const StrRef& separators)
 {
-    char        ch;
-    std::size_t count(0);
+    char ch;
 
-    if (len <= 0)
-    {
-        return;
-    }
-    
-    while (((count + 1) < len) && mFileHandle.read(&ch, 1) == 1)
+    while (mFileHandle.read(&ch, 1) == 1)
     {
         if (std::find(separators.begin(), separators.end(), ch) == separators.end())
         {
-            data[count++] = ch;
+            ostream.appendChar(ch);
             break;
         }
     }
 
-    while (((count + 1) < len) && mFileHandle.read(&ch, 1) == 1)
+    while (mFileHandle.read(&ch, 1) == 1)
     {
         if (std::find(separators.begin(), separators.end(), ch) == separators.end())
         {
-            data[count++] = ch;
+            ostream.appendChar(ch);
         }
         else
         {
@@ -82,8 +77,6 @@ void Storage::IStream::readToken(char*         data,
             break;
         }
     }
-
-    data[count] = '\0';
 }
 
 Storage::OStream::OStream(File fileHandle)

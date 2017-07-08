@@ -1,5 +1,7 @@
 #include "serialize/keyidserializer.h"
 
+#include "types/strutil.h"
+
 void KeyIdSerializer::serialize(KeyId keyId, StrOStream& str)
 {
     switch (keyId.type())
@@ -17,8 +19,8 @@ void KeyIdSerializer::serialize(KeyId keyId, StrOStream& str)
             }
             else
             {
-                str.appendChar('x');
-                str.appendInt(keyId.value(), "%x");
+                str.appendChar('_');
+                str.appendInt(keyId.value());
             }
         }
         else
@@ -27,13 +29,27 @@ void KeyIdSerializer::serialize(KeyId keyId, StrOStream& str)
         }
         break;
 
+    case KeyId::Type::kLayer:
+        str.appendChar('L');
+        str.appendInt(keyId.value());
+        break;
+        
+    case KeyId::Type::kLock:
+        str.appendChar('O');
+        str.appendInt(static_cast<int>(keyId.lockType()));
+        str.appendChar('/');
+        str.appendInt(keyId.value());
+        break;
+
     case KeyId::Type::kMacro:
         str.appendChar('M');
         str.appendInt(keyId.value());
         break;
-            
-    case KeyId::Type::kLayer:
-        str.appendChar('L');
+
+    case KeyId::Type::kAction:
+        str.appendChar('A');
+        str.appendInt(static_cast<int>(keyId.actionType()));
+        str.appendChar('/');
         str.appendInt(keyId.value());
         break;
 
@@ -50,31 +66,54 @@ void KeyIdSerializer::deserialize(const StrRef& keyIdStr, KeyId& keyId)
         return;
     }
 
-    switch (*keyIdStr.begin())
+    switch (keyIdStr[0])
     {
     case 'K':
     {
-        auto keyCode(KeyCodes::keyCode(StrRef(keyIdStr.begin() + 1,
-                                              keyIdStr.end())));
+        auto keyCodeStr(keyIdStr.substr(1));
 
-        if (keyCode != 0)
+        if (!keyCodeStr.empty() && keyCodeStr[0] == '_')
         {
-            keyId = KeyId(keyCode);
-        }
+            int index(0);
 
+            if (StrUtil::parseUInt(keyCodeStr.substr(1), index))
+            {
+                keyId = KeyId(index);
+            }
+        }
+        else
+        {
+            auto keyCode(KeyCodes::keyCode(keyCodeStr));
+            
+            if (keyCode != 0)
+            {
+                keyId = KeyId(keyCode);
+            }
+        }
+        
         break;
     }
 
     case 'M':
     {
-        keyId = KeyId::Macro(0);
+        int index(0);
+
+        if (StrUtil::parseUInt(keyIdStr.substr(1), index))
+        {
+            keyId = KeyId::Macro(index);
+        }
         
         break;
     }
 
     case 'L':
     {
-        keyId = KeyId::Layer(0);
+        int index(0);
+
+        if (StrUtil::parseUInt(keyIdStr.substr(1), index))
+        {
+            keyId = KeyId::Layer(index);
+        }
         
         break;
     }

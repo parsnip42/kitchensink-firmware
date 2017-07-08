@@ -1,9 +1,52 @@
 #include "strutil.h"
 
+#include "types/range.h"
+
 #include <algorithm>
 
 namespace StrUtil
 {
+
+namespace
+{
+
+// Regular std::pow() seems to be pulling in an extra 5KB.
+int smPow(int n, int p)
+{
+    int value(1);
+    
+    while (p--)
+    {
+        value *= n;
+    }
+
+    return value;
+}
+
+}
+
+bool parseUInt(const StrRef& input,
+               int&          output)
+{
+    Range<StrRef::const_iterator> range(input.begin(), input.end());
+    int p(0);
+    
+    output = 0;
+    
+    for (auto c : range.reverse())
+    {
+        if (c >= '0' && c <= '9')
+        {
+            output += static_cast<int>(c - '0') * smPow(10, p++);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 StrRef nextToken(const StrRef& input,
                  const StrRef& delim,

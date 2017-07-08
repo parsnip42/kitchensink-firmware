@@ -30,7 +30,11 @@ public:
     constexpr const_iterator end() const;
     constexpr std::size_t size() const;
     constexpr bool empty() const;
+    constexpr StrRef substr(std::size_t start) const;
     constexpr StrRef substr(std::size_t start, std::size_t len) const;
+
+public:
+    const char& operator[](std::size_t n) const;
     
 private:
     const char* mBegin;
@@ -81,9 +85,22 @@ constexpr bool StrRef::empty() const
 }
 
 inline
+constexpr StrRef StrRef::substr(std::size_t start) const
+{
+    return StrRef((start < size()) ? (mBegin + start) : mEnd, mEnd);
+}
+
+inline
 constexpr StrRef StrRef::substr(std::size_t start, std::size_t len) const
 {
-    return StrRef(mBegin + start, (start + len) < size() ? (mBegin + start + len) : mEnd);
+    return StrRef((start < size()) ? (mBegin + start) : mEnd,
+                  (start + len) < size() ? (mBegin + start + len) : mEnd);
+}
+
+inline
+const char& StrRef::operator[](std::size_t n) const
+{
+    return mBegin[n];
 }
 
 inline

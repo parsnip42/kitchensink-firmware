@@ -60,13 +60,15 @@ bool Serializer<Layer>::deserialize(Storage::IStream& is, Layer& layer)
 {
     layer.clear();
     
-    is.readToken(layer.name, "\r\n");
+    StrOStream ostream(layer.name);
+    is.readToken(ostream, "\r\n");
 
     for (auto& row : layer.mapping)
     {
         StrBuf<240> rowData;
+        StrOStream ostream(rowData);
         
-        is.readToken(rowData, "\r\n");
+        is.readToken(ostream, "\r\n");
 
         StrRef token(StrUtil::nextToken(rowData, " \t"));
 
@@ -78,32 +80,6 @@ bool Serializer<Layer>::deserialize(Storage::IStream& is, Layer& layer)
             token = StrUtil::nextToken(rowData, " \t", token);
         }
     }
-    
-    return true;
-}
-
-void Serializer<KeyEvent>::serialize(const KeyEvent& keyEvent, Storage::OStream& os)
-{
-    // Serializer<KeyId> s;
-
-    // if (!keyEvent.pressed)
-    // {
-    //     os.write("!");
-    // }
-    
-    // s.serialize(keyEvent.keyId, os);
-}
-
-bool Serializer<KeyEvent>::deserialize(Storage::IStream& is, KeyEvent& keyEvent)
-{
-    // StrBuf<32> key;
-
-    // is.readToken(key, " \t");
-
-    // if (key[0] == '!')
-    // {
-    //     keyEvent.pressed = false;
-    // }
     
     return true;
 }
