@@ -4,6 +4,7 @@
 #include "ui/arraydatasource.h"
 #include "ui/menu.h"
 
+class StrOStream;
 class KeyboardState;
 
 namespace Impl
@@ -15,7 +16,7 @@ public:
     explicit constexpr MacroDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(ItemText&   text,
+    virtual void getItem(StrOStream& ostream,
                          KeyId&      keyId,
                          std::size_t index) const;
 
@@ -36,7 +37,7 @@ public:
     explicit constexpr EditMacroDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(ItemText&   text,
+    virtual void getItem(StrOStream& ostream,
                          KeyId&      keyId,
                          std::size_t index) const;
 
@@ -57,7 +58,7 @@ public:
     explicit constexpr LockDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(ItemText&   text,
+    virtual void getItem(StrOStream& ostream,
                          KeyId&      keyId,
                          std::size_t index) const;
 
@@ -77,7 +78,7 @@ public:
     explicit constexpr KeyDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(ItemText&   text,
+    virtual void getItem(StrOStream& ostream,
                          KeyId&      keyId,
                          std::size_t index) const;
 

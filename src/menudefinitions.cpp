@@ -31,12 +31,12 @@ constexpr MacroDataSource::MacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void MacroDataSource::getItem(ItemText&   text,
+void MacroDataSource::getItem(StrOStream& ostream,
                               KeyId&      keyId,
                               std::size_t index) const
 
 {
-    text  = mKeyboardState.macroSet[index].name();
+    ostream.appendStr(mKeyboardState.macroSet[index].name());
     keyId = KeyId::Macro(index);
 }
 
@@ -50,12 +50,12 @@ constexpr EditMacroDataSource::EditMacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void EditMacroDataSource::getItem(ItemText&   text,
+void EditMacroDataSource::getItem(StrOStream& ostream,
                                   KeyId&      keyId,
                                   std::size_t index) const
 {
     
-    text  = mKeyboardState.macroSet[index].name();
+    ostream.appendStr(mKeyboardState.macroSet[index].name());
     keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
 }
 
@@ -69,12 +69,12 @@ constexpr LockDataSource::LockDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void LockDataSource::getItem(ItemText&   text,
+void LockDataSource::getItem(StrOStream& ostream,
                              KeyId&      keyId,
                              std::size_t index) const
 {
     
-    text  = mKeyboardState.lockSet[index].name;
+    ostream.appendStr(mKeyboardState.lockSet[index].name);
     keyId = KeyId::Lock(KeyId::LockType::kToggle, index);
 }
 
@@ -88,7 +88,7 @@ constexpr KeyDataSource::KeyDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void KeyDataSource::getItem(ItemText&   text,
+void KeyDataSource::getItem(StrOStream& ostream,
                             KeyId&      keyId,
                             std::size_t index) const
 {
@@ -99,9 +99,9 @@ void KeyDataSource::getItem(ItemText&   text,
         keyName = "Reserved";
     }
     
-    text.appendInt(index, "0x%2.2x");
-    text.appendStr(" : ");
-    text.appendStr(keyName);
+    ostream.appendInt(index, "0x%2.2x");
+    ostream.appendStr(" : ");
+    ostream.appendStr(keyName);
     
     keyId = KeyId(index);
 }

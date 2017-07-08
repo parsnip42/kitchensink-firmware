@@ -22,9 +22,7 @@ public:
     typedef const char* const_iterator;
     
 public:
-    constexpr StrRef(const char* str);
-
-private:
+    constexpr StrRef(const char* str = "");
     constexpr StrRef(const char* begin, const char* end);
     
 public:

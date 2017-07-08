@@ -5,6 +5,8 @@
 
 #include <cstdint>
 
+class StrOStream;
+
 namespace UI
 {
 
@@ -27,7 +29,7 @@ public:
     constexpr ArrayDataSource(const Item (&menu)[Size]);
 
 public:
-    virtual void getItem(ItemText&   text,
+    virtual void getItem(StrOStream& ostream,
                          KeyId&      keyId,
                          std::size_t index) const;
 
@@ -55,13 +57,13 @@ constexpr ArrayDataSource::ArrayDataSource(const UI::ArrayDataSource::Item (&men
 { }
 
 inline
-void ArrayDataSource::getItem(ItemText&   text,
+void ArrayDataSource::getItem(StrOStream& ostream,
                               KeyId&      keyId,
                               std::size_t index) const
 {
     auto& item(*(mBegin + index));
 
-    text  = item.text;
+    ostream.appendStr(item.text);
     keyId = item.keyId;
 }
 

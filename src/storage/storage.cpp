@@ -12,10 +12,6 @@ Storage::Storage()
     mSdFat.begin(SD_CS_PIN, SPI_HALF_SPEED);
 }
 
-Storage::~Storage()
-{
-}
-
 int Storage::state() const
 {
     return mSdFat.card()->errorCode();
@@ -38,7 +34,9 @@ Storage::IStream Storage::read(Region region)
 
 Storage::OStream Storage::write(Region region)
 {
-    return OStream(mSdFat.open("test.cfg", O_WRITE));
+    mSdFat.remove("test.cfg");
+    
+    return OStream(mSdFat.open("test.cfg", O_CREAT | O_EXCL | O_WRITE));
 }
 
 
@@ -80,6 +78,7 @@ void Storage::IStream::readToken(char*         data,
         }
         else
         {
+            mFileHandle.seekCur(-1);
             break;
         }
     }

@@ -23,6 +23,7 @@ public:
 
 public:
     KeyId at(int row, int column) const;
+    void clear();
     
 public:
     StrBuf<12> name;

@@ -57,12 +57,11 @@ public:
 public:
     enum class Region : int
     {
-        kConfig = 0
+        Config = 0
     };
     
 public:
     Storage();
-    ~Storage();
 
 public:
     IStream read(Region region);

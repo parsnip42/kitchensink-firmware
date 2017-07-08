@@ -92,10 +92,11 @@ void Menu::createMenu()
         }
         else if (Keys::ok(keyId))
         {
-            DataSource::ItemText text;
+            StrBuf<20> text;
+            StrOStream ostream(text);
             KeyId keyId;
             
-            mDataSource.getItem(text,
+            mDataSource.getItem(ostream,
                                 keyId,
                                 mSelected);
             
@@ -135,7 +136,9 @@ void Menu::paintMenu(int     offset,
 
     for (int y(start); y < (start + height); ++y)
     {
-        DataSource::ItemText text;
+        StrBuf<20> text;
+        StrOStream ostream(text);
+
         KeyId keyId;
 
         int point(y + offset);
@@ -147,7 +150,7 @@ void Menu::paintMenu(int     offset,
         const auto& colors(current != mSelected ? colorMap : invColorMap);
 
         
-        mDataSource.getItem(text,
+        mDataSource.getItem(ostream,
                             keyId,
                             current);
 

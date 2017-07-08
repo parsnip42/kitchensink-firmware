@@ -12,3 +12,13 @@ KeyId Layer::at(int row, int column) const
         return KeyId();
     }
 }
+
+void Layer::clear()
+{
+    name.clear();
+
+    for (auto& row : mapping)
+    {
+        row.fill(KeyId());
+    }
+}

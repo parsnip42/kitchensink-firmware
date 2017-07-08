@@ -20,26 +20,6 @@ struct Serializer
     bool deserialize(Storage::IStream&, T&);
 };
 
-template <typename T, std::size_t N>
-struct Serializer<std::array<T, N>>
-{
-    void serialize(const std::array<T, N>& array, Storage::OStream& os)
-    {
-        Serializer<T> s;
-        
-        for (const auto& element : array)
-        {
-            s.serialize(element, os);
-            os.write(" ");
-        }
-    }
-    
-    bool deserialize(Storage::IStream& is, std::array<T, N>& array)
-    {
-        return true;
-    }
-};
-
 template <>
 struct Serializer<MacroSet::Macro>
 {
@@ -52,13 +32,6 @@ struct Serializer<Layer>
 {
     void serialize(const Layer& layer, Storage::OStream& os);
     bool deserialize(Storage::IStream& is, Layer& layer);
-};
-
-template <>
-struct Serializer<KeyId>
-{
-    void serialize(const KeyId& keyId, Storage::OStream& os);
-    bool deserialize(Storage::IStream& is, KeyId& keyId);
 };
 
 template <>

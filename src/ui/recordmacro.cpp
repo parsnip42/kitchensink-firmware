@@ -3,6 +3,7 @@
 #include "keyprocessor.h"
 #include "usbkeyboard.h"
 #include "ui/surface.h"
+#include "types/strostream.h"
 
 #include <elapsedMillis.h>
 #include <cstdint>
@@ -69,9 +70,10 @@ bool RecordMacro::create(const StrRef& title,
                 }
                 
                 StrBuf<30> text;
-
-                text.appendInt(mMacroSize)
-                    .appendStr(" events");
+                StrOStream ostream(text);
+                
+                ostream.appendInt(mMacroSize)
+                       .appendStr(" events");
                 
                 mSurface.paintText(0, 20, text, 0x7, 0);
             });

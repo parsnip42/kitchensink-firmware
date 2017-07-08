@@ -1,15 +1,15 @@
 #include "lockset.h"
 
 #include "types/strbuf.h"
+#include "types/strostream.h"
 
 LockSet::LockSet()
 {
     for (std::size_t i(0); i < mData.size(); ++i)
     {
-        StrBuf<12> lockName("Lock ");
-        
-        lockName.appendInt(i);
-        
-        mData[i].name = lockName;
+        StrOStream ostream(mData[i].name);
+
+        ostream.appendStr("Lock ")
+               .appendInt(i);
     }
 }

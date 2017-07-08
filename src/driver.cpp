@@ -9,11 +9,14 @@
 
 #include "storage/storage.h"
 
+#include "types/strutil.h"
+
 #include "ui/surface.h"
 #include "ui/home.h"
 #include "ui/text.h"
 
 #include "types/strbuf.h"
+#include "types/strostream.h"
 
 
 void setup()
@@ -40,36 +43,25 @@ void loop()
     if (storage.state())
     {
         StrBuf<48> sdErr;
+
+        StrOStream out(sdErr);
         
-        sdErr.appendStr("SD Failed : ")
-             .appendInt(storage.state());
+        out.appendStr("SD Failed : ")
+           .appendInt(storage.state());
 
         initLog.appendLine(sdErr);
     }
     else
     {
         StrBuf<48> sdInfo;
-
-        sdInfo.appendStr("SD OK : ")
-              .appendInt(storage.capacityMb())
-              .appendStr("MB / FAT")
-              .appendInt(storage.fatType());
+        StrOStream out(sdInfo);
+        
+        out.appendStr("SD OK : ")
+           .appendInt(storage.capacityMb())
+           .appendStr("MB / FAT")
+           .appendInt(storage.fatType());
         
         initLog.appendLine(sdInfo);
-
-    }
-    
-    StrBuf<128> str;
-
-    {
-        auto iStream(storage.read(Storage::Region::kConfig));
-
-        do
-        {
-            iStream.readToken(str,"\r\n\t");
-            initLog.appendLine(str);
-        }
-        while (!str.empty());
     }
     
 
@@ -83,32 +75,75 @@ void loop()
 
     KeyboardState keyboardState;
 
+
+
+
+
+
+
+
+    
     DefaultProfile::init(keyboardState);
 
     {
-        auto os(storage.write(Storage::Region::kConfig));
+        auto os(storage.write(Storage::Region::Config));
         
         {
             Serializer<Layer> s;
 
-            for (const auto& layer : keyboardState.layerStack)
-            {
-                s.serialize(layer, os);
-            }
+            s.serialize(keyboardState.layerStack[0], os);
         }
-        
-        {
-            Serializer<MacroSet::Macro> s;
+    }
+    
+    {
+        StrBuf<200> line;
 
-            const auto& macroSet(keyboardState.macroSet);
+        auto is(storage.read(Storage::Region::Config));
+        
+        is.readToken(line, "\r\n");
+
+        if (line == "[Layer]")
+        {
+            Serializer<Layer> s;
             
-            for (std::size_t i(0); i < macroSet.size(); ++i)
-            {
-                s.serialize(macroSet[i], os);
-            }
+            s.deserialize(is, keyboardState.layerStack[0]);
         }
     }
 
+    {
+        auto os(storage.write(Storage::Region::Config));
+        
+        {
+            Serializer<Layer> s;
+
+            s.serialize(keyboardState.layerStack[0], os);
+        }
+        
+    }
+
+    {
+        auto is(storage.read(Storage::Region::Config));
+
+        StrBuf<200> line;
+
+        do
+        {
+            is.readToken(line, "\r\n");
+            initLog.appendLine(line);
+        } while (!line.empty());
+    }
+    
+    DefaultProfile::init(keyboardState);
+
+
+
+
+
+
+
+
+
+    
     UI::Home home(surface,
                   keyboardState);
 

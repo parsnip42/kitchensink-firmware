@@ -20,11 +20,9 @@ public:
     StrBuf(const StrRef& strRef);
 
 public:
-    StrBuf<Size>& appendStr(const StrRef& str);
-    StrBuf<Size>& appendChar(char c);
-    StrBuf<Size>& appendInt(int n, const char* fmt = "%d");
     StrBuf<Size>& insert(iterator it, char c);
     StrBuf<Size>& erase(iterator it);
+    void clear();
     
 public:
     constexpr const_iterator begin() const;
@@ -42,6 +40,9 @@ public:
 public:
     StrBuf<Size>& operator=(const StrRef& strRef);
     constexpr operator StrRef() const;
+
+    const char& operator[](std::size_t n) const;
+    char& operator[](std::size_t n);
 
 private:
     constexpr std::size_t length(const char* data) const;
@@ -66,45 +67,6 @@ StrBuf<Size>::StrBuf(const StrRef& strRef)
 
 template <std::size_t Size>
 inline
-StrBuf<Size>& StrBuf<Size>::appendStr(const StrRef& str)
-{
-    auto currentLength(length());
-
-    strlcpy(mData + currentLength,
-            str.begin(),
-            std::min(str.size() + 1, capacity() - currentLength));
-    
-    return *this;
-}
-
-template <std::size_t Size>
-inline
-StrBuf<Size>& StrBuf<Size>::appendChar(char c)
-{
-    auto currentLength(length());
-
-    if (currentLength < capacity() - 1)
-    {
-        mData[currentLength] = c;
-        mData[currentLength + 1] = '\0';
-    }
-
-    return *this;
-}
-
-template <std::size_t Size>
-inline
-StrBuf<Size>& StrBuf<Size>::appendInt(int n, const char* fmt)
-{
-    auto currentLength(length());
-
-    snprintf(mData + currentLength, capacity() - currentLength, fmt, n);
-
-    return *this;
-}
-
-template <std::size_t Size>
-inline
 StrBuf<Size>& StrBuf<Size>::insert(iterator it, char c)
 {
     auto endIt(end());
@@ -125,6 +87,13 @@ StrBuf<Size>& StrBuf<Size>::erase(iterator it)
     *(end() - 1) = '\0';
     
     return *this;
+}
+
+template <std::size_t Size>
+inline
+void StrBuf<Size>::clear()
+{
+    mData[0] = '\0';
 }
 
 template <std::size_t Size>
@@ -197,6 +166,20 @@ inline
 constexpr StrBuf<Size>::operator StrRef() const
 {
     return StrRef(mData);
+}
+
+template <std::size_t Size>
+inline
+const char& StrBuf<Size>::operator[](std::size_t n) const
+{
+    return mData[n];
+}
+
+template <std::size_t Size>
+inline
+char& StrBuf<Size>::operator[](std::size_t n)
+{
+    return mData[n];
 }
 
 template <std::size_t Size>

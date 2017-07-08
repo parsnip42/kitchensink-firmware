@@ -4,6 +4,7 @@
 #include "keyid.h"
 #include "keyprocessor.h"
 #include "types/strbuf.h"
+#include "types/strostream.h"
 #include "types/strref.h"
 #include "ui/surface.h"
 
@@ -20,10 +21,7 @@ public:
     class DataSource
     {
     public:
-        typedef StrBuf<20> ItemText;
-        
-    public:
-        virtual void getItem(ItemText&   text,
+        virtual void getItem(StrOStream& text,
                              KeyId&      keyId,
                              std::size_t index) const = 0;
         

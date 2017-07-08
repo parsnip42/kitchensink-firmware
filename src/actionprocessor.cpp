@@ -11,6 +11,7 @@
 #include "ui/combo.h"
 #include "ui/recordmacro.h"
 #include "types/strbuf.h"
+#include "types/strostream.h"
 
 #include <elapsedMillis.h>
 
@@ -82,9 +83,11 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 
                 mSurface.clear();
 
-                StrBuf<20> title{{"Macro #"}};
+                StrBuf<20> title;
+                StrOStream ostream(title);
 
-                title.appendInt(macroIndex);
+                ostream.appendStr("Macro #")
+                       .appendInt(macroIndex);
                 
                 mSurface.paintTextC(0, 0, 240, title, 0xf, 0);
 
@@ -111,9 +114,12 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                 {
                     if (combo.create())
                     {
-                        StrBuf<20> recordStr{{"Recording Macro #"}};
+                        StrBuf<20> recordStr;
+                        StrOStream ostream(recordStr);
                         
-                        recordStr.appendInt(macroIndex);
+                        ostream.appendStr("Recording Macro #")
+                               .appendInt(macroIndex);
+
                         
                         UI::RecordMacro record(mSurface,
                                                mKeyProcessor,
@@ -162,8 +168,10 @@ void ActionProcessor::fireBuiltIn(int             action,
 
             {
                 StrBuf<32> line("Free Memory: ");
-            
-                line.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
+                StrOStream ostream(line);
+                
+                ostream.appendStr("Free Memory: ")
+                       .appendInt(static_cast<int>(CtrlUtil::freeMemory()));
             
                 text.appendLine(line);
             }
@@ -179,19 +187,23 @@ void ActionProcessor::fireBuiltIn(int             action,
                 auto end(millis());
 
                 {
-                    StrBuf<32> line("  1000 polls: ");
-                
-                    line.appendInt(static_cast<int>(end-start));
-                    line.appendStr("ms");
+                    StrBuf<32> line;
+                    StrOStream ostream(line);
+
+                    ostream.appendStr("  1000 polls: ")
+                           .appendInt(static_cast<int>(end-start))
+                           .appendStr("ms");
 
                     text.appendLine(line);
                 }
 
                 {
-                    StrBuf<32> line("  ");
-                
-                    line.appendInt(static_cast<int>(1000000 / (end-start)));
-                    line.appendStr(" polls/s");
+                    StrBuf<32> line;
+                    StrOStream ostream(line);
+
+                    ostream.appendStr("  ")
+                           .appendInt(static_cast<int>(1000000 / (end-start)))
+                           .appendStr(" polls/s");
 
                     text.appendLine(line);
                 }
