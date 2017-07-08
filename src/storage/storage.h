@@ -40,8 +40,13 @@ public:
         
     public:
         template <std::size_t N>
-        void readLine(StrBuf<N>& str);
+        void readToken(StrBuf<N>& str, const StrRef& separators);
 
+    private:
+        void readToken(char*         data,
+                       std::size_t   len,
+                       const StrRef& separators);
+        
     private:
         File mFileHandle;
 
@@ -74,10 +79,9 @@ private:
 
 
 template <std::size_t N>
-inline
-void Storage::IStream::readLine(StrBuf<N>& str)
+void Storage::IStream::readToken(StrBuf<N>& str, const StrRef& separators)
 {
-    mFileHandle.fgets(str.data(), N);   
+    Storage::IStream::readToken(str.data(), N, separators);
 }
 
 #endif /* INCLUDED_STORAGE_H */

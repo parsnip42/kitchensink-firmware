@@ -49,8 +49,8 @@ ArrayPool<Pool, IndexSize>::ArrayPool()
 {
     for (auto& e : mIndex)
     {
-        e.begin = mPool.begin();
-        e.end = mPool.begin();
+        e.begin() = mPool.begin();
+        e.end()   = mPool.begin();
     }
 }
 
@@ -75,7 +75,7 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
 {
     auto& entry(mIndex[index]);
 
-    auto entrySize(std::distance(entry.begin, entry.end));
+    auto entrySize(std::distance(entry.begin(), entry.end()));
     auto dataSize(std::distance(begin, end));
 
     // Note that if the size of an entry is bigger than the total used size of
@@ -85,18 +85,18 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
         return false;
     }
     
-    std::move(entry.end,
-              entry.end + mPoolSize,
-              entry.begin);
+    std::move(entry.end(),
+              entry.end() + mPoolSize,
+              entry.begin());
 
     mPoolSize -= entrySize;
 
     for (auto& e : mIndex)
     {
-        if (e.begin >= entry.end)
+        if (e.begin() >= entry.end())
         {
-            e.begin -= entrySize;
-            e.end -= entrySize;
+            e.begin() -= entrySize;
+            e.end() -= entrySize;
         }
     }
         
@@ -104,11 +104,11 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
               end,
               mPool.begin() + mPoolSize);
 
-    entry.begin = mPool.begin() + mPoolSize;
+    entry.begin() = mPool.begin() + mPoolSize;
         
     mPoolSize += dataSize;
 
-    entry.end = mPool.begin() + mPoolSize;
+    entry.end() = mPool.begin() + mPoolSize;
 
     return true;
 }
@@ -119,7 +119,7 @@ typename ArrayPool<Pool, IndexSize>::Content ArrayPool<Pool, IndexSize>::operato
 {
     const auto& entry(mIndex[index]);
     
-    return Range<const_iterator>(entry.begin, entry.end);
+    return Range<const_iterator>(entry.begin(), entry.end());
 }
 
 #endif

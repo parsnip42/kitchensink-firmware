@@ -15,7 +15,7 @@ class Surface
 {
 public:
     static constexpr int kHeight = 64;
-    static constexpr int kWidth = 240;
+    static constexpr int kWidth = 256;
     static constexpr int kFontWidth = Font::kWidth;
     static constexpr int kFontHeight = Font::kHeight;
     static constexpr uint8_t kScrollMax = 128;
@@ -50,6 +50,7 @@ public:
     void rectangle(int x, int y, int w, int h);
 
     void initRegion(int x, int y, int w, int h);
+    void clearRegion(int x, int y, int w, int h);
 
     void paintTextLine(const StrRef&   text,
                        const int       line,

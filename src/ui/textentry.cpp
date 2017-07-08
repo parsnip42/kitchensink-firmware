@@ -25,7 +25,7 @@ TextEntry::TextEntry(Surface&      surface,
     , mY(y)
     , mWidth(width)
     , mText(text)
-    , mCursorPosition(mText.size())
+    , mCursorPosition(mText.length())
 { }
 
 bool TextEntry::create()
@@ -91,7 +91,7 @@ bool TextEntry::create()
                 break;
                 
             case KeyCodes::Right:
-                if (mCursorPosition < mText.size())
+                if (mCursorPosition < mText.length())
                 {
                     ++mCursorPosition;
                 }
@@ -102,7 +102,7 @@ bool TextEntry::create()
                 break;
                 
             case KeyCodes::End:
-                mCursorPosition = mText.size();
+                mCursorPosition = mText.length();
                 break;
 
             case KeyCodes::Backspace:
@@ -116,7 +116,7 @@ bool TextEntry::create()
                 break;
                 
             default:
-                if (mText.size() < 24)
+                if (mText.length() < 24)
                 {
                     char newChar;
                     
@@ -159,7 +159,7 @@ void TextEntry::processKey(const KeyId& keyId)
 void TextEntry::paintText()
 {
     mSurface.paintText(mX + 4, mY + 2, mText, 0xf, 0);
-    mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth), mY + 2, " ", 0xf, 0);
+    mSurface.paintText(mX + 4 + (mText.length() * Surface::kFontWidth), mY + 2, " ", 0xf, 0);
 }
 
 void TextEntry::paintCursor(bool visible)
@@ -167,7 +167,7 @@ void TextEntry::paintCursor(bool visible)
     auto fg(visible ? 0 : 0xf);
     auto bg(visible ? 0xf : 0);
     
-    if (mCursorPosition < mText.size())
+    if (mCursorPosition < mText.length())
     {
         StrRef textRef(mText);
         auto cursorChar(textRef.substr(mCursorPosition, 1));
@@ -177,7 +177,7 @@ void TextEntry::paintCursor(bool visible)
     }
     else
     {        
-        mSurface.paintText(mX + 4 + (mText.size() * Surface::kFontWidth),
+        mSurface.paintText(mX + 4 + (mText.length() * Surface::kFontWidth),
                            mY + 2, " ", fg, bg);
     }
 }

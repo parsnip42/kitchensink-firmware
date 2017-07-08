@@ -31,6 +31,7 @@ public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
     constexpr std::size_t size() const;
+    constexpr bool empty() const;
     constexpr StrRef substr(std::size_t start, std::size_t len) const;
     
 private:
@@ -73,6 +74,12 @@ inline
 constexpr std::size_t StrRef::size() const
 {
     return mEnd - mBegin;
+}
+
+inline
+constexpr bool StrRef::empty() const
+{
+    return mBegin == mEnd;
 }
 
 inline

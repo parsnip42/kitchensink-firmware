@@ -1,5 +1,7 @@
 #include "storage.h"
 
+#include <algorithm>
+
 namespace
 {
 constexpr uint8_t SD_CS_PIN = 10;
@@ -47,6 +49,42 @@ Storage::IStream::IStream(File fileHandle)
 Storage::IStream::~IStream()
 {
     mFileHandle.close();
+}
+
+void Storage::IStream::readToken(char*         data,
+                                 std::size_t   len,
+                                 const StrRef& separators)
+{
+    char        ch;
+    std::size_t count(0);
+
+    if (len <= 0)
+    {
+        return;
+    }
+    
+    while (((count + 1) < len) && mFileHandle.read(&ch, 1) == 1)
+    {
+        if (std::find(separators.begin(), separators.end(), ch) == separators.end())
+        {
+            data[count++] = ch;
+            break;
+        }
+    }
+
+    while (((count + 1) < len) && mFileHandle.read(&ch, 1) == 1)
+    {
+        if (std::find(separators.begin(), separators.end(), ch) == separators.end())
+        {
+            data[count++] = ch;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    data[count] = '\0';
 }
 
 Storage::OStream::OStream(File fileHandle)

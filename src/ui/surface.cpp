@@ -83,6 +83,16 @@ void Surface::initRegion(int x, int y, int w, int h)
     mDisplay.initRegion(x, y, w, h);
 }
 
+void Surface::clearRegion(int x, int y, int w, int h)
+{
+    mDisplay.initRegion(x, y, w, h);
+
+    for (int i = 0; i < (w * h) / 2; ++i)
+    {
+        mDisplay.writeData(0x0);
+    }
+}
+
 void Surface::paintTextLine(const StrRef&   text,
                             const int       line,
                             const ColorMap& colorMap)

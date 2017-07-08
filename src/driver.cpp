@@ -64,15 +64,16 @@ void loop()
     {
         auto iStream(storage.read(Storage::Region::kConfig));
 
-        iStream.readLine(str);
-        initLog.appendLine(str);
-
-        iStream.readLine(str);
-        initLog.appendLine(str);
+        do
+        {
+            iStream.readToken(str,"\r\n\t");
+            initLog.appendLine(str);
+        }
+        while (!str.empty());
     }
     
 
-    surface.clear();
+    //surface.clear();
     
     UsbKeyboard usbKeyboard;
     
@@ -86,10 +87,26 @@ void loop()
 
     {
         auto os(storage.write(Storage::Region::kConfig));
+        
+        {
+            Serializer<Layer> s;
 
-        Serializer<LayerStack> s;
+            for (const auto& layer : keyboardState.layerStack)
+            {
+                s.serialize(layer, os);
+            }
+        }
+        
+        {
+            Serializer<MacroSet::Macro> s;
 
-        s.serialize(keyboardState.layerStack, os);
+            const auto& macroSet(keyboardState.macroSet);
+            
+            for (std::size_t i(0); i < macroSet.size(); ++i)
+            {
+                s.serialize(macroSet[i], os);
+            }
+        }
     }
 
     UI::Home home(surface,

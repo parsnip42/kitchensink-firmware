@@ -17,6 +17,9 @@ private:
     typedef std::array<Layer, MaxLayers> Layers;
 
 public:
+    typedef Layers::const_iterator const_iterator;
+    
+public:
     LayerStack() = default;
 
 public:
@@ -31,6 +34,10 @@ public:
 public:
     const Layer& operator[](std::size_t n) const;
     Layer& operator[](std::size_t n);
+
+public:
+    const_iterator begin() const;
+    const_iterator end() const;
     
 private:
     Layers             mLayers;
@@ -52,6 +59,18 @@ inline
 Layer& LayerStack::operator[](std::size_t n)
 {
     return mLayers[n];
+}
+
+inline
+LayerStack::const_iterator LayerStack::begin() const
+{
+    return mLayers.begin();
+}
+
+inline
+LayerStack::const_iterator LayerStack::end() const
+{
+    return mLayers.end();
 }
 
 #endif

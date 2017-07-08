@@ -5,7 +5,7 @@ namespace KeyCodes
 namespace
 {
 
-const char* const Names[] =
+const char* const Keys[] =
 {
     "None",
     "ErrorRollOver",
@@ -174,16 +174,35 @@ const char* const Names[] =
     "ExSel"
 };
 
-const std::size_t NameCount(sizeof(Names) / sizeof(*Names));
+const std::size_t KeyCount(sizeof(Keys) / sizeof(*Keys));
+
+const char* const Modifiers[] =
+{
+    "LCtrl",
+    "LShift",
+    "LAlt",
+    "LGui",
+    "RCtrl",
+    "RShift",
+    "RAlt",
+    "RGui"
+};
+
+const std::size_t ModifierCount(sizeof(Modifiers) / sizeof(*Modifiers));
 }
 
 StrRef keyName(keycode_t keyCode)
 {
-    if (keyCode < NameCount)
+    if (keyCode < KeyCount)
     {
-        return Names[keyCode];
+        return Keys[keyCode];
     }
-
+    else if ((keyCode >= ModifierOffset) &&
+             (keyCode < (ModifierOffset + ModifierCount)))
+    {
+        return Modifiers[keyCode - ModifierOffset];
+    }
+    
     return StrRef("");
 }
 
@@ -192,12 +211,20 @@ keycode_t keyCode(const StrRef& keyName)
     // Intentionally avoiding the use of a lookup table to save
     // memory. If performance becomes a problem, we should create an
     // ordered index for a binary search.
-    for (keycode_t i(0); i < NameCount; ++i)
+    for (keycode_t i(0); i < KeyCount; ++i)
     {
         // And this might need to be case-insensitive too.
-        if (keyName == Names[i])
+        if (keyName == Keys[i])
         {
             return i;
+        }
+    }
+
+    for (keycode_t i(0); i < ModifierCount; ++i)
+    {
+        if (keyName == Modifiers[i])
+        {
+            return i + ModifierOffset;
         }
     }
 
