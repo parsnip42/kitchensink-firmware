@@ -6,6 +6,8 @@
 #include "debounce.h"
 #include "keymatrixdispatcher.h"
 
+#include <cstdint>
+
 class KeyboardPlate
 {
 public:
@@ -20,7 +22,8 @@ public:
 
 public:
     template <typename Callback>
-    void poll(const Callback& callback);
+    void poll(uint32_t        timeMs,
+              const Callback& callback);
 
     template <typename Callback>
     void pressed(const Callback& callback);
@@ -40,11 +43,12 @@ private:
 
 template <typename Callback>
 inline
-void KeyboardPlate::poll(const Callback& callback)
+void KeyboardPlate::poll(uint32_t        timeMs,
+                         const Callback& callback)
 {
     mMatrix.scan();
 
-    if (mDebounce.process(mMatrix.state()))
+    if (mDebounce.process(timeMs, mMatrix.state()))
     {
         mDispatcher.dispatch(mDebounce.state(),
                              mDebounce.delta(),

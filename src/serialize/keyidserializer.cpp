@@ -37,7 +37,7 @@ void KeyIdSerializer::serialize(KeyId keyId, StrOStream& str)
     case KeyId::Type::kLock:
         str.appendChar('O');
         str.appendInt(static_cast<int>(keyId.lockType()));
-        str.appendChar('/');
+        str.appendChar(':');
         str.appendInt(keyId.value());
         break;
 
@@ -49,12 +49,17 @@ void KeyIdSerializer::serialize(KeyId keyId, StrOStream& str)
     case KeyId::Type::kAction:
         str.appendChar('A');
         str.appendInt(static_cast<int>(keyId.actionType()));
-        str.appendChar('/');
+        str.appendChar(':');
         str.appendInt(keyId.value());
+        break;
+        
+    case KeyId::Type::kDelay:
+        str.appendChar('D');
+        str.appendInt(static_cast<int>(keyId.delayMs()));
         break;
 
     default:
-        str.appendStr("_");
+        str.appendStr("?");
         break;
     }
 }
@@ -93,19 +98,7 @@ void KeyIdSerializer::deserialize(const StrRef& keyIdStr, KeyId& keyId)
         
         break;
     }
-
-    case 'M':
-    {
-        int index(0);
-
-        if (StrUtil::parseUInt(keyIdStr.substr(1), index))
-        {
-            keyId = KeyId::Macro(index);
-        }
-        
-        break;
-    }
-
+    
     case 'L':
     {
         int index(0);
@@ -118,6 +111,74 @@ void KeyIdSerializer::deserialize(const StrRef& keyIdStr, KeyId& keyId)
         break;
     }
 
+    case 'O':
+    {
+        auto contentStr(keyIdStr.substr(1));
+        auto token(StrUtil::nextToken(contentStr, ":"));
+
+        int type(0);
+        
+        if (StrUtil::parseUInt(token, type))
+        {
+            token = StrUtil::nextToken(contentStr, ":", token);
+
+            int index(0);
+            
+            if (StrUtil::parseUInt(token, index))
+            {
+                keyId = KeyId::Lock(static_cast<KeyId::LockType>(type),
+                                    index);
+            }
+        }
+        break;
+    }
+    
+    case 'M':
+    {
+        int index(0);
+
+        if (StrUtil::parseUInt(keyIdStr.substr(1), index))
+        {
+            keyId = KeyId::Macro(index);
+        }
+        
+        break;
+    }
+    
+    case 'A':
+    {
+        auto contentStr(keyIdStr.substr(1));
+        auto token(StrUtil::nextToken(contentStr, ":"));
+
+        int type(0);
+        
+        if (StrUtil::parseUInt(token, type))
+        {
+            token = StrUtil::nextToken(contentStr, ":", token);
+
+            int index(0);
+            
+            if (StrUtil::parseUInt(token, index))
+            {
+                keyId = KeyId::Action(static_cast<KeyId::ActionType>(type),
+                                      index);
+            }
+        }
+        break;
+    }
+    
+    case 'D':
+    {
+        int delayMs(0);
+
+        if (StrUtil::parseUInt(keyIdStr.substr(1), delayMs))
+        {
+            keyId = KeyId::Delay(delayMs);
+        }
+        
+        break;
+    }
+    
     }
 }
 

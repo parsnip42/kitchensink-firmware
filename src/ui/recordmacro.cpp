@@ -42,7 +42,7 @@ bool RecordMacro::create(const StrRef& title,
                     
                     return;
                 }
-                
+
                 if (keyId.type() == KeyId::Type::kKey)
                 {
                     mUsbKeyboard.processKey(keyId.value(), event.pressed);

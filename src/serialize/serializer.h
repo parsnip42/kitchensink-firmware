@@ -12,12 +12,20 @@
 class KeyEvent;
 class KeyId;
 class Layer;
+class LayerStack;
 
 template <typename T>
 struct Serializer
 {
     void serialize(const T&, Storage::OStream&);
     bool deserialize(Storage::IStream&, T&);
+};
+
+template <>
+struct Serializer<MacroSet>
+{
+    void serialize(const MacroSet& macroSet, Storage::OStream& os);
+    bool deserialize(Storage::IStream& is, MacroSet& macroSet);
 };
 
 template <>

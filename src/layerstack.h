@@ -10,11 +10,11 @@
 
 class LayerStack
 {
-public:
+private:
     static constexpr std::size_t MaxLayers = 10;
     
-private:
     typedef std::array<Layer, MaxLayers> Layers;
+    typedef Bitmask<MaxLayers>           LayerMask;
 
 public:
     typedef Layers::const_iterator const_iterator;
@@ -34,14 +34,15 @@ public:
 public:
     const Layer& operator[](std::size_t n) const;
     Layer& operator[](std::size_t n);
+    constexpr std::size_t size() const;
 
 public:
     const_iterator begin() const;
     const_iterator end() const;
     
 private:
-    Layers             mLayers;
-    Bitmask<MaxLayers> mLayerMask;
+    Layers    mLayers;
+    LayerMask mLayerMask;
 
 private:
     LayerStack(const LayerStack&) = delete;
@@ -59,6 +60,12 @@ inline
 Layer& LayerStack::operator[](std::size_t n)
 {
     return mLayers[n];
+}
+
+inline
+constexpr std::size_t LayerStack::size() const
+{
+    return mLayers.size();
 }
 
 inline

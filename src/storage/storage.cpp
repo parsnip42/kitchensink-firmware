@@ -51,32 +51,21 @@ Storage::IStream::~IStream()
     mFileHandle.close();
 }
 
-void Storage::IStream::readToken(StrOStream&   ostream,
-                                 const StrRef& separators)
+bool Storage::IStream::readLine(StrOStream& ostream)
 {
     char ch;
-
+    
     while (mFileHandle.read(&ch, 1) == 1)
     {
-        if (std::find(separators.begin(), separators.end(), ch) == separators.end())
+        if (ch == '\n' || ch == '\r')
         {
-            ostream.appendChar(ch);
-            break;
+            return true;
         }
+        
+        ostream.appendChar(ch);
     }
 
-    while (mFileHandle.read(&ch, 1) == 1)
-    {
-        if (std::find(separators.begin(), separators.end(), ch) == separators.end())
-        {
-            ostream.appendChar(ch);
-        }
-        else
-        {
-            mFileHandle.seekCur(-1);
-            break;
-        }
-    }
+    return false;
 }
 
 Storage::OStream::OStream(File fileHandle)

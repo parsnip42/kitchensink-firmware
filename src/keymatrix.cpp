@@ -18,7 +18,10 @@ constexpr uint8_t GPIOB  = 0x13;
 void KeyMatrix::setup()
 {
     Wire.begin();
-    Wire.setClock(400000L);
+
+    //Wire.setClock(100000L);
+    //Wire.setClock(400000L);
+    Wire.setClock(1000000L);
 }
 
 void KeyMatrix::init()

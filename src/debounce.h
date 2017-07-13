@@ -6,22 +6,23 @@
 class Debounce
 {
 private:
-    static constexpr unsigned int kLatency = 3;
+    static constexpr uint32_t kLatencyMs = 0;
     
 public:
     constexpr Debounce();
 
 public:
-    bool process(const KeyMask& next);
+    bool process(uint32_t       timeMs,
+                 const KeyMask& next);
     
     const KeyMask& state() const;
     const KeyMask& delta() const;
     
 private:
-    unsigned int mCounter;
-    KeyMask      mCurrent;
-    KeyMask      mState;
-    KeyMask      mDelta;
+    uint32_t mLastMs;
+    KeyMask  mCurrent;
+    KeyMask  mState;
+    KeyMask  mDelta;
     
 private:
     Debounce(const Debounce&) = delete;
@@ -30,7 +31,7 @@ private:
 
 inline
 constexpr Debounce::Debounce()
-    : mCounter(0)
+    : mLastMs(0)
 { }
 
 inline

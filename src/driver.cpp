@@ -35,7 +35,6 @@ void loop()
     UI::Text initLog(surface);
 
     initLog.appendLine("Start");
-    
     initLog.appendLine("Configure");
 
     Storage storage;
@@ -85,58 +84,70 @@ void loop()
     
     DefaultProfile::init(keyboardState);
 
-    {
-        auto os(storage.write(Storage::Region::Config));
-        
-        {
-            Serializer<Layer> s;
+    // {
+    //     auto os(storage.write(Storage::Region::Config));
 
-            s.serialize(keyboardState.layerStack[0], os);
-        }
-    }
+    //     for (const auto& layer : keyboardState.layerStack)
+    //     {
+    //         Serializer<Layer> s;
+
+    //         os.write("[Layer]\n");
+    //         s.serialize(layer, os);
+    //         os.write("\n");
+    //     }
+    // }
     
-    {
-        StrBuf<200> line;
-        StrOStream ostream(line);
+    // {
+    //     StrBuf<200> line;
+    //     StrOStream ostream(line);
         
-        auto is(storage.read(Storage::Region::Config));
-        
-        is.readToken(ostream, "\r\n");
+    //     auto is(storage.read(Storage::Region::Config));
 
-        if (line == "[Layer]")
-        {
-            Serializer<Layer> s;
+    //     auto& layerStack(keyboardState.layerStack);
+    //     std::size_t layerCount(0);
+        
+    //     while(is.readLine(ostream))
+    //     {
+    //         if (line == "[Layer]" && layerCount < layerStack.size())
+    //         {
+    //             Serializer<Layer> s;
+                
+    //             s.deserialize(is, layerStack[layerCount++]);
+    //         }
+
+    //         line.clear();
+    //     }
+    // }
+
+    // {
+    //     auto os(storage.write(Storage::Region::Config));
+    //     const auto& macroSet(keyboardState.macroSet);
+        
+    //     for (std::size_t i(0); i < macroSet.size(); ++i)
+    //     {
+    //         Serializer<MacroSet::Macro> s;
             
-            s.deserialize(is, keyboardState.layerStack[0]);
-        }
-    }
+    //         os.write("[Macro]\n");
+    //         s.serialize(macroSet[i], os);
+    //         os.write("\n");
+    //     }
+    // }
 
-    {
-        auto os(storage.write(Storage::Region::Config));
-        
-        {
-            Serializer<Layer> s;
-
-            s.serialize(keyboardState.layerStack[0], os);
-        }
-        
-    }
 
     {
         auto is(storage.read(Storage::Region::Config));
 
         StrBuf<200> line;
         StrOStream ostream(line);
-        
-        do
+
+        while (is.readLine(ostream))
         {
-            line.clear();
-            is.readToken(ostream, "\r\n");
             initLog.appendLine(line);
-        } while (!line.empty());
+            line.clear();
+        }
     }
     
-    DefaultProfile::init(keyboardState);
+    // DefaultProfile::init(keyboardState);
 
 
 

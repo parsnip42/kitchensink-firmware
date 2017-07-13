@@ -41,8 +41,7 @@ public:
         ~IStream();
 
     public:
-        void readToken(StrOStream&   ostream,
-                       const StrRef& separators);
+        bool readLine(StrOStream& ostream);
         
     private:
         File mFileHandle;

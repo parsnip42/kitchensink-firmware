@@ -13,6 +13,14 @@
 #include "types/strbuf.h"
 #include "types/strostream.h"
 
+
+
+#include "serialize/serializer.h"
+#include "storage/storage.h"
+
+
+
+
 #include <elapsedMillis.h>
 
 namespace
@@ -136,6 +144,26 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                                                          entry.text(),
                                                          macro.begin(),
                                                          macro.begin() + record.macroSize());
+
+
+
+
+
+
+
+
+
+                        Storage storage;
+                        
+                        {
+                            Serializer<MacroSet> s;
+                            
+                            auto os(storage.write(Storage::Region::Config));
+
+                            s.serialize(mKeyboardState.macroSet, os);
+                        }
+                        
+
                     }
                 }
 
@@ -167,7 +195,7 @@ void ActionProcessor::fireBuiltIn(int             action,
             UI::Text text(mSurface);
 
             {
-                StrBuf<32> line("Free Memory: ");
+                StrBuf<32> line;
                 StrOStream ostream(line);
                 
                 ostream.appendStr("Free Memory: ")

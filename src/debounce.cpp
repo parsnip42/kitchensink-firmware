@@ -1,20 +1,21 @@
 #include "debounce.h"
 
-bool Debounce::process(const KeyMask& next)
+bool Debounce::process(uint32_t       timeMs,
+                       const KeyMask& next)
 {
-    mCounter = (mCounter + 1) % (kLatency + 1);
-    
-    if (mCounter == 0)
+    if (timeMs >= (mLastMs + kLatencyMs))
     {
         mDelta = mState;
         mDelta ^= mCurrent;
         mState = mCurrent;
         mCurrent = next;
+        mLastMs = timeMs;
+        
+        return !mDelta.empty();
     }
-    else
-    {
-        mCurrent &= next;
-    }
+
+    mCurrent &= next;
     
-    return (mCounter == 0 && !mDelta.empty());
+    return false;
 }
+

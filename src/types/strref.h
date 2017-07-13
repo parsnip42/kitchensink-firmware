@@ -29,10 +29,16 @@ public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
     constexpr std::size_t size() const;
+    constexpr std::size_t length() const;
     constexpr bool empty() const;
     constexpr StrRef substr(std::size_t start) const;
     constexpr StrRef substr(std::size_t start, std::size_t len) const;
 
+public:
+    bool beginsWith(const StrRef& str) const;
+    bool endsWith(const StrRef& str) const;
+    StrRef trim() const;
+    
 public:
     const char& operator[](std::size_t n) const;
     
@@ -79,6 +85,12 @@ constexpr std::size_t StrRef::size() const
 }
 
 inline
+constexpr std::size_t StrRef::length() const
+{
+    return mEnd - mBegin;
+}
+
+inline
 constexpr bool StrRef::empty() const
 {
     return mBegin == mEnd;
@@ -98,6 +110,18 @@ constexpr StrRef StrRef::substr(std::size_t start, std::size_t len) const
 }
 
 inline
+bool StrRef::beginsWith(const StrRef& str) const
+{
+    return substr(0, str.size()) == str;
+}
+
+inline
+bool StrRef::endsWith(const StrRef& str) const
+{
+    return substr((length() - 1) - str.size(), str.size()) == str;
+}
+
+inline
 const char& StrRef::operator[](std::size_t n) const
 {
     return mBegin[n];
@@ -106,12 +130,8 @@ const char& StrRef::operator[](std::size_t n) const
 inline
 bool operator==(const StrRef& lhs, const StrRef& rhs)
 {
-    if (lhs.size() == rhs.size())
-    {
-        return std::equal(lhs.begin(), lhs.end(), rhs.begin());
-    }
-
-    return false;
+    return (lhs.size() == rhs.size()) &&
+        std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
 inline

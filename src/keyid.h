@@ -59,6 +59,7 @@ public:
 
     constexpr ActionType actionType() const;
     constexpr LockType lockType() const;
+    constexpr uint32_t delayMs() const;
     
 private:
     uint8_t mType;
@@ -175,6 +176,12 @@ inline
 constexpr KeyId::LockType KeyId::lockType() const
 {
     return static_cast<KeyId::LockType>(subType());
+}
+
+inline
+constexpr uint32_t KeyId::delayMs() const
+{
+    return (subType() << 8) | value();
 }
 
 #endif

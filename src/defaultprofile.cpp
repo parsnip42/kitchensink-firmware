@@ -121,9 +121,9 @@ void init(KeyboardState& keyboardState)
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
             { { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },
-            { { Esc, Macro(7), Q, W, E, R, T, Tab, Macro(12), Macro(13),                    /**/ Macro(23),  Macro(24), Backspace, Y, U, I, O, P, LBrace, RBrace } },
+            { { Esc, Macro(7), Q, W, E, R, T, 0, Macro(12), Macro(13),                    /**/ Macro(23),  Macro(24), Backspace, Y, U, I, O, P, LBrace, RBrace } },
             { { 0, Layer(2), A, S, D, F, G, 0, Macro(14), Macro(15),                        /**/ Macro(25),  Macro(26), 0, H, J, K, L, Semicolon, Enter } },
-            { { 0, Hold(kLShift), Z, X, C, V, B, Delete, Macro(16), Macro(17),              /**/ MainMenu(), Macro(27), Quote, N, M, Comma, Dot, Slash, Hold(kRShift) } },
+            { { 0, Hold(kLShift), Z, X, C, V, B, 0, Macro(16), Macro(17),              /**/ MainMenu(), Macro(27), Quote, N, M, Comma, Dot, Slash, Hold(kRShift) } },
             { { 0, Hold(kLGui), Hold(kRAlt), Macro(18), Macro(19), Macro(20),
                 Hold(kLCtrl), Layer(1), Hold(kLAlt), 0,                                     /**/ 0, Hold(kLAlt), Space, Hold(kRCtrl), End, Left, Up, Down, Right } }
         } };

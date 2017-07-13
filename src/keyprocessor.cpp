@@ -4,7 +4,7 @@
 #include "keyboardstate.h"
 #include "keylocation.h"
 
-#include <keylayouts.h>
+#include <elapsedMillis.h>
 
 KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
                            KeyboardState& keyboardState)
@@ -17,7 +17,9 @@ KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
 
 void KeyProcessor::poll()
 {
-    mKeyboard.poll([&](const KsKeyboard::Event& event)
+    auto timeMs(millis());
+    
+    mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& event)
     {
         auto keyId(mKeyboardState.layerStack.at(event.row, event.column));
         
@@ -41,10 +43,9 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
 
     if (keyId.type() == KeyId::Type::kDelay)
     {
-        delay((keyId.subType()) << 8 | (keyId.value()));
+        delay(keyId.delayMs());
     }
-
-    if (keyId.type() == KeyId::Type::kLayer)
+    else if (keyId.type() == KeyId::Type::kLayer)
     {
         setLayer(mKeyboardState.layerStack,
                  keyId.value(),
@@ -52,7 +53,7 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
         
         return Consumed::kStateChanged;
     }
-
+    
     if (mLockProcessor.processEvent(mKeyboardState.lockSet,
                                     event,
                                     mEventQueue))
@@ -110,7 +111,10 @@ KeyLocation KeyProcessor::readKeyLocation()
 
     while (!complete)
     {
-        mKeyboard.poll([&](const KsKeyboard::Event& event)
+        auto timeMs(millis());
+
+        mKeyboard.poll(timeMs,
+                       [&](const KsKeyboard::Event& event)
         {
             if (event.pressed)
             {

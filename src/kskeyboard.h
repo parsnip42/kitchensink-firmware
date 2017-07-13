@@ -6,6 +6,8 @@
 #include "layerstack.h"
 #include "tapping.h"
 
+#include <cstdint>
+
 class KsKeyboard
 {
 public:
@@ -19,7 +21,8 @@ public:
     
 public:
     template <typename Callback>
-    void poll(const Callback& callback); 
+    void poll(uint32_t        timeMs,
+              const Callback& callback); 
 
     template <typename Callback>
     void pressed(const Callback& callback);
@@ -38,10 +41,11 @@ private:
 
 template <typename Callback>
 inline
-void KsKeyboard::poll(const Callback& callback)
+void KsKeyboard::poll(uint32_t        timeMs,
+                      const Callback& callback)
 {
-    mLeft.poll(callback);
-    mRight.poll(callback);
+    mLeft.poll(timeMs, callback);
+    mRight.poll(timeMs, callback);
 }
 
 template <typename Callback>
