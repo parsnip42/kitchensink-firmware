@@ -22,7 +22,8 @@ public:
 
 public:
     bool empty() const;
-
+    void clear();
+    
 public:
     const Row& operator[](const std::size_t n) const;
     Row& operator[](const std::size_t n);
@@ -60,6 +61,16 @@ bool Bitmask2d<Width, Height>::empty() const
     }
 
     return true;
+}
+
+template <std::size_t Width, std::size_t Height>
+inline
+void Bitmask2d<Width, Height>::clear()
+{
+    for (auto& row : mRows)
+    {
+        row.clear();
+    }
 }
 
 template <std::size_t Width, std::size_t Height>

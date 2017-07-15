@@ -97,7 +97,7 @@ void KeyProcessor::poll(const EventCallback& eventCallback,
 {
     poll();
 
-    while (!mEventQueue.empty())
+    if (!mEventQueue.empty())
     {
         auto event(mEventQueue.pop());
         auto consumed(consumeEvent(event));

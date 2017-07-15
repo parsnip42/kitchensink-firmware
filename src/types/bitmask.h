@@ -40,6 +40,7 @@ public:
     constexpr std::size_t size() const;
     constexpr bool empty() const;
     BitIterator<Data> bitIterator() const;
+    void clear();
     
 public:
     constexpr bool operator[](std::size_t n) const;
@@ -125,7 +126,7 @@ template <std::size_t Size>
 inline
 constexpr bool Bitmask<Size>::empty() const
 {
-    return (mData == 0);
+    return mData == 0;
 }
 
 template <std::size_t Size>
@@ -133,6 +134,13 @@ inline
 BitIterator<typename Bitmask<Size>::Data> Bitmask<Size>::bitIterator() const
 {
     return BitIterator<Data>(mData);
+}
+
+template <std::size_t Size>
+inline
+void Bitmask<Size>::clear()
+{
+    mData = 0;
 }
 
 template <std::size_t Size>
