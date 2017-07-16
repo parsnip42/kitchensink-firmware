@@ -6,6 +6,7 @@
 #include "keyprocessor.h"
 #include "usbkeyboard.h"
 #include "serialize/serializer.h"
+#include "serialize/iniformat.h"
 
 #include "storage/storage.h"
 
@@ -134,26 +135,25 @@ void loop()
     // }
 
 
-    {
-        auto is(storage.read(Storage::Region::Config));
+    // {
+    //     auto is(storage.read(Storage::Region::Config));
+    //     StrBuf<200> line;6
 
-        StrBuf<200> line;
-        StrOStream ostream(line);
-
-        while (is.readLine(ostream))
-        {
-            initLog.appendLine(line);
-            line.clear();
-        }
-    }
+    //     while (is.readLine(line))
+    //     {
+    //         initLog.appendLine(line);
+    //     }
+    // }
     
-    // DefaultProfile::init(keyboardState);
+    {
+        auto is(storage.read(Storage::Region::Macro));
+        Serializer<MacroSet> s;
+        
+        s.deserialize(is, keyboardState.macroSet);
+    }
 
-
-
-
-
-
+    
+     // DefaultProfile::init(keyboardState);
 
 
 

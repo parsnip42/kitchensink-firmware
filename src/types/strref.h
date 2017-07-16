@@ -1,34 +1,24 @@
 #ifndef INCLUDED_STRREF_H
 #define INCLUDED_STRREF_H
 
+#include "range.h"
+
 #include <algorithm>
 #include <cstdint>
-#include <cstring>
-
-namespace StrRefImpl
-{
-
-inline
-constexpr std::size_t strSize(const char* data)
-{
-    return (data[0] == '\0') ? 0 : (1 + strSize(data + 1));
-}
-
-}
 
 class StrRef
 {
 public:
     typedef const char* const_iterator;
-    
+
 public:
     constexpr StrRef(const char* str = "");
-    constexpr StrRef(const char* begin, const char* end);
+    constexpr StrRef(const_iterator begin,
+                     const_iterator end);
     
 public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
-    constexpr std::size_t size() const;
     constexpr std::size_t length() const;
     constexpr bool empty() const;
     constexpr StrRef substr(std::size_t start) const;
@@ -40,12 +30,14 @@ public:
     StrRef trim() const;
     
 public:
-    const char& operator[](std::size_t n) const;
+    constexpr const char& operator[](std::size_t n) const;
     
 private:
-    const char* mBegin;
-    const char* mEnd;
+    Range<const_iterator> mRange;
 
+private:
+    static constexpr std::size_t length(const_iterator data);
+    
 private:
     friend bool operator==(const StrRef& lhs, const StrRef& rhs);
 };
@@ -56,81 +48,71 @@ bool operator!=(const StrRef& lhs, const StrRef& rhs);
 
 inline
 constexpr StrRef::StrRef(const char* str)
-    : mBegin(str)
-    , mEnd(str + StrRefImpl::strSize(str))
+    : mRange(str, str + length(str))
 { }
 
 inline
-constexpr StrRef::StrRef(const char* begin, const char* end)
-    : mBegin(begin)
-    , mEnd(end)
+constexpr StrRef::StrRef(const_iterator begin,
+                         const_iterator end)
+    : mRange(begin, end)
 { }
 
 inline
 constexpr StrRef::const_iterator StrRef::begin() const
 {
-    return mBegin;
+    return mRange.begin();
 }
 
 inline
 constexpr StrRef::const_iterator StrRef::end() const
 {
-    return mEnd;
-}
-
-inline
-constexpr std::size_t StrRef::size() const
-{
-    return mEnd - mBegin;
+    return mRange.end();
 }
 
 inline
 constexpr std::size_t StrRef::length() const
 {
-    return mEnd - mBegin;
+    return mRange.end() - mRange.begin();
 }
 
 inline
 constexpr bool StrRef::empty() const
 {
-    return mBegin == mEnd;
+    return mRange.begin() == mRange.end();
 }
 
 inline
 constexpr StrRef StrRef::substr(std::size_t start) const
 {
-    return StrRef((start < size()) ? (mBegin + start) : mEnd, mEnd);
+    return StrRef(
+        (start < length()) ? (mRange.begin() + start) : mRange.end(),
+        mRange.end());
 }
 
 inline
 constexpr StrRef StrRef::substr(std::size_t start, std::size_t len) const
 {
-    return StrRef((start < size()) ? (mBegin + start) : mEnd,
-                  (start + len) < size() ? (mBegin + start + len) : mEnd);
+    return StrRef(
+        (start < length()) ? (mRange.begin() + start) : mRange.end(),
+        (start + len) < length() ? (mRange.begin() + start + len) : mRange.end());
 }
 
 inline
-bool StrRef::beginsWith(const StrRef& str) const
+constexpr const char& StrRef::operator[](std::size_t n) const
 {
-    return substr(0, str.size()) == str;
+    return mRange.begin()[n];
 }
 
 inline
-bool StrRef::endsWith(const StrRef& str) const
+constexpr std::size_t StrRef::length(const_iterator data)
 {
-    return substr((length() - 1) - str.size(), str.size()) == str;
-}
-
-inline
-const char& StrRef::operator[](std::size_t n) const
-{
-    return mBegin[n];
+    return (*data == '\0') ? 0 : (1 + length(data + 1));
 }
 
 inline
 bool operator==(const StrRef& lhs, const StrRef& rhs)
 {
-    return (lhs.size() == rhs.size()) &&
+    return (lhs.length() == rhs.length()) &&
         std::equal(lhs.begin(), lhs.end(), rhs.begin());
 }
 
@@ -141,3 +123,9 @@ bool operator!=(const StrRef& lhs, const StrRef& rhs)
 }
 
 #endif
+
+
+
+
+
+

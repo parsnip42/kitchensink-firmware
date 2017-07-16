@@ -13,8 +13,8 @@ public:
                     const T& end);
 
 public:
-    const T& begin() const;
-    const T& end() const;
+    constexpr const T& begin() const;
+    constexpr const T& end() const;
 
     T& begin();
     T& end();
@@ -38,14 +38,14 @@ constexpr Range<T>::Range(const T& begin,
 
 template <typename T>
 inline
-const T& Range<T>::begin() const
+constexpr const T& Range<T>::begin() const
 {
     return mBegin;
 }
 
 template <typename T>
 inline
-const T& Range<T>::end() const
+constexpr const T& Range<T>::end() const
 {
     return mEnd;
 }

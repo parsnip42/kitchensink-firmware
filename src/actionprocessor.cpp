@@ -158,7 +158,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                         {
                             Serializer<MacroSet> s;
                             
-                            auto os(storage.write(Storage::Region::Config));
+                            auto os(storage.write(Storage::Region::Macro));
 
                             s.serialize(mKeyboardState.macroSet, os);
                         }

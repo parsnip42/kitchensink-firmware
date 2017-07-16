@@ -2,64 +2,64 @@
 
 #include "types/strutil.h"
 
-void KeyIdSerializer::serialize(KeyId keyId, StrOStream& str)
+void KeyIdSerializer::serialize(KeyId keyId, const StrOStream& os)
 {
     switch (keyId.type())
     {
     case KeyId::Type::kKey:
         if (keyId.value() != 0)
         {
-            str.appendChar('K');
+            os.appendChar('K');
 
             auto keyName(KeyCodes::keyName(keyId.value()));
 
             if (!keyName.empty())
             {
-                str.appendStr(keyName);
+                os.appendStr(keyName);
             }
             else
             {
-                str.appendChar('_');
-                str.appendInt(keyId.value());
+                os.appendChar('_');
+                os.appendInt(keyId.value());
             }
         }
         else
         {
-            str.appendStr("_");
+            os.appendStr("_");
         }
         break;
 
     case KeyId::Type::kLayer:
-        str.appendChar('L');
-        str.appendInt(keyId.value());
+        os.appendChar('L');
+        os.appendInt(keyId.value());
         break;
         
     case KeyId::Type::kLock:
-        str.appendChar('O');
-        str.appendInt(static_cast<int>(keyId.lockType()));
-        str.appendChar(':');
-        str.appendInt(keyId.value());
+        os.appendChar('O');
+        os.appendInt(static_cast<int>(keyId.lockType()));
+        os.appendChar(':');
+        os.appendInt(keyId.value());
         break;
 
     case KeyId::Type::kMacro:
-        str.appendChar('M');
-        str.appendInt(keyId.value());
+        os.appendChar('M');
+        os.appendInt(keyId.value());
         break;
 
     case KeyId::Type::kAction:
-        str.appendChar('A');
-        str.appendInt(static_cast<int>(keyId.actionType()));
-        str.appendChar(':');
-        str.appendInt(keyId.value());
+        os.appendChar('A');
+        os.appendInt(static_cast<int>(keyId.actionType()));
+        os.appendChar(':');
+        os.appendInt(keyId.value());
         break;
         
     case KeyId::Type::kDelay:
-        str.appendChar('D');
-        str.appendInt(static_cast<int>(keyId.delayMs()));
+        os.appendChar('D');
+        os.appendInt(static_cast<int>(keyId.delayMs()));
         break;
 
     default:
-        str.appendStr("?");
+        os.appendStr("?");
         break;
     }
 }

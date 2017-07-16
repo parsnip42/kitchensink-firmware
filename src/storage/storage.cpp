@@ -9,6 +9,27 @@ namespace
 constexpr uint8_t SD_CS_PIN = 10;
 }
 
+namespace
+{
+const char* getRegionFile(Storage::Region region)
+{
+    switch (region)
+    {
+    case Storage::Region::Config:
+        return "config.ini";
+
+    case Storage::Region::Layer:
+        return "layer.ini";
+        
+    case Storage::Region::Macro:
+        return "macro.ini";
+
+    default:
+        return "unknown.ini";
+    }
+}
+}
+
 Storage::Storage()
 {
     mSdFat.begin(SD_CS_PIN, SPI_HALF_SPEED);
@@ -31,14 +52,16 @@ int Storage::fatType() const
 
 Storage::IStream Storage::read(Region region)
 {
-    return IStream(mSdFat.open("test.cfg", O_READ));
+    return IStream(mSdFat.open(getRegionFile(region), O_READ));
 }
 
 Storage::OStream Storage::write(Region region)
 {
-    mSdFat.remove("test.cfg");
+    auto regionFile(getRegionFile(region));
     
-    return OStream(mSdFat.open("test.cfg", O_CREAT | O_EXCL | O_WRITE));
+    mSdFat.remove(regionFile);
+    
+    return OStream(mSdFat.open(regionFile, O_CREAT | O_EXCL | O_WRITE));
 }
 
 
@@ -51,9 +74,11 @@ Storage::IStream::~IStream()
     mFileHandle.close();
 }
 
-bool Storage::IStream::readLine(StrOStream& ostream)
+bool Storage::IStream::readLine(const StrOStream& os)
 {
     char ch;
+
+    os.reset();
     
     while (mFileHandle.read(&ch, 1) == 1)
     {
@@ -62,7 +87,7 @@ bool Storage::IStream::readLine(StrOStream& ostream)
             return true;
         }
         
-        ostream.appendChar(ch);
+        os.appendChar(ch);
     }
 
     return false;
@@ -79,5 +104,5 @@ Storage::OStream::~OStream()
         
 void Storage::OStream::write(const StrRef& str)
 {
-    mFileHandle.write(str.begin(), str.size());   
+    mFileHandle.write(str.begin(), str.length());   
 }

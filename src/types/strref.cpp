@@ -5,7 +5,7 @@ StrRef StrRef::trim() const
     const_iterator trimBegin(begin());
 
     while (trimBegin != end() &&
-           (*trimBegin == ' ' || *trimBegin == '\t'));
+           (*trimBegin == ' ' || *trimBegin == '\t'))
     {
         ++trimBegin;
     }
@@ -26,3 +26,12 @@ StrRef StrRef::trim() const
     return StrRef(trimBegin, trimEnd);
 }
 
+bool StrRef::beginsWith(const StrRef& str) const
+{
+    return substr(0, str.length()) == str;
+}
+
+bool StrRef::endsWith(const StrRef& str) const
+{
+    return substr(length() - str.length()) == str;
+}

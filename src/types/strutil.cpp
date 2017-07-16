@@ -71,4 +71,41 @@ StrRef nextToken(const StrRef& input,
     return StrRef(tokenBegin, tokenEnd);
 }
 
+bool cut(const StrRef& input,
+         StrRef&       tokenA,
+         char          separator,
+         StrRef&       tokenB)
+{
+    auto centre(std::find(input.begin(), input.end(), separator));
+
+    if (centre != input.end())
+    {
+        tokenA = StrRef(input.begin(), centre);
+        tokenB = StrRef(centre + 1, input.end());
+
+        return true;
+    }
+
+    return false;
+}
+
+bool cutTrim(const StrRef& input,
+             StrRef&       tokenA,
+             char          separator,
+             StrRef&       tokenB)
+{
+    if (cut(input.trim(),
+            tokenA,
+            separator,
+            tokenB))
+    {
+        tokenA = tokenA.trim();
+        tokenB = tokenB.trim();
+        
+        return true;
+    }
+    
+    return false;
+}
+
 };

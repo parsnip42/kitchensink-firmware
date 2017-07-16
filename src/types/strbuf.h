@@ -3,68 +3,71 @@
 
 #include "types/strref.h"
 
+#include <array>
 #include <algorithm>
-#include <cstdio>
 #include <cstdint>
-#include <cstring>
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 class StrBuf
 {
+private:
+    typedef std::array<char, Capacity + 1> Data;
+    
 public:
-    typedef const char* const_iterator;
-    typedef char*       iterator;
+    typedef typename Data::const_iterator const_iterator;
+    typedef typename Data::iterator       iterator;
 
 public:
     constexpr StrBuf();
     StrBuf(const StrRef& strRef);
 
 public:
-    StrBuf<Size>& insert(iterator it, char c);
-    StrBuf<Size>& erase(iterator it);
+    StrBuf<Capacity>& insert(iterator it, char c);
+    StrBuf<Capacity>& erase(iterator it);
     void clear();
     
 public:
-    const_iterator begin() const;
-    const_iterator end() const;
+    constexpr const_iterator begin() const;
+    constexpr const_iterator end() const;
 
     iterator begin();
     iterator end();
     
-    std::size_t length() const;
-    constexpr bool empty() const;
-
-    char* data();
     constexpr std::size_t capacity() const;
+    constexpr std::size_t length() const;
+    constexpr bool empty() const;
     
 public:
-    StrBuf<Size>& operator=(const StrRef& strRef);
+    StrBuf<Capacity>& operator=(const StrRef& strRef);
     constexpr operator StrRef() const;
 
-    const char& operator[](std::size_t n) const;
+    constexpr const char& operator[](std::size_t n) const;
     char& operator[](std::size_t n);
 
 private:
-    char mData[Size];
+    Data mData;
+
+private:
+    static constexpr std::size_t length(const_iterator data);
 };
 
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-constexpr StrBuf<Size>::StrBuf()
+constexpr StrBuf<Capacity>::StrBuf()
     : mData{0}
 { }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-StrBuf<Size>::StrBuf(const StrRef& strRef)
+StrBuf<Capacity>::StrBuf(const StrRef& strRef)
 {
-    strlcpy(mData, strRef.begin(), std::min(strRef.size() + 1, sizeof(mData)));
+    *this = strRef;
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-StrBuf<Size>& StrBuf<Size>::insert(iterator it, char c)
+StrBuf<Capacity>& StrBuf<Capacity>::insert(iterator it, char c)
 {
     auto endIt(end());
     
@@ -75,108 +78,108 @@ StrBuf<Size>& StrBuf<Size>::insert(iterator it, char c)
     return *this;
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-StrBuf<Size>& StrBuf<Size>::erase(iterator it)
+StrBuf<Capacity>& StrBuf<Capacity>::erase(iterator it)
 {
-    std::move(it + 1, end(), it);
-
-    *(end() - 1) = '\0';
+    std::move(it + 1, end() + 1, it);
     
     return *this;
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-void StrBuf<Size>::clear()
+void StrBuf<Capacity>::clear()
 {
-    mData[0] = '\0';
+    mData.front() = '\0';
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-typename StrBuf<Size>::const_iterator StrBuf<Size>::begin() const
+constexpr typename StrBuf<Capacity>::const_iterator StrBuf<Capacity>::begin() const
 {
-    return mData;
+    return mData.begin();
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-typename StrBuf<Size>::const_iterator StrBuf<Size>::end() const
+constexpr typename StrBuf<Capacity>::const_iterator StrBuf<Capacity>::end() const
 {
-    return mData + length();
+    return mData.begin() + length();
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-typename StrBuf<Size>::iterator StrBuf<Size>::begin()
+typename StrBuf<Capacity>::iterator StrBuf<Capacity>::begin()
 {
-    return mData;
+    return mData.begin();
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-typename StrBuf<Size>::iterator StrBuf<Size>::end()
+typename StrBuf<Capacity>::iterator StrBuf<Capacity>::end()
 {
-    return mData + length();
+    return mData.begin() + length();
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-std::size_t StrBuf<Size>::length() const
+constexpr std::size_t StrBuf<Capacity>::length() const
 {
-    return strlen(mData);
+    return length(mData.begin());
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-constexpr bool StrBuf<Size>::empty() const
+constexpr bool StrBuf<Capacity>::empty() const
 {
-    return (mData[0] == '\0');
+    return mData.front() == '\0';
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-char* StrBuf<Size>::data()
+constexpr std::size_t StrBuf<Capacity>::capacity() const
 {
-    return mData;
+    return Capacity;
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-constexpr std::size_t StrBuf<Size>::capacity() const
+StrBuf<Capacity>& StrBuf<Capacity>::operator=(const StrRef& strRef)
 {
-    return sizeof(mData);
-}
-
-template <std::size_t Size>
-inline
-StrBuf<Size>& StrBuf<Size>::operator=(const StrRef& strRef)
-{
-    strlcpy(mData, strRef.begin(), std::min(strRef.size() + 1, sizeof(mData)));
-
+    *std::copy(strRef.begin(),
+               strRef.begin() + std::min(strRef.length(), capacity()),
+               mData.begin()) = '\0';
+    
     return *this;
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-constexpr StrBuf<Size>::operator StrRef() const
+constexpr StrBuf<Capacity>::operator StrRef() const
 {
-    return StrRef(mData);
+    return StrRef(mData.begin());
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-const char& StrBuf<Size>::operator[](std::size_t n) const
+constexpr const char& StrBuf<Capacity>::operator[](std::size_t n) const
 {
     return mData[n];
 }
 
-template <std::size_t Size>
+template <std::size_t Capacity>
 inline
-char& StrBuf<Size>::operator[](std::size_t n)
+char& StrBuf<Capacity>::operator[](std::size_t n)
 {
     return mData[n];
+}
+
+template <std::size_t Capacity>
+inline
+constexpr std::size_t StrBuf<Capacity>::length(const_iterator data)
+{
+    return (*data == '\0') ? 0 : (1 + length(data + 1));
 }
 
 #endif

@@ -11,7 +11,7 @@
 namespace KeyIdSerializer
 {
 
-void serialize(KeyId keyId, StrOStream& str);
+void serialize(KeyId keyId, const StrOStream& os);
 void deserialize(const StrRef& keyIdStr, KeyId& keyId);
 
 };

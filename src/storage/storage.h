@@ -41,7 +41,7 @@ public:
         ~IStream();
 
     public:
-        bool readLine(StrOStream& ostream);
+        bool readLine(const StrOStream& os);
         
     private:
         File mFileHandle;
@@ -53,7 +53,9 @@ public:
 public:
     enum class Region : int
     {
-        Config = 0
+        Config = 0,
+        Layer = 1,
+        Macro = 2
     };
     
 public:

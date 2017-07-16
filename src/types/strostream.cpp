@@ -2,34 +2,31 @@
 
 #include "types/strref.h"
 
+#include <cstdio>
+#include <cstring>
 #include <string.h>
 
-std::size_t StrOStream::length() const
+void StrOStream::reset() const
 {
-    return strlen(mData);
+    mData[0] = '\0';
 }
 
-std::size_t StrOStream::capacity() const
+const StrOStream& StrOStream::appendStr(const StrRef& str) const
 {
-    return mCapacity;
-}
-
-StrOStream& StrOStream::appendStr(const StrRef& str)
-{
-    auto currentLength(length());
+    auto currentLength(strlen(mData));
 
     strlcpy(mData + currentLength,
             str.begin(),
-            std::min(str.size() + 1, capacity() - currentLength));
+            std::min(str.length() + 1, mDataSize - currentLength));
     
     return *this;
 }
 
-StrOStream& StrOStream::appendChar(char c)
+const StrOStream& StrOStream::appendChar(char c) const
 {
-    auto currentLength(length());
+    auto currentLength(strlen(mData));
 
-    if (currentLength < capacity() - 1)
+    if (currentLength < mDataSize - 1)
     {
         mData[currentLength] = c;
         mData[currentLength + 1] = '\0';
@@ -38,11 +35,11 @@ StrOStream& StrOStream::appendChar(char c)
     return *this;    
 }
 
-StrOStream& StrOStream::appendInt(int n, const char* fmt)
+const StrOStream& StrOStream::appendInt(int n, const char* fmt) const
 {
-    auto currentLength(length());
+    auto currentLength(strlen(mData));
 
-    snprintf(mData + currentLength, capacity() - currentLength, fmt, n);
+    snprintf(mData + currentLength, mDataSize - currentLength, fmt, n);
 
     return *this;
 }

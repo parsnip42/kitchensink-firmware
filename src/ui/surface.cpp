@@ -16,7 +16,7 @@ void Surface::paintText(int           x,
                         uint8_t       fg,
                         uint8_t       bg)
 {
-    auto len(text.size());
+    auto len(text.length());
     
     initRegion(x, y, len * kFontWidth, kFontHeight);
 
@@ -125,7 +125,7 @@ void Surface::paintTextLineC(const StrRef&   text,
     auto hWidth(width / 2);
     
     int prePad(0);
-    int textLen(text.size() * 4);
+    int textLen(text.length() * 4);
 
     if (hWidth > textLen)
     {

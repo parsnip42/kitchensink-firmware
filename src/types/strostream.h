@@ -4,6 +4,7 @@
 #include "types/strbuf.h"
 
 #include <cstdint>
+#include <cstring>
 
 class StrRef;
 
@@ -11,28 +12,35 @@ class StrOStream
 {
 public:
     template <std::size_t N>
-    explicit StrOStream(StrBuf<N>& strBuf);
+    StrOStream(StrBuf<N>& strBuf);
 
 public:
-    std::size_t length() const;
-    std::size_t capacity() const;
+    StrRef str() const;
+    void reset() const;
 
-    StrOStream& appendStr(const StrRef& str);
-    StrOStream& appendChar(char c);
-    StrOStream& appendInt(int n, const char* fmt = "%d");
+public:
+    const StrOStream& appendStr(const StrRef& str) const;
+    const StrOStream& appendChar(char c) const;
+    const StrOStream& appendInt(int n, const char* fmt = "%d") const;
     
 private:
     char*       mData;
-    std::size_t mCapacity;
+    std::size_t mDataSize;
 };
 
 
 template <std::size_t N>
 inline
 StrOStream::StrOStream(StrBuf<N>& strBuf)
-    : mData(strBuf.data())
-    , mCapacity(strBuf.capacity())
+    : mData(strBuf.begin())
+    , mDataSize(strBuf.capacity() + 1)
 { }
+
+inline
+StrRef StrOStream::str() const
+{
+    return StrRef(mData);
+}
 
 #endif /* INCLUDED_STROSTREAM_H */
 

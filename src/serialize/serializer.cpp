@@ -23,7 +23,8 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, Storage::OStream&
         StrBuf<20> headerStr;
         StrOStream ostream(headerStr);
 
-        ostream.appendStr("macro ").appendInt(i);
+        ostream.appendStr("macro ")
+               .appendInt(i);
                                 
         ini.writeSection(headerStr);
         s.serialize(macroSet[i], os);
@@ -32,7 +33,69 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, Storage::OStream&
 
 bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
 {
-    return true;
+    IniFormat::IStream ini(is);
+    
+    StrRef sectionName;
+
+    while (ini.nextSection(sectionName))
+    {
+        int macroId;
+        StrRef typeStr;
+        StrRef numStr;
+
+        if (StrUtil::cutTrim(sectionName, typeStr, ' ', numStr) &&
+            typeStr == "macro" &&
+            StrUtil::parseUInt(numStr, macroId))
+        {
+            StrRef key;
+            StrRef value;
+
+            StrBuf<24> name;
+            int type(0);
+            std::array<KeyEvent, 200> macro;
+            std::size_t macroSize(0);
+
+            while (ini.nextProperty(key, value))
+            {
+                if (key == "name")
+                {
+                    name = value;
+                }
+
+                if (key == "type")
+                {
+                    StrUtil::parseUInt(value, type);
+                }
+
+                if (key == "content")
+                {
+                    StrRef token(StrUtil::nextToken(value, " \t"));
+                    
+                    while (!token.empty() && macroSize < macro.size())
+                    {
+                        auto& keyEvent(macro[macroSize++]);
+                        
+                        if (token.beginsWith("!"))
+                        {
+                            token = token.substr(1);
+                            keyEvent.pressed = false;
+                        }
+                        else
+                        {
+                            keyEvent.pressed = true;
+                        }
+                        
+                        KeyIdSerializer::deserialize(token, keyEvent.keyId);
+                        token = StrUtil::nextToken(value, " \t", token);
+                    }
+                }
+            }
+            
+            macroSet.setMacro(macroId, static_cast<MacroType>(type), name, macro.begin(), macro.begin() + macroSize);
+        }
+    }
+    
+    return false;
 }
 
 void Serializer<MacroSet::Macro>::serialize(const MacroSet::Macro& macro, Storage::OStream& os)
@@ -40,7 +103,14 @@ void Serializer<MacroSet::Macro>::serialize(const MacroSet::Macro& macro, Storag
     IniFormat::OStream ini(os);
 
     ini.writeProperty("name", macro.name());
+
+    StrBuf<12> typeStr;
+    StrOStream oss(typeStr);
+
+    oss.appendInt(static_cast<int>(macro.type()));
     
+    ini.writeProperty("type", typeStr);
+
     os.write("content=");
 
     for (const auto& event : macro.content())
@@ -51,9 +121,8 @@ void Serializer<MacroSet::Macro>::serialize(const MacroSet::Macro& macro, Storag
         }
         
         StrBuf<24> str;
-        StrOStream out(str);
 
-        KeyIdSerializer::serialize(event.keyId, out);
+        KeyIdSerializer::serialize(event.keyId, str);
         os.write(str);
         
         os.write(" ");
@@ -77,9 +146,8 @@ void Serializer<Layer>::serialize(const Layer& layer, Storage::OStream& os)
         for (const auto& key : row)
         {
             StrBuf<24> str;
-            StrOStream out(str);
             
-            KeyIdSerializer::serialize(key, out);
+            KeyIdSerializer::serialize(key, str);
             
             os.write(str);
             os.write(" ");
@@ -95,16 +163,13 @@ bool Serializer<Layer>::deserialize(Storage::IStream& is, Layer& layer)
 {
     layer.clear();
     
-    StrOStream ostream(layer.name);
-
-    is.readLine(ostream);
+    is.readLine(layer.name);
 
     for (auto& row : layer.mapping)
     {
         StrBuf<240> rowData;
-        StrOStream ostream(rowData);
         
-        is.readLine(ostream);
+        is.readLine(rowData);
 
         StrRef token(StrUtil::nextToken(rowData, " \t"));
 
