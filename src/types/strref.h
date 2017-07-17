@@ -25,10 +25,13 @@ public:
     constexpr StrRef substr(std::size_t start, std::size_t len) const;
 
 public:
+    bool equalsCase(const StrRef& str) const;
     bool beginsWith(const StrRef& str) const;
     bool endsWith(const StrRef& str) const;
+    bool beginsWithCase(const StrRef& str) const;
+    bool endsWithCase(const StrRef& str) const;
     StrRef trim() const;
-    
+        
 public:
     constexpr const char& operator[](std::size_t n) const;
     

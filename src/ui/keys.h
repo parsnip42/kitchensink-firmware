@@ -12,35 +12,43 @@ namespace Keys
 inline
 constexpr bool up(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Up) ||
-            keyId == KeyId(KeyCodes::E) ||
-            keyId == KeyId(KeyCodes::I));
+    return keyId == KeyId(KeyCodes::Up);
 }
 
 inline
 constexpr bool down(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Down) ||
-            keyId == KeyId(KeyCodes::D) ||
-            keyId == KeyId(KeyCodes::K));
+    return keyId == KeyId(KeyCodes::Down);
+}
+
+inline
+constexpr bool pageUp(const KeyId& keyId)
+{
+    return keyId == KeyId(KeyCodes::PageUp);
+}
+
+inline
+constexpr bool pageDown(const KeyId& keyId)
+{
+    return keyId == KeyId(KeyCodes::PageDown);
 }
 
 inline
 constexpr bool left(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Left));
+    return keyId == KeyId(KeyCodes::Left);
 }
 
 inline
 constexpr bool right(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Right));
+    return keyId == KeyId(KeyCodes::Right);
 }
 
 inline
 constexpr bool ok(const KeyId& keyId)
 {
-    return (keyId == KeyId(KeyCodes::Enter));
+    return keyId == KeyId(KeyCodes::Enter);
 
 }
 

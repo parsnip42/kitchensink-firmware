@@ -92,17 +92,18 @@ void KeyDataSource::getItem(const StrOStream& os,
                             KeyId&            keyId,
                             std::size_t       index) const
 {
-    auto keyName(KeyCodes::keyName(index));
+    auto keyName(KeyCodes::keyName(index + 1));
 
     if (keyName == "")
     {
         keyName = "Reserved";
     }
     
-    os.appendInt(index, "0x%2.2x");
-    os.appendStr(" : ");
     os.appendStr(keyName);
-    
+    os.appendStr(" (");
+    os.appendInt(index + 1, "0x%2.2x");
+    os.appendStr(")");
+        
     keyId = KeyId(index);
 }
 

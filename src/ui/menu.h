@@ -37,15 +37,27 @@ public:
     void createMenu();
 
 private:
-    void paintMenu(int offset,
-                   int start,
-                   int end);
+    void moveSelection(int selectionOffset);
+    
+    void redraw();
+    
+    void paintMenu(int start,
+                   int height);
+
+    bool matchesFilter(const StrRef& title);
+    
+    void filteredItem(const StrOStream& title,
+                      KeyId&            keyId,
+                      std::size_t       index);
+    
+    std::size_t filteredItemCount();
     
 private:
     const DataSource& mDataSource;
     Surface&          mSurface;
     KeyProcessor&     mKeyProcessor;
-    int               mSelected;
+    std::size_t       mSelected;
+    StrBuf<12>        mFilter;
     
 private:
     Menu(const Menu&) = delete;
@@ -61,6 +73,7 @@ Menu::Menu(const DataSource& dataSource,
     , mSurface(surface)
     , mKeyProcessor(keyProcessor)
     , mSelected(0)
+    , mFilter()
 { }
 
 }
