@@ -29,9 +29,9 @@ public:
     constexpr ArrayDataSource(const Item (&menu)[Size]);
 
 public:
-    virtual void getItem(StrOStream& ostream,
-                         KeyId&      keyId,
-                         std::size_t index) const;
+    virtual void getItem(const StrOStream& os,
+                         KeyId&            keyId,
+                         std::size_t       index) const;
 
     virtual std::size_t getItemCount() const;
 
@@ -57,13 +57,13 @@ constexpr ArrayDataSource::ArrayDataSource(const UI::ArrayDataSource::Item (&men
 { }
 
 inline
-void ArrayDataSource::getItem(StrOStream& ostream,
-                              KeyId&      keyId,
-                              std::size_t index) const
+void ArrayDataSource::getItem(const StrOStream& os,
+                              KeyId&            keyId,
+                              std::size_t       index) const
 {
     auto& item(*(mBegin + index));
 
-    ostream.appendStr(item.text);
+    os.appendStr(item.text);
     keyId = item.keyId;
 }
 

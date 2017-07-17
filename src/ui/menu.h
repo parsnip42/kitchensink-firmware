@@ -21,9 +21,9 @@ public:
     class DataSource
     {
     public:
-        virtual void getItem(StrOStream& text,
-                             KeyId&      keyId,
-                             std::size_t index) const = 0;
+        virtual void getItem(const StrOStream& os,
+                             KeyId&            keyId,
+                             std::size_t       index) const = 0;
         
         virtual std::size_t getItemCount() const = 0;
     };
@@ -37,11 +37,9 @@ public:
     void createMenu();
 
 private:
-    void paintMenu(int     offset,
-                   int     start,
-                   int     end,
-                   uint8_t fg,
-                   uint8_t bg);
+    void paintMenu(int offset,
+                   int start,
+                   int end);
     
 private:
     const DataSource& mDataSource;

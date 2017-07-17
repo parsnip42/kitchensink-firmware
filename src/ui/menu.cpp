@@ -15,27 +15,17 @@ void Menu::createMenu()
     uint8_t scrollPos(0);    
 
     auto redraw(
-        [&](uint8_t fg = 0xf)
+        [&]()
         {
             paintMenu(
                 (mSelected * Surface::kFontHeight) - selectionOffset - scrollPos,
                 scrollPos,
-                Surface::kHeight,
-                fg,
-                0);                    
+                Surface::kHeight);                    
         });
 
     mSurface.clear();
+    redraw();
     
-    for (auto fg(0); fg <= 0xf; ++fg)
-    {
-         mKeyProcessor.delay(
-             [&]()
-             {
-                 redraw(fg);
-             }, 8);
-    }
-
     while (1)
     {
         mKeyProcessor.poll(
@@ -51,9 +41,7 @@ void Menu::createMenu()
             paintMenu(
                 (mSelected * Surface::kFontHeight) - selectionOffset - scrollPos,
                 scrollPos - Surface::kFontHeight,
-                Surface::kFontHeight,
-                0xf,
-                0);                       
+                Surface::kFontHeight);                       
 
             for (int i(0); i < Surface::kFontHeight; ++i)
             {
@@ -73,9 +61,7 @@ void Menu::createMenu()
             paintMenu(
                 (mSelected * Surface::kFontHeight) - selectionOffset - scrollPos,
                 Surface::kHeight + scrollPos,
-                Surface::kFontHeight,
-                0xf,
-                0);
+                Surface::kFontHeight);
 
             for (int i(0); i < Surface::kFontHeight; ++i)
             {
@@ -110,24 +96,15 @@ void Menu::createMenu()
         }
     }
 
-    for (auto fg(0xf); fg >= 0; --fg)
-    {
-        mKeyProcessor.delay(
-            [&]()
-            {
-                redraw(fg);
-            }, 8);
-    }
+    mSurface.clear();
 }
 
-void Menu::paintMenu(int     offset,
-                     int     start,
-                     int     height,
-                     uint8_t fg,
-                     uint8_t bg)
+void Menu::paintMenu(int offset,
+                     int start,
+                     int height)
 {
-    const Surface::ColorMap colorMap(fg, bg);
-    const Surface::ColorMap invColorMap(bg, fg);
+    static const Surface::ColorMap colorMap(0xf, 0x0);
+    static const Surface::ColorMap invColorMap(0x0, 0xf);
 
     const int itemCount(mDataSource.getItemCount());
     const int pointRange(itemCount * Surface::kFontHeight);

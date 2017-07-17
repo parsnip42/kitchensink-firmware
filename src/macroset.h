@@ -21,6 +21,7 @@ private:
     public:
         MacroType  type;
         StrBuf<24> name;
+        StrBuf<24> shortcut;
     };
 
     typedef std::array<MacroDataEntry, 30> MacroData;

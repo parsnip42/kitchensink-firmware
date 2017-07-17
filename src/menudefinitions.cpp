@@ -31,12 +31,12 @@ constexpr MacroDataSource::MacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void MacroDataSource::getItem(StrOStream& ostream,
-                              KeyId&      keyId,
-                              std::size_t index) const
+void MacroDataSource::getItem(const StrOStream& os,
+                              KeyId&            keyId,
+                              std::size_t       index) const
 
 {
-    ostream.appendStr(mKeyboardState.macroSet[index].name());
+    os.appendStr(mKeyboardState.macroSet[index].name());
     keyId = KeyId::Macro(index);
 }
 
@@ -50,12 +50,12 @@ constexpr EditMacroDataSource::EditMacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void EditMacroDataSource::getItem(StrOStream& ostream,
-                                  KeyId&      keyId,
-                                  std::size_t index) const
+void EditMacroDataSource::getItem(const StrOStream& os,
+                                  KeyId&            keyId,
+                                  std::size_t       index) const
 {
     
-    ostream.appendStr(mKeyboardState.macroSet[index].name());
+    os.appendStr(mKeyboardState.macroSet[index].name());
     keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
 }
 
@@ -69,12 +69,12 @@ constexpr LockDataSource::LockDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void LockDataSource::getItem(StrOStream& ostream,
-                             KeyId&      keyId,
-                             std::size_t index) const
+void LockDataSource::getItem(const StrOStream& os,
+                             KeyId&            keyId,
+                             std::size_t       index) const
 {
     
-    ostream.appendStr(mKeyboardState.lockSet[index].name);
+    os.appendStr(mKeyboardState.lockSet[index].name);
     keyId = KeyId::Lock(KeyId::LockType::kToggle, index);
 }
 
@@ -88,9 +88,9 @@ constexpr KeyDataSource::KeyDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void KeyDataSource::getItem(StrOStream& ostream,
-                            KeyId&      keyId,
-                            std::size_t index) const
+void KeyDataSource::getItem(const StrOStream& os,
+                            KeyId&            keyId,
+                            std::size_t       index) const
 {
     auto keyName(KeyCodes::keyName(index));
 
@@ -99,9 +99,9 @@ void KeyDataSource::getItem(StrOStream& ostream,
         keyName = "Reserved";
     }
     
-    ostream.appendInt(index, "0x%2.2x");
-    ostream.appendStr(" : ");
-    ostream.appendStr(keyName);
+    os.appendInt(index, "0x%2.2x");
+    os.appendStr(" : ");
+    os.appendStr(keyName);
     
     keyId = KeyId(index);
 }

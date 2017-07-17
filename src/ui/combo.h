@@ -6,6 +6,7 @@
 class KeyProcessor;
 
 namespace UI { class Surface; }
+namespace UI { class Rectangle; }
 
 namespace UI
 {
@@ -28,9 +29,7 @@ public:
 public:
     Combo(Surface&           surface,
           KeyProcessor&      keyProcessor,
-          int                x,
-          int                y,
-          int                width,
+          const Rectangle&   rect,
           Combo::DataSource& dataSource,
           std::size_t        selectedItem);
 

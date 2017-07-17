@@ -4,6 +4,7 @@
 #include "keyprocessor.h"
 #include "ui/surface.h"
 #include "ui/keys.h"
+#include "ui/rectangle.h"
 #include "types/strref.h"
 
 namespace UI
@@ -11,16 +12,14 @@ namespace UI
 
 Combo::Combo(Surface&           surface,
              KeyProcessor&      keyProcessor,
-             int                x,
-             int                y,
-             int                width,
+             const Rectangle&   rect,
              Combo::DataSource& dataSource,
              std::size_t        selectedItem)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
-    , mX(x)
-    , mY(y)
-    , mWidth(width)
+    , mX(rect.x)
+    , mY(rect.y)
+    , mWidth(rect.width)
     , mDataSource(dataSource)
     , mSelectedItem(selectedItem % mDataSource.getItemCount())
 {

@@ -10,6 +10,7 @@ class KeyId;
 class KeyProcessor;
 
 namespace UI { class Surface; }
+namespace UI { class Rectangle; }
 
 namespace UI
 {
@@ -17,20 +18,17 @@ namespace UI
 class TextEntry
 {
 public:
-    TextEntry(Surface&      surface,
-              KeyProcessor& keyProcessor,
-              int           x,
-              int           y,
-              int           width,
-              const StrRef& text);
+    TextEntry(Surface&         surface,
+              KeyProcessor&    keyProcessor,
+              const Rectangle& rect,
+              const StrRef&    text);
 
 public:
-    bool create();
+    bool focus();
 
     StrRef text() const;
 
 private:
-    void processKey(const KeyId& keyId);
     void paintText();
     void paintCursor(bool visible);
     

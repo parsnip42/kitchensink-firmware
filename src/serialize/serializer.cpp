@@ -138,11 +138,14 @@ bool Serializer<MacroSet::Macro>::deserialize(Storage::IStream& is, MacroSet::Ma
 
 void Serializer<Layer>::serialize(const Layer& layer, Storage::OStream& os)
 {
-    os.write(layer.name);
-    os.write("\n");
+    IniFormat::OStream ini(os);
+    
+    ini.writeProperty("name", layer.name);
 
     for (const auto& row : layer.mapping)
     {
+        os.write("row=");
+        
         for (const auto& key : row)
         {
             StrBuf<24> str;

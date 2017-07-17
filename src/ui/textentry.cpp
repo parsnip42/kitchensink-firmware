@@ -7,33 +7,32 @@
 #include "data/keymap.h"
 #include "ui/keys.h"
 #include "ui/surface.h"
+#include "ui/rectangle.h"
 
 #include <elapsedMillis.h>
 
 namespace UI
 {
 
-TextEntry::TextEntry(Surface&      surface,
-                     KeyProcessor& keyProcessor,
-                     int           x,
-                     int           y,
-                     int           width,
-                     const StrRef& text)
+TextEntry::TextEntry(Surface&         surface,
+                     KeyProcessor&    keyProcessor,
+                     const Rectangle& rect,
+                     const StrRef&    text)
     : mSurface(surface)
     , mKeyProcessor(keyProcessor)
-    , mX(x)
-    , mY(y)
-    , mWidth(width)
+    , mX(rect.x)
+    , mY(rect.y)
+    , mWidth(rect.width)
     , mText(text)
     , mCursorPosition(mText.length())
-{ }
-
-bool TextEntry::create()
 {
     mSurface.rectangle(mX, mY, mWidth, Surface::kFontHeight + 3);
     
     paintText();
+}
 
+bool TextEntry::focus()
+{
     AutoRepeat autoRepeat;
     ModifierState modifierState;
 
@@ -149,11 +148,6 @@ bool TextEntry::create()
     }
 
     return entered;
-}
-
-void TextEntry::processKey(const KeyId& keyId)
-{
-    
 }
 
 void TextEntry::paintText()

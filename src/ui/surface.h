@@ -15,7 +15,7 @@ class Surface
 {
 public:
     static constexpr int kHeight = 64;
-    static constexpr int kWidth = 256;
+    static constexpr int kWidth = 240;
     static constexpr int kFontWidth = Font::kWidth;
     static constexpr int kFontHeight = Font::kHeight;
     static constexpr uint8_t kScrollMax = 128;

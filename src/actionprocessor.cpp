@@ -8,8 +8,11 @@
 #include "ui/menu.h"
 #include "ui/text.h"
 #include "ui/textentry.h"
+#include "ui/label.h"
 #include "ui/combo.h"
 #include "ui/recordmacro.h"
+#include "ui/tablelayout.h"
+
 #include "types/strbuf.h"
 #include "types/strostream.h"
 
@@ -91,34 +94,44 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 
                 mSurface.clear();
 
-                StrBuf<20> title;
-                StrOStream ostream(title);
-
-                ostream.appendStr("Macro #")
-                       .appendInt(macroIndex);
-                
-                mSurface.paintTextC(0, 0, 240, title, 0xf, 0);
-
                 const auto& macro(mKeyboardState.macroSet[macroIndex]);
+
+                UI::TableLayout layout(72, UI::Surface::kWidth, 20, 8);
                 
+                UI::Label(mSurface,
+                          layout.next(),
+                          "Name",
+                          UI::Label::Justify::Right);
+
                 UI::TextEntry entry(mSurface,
                                     mKeyProcessor,
-                                    0,
-                                    20,
-                                    UI::Surface::kWidth,
+                                    layout.next(),
                                     macro.name());
+                
+                UI::Label(mSurface,
+                          layout.next(),
+                          "Shortcut",
+                          UI::Label::Justify::Right);
+                
+                UI::TextEntry entry2(mSurface,
+                                     mKeyProcessor,
+                                     layout.next(),
+                                     "SCT");
 
                 MacroTypeDataSource ds;
                 
+                UI::Label(mSurface,
+                          layout.next(),
+                          "Type",
+                          UI::Label::Justify::Right);
+
                 UI::Combo combo(mSurface,
                                 mKeyProcessor,
-                                0,
-                                45,
-                                UI::Surface::kWidth,
+                                layout.next(),
                                 ds,
                                 0);
                 
-                if (entry.create())
+                if (entry.focus() && entry2.focus())
                 {
                     if (combo.create())
                     {

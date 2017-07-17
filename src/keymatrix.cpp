@@ -20,8 +20,8 @@ void KeyMatrix::setup()
     Wire.begin();
 
     //Wire.setClock(100000L);
-    Wire.setClock(400000L);
-    //Wire.setClock(1000000L);
+    //Wire.setClock(400000L);
+    Wire.setClock(1000000L);
 }
 
 void KeyMatrix::init()
