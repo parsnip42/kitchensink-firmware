@@ -125,7 +125,6 @@ void Menu::paintMenu(int offset,
         int current(point / Surface::kFontHeight);
         
         const auto& colors(current != mSelected ? colorMap : invColorMap);
-
         
         mDataSource.getItem(ostream,
                             keyId,

@@ -1,18 +1,16 @@
 #ifndef INCLUDED_STROSTREAM_H
 #define INCLUDED_STROSTREAM_H
 
-#include "types/strbuf.h"
+#include "types/strref.h"
 
 #include <cstdint>
 #include <cstring>
 
-class StrRef;
-
 class StrOStream
 {
 public:
-    template <std::size_t N>
-    StrOStream(StrBuf<N>& strBuf);
+    StrOStream(char*       data,
+               std::size_t dataSize);
 
 public:
     StrRef str() const;
@@ -29,11 +27,11 @@ private:
 };
 
 
-template <std::size_t N>
 inline
-StrOStream::StrOStream(StrBuf<N>& strBuf)
-    : mData(strBuf.begin())
-    , mDataSize(strBuf.capacity() + 1)
+StrOStream::StrOStream(char*       data,
+                       std::size_t dataSize)
+    : mData(data)
+    , mDataSize(dataSize)
 { }
 
 inline

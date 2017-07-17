@@ -36,7 +36,7 @@ private:
     Range<const_iterator> mRange;
 
 private:
-    static constexpr std::size_t length(const_iterator data);
+    static constexpr std::size_t termLen(const char* data);
     
 private:
     friend bool operator==(const StrRef& lhs, const StrRef& rhs);
@@ -48,7 +48,7 @@ bool operator!=(const StrRef& lhs, const StrRef& rhs);
 
 inline
 constexpr StrRef::StrRef(const char* str)
-    : mRange(str, str + length(str))
+    : mRange(str, str + termLen(str))
 { }
 
 inline
@@ -104,9 +104,16 @@ constexpr const char& StrRef::operator[](std::size_t n) const
 }
 
 inline
-constexpr std::size_t StrRef::length(const_iterator data)
+constexpr std::size_t StrRef::termLen(const char* data)
 {
-    return (*data == '\0') ? 0 : (1 + length(data + 1));
+    std::size_t len(0);
+
+    while (data[len] != '\0')
+    {
+        ++len;
+    }
+
+    return len;
 }
 
 inline

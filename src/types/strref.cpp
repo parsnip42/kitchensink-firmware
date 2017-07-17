@@ -1,5 +1,10 @@
 #include "types/strref.h"
 
+bool StrRef::beginsWith(const StrRef& str) const
+{
+    return substr(0, str.length()) == str;
+}
+
 StrRef StrRef::trim() const
 {
     const_iterator trimBegin(begin());
@@ -24,11 +29,6 @@ StrRef StrRef::trim() const
     }
     
     return StrRef(trimBegin, trimEnd);
-}
-
-bool StrRef::beginsWith(const StrRef& str) const
-{
-    return substr(0, str.length()) == str;
 }
 
 bool StrRef::endsWith(const StrRef& str) const

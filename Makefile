@@ -52,7 +52,7 @@ COMPILERPATH = $(TOOLSPATH)/arm/bin
 CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DARDUINO -DTEENSYDUINO=124 -DF_CPU=$(TEENSY_CORE_SPEED) -Isrc -I$(COREPATH)
 
 # compiler options for C++ only
-CXXFLAGS = -std=gnu++0x -felide-constructors -fno-exceptions -fno-rtti
+CXXFLAGS = -std=gnu++14 -felide-constructors -fno-exceptions -fno-rtti
 
 # compiler options for C only
 CFLAGS =

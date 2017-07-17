@@ -203,7 +203,7 @@ StrRef keyName(keycode_t keyCode)
         return Modifiers[keyCode - ModifierOffset];
     }
     
-    return StrRef("");
+    return StrRef();
 }
 
 keycode_t keyCode(const StrRef& keyName)

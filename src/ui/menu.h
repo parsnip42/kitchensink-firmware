@@ -21,7 +21,7 @@ public:
     class DataSource
     {
     public:
-        virtual void getItem(const StrOStream& os,
+        virtual void getItem(const StrOStream& title,
                              KeyId&            keyId,
                              std::size_t       index) const = 0;
         
@@ -29,9 +29,9 @@ public:
     };
 
 public:
-    constexpr Menu(const DataSource& dataSource,
-                   Surface&          surface,
-                   KeyProcessor&     keyProcessor);
+    Menu(const DataSource& dataSource,
+         Surface&          surface,
+         KeyProcessor&     keyProcessor);
 
 public:
     void createMenu();
@@ -54,9 +54,9 @@ private:
 
 
 inline
-constexpr Menu::Menu(const DataSource& dataSource,
-                     Surface&          surface,
-                     KeyProcessor&     keyProcessor)
+Menu::Menu(const DataSource& dataSource,
+           Surface&          surface,
+           KeyProcessor&     keyProcessor)
     : mDataSource(dataSource)
     , mSurface(surface)
     , mKeyProcessor(keyProcessor)

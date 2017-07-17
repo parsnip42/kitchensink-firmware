@@ -1,6 +1,7 @@
 #ifndef INCLUDED_STRBUF_H
 #define INCLUDED_STRBUF_H
 
+#include "types/strostream.h"
 #include "types/strref.h"
 
 #include <array>
@@ -19,27 +20,29 @@ public:
 
 public:
     constexpr StrBuf();
-    StrBuf(const StrRef& strRef);
+    constexpr StrBuf(const StrRef& strRef);
 
 public:
     StrBuf<Capacity>& insert(iterator it, char c);
     StrBuf<Capacity>& erase(iterator it);
-    void clear();
     
 public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
 
-    iterator begin();
-    iterator end();
+    constexpr iterator begin();
+    constexpr iterator end();
     
     constexpr std::size_t capacity() const;
     constexpr std::size_t length() const;
     constexpr bool empty() const;
+
+    constexpr void clear();
     
 public:
-    StrBuf<Capacity>& operator=(const StrRef& strRef);
+    constexpr StrBuf<Capacity>& operator=(const StrRef& strRef);
     constexpr operator StrRef() const;
+    operator StrOStream();
 
     constexpr const char& operator[](std::size_t n) const;
     char& operator[](std::size_t n);
@@ -55,12 +58,13 @@ private:
 template <std::size_t Capacity>
 inline
 constexpr StrBuf<Capacity>::StrBuf()
-    : mData{0}
-{ }
+{
+    clear();
+}
 
 template <std::size_t Capacity>
 inline
-StrBuf<Capacity>::StrBuf(const StrRef& strRef)
+constexpr StrBuf<Capacity>::StrBuf(const StrRef& strRef)
 {
     *this = strRef;
 }
@@ -89,7 +93,7 @@ StrBuf<Capacity>& StrBuf<Capacity>::erase(iterator it)
 
 template <std::size_t Capacity>
 inline
-void StrBuf<Capacity>::clear()
+constexpr void StrBuf<Capacity>::clear()
 {
     mData.front() = '\0';
 }
@@ -110,14 +114,14 @@ constexpr typename StrBuf<Capacity>::const_iterator StrBuf<Capacity>::end() cons
 
 template <std::size_t Capacity>
 inline
-typename StrBuf<Capacity>::iterator StrBuf<Capacity>::begin()
+constexpr typename StrBuf<Capacity>::iterator StrBuf<Capacity>::begin()
 {
     return mData.begin();
 }
 
 template <std::size_t Capacity>
 inline
-typename StrBuf<Capacity>::iterator StrBuf<Capacity>::end()
+constexpr typename StrBuf<Capacity>::iterator StrBuf<Capacity>::end()
 {
     return mData.begin() + length();
 }
@@ -140,12 +144,12 @@ template <std::size_t Capacity>
 inline
 constexpr std::size_t StrBuf<Capacity>::capacity() const
 {
-    return Capacity;
+    return mData.size();
 }
 
 template <std::size_t Capacity>
 inline
-StrBuf<Capacity>& StrBuf<Capacity>::operator=(const StrRef& strRef)
+constexpr StrBuf<Capacity>& StrBuf<Capacity>::operator=(const StrRef& strRef)
 {
     *std::copy(strRef.begin(),
                strRef.begin() + std::min(strRef.length(), capacity()),
@@ -159,6 +163,13 @@ inline
 constexpr StrBuf<Capacity>::operator StrRef() const
 {
     return StrRef(mData.begin());
+}
+
+template <std::size_t Capacity>
+inline
+StrBuf<Capacity>::operator StrOStream()
+{
+    return StrOStream(mData.begin(), mData.size());
 }
 
 template <std::size_t Capacity>

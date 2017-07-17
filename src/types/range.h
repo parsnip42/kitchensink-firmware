@@ -16,11 +16,11 @@ public:
     constexpr const T& begin() const;
     constexpr const T& end() const;
 
-    T& begin();
-    T& end();
+    constexpr T& begin();
+    constexpr T& end();
 
 public:
-    Range<std::reverse_iterator<T>> reverse() const;
+    constexpr Range<std::reverse_iterator<T>> reverse() const;
     
 private:
     T mBegin;
@@ -52,21 +52,21 @@ constexpr const T& Range<T>::end() const
 
 template <typename T>
 inline
-T& Range<T>::begin()
+constexpr T& Range<T>::begin()
 {
     return mBegin;
 }
 
 template <typename T>
 inline
-T& Range<T>::end()
+constexpr T& Range<T>::end()
 {
     return mEnd;
 }
 
 template <typename T>
 inline
-Range<std::reverse_iterator<T>> Range<T>::reverse() const
+constexpr Range<std::reverse_iterator<T>> Range<T>::reverse() const
 {
     return Range<std::reverse_iterator<T>>(
         std::reverse_iterator<T>(mEnd),
@@ -74,3 +74,13 @@ Range<std::reverse_iterator<T>> Range<T>::reverse() const
 }
 
 #endif /* INCLUDED_RANGE_H */
+
+
+
+
+
+
+
+
+
+
