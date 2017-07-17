@@ -1,6 +1,7 @@
 #include "ui/menu.h"
 #include "ui/keys.h"
 #include "autorepeat.h"
+#include "data/keycodes.h"
 #include "data/keymap.h"
 #include "modifierstate.h"
 
@@ -49,15 +50,12 @@ void Menu::createMenu()
         }
         else if (Keys::ok(keyId))
         {
-            StrBuf<20> text;
-            KeyId keyId;
+            Item item;
+
+            filteredItem(item, mSelected);
             
-            filteredItem(text,
-                         keyId,
-                         mSelected);
-            
-            mKeyProcessor.pushEvent(KeyEvent(keyId, true));
-            mKeyProcessor.pushEvent(KeyEvent(keyId, false));
+            mKeyProcessor.pushEvent(KeyEvent(item.keyId, true));
+            mKeyProcessor.pushEvent(KeyEvent(item.keyId, false));
             break;
         }
         else if (Keys::cancel(keyId))
@@ -66,7 +64,7 @@ void Menu::createMenu()
         }
         else if (keyId.type() == KeyId::Type::kKey)
         {
-            if (keyId.value() == 0x2a)
+            if (keyId.value() == KeyCodes::Backspace)
             {
                 mFilter.erase(mFilter.end() - 1);
                 moveSelection(0);
@@ -170,15 +168,17 @@ void Menu::paintMenu(int start,
 
         // FIXME: This should really iterate rather than performing a linear
         // search across the entire list from the start.
-        filteredItem(text,
-                     keyId,
-                     menuItem);
+        Item item;
+        
+        filteredItem(item, menuItem);
         
         const auto& colors(menuItem != mSelected ? colorMap : invColorMap);
 
+        // Paint the menu item line by line until we hit the font height or the
+        // bottom of the rendered region, whichever comes first.
         while (y < height && menuItemOffset < Surface::kFontHeight)
         {
-            mSurface.paintTextLineC(text, Surface::kWidth, menuItemOffset, colors);
+            mSurface.paintTextLineC(item.title, Surface::kWidth, menuItemOffset, colors);
 
             ++menuItemOffset;
             ++y;
@@ -186,30 +186,29 @@ void Menu::paintMenu(int start,
     }
 }
 
-bool Menu::matchesFilter(const StrRef& title)
+bool Menu::matchesFilter(const Menu::Item& item)
 {
-    return title.beginsWithCase(mFilter);
+    return StrRef(item.title).beginsWithCase(mFilter) ||
+        StrRef(item.shortcut).beginsWithCase(mFilter);
 }
 
-void Menu::filteredItem(const StrOStream& title,
-                        KeyId&            keyId,
-                        std::size_t       index)
+void Menu::filteredItem(Menu::Item& item,
+                        std::size_t index)
 {
     std::size_t count(0);
 
     for (std::size_t i(0); i < mDataSource.getItemCount(); ++i)
     {
-        title.reset();
-        mDataSource.getItem(title,
-                            keyId,
-                            i);
+        mDataSource.getItem(item, i);
 
-        if (matchesFilter(title.str()) &&
-            (count++ >= index))
+        if (matchesFilter(item) && (count++ >= index))
         {
-            break;
+            return;
         }
     }
+
+    // Return blank when out of range.
+    item = Menu::Item();
 }
 
 std::size_t Menu::filteredItemCount()
@@ -220,12 +219,12 @@ std::size_t Menu::filteredItemCount()
     {
         StrBuf<20> text;
         KeyId keyId;
+        
+        Item item;
+        
+        mDataSource.getItem(item, i);
 
-        mDataSource.getItem(text,
-                            keyId,
-                            i);
-
-        if (matchesFilter(text))
+        if (matchesFilter(item))
         {
             ++count;
         }

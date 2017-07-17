@@ -18,12 +18,20 @@ namespace UI
 class Menu
 {
 public:
+    class Item
+    {
+    public:
+        StrBuf<24> title;
+        StrBuf<12> shortcut;
+        KeyId      keyId;
+    };
+    
+public:
     class DataSource
     {
     public:
-        virtual void getItem(const StrOStream& title,
-                             KeyId&            keyId,
-                             std::size_t       index) const = 0;
+        virtual void getItem(Item&       menuItem,
+                             std::size_t index) const = 0;
         
         virtual std::size_t getItemCount() const = 0;
     };
@@ -44,11 +52,10 @@ private:
     void paintMenu(int start,
                    int height);
 
-    bool matchesFilter(const StrRef& title);
+    bool matchesFilter(const Item& item);
     
-    void filteredItem(const StrOStream& title,
-                      KeyId&            keyId,
-                      std::size_t       index);
+    void filteredItem(Item&       item,
+                      std::size_t index);
     
     std::size_t filteredItemCount();
     

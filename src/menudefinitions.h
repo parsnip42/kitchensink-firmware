@@ -16,9 +16,8 @@ public:
     explicit constexpr MacroDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(const StrOStream& os,
-                         KeyId&            keyId,
-                         std::size_t       index) const;
+    virtual void getItem(UI::Menu::Item& menuItem,
+                         std::size_t     index) const;
 
     virtual std::size_t getItemCount() const;
 
@@ -37,9 +36,8 @@ public:
     explicit constexpr EditMacroDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(const StrOStream& os,
-                         KeyId&            keyId,
-                         std::size_t       index) const;
+    virtual void getItem(UI::Menu::Item& menuItem,
+                         std::size_t     index) const;
 
     virtual std::size_t getItemCount() const;
 
@@ -58,9 +56,8 @@ public:
     explicit constexpr LockDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(const StrOStream& os,
-                         KeyId&            keyId,
-                         std::size_t       index) const;
+    virtual void getItem(UI::Menu::Item& menuItem,
+                         std::size_t     index) const;
 
     virtual std::size_t getItemCount() const;
 
@@ -78,9 +75,8 @@ public:
     explicit constexpr KeyDataSource(KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(const StrOStream& os,
-                         KeyId&            keyId,
-                         std::size_t       index) const;
+    virtual void getItem(UI::Menu::Item& menuItem,
+                         std::size_t     index) const;
 
     virtual std::size_t getItemCount() const;
 

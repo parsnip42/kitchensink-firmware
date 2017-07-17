@@ -31,13 +31,12 @@ constexpr MacroDataSource::MacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void MacroDataSource::getItem(const StrOStream& os,
-                              KeyId&            keyId,
-                              std::size_t       index) const
+void MacroDataSource::getItem(UI::Menu::Item& menuItem,
+                              std::size_t     index) const
 
 {
-    os.appendStr(mKeyboardState.macroSet[index].name());
-    keyId = KeyId::Macro(index);
+    menuItem.title = mKeyboardState.macroSet[index].name();
+    menuItem.keyId = KeyId::Macro(index);
 }
 
 std::size_t MacroDataSource::getItemCount() const
@@ -50,13 +49,12 @@ constexpr EditMacroDataSource::EditMacroDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void EditMacroDataSource::getItem(const StrOStream& os,
-                                  KeyId&            keyId,
-                                  std::size_t       index) const
+void EditMacroDataSource::getItem(UI::Menu::Item& menuItem,
+                                  std::size_t     index) const
 {
     
-    os.appendStr(mKeyboardState.macroSet[index].name());
-    keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
+    menuItem.title = mKeyboardState.macroSet[index].name();
+    menuItem.keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
 }
 
 std::size_t EditMacroDataSource::getItemCount() const
@@ -69,13 +67,12 @@ constexpr LockDataSource::LockDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void LockDataSource::getItem(const StrOStream& os,
-                             KeyId&            keyId,
-                             std::size_t       index) const
+void LockDataSource::getItem(UI::Menu::Item& menuItem,
+                             std::size_t     index) const
 {
     
-    os.appendStr(mKeyboardState.lockSet[index].name);
-    keyId = KeyId::Lock(KeyId::LockType::kToggle, index);
+    menuItem.title = mKeyboardState.lockSet[index].name;
+    menuItem.keyId = KeyId::Lock(KeyId::LockType::kToggle, index);
 }
 
 std::size_t LockDataSource::getItemCount() const
@@ -88,9 +85,8 @@ constexpr KeyDataSource::KeyDataSource(KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void KeyDataSource::getItem(const StrOStream& os,
-                            KeyId&            keyId,
-                            std::size_t       index) const
+void KeyDataSource::getItem(UI::Menu::Item& menuItem,
+                            std::size_t     index) const
 {
     auto keyName(KeyCodes::keyName(index + 1));
 
@@ -98,13 +94,25 @@ void KeyDataSource::getItem(const StrOStream& os,
     {
         keyName = "Reserved";
     }
-    
-    os.appendStr(keyName);
-    os.appendStr(" (");
-    os.appendInt(index + 1, "0x%2.2x");
-    os.appendStr(")");
+
+    {
+        StrOStream os(menuItem.title);
+
+        os.reset();
+        os.appendStr(keyName);
+        os.appendStr(" (");
+        os.appendInt(index + 1, "0x%2.2x");
+        os.appendStr(")");
+    }
+
+    {
+        StrOStream os(menuItem.shortcut);
         
-    keyId = KeyId(index);
+        os.reset();
+        os.appendInt(index + 1, "%2.2x");
+    }
+    
+    menuItem.keyId = KeyId(index);
 }
 
 std::size_t KeyDataSource::getItemCount() const
