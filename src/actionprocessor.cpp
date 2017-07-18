@@ -94,7 +94,7 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
 
                 mSurface.clear();
 
-                const auto& macro(mKeyboardState.macroSet[macroIndex]);
+                auto& macro(mKeyboardState.macroSet[macroIndex]);
 
                 UI::TableLayout layout(72, UI::Surface::kWidth, 20, 8);
                 
@@ -103,20 +103,20 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                           "Name",
                           UI::Label::Justify::Right);
 
-                UI::TextEntry entry(mSurface,
-                                    mKeyProcessor,
-                                    layout.next(),
-                                    macro.name());
+                UI::TextEntry titleEntry(mSurface,
+                                         mKeyProcessor,
+                                         layout.next(),
+                                         macro.name);
                 
                 UI::Label(mSurface,
                           layout.next(),
                           "Shortcut",
                           UI::Label::Justify::Right);
                 
-                UI::TextEntry entry2(mSurface,
-                                     mKeyProcessor,
-                                     layout.next(),
-                                     "SCT");
+                UI::TextEntry shortcutEntry(mSurface,
+                                            mKeyProcessor,
+                                            layout.next(),
+                                            macro.shortcut);
 
                 MacroTypeDataSource ds;
                 
@@ -131,7 +131,8 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                                 ds,
                                 0);
                 
-                if (entry.focus() && entry2.focus())
+                if (titleEntry.focus() &&
+                    shortcutEntry.focus())
                 {
                     if (combo.create())
                     {
@@ -148,23 +149,17 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                         
                         record.create(recordStr, (combo.selectedItem() == 1));
                         
-                        const auto& macro(record.macro());
+                        const auto& content(record.macro());
 
                         MacroType macroType((combo.selectedItem() == 2) ? MacroType::kInvert : MacroType::kSync);
+
+                        macro.type = macroType;
+                        macro.name = titleEntry.text();
+                        macro.shortcut = shortcutEntry.text();
+
+                        macro.setContent(content.begin(),
+                                         content.begin() + record.macroSize());
                         
-                        mKeyboardState.macroSet.setMacro(macroIndex,
-                                                         macroType,
-                                                         entry.text(),
-                                                         macro.begin(),
-                                                         macro.begin() + record.macroSize());
-
-
-
-
-
-
-
-
 
                         Storage storage;
                         

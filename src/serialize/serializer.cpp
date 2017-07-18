@@ -16,10 +16,10 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, Storage::OStream&
 {
     IniFormat::OStream ini(os);
 
+    Serializer<Macro> s;
+    
     for (std::size_t i(0); i < macroSet.size(); ++i)
     {
-        Serializer<MacroSet::Macro> s;
-
         StrBuf<20> headerStr;
         StrOStream ostream(headerStr);
 
@@ -47,33 +47,42 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
             typeStr == "macro" &&
             StrUtil::parseUInt(numStr, macroId))
         {
+            auto& macro(macroSet[macroId]);
+            
             StrRef key;
             StrRef value;
 
-            StrBuf<24> name;
-            int type(0);
-            std::array<KeyEvent, 200> macro;
-            std::size_t macroSize(0);
+            std::array<KeyEvent, 200> macroData;
+            std::size_t macroDataSize(0);
 
             while (ini.nextProperty(key, value))
             {
                 if (key == "name")
                 {
-                    name = value;
+                    macro.name = value;
+                }
+
+                if (key == "shortcut")
+                {
+                    macro.shortcut = value;
                 }
 
                 if (key == "type")
                 {
-                    StrUtil::parseUInt(value, type);
+                    int typeVal;
+                    
+                    StrUtil::parseUInt(value, typeVal);
+
+                    macro.type = static_cast<MacroType>(typeVal);
                 }
 
                 if (key == "content")
                 {
                     StrRef token(StrUtil::nextToken(value, " \t"));
                     
-                    while (!token.empty() && macroSize < macro.size())
+                    while (!token.empty() && macroDataSize < macroData.size())
                     {
-                        auto& keyEvent(macro[macroSize++]);
+                        auto& keyEvent(macroData[macroDataSize++]);
                         
                         if (token.beginsWith("!"))
                         {
@@ -89,25 +98,26 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
                         token = StrUtil::nextToken(value, " \t", token);
                     }
                 }
+
+                macro.setContent(macroData.begin(), macroData.begin() + macroDataSize); 
             }
-            
-            macroSet.setMacro(macroId, static_cast<MacroType>(type), name, macro.begin(), macro.begin() + macroSize);
         }
     }
     
     return false;
 }
 
-void Serializer<MacroSet::Macro>::serialize(const MacroSet::Macro& macro, Storage::OStream& os)
+void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
 {
     IniFormat::OStream ini(os);
 
-    ini.writeProperty("name", macro.name());
+    ini.writeProperty("name", macro.name);
+    ini.writeProperty("shortcut", macro.shortcut);
 
     StrBuf<12> typeStr;
     StrOStream oss(typeStr);
 
-    oss.appendInt(static_cast<int>(macro.type()));
+    oss.appendInt(static_cast<int>(macro.type));
     
     ini.writeProperty("type", typeStr);
 
@@ -131,7 +141,7 @@ void Serializer<MacroSet::Macro>::serialize(const MacroSet::Macro& macro, Storag
     os.write("\n");
 }
 
-bool Serializer<MacroSet::Macro>::deserialize(Storage::IStream& is, MacroSet::Macro& macro)
+bool Serializer<Macro>::deserialize(Storage::IStream& is, Macro& macro)
 {
     return true;
 }

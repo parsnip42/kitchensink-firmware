@@ -56,6 +56,11 @@ constexpr KeyId MainMenu()
     return KeyId::Action(KeyId::ActionType::kMenu, 0);
 }
 
+constexpr KeyId Menu(int index)
+{
+    return KeyId::Action(KeyId::ActionType::kMenu, index);
+}
+
 }
 
 void init(KeyboardState& keyboardState)
@@ -123,7 +128,7 @@ void init(KeyboardState& keyboardState)
             { { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },
             { { Esc, Macro(7), Q, W, E, R, T, Tab, Macro(12), Macro(13),                    /**/ Macro(23),  Macro(24), Backspace, Y, U, I, O, P, LBrace, RBrace } },
             { { 0, Layer(2), A, S, D, F, G, 0, Macro(14), Macro(15),                        /**/ Macro(25),  Macro(26), 0, H, J, K, L, Semicolon, Enter } },
-            { { 0, Hold(kLShift), Z, X, C, V, B, 0, Macro(16), Macro(17),              /**/ MainMenu(), Macro(27), Quote, N, M, Comma, Dot, Slash, Hold(kRShift) } },
+            { { 0, Hold(kLShift), Z, X, C, V, B, 0, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(1), Quote, N, M, Comma, Dot, Slash, Hold(kRShift) } },
             { { 0, Y, U, I, O, P,
                 Hold(kLCtrl), Layer(1), Hold(kLAlt), 0,                                     /**/ 0, Hold(kLAlt), Space, Hold(kRCtrl), End, Left, Up, Down, Right } }
         } };
@@ -151,7 +156,7 @@ void init(KeyboardState& keyboardState)
             { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(10), EditMacro(11),             /**/ EditMacro(21), EditMacro(22), 0, 0, 0, 0, 0, 0, 0, 0 } },
             { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(12), EditMacro(13),             /**/ EditMacro(23), EditMacro(24), 0, 0, 0, 0, 0, 0, 0, 0 } },
             { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(14), EditMacro(15),             /**/ EditMacro(25), EditMacro(26), 0, 0, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(16), EditMacro(17),             /**/ Bootloader(),  EditMacro(27), 0, 0, 0, 0, 0, 0, 0, 0 } },
+            { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(16), EditMacro(17),             /**/ Bootloader(),  Menu(2), 0, 0, 0, 0, 0, 0, 0, 0 } },
             { { 0, 0, 0, EditMacro(18), EditMacro(19), EditMacro(20), 0, 0, 0, 0, /**/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
         } };
 

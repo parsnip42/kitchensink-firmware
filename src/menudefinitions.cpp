@@ -35,7 +35,8 @@ void MacroDataSource::getItem(UI::Menu::Item& menuItem,
                               std::size_t     index) const
 
 {
-    menuItem.title = mKeyboardState.macroSet[index].name();
+    menuItem.title = mKeyboardState.macroSet[index].name;
+    menuItem.shortcut = mKeyboardState.macroSet[index].shortcut;
     menuItem.keyId = KeyId::Macro(index);
 }
 
@@ -53,7 +54,7 @@ void EditMacroDataSource::getItem(UI::Menu::Item& menuItem,
                                   std::size_t     index) const
 {
     
-    menuItem.title = mKeyboardState.macroSet[index].name();
+    menuItem.title = mKeyboardState.macroSet[index].name;
     menuItem.keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
 }
 
@@ -112,7 +113,7 @@ void KeyDataSource::getItem(UI::Menu::Item& menuItem,
         os.appendInt(index + 1, "%2.2x");
     }
     
-    menuItem.keyId = KeyId(index);
+    menuItem.keyId = KeyId(index + 1);
 }
 
 std::size_t KeyDataSource::getItemCount() const

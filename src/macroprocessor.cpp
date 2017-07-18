@@ -26,7 +26,7 @@ bool MacroProcessor::processEvent(const MacroSet& macroSet,
                     eventQueue.pushFront(event);
                 }
             }
-            else if (macro.type() == MacroType::kInvert)
+            else if (macro.type == MacroType::kInvert)
             {
                 for (auto event : content)
                 {

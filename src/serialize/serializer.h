@@ -6,6 +6,7 @@
 #include "types/strref.h"
 #include "types/range.h"
 #include "macroset.h"
+#include "macro.h"
 
 #include <array>
 
@@ -29,10 +30,10 @@ struct Serializer<MacroSet>
 };
 
 template <>
-struct Serializer<MacroSet::Macro>
+struct Serializer<Macro>
 {
-    void serialize(const MacroSet::Macro& macro, Storage::OStream& os);
-    bool deserialize(Storage::IStream& is, MacroSet::Macro& macro);
+    void serialize(const Macro& macro, Storage::OStream& os);
+    bool deserialize(Storage::IStream& is, Macro& macro);
 };
 
 template <>
