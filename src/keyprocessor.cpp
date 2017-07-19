@@ -173,8 +173,8 @@ void KeyProcessor::pressLayer(LayerStack& layerStack,
                 
                 if (current != next)
                 {    
-                    mEventQueue.pushBack(KeyEvent(current,
-                                                  false));
+                    mEventQueue.pushBack(KeyEvent(current, false));
+                    mEventQueue.pushBack(KeyEvent(next, true));
                 }
             }
         }
@@ -196,11 +196,10 @@ void KeyProcessor::releaseLayer(LayerStack& layerStack,
                 
                 if (current != next)
                 {    
-                    mEventQueue.pushBack(KeyEvent(current,
-                                                  false));
+                    mEventQueue.pushBack(KeyEvent(current, false));
+                    mEventQueue.pushBack(KeyEvent(next, true));
                 }
             }            
         }
     });
 }
-

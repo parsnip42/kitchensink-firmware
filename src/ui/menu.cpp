@@ -85,6 +85,12 @@ void Menu::createMenu()
                 if (newChar)
                 {
                     mFilter.insert(mFilter.end(), newChar);
+
+                    if (processExactFilterMatch())
+                    {
+                        break;
+                    }
+                    
                     moveSelection(0);
                 }
             }
@@ -231,6 +237,25 @@ std::size_t Menu::filteredItemCount()
     }
 
     return count;
+}
+
+bool Menu::processExactFilterMatch()
+{
+    for (std::size_t i(0); i < mDataSource.getItemCount(); ++i)
+    {
+        Item item;
+
+        mDataSource.getItem(item, i);
+        
+        if (StrRef(item.shortcut).equalsCase(mFilter))
+        {
+            mKeyProcessor.pushEvent(KeyEvent(item.keyId, true));
+            mKeyProcessor.pushEvent(KeyEvent(item.keyId, false));
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }

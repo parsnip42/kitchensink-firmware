@@ -65,7 +65,7 @@ void loop()
     }
     
 
-    //surface.clear();
+    surface.clear();
     
     UsbKeyboard usbKeyboard;
     

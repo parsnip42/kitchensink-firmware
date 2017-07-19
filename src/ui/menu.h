@@ -56,6 +56,8 @@ private:
     
     void filteredItem(Item&       item,
                       std::size_t index);
+
+    bool processExactFilterMatch();
     
     std::size_t filteredItemCount();
     
