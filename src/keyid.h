@@ -14,7 +14,8 @@ public:
         kMacro  = 3,
         kSMacro = 4,
         kAction = 5,
-        kDelay  = 6
+        kDelay  = 6,
+        kMulti  = 7
     };
 
     enum class LockType : uint8_t
@@ -40,9 +41,10 @@ public:
                                   int        actionId);
     static constexpr KeyId Layer(int layerId);
     static constexpr KeyId Lock(LockType lockType,
-                                int          lockId);
+                                int      lockId);
     static constexpr KeyId Lock(int lockId);
     static constexpr KeyId Macro(int macroId);
+    static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Delay(uint32_t delayMs);
 
 public:
@@ -113,6 +115,12 @@ constexpr KeyId KeyId::Lock(LockType lockType,
     return KeyId(Type::kLock,
                  static_cast<uint8_t>(lockType),
                  lockId);
+}
+
+inline
+constexpr KeyId KeyId::Multi(int multiId)
+{
+    return KeyId(Type::kMulti, multiId);
 }
 
 inline

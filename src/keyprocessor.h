@@ -3,6 +3,7 @@
 
 #include "eventqueue.h"
 #include "macroprocessor.h"
+#include "multiprocessor.h"
 #include "lockprocessor.h"
 #include "timed.h"
 
@@ -20,7 +21,7 @@ public:
 public:
     void pushEvent(const KeyEvent& event);
     
-    void poll();
+    uint32_t poll();
     
     template <typename EventCallback>
     void poll(const EventCallback& eventCallback);
@@ -51,7 +52,8 @@ private:
     };
     
 private:
-    Consumed consumeEvent(const KeyEvent& event);
+    Consumed consumeEvent(const KeyEvent& event,
+                          uint32_t        timeMs);
     
     void setLayer(LayerStack& layerStack,
                   int         index,
@@ -68,6 +70,7 @@ private:
     KeyboardState& mKeyboardState;
     EventQueue     mEventQueue;
     LockProcessor  mLockProcessor;
+    MultiProcessor mMultiProcessor;
     MacroProcessor mMacroProcessor;
     
 private:
@@ -95,12 +98,12 @@ inline
 void KeyProcessor::poll(const EventCallback& eventCallback,
                         const StateCallback& stateCallback)
 {
-    poll();
+    auto timeMs(poll());
 
     if (!mEventQueue.empty())
     {
         auto event(mEventQueue.pop());
-        auto consumed(consumeEvent(event));
+        auto consumed(consumeEvent(event, timeMs));
 
         switch (consumed)
         {

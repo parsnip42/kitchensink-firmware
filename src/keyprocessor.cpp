@@ -15,7 +15,7 @@ KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
     , mMacroProcessor()
 { }
 
-void KeyProcessor::poll()
+uint32_t KeyProcessor::poll()
 {
     auto timeMs(millis());
     
@@ -25,6 +25,12 @@ void KeyProcessor::poll()
         
         mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
     });
+
+    mMultiProcessor.tick(mKeyboardState.multiSet,
+                         timeMs,
+                         mEventQueue);
+        
+    return timeMs;
 }
 
 void KeyProcessor::delay(uint32_t timeMs)
@@ -37,7 +43,8 @@ void KeyProcessor::delay(uint32_t timeMs)
     Timed(timeMs, pollFunc);
 }
 
-KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
+KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event,
+                                                  uint32_t        timeMs)
 {
     auto keyId(event.keyId);
 
@@ -60,11 +67,22 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event)
     {
         return Consumed::kStateChanged;
     }
+
+    if (mMultiProcessor.processEvent(mKeyboardState.multiSet,
+                                     event,
+                                     timeMs,
+                                     mEventQueue))
+    {
+        return Consumed::kConsumed;
+    }
     
-    mMacroProcessor.processEvent(mKeyboardState.macroSet,
-                                 event,
-                                 mEventQueue);
-    
+    if (mMacroProcessor.processEvent(mKeyboardState.macroSet,
+                                     event,
+                                     mEventQueue))
+    {
+        return Consumed::kConsumed;
+    }
+
     return Consumed::kIgnored;
 }
 
@@ -131,7 +149,7 @@ KeyLocation KeyProcessor::readKeyLocation()
 
         while (!mEventQueue.empty())
         {
-            consumeEvent(mEventQueue.pop());
+            consumeEvent(mEventQueue.pop(), timeMs);
         }
     }
     
