@@ -9,30 +9,34 @@
 class EventQueue;
 class KeyEvent;
 
-class MultiProcessor
+class MultiProcessor : public KeyEventStage
 {
 public:
-    MultiProcessor()
-        : mLast(0)
-        , mTapTime(0)
-        , mTaps(0)
-    {
-    }
-    
+    MultiProcessor(MultiSet&      multiSet,
+                   KeyEventStage& next);
+
 public:
-    void tick(MultiSet&   multiSet,
-              uint32_t    timeMs,
-              EventQueue& eventQueue);
-    
-    bool processEvent(MultiSet&       multiSet,
-                      const KeyEvent& event,
-                      uint32_t        timeMs,
-                      EventQueue&     eventQueue);
+    virtual void processKeyEvent(const KeyEvent& event) override;
+
+public:
+    void tick(uint32_t timeMs);
     
 private:
-    std::size_t mLast;
-    uint32_t    mTapTime;
-    uint8_t     mTaps;
+    MultiSet&      mMultiSet;
+    std::size_t    mLast;
+    uint32_t       mTapTime;
+    uint8_t        mTaps;
+    KeyEventStage& mNext;
 };
+
+inline
+MultiProcessor::MultiProcessor(MultiSet&      multiSet,
+                               KeyEventStage& next)
+    : mMultiSet(multiSet)
+    , mLast(0)
+    , mTapTime(0)
+    , mTaps(0)
+    , mNext(next)
+{ }
 
 #endif /* INCLUDED_MULTIPROCESSOR_H */

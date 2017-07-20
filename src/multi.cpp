@@ -1,6 +1,7 @@
 #include "multi.h"
 
-#include "eventqueue.h"
+#include "keyevent.h"
+#include "keyeventstage.h"
 
 void Multi::press()
 {
@@ -9,7 +10,7 @@ void Multi::press()
     mActiveKey = key(++mTaps);
 }
 
-void Multi::release(EventQueue& eventQueue)
+void Multi::release(KeyEventStage& next)
 {
     mReleased = true;
                 
@@ -17,25 +18,25 @@ void Multi::release(EventQueue& eventQueue)
     {
         // Key has been pressed by the trigger, so this event is now
         // responsible for releasing the key.
-        eventQueue.pushFront(KeyEvent(mActiveKey, false));
+        next.processKeyEvent(KeyEvent(mActiveKey, false));
         mTaps = 0;
     }
 }
 
-bool Multi::trigger(EventQueue& eventQueue)
+bool Multi::trigger(KeyEventStage& next)
 {
     if (!mTriggered)
     {
         mTriggered = true;
 
+        next.processKeyEvent(KeyEvent(mActiveKey, true));
+        
         // If the key was marked as released before it was pressed by the
         // trigger, then we need to release it immediately too.
         if (mReleased)
         {
-            eventQueue.pushFront(KeyEvent(mActiveKey, false));
+            next.processKeyEvent(KeyEvent(mActiveKey, false));
         }
-        
-        eventQueue.pushFront(KeyEvent(mActiveKey, true));
 
         mTaps = 0;
 
@@ -44,15 +45,4 @@ bool Multi::trigger(EventQueue& eventQueue)
 
     return false;
 
-}
-
-bool Multi::trigger(const KeyEvent& triggerEvent,
-                    EventQueue&     eventQueue)
-{
-    if (!mTriggered)
-    {
-        eventQueue.pushFront(triggerEvent);
-    }
-
-    return trigger(eventQueue);
 }

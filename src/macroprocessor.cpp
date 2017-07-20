@@ -1,12 +1,8 @@
 #include "macroprocessor.h"
 
-#include "eventqueue.h"
 #include "keyevent.h"
-#include "macroset.h"
 
-bool MacroProcessor::processEvent(const MacroSet& macroSet,
-                                  const KeyEvent& event,
-                                  EventQueue&     eventQueue)
+void MacroProcessor::processKeyEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
 
@@ -14,31 +10,31 @@ bool MacroProcessor::processEvent(const MacroSet& macroSet,
     {
         auto macroIndex(keyId.value());
 
-        if (macroIndex < macroSet.size())
+        if (macroIndex < mMacroSet.size())
         {
-            const auto& macro(macroSet[keyId.value()]);
+            const auto& macro(mMacroSet[keyId.value()]);
             const auto& content(macro.content());
             
             if (event.pressed)
             {
-                for (const auto& event : content.reverse())
+                for (const auto& event : content)
                 {
-                    eventQueue.pushFront(event);
+                    mNext.processKeyEvent(event);
                 }
             }
             else if (macro.type == MacroType::kInvert)
             {
-                for (auto event : content)
+                for (auto event : content.reverse())
                 {
                     event.pressed = !event.pressed;
-                    eventQueue.pushFront(event);
+                    mNext.processKeyEvent(event);
                 }
             }
         }
-        
-        return true;
     }
-
-    return false;
+    else
+    {
+        mNext.processKeyEvent(event);
+    }
 }
 

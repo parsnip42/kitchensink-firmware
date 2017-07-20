@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-class EventQueue;
+class KeyEventStage;
 
 class Lock
 {
@@ -20,10 +20,10 @@ public:
 public:
     bool processEvent(const KeyEvent& keyEvent,
                       uint8_t         taps,
-                      EventQueue&     eventQueue);
+                      KeyEventStage&  next);
 
     bool clearTrigger(const KeyEvent& keyEvent,
-                      EventQueue&     eventQueue);
+                      KeyEventStage&  next);
 
     bool active() const;
     bool locked() const;

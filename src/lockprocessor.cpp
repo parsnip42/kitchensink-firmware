@@ -2,9 +2,7 @@
 
 #include "keyevent.h"
 
-bool LockProcessor::processEvent(LockSet&        lockSet,
-                                 const KeyEvent& event,
-                                 EventQueue&     eventQueue)
+void LockProcessor::processKeyEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
 
@@ -17,22 +15,25 @@ bool LockProcessor::processEvent(LockSet&        lockSet,
     
         auto lockIndex(keyId.value());
 
-        if (lockIndex < lockSet.size())
+        if (lockIndex < mLockSet.size())
         {
-            auto& lock(lockSet[lockIndex]);
+            auto& lock(mLockSet[lockIndex]);
             
-            return lock.processEvent(event,
-                                     mTapping.count(keyId),
-                                     eventQueue);
+            lock.processEvent(event,
+                              mTapping.count(keyId),
+                              mNext);
         }
     }
-    else if (keyId.type() == KeyId::Type::kKey && !event.pressed)
+    else
     {
-        for (auto& lock : lockSet)
+        if (keyId.type() == KeyId::Type::kKey && !event.pressed)
         {
-            lock.clearTrigger(event, eventQueue);
+            for (auto& lock : mLockSet)
+            {
+                lock.clearTrigger(event, mNext);
+            }
         }
+
+        mNext.processKeyEvent(event);
     }
-    
-    return false;
 }

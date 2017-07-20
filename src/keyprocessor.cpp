@@ -10,9 +10,6 @@ KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
                            KeyboardState& keyboardState)
     : mKeyboard(keyboard)
     , mKeyboardState(keyboardState)
-    , mEventQueue()
-    , mLockProcessor()
-    , mMacroProcessor()
 { }
 
 uint32_t KeyProcessor::poll()
@@ -25,10 +22,6 @@ uint32_t KeyProcessor::poll()
         
         mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
     });
-
-    mMultiProcessor.tick(mKeyboardState.multiSet,
-                         timeMs,
-                         mEventQueue);
         
     return timeMs;
 }
@@ -61,27 +54,27 @@ KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event,
         return Consumed::kStateChanged;
     }
     
-    if (mLockProcessor.processEvent(mKeyboardState.lockSet,
-                                    event,
-                                    mEventQueue))
-    {
-        return Consumed::kStateChanged;
-    }
+    // if (mLockProcessor.processEvent(mKeyboardState.lockSet,
+    //                                 event,
+    //                                 mEventQueue))
+    // {
+    //     return Consumed::kStateChanged;
+    // }
 
-    if (mMultiProcessor.processEvent(mKeyboardState.multiSet,
-                                     event,
-                                     timeMs,
-                                     mEventQueue))
-    {
-        return Consumed::kConsumed;
-    }
+    // if (mMultiProcessor.processEvent(mKeyboardState.multiSet,
+    //                                  event,
+    //                                  timeMs,
+    //                                  mEventQueue))
+    // {
+    //     return Consumed::kConsumed;
+    // }
     
-    if (mMacroProcessor.processEvent(mKeyboardState.macroSet,
-                                     event,
-                                     mEventQueue))
-    {
-        return Consumed::kConsumed;
-    }
+    // if (mMacroProcessor.processEvent(mKeyboardState.macroSet,
+    //                                  event,
+    //                                  mEventQueue))
+    // {
+    //     return Consumed::kConsumed;
+    // }
 
     return Consumed::kIgnored;
 }

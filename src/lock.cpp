@@ -1,10 +1,11 @@
 #include "lock.h"
 
+#include "keyeventstage.h"
 #include "eventqueue.h"
 
 bool Lock::processEvent(const KeyEvent& keyEvent,
                         uint8_t         taps,
-                        EventQueue&     eventQueue)
+                        KeyEventStage&  next)
 {
     auto originalState(active());
     
@@ -59,7 +60,7 @@ bool Lock::processEvent(const KeyEvent& keyEvent,
     
     if (originalState != currentState)
     {
-        eventQueue.pushFront(KeyEvent(keyId, currentState));
+        next.processKeyEvent(KeyEvent(keyId, currentState));
 
         return true;
     }
@@ -68,7 +69,7 @@ bool Lock::processEvent(const KeyEvent& keyEvent,
 }
 
 bool Lock::clearTrigger(const KeyEvent& keyEvent,
-                        EventQueue&     eventQueue)
+                        KeyEventStage&  next)
 {
     if (mTrigger && keyEvent.keyId != keyId)
     {
@@ -80,7 +81,7 @@ bool Lock::clearTrigger(const KeyEvent& keyEvent,
         
         if (originalState != currentState)
         {
-            eventQueue.pushFront(KeyEvent(keyId, currentState));
+            next.processKeyEvent(KeyEvent(keyId, currentState));
 
             return true;
         }

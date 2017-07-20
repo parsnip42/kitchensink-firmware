@@ -2,29 +2,33 @@
 #define INCLUDED_LOCKPROCESSOR_H
 
 #include "lockset.h"
+#include "keyeventstage.h"
 #include "tapping.h"
 
-class EventQueue;
 class KeyEvent;
 
-class LockProcessor
+class LockProcessor : public KeyEventStage
 {
 public:
-    constexpr LockProcessor();
+    explicit LockProcessor(LockSet&       lockSet,
+                           KeyEventStage& next);
 
 public:
-    bool processEvent(LockSet&        lockSet,
-                      const KeyEvent& event,
-                      EventQueue&     eventQueue);
+    virtual void processKeyEvent(const KeyEvent& event) override;
 
 private:
-    Tapping mTapping;
+    Tapping        mTapping;
+    LockSet&       mLockSet;
+    KeyEventStage& mNext;
 };
 
 
 inline
-constexpr LockProcessor::LockProcessor()
+LockProcessor::LockProcessor(LockSet&       lockSet,
+                             KeyEventStage& next)
     : mTapping(500)
+    , mLockSet(lockSet)
+    , mNext(next)
 { }
 
 #endif

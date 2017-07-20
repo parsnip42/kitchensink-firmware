@@ -3,53 +3,49 @@
 #include "eventqueue.h"
 #include "keyevent.h"
 
-void MultiProcessor::tick(MultiSet&   multiSet,
-                          uint32_t    timeMs,
-                          EventQueue& eventQueue)
+#include <elapsedMillis.h>
+
+void MultiProcessor::tick(uint32_t timeMs)
 {
     if (timeMs >= mTapTime + 1000)
     {
-        multiSet[mLast].trigger(eventQueue);
+        mMultiSet[mLast].trigger(mNext);
     }
 }   
 
-bool MultiProcessor::processEvent(MultiSet&       multiSet,
-                                  const KeyEvent& event,
-                                  uint32_t        timeMs,
-                                  EventQueue&     eventQueue)
+void MultiProcessor::processKeyEvent(const KeyEvent& event)
 {
+    auto timeMs(millis());
+
     const auto& keyId(event.keyId);
 
     if (keyId.type() == KeyId::Type::kMulti)
     {
         auto multiId(keyId.value());
         
-        if (multiId < multiSet.size())
+        if (multiId < mMultiSet.size())
         {
             if (event.pressed)
             {
                 mTapTime = timeMs;
-                multiSet[multiId].press();
+                mMultiSet[multiId].press();
             }
             else
             {
-                multiSet[multiId].release(eventQueue);
+                mMultiSet[multiId].release(mNext);
             }
             
             if (multiId != mLast)
             {
-                multiSet[mLast].trigger(eventQueue);
+                mMultiSet[mLast].trigger(mNext);
             }
             
             mLast = multiId;
         }
-        
-        return true;
     }
     else
     {
-        return multiSet[mLast].trigger(event, eventQueue);
+        mMultiSet[mLast].trigger(mNext);
+        mNext.processKeyEvent(event);   
     }
-
-    return false;
 }

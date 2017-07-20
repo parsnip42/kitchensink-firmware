@@ -23,7 +23,7 @@ public:
     
     uint32_t poll();
     
-    void poll(KeyEventStage& stage);
+    uint32_t poll(KeyEventStage& stage);
 
     void delay(uint32_t timeMs);
 
@@ -63,9 +63,6 @@ private:
     KsKeyboard&    mKeyboard;
     KeyboardState& mKeyboardState;
     EventQueue     mEventQueue;
-    LockProcessor  mLockProcessor;
-    MultiProcessor mMultiProcessor;
-    MacroProcessor mMacroProcessor;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;
@@ -80,7 +77,7 @@ void KeyProcessor::pushEvent(const KeyEvent& event)
 }
 
 inline
-void KeyProcessor::poll(KeyEventStage& stage)
+uint32_t KeyProcessor::poll(KeyEventStage& stage)
 {
     auto timeMs(poll());
 
@@ -102,6 +99,8 @@ void KeyProcessor::poll(KeyEventStage& stage)
             break;
         }
     }
+
+    return timeMs;
 }
 
 template <typename Func>

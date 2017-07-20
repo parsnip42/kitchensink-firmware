@@ -169,10 +169,21 @@ void loop()
                                     keyboardState,
                                     surface,
                                     usbKeyboard);
+    
+    MacroProcessor macroProcessor(keyboardState.macroSet,
+                                  actionProcessor);
+
+    LockProcessor lockProcessor(keyboardState.lockSet,
+                                macroProcessor);
+    
+    MultiProcessor multiProcessor(keyboardState.multiSet,
+                                  macroProcessor);
 
     while (1)
     {
-        keyProcessor.poll(actionProcessor);        
+        auto timeMs(keyProcessor.poll(multiProcessor));
+
+        multiProcessor.tick(timeMs);
         //home.paint();
     }
 }

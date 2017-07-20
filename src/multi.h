@@ -6,8 +6,8 @@
 
 #include <array>
 
-class EventQueue;
 class KeyEvent;
+class KeyEventStage;
 
 class Multi
 {
@@ -24,10 +24,8 @@ public:
     KeyId key(int taps);
 
     void press();
-    void release(EventQueue& eventQueue);
-    bool trigger(EventQueue& eventQueue);
-    bool trigger(const KeyEvent& triggerEvent,
-                 EventQueue&     eventQueue);
+    void release(KeyEventStage& next);
+    bool trigger(KeyEventStage& next);
 
 public:
     StrBuf<12>           title;
