@@ -26,57 +26,21 @@ uint32_t KeyProcessor::poll()
     return timeMs;
 }
 
-void KeyProcessor::delay(uint32_t timeMs)
-{
-    auto pollFunc([&]()
-    {
-        poll();
-    });
-    
-    Timed(timeMs, pollFunc);
-}
-
-KeyProcessor::Consumed KeyProcessor::consumeEvent(const KeyEvent& event,
-                                                  uint32_t        timeMs)
+bool KeyProcessor::consumeEvent(const KeyEvent& event,
+                                uint32_t        timeMs)
 {
     auto keyId(event.keyId);
 
-    if (keyId.type() == KeyId::Type::kDelay)
-    {
-        delay(keyId.delayMs());
-    }
-    else if (keyId.type() == KeyId::Type::kLayer)
+    if (keyId.type() == KeyId::Type::kLayer)
     {
         setLayer(mKeyboardState.layerStack,
                  keyId.value(),
                  event.pressed);
         
-        return Consumed::kStateChanged;
+        return true;
     }
-    
-    // if (mLockProcessor.processEvent(mKeyboardState.lockSet,
-    //                                 event,
-    //                                 mEventQueue))
-    // {
-    //     return Consumed::kStateChanged;
-    // }
 
-    // if (mMultiProcessor.processEvent(mKeyboardState.multiSet,
-    //                                  event,
-    //                                  timeMs,
-    //                                  mEventQueue))
-    // {
-    //     return Consumed::kConsumed;
-    // }
-    
-    // if (mMacroProcessor.processEvent(mKeyboardState.macroSet,
-    //                                  event,
-    //                                  mEventQueue))
-    // {
-    //     return Consumed::kConsumed;
-    // }
-
-    return Consumed::kIgnored;
+    return false;
 }
 
 void KeyProcessor::untilKeyPress()

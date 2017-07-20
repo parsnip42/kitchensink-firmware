@@ -1,4 +1,5 @@
 #include "actionprocessor.h"
+#include "delayprocessor.h"
 #include "defaultprofile.h"
 #include "display.h"
 #include "kskeyboard.h"
@@ -170,15 +171,17 @@ void loop()
                                     surface,
                                     usbKeyboard);
     
+    DelayProcessor delayProcessor(actionProcessor);
+    
     MacroProcessor macroProcessor(keyboardState.macroSet,
-                                  actionProcessor);
+                                  delayProcessor);
 
     LockProcessor lockProcessor(keyboardState.lockSet,
                                 macroProcessor);
     
     MultiProcessor multiProcessor(keyboardState.multiSet,
                                   macroProcessor);
-
+    
     while (1)
     {
         auto timeMs(keyProcessor.poll(multiProcessor));

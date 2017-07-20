@@ -30,6 +30,7 @@ public:
     bool full() const;
     
 private:
+    uint32_t       mLastMs;
     bool           mRealtime;
     Content        mContent;
     std::size_t    mSize;

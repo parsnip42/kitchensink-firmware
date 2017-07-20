@@ -7,7 +7,7 @@
 
 void MultiProcessor::tick(uint32_t timeMs)
 {
-    if (timeMs >= mTapTime + 1000)
+    if (timeMs >= mTapTime + 200)
     {
         mMultiSet[mLast].trigger(mNext);
     }

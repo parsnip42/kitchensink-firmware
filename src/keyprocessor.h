@@ -25,12 +25,6 @@ public:
     
     uint32_t poll(KeyEventStage& stage);
 
-    void delay(uint32_t timeMs);
-
-    template <typename Func>
-    void delay(const Func& func,
-               uint32_t    timeMs);
-
     void untilKeyPress();
     
     void untilIdle();
@@ -38,16 +32,8 @@ public:
     KeyLocation readKeyLocation();
 
 private:
-    enum class Consumed
-    {
-        kIgnored,
-        kStateChanged,
-        kConsumed
-    };
-    
-private:
-    Consumed consumeEvent(const KeyEvent& event,
-                          uint32_t        timeMs);
+    bool consumeEvent(const KeyEvent& event,
+                      uint32_t        timeMs);
     
     void setLayer(LayerStack& layerStack,
                   int         index,
@@ -86,33 +72,13 @@ uint32_t KeyProcessor::poll(KeyEventStage& stage)
         auto event(mEventQueue.pop());
         auto consumed(consumeEvent(event, timeMs));
 
-        switch (consumed)
+        if (!consumed)
         {
-        case Consumed::kIgnored:
             stage.processKeyEvent(event);
-            break;
-        
-        case Consumed::kStateChanged:
-            break;
-
-        default:
-            break;
         }
     }
 
     return timeMs;
-}
-
-template <typename Func>
-void KeyProcessor::delay(const Func& func,
-                         uint32_t    timeMs)
-{
-    auto pollFunc([&]()
-    {
-        poll();
-    });
-    
-    Timed(timeMs, func, pollFunc);
 }
 
 #endif
