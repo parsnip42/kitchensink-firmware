@@ -3,6 +3,7 @@
 
 #include "menudefinitions.h"
 #include "usbkeyboard.h"
+#include "keyeventstage.h"
 
 #include <array>
 
@@ -12,19 +13,20 @@ class KeyboardState;
 
 namespace UI { class Surface; };
 
-class ActionProcessor
+class ActionProcessor : public KeyEventStage
 {
 public:
     static constexpr int kMaxActions = 10;
     
 public:
-    explicit ActionProcessor(KeyProcessor&  keyProcessor,
-                             UsbKeyboard&   usbKeyboard,
-                             KeyboardState& keyboardState,
-                             UI::Surface&   surface);
+    ActionProcessor(KeyProcessor&  keyProcessor,
+                    UsbKeyboard&   usbKeyboard,
+                    KeyboardState& keyboardState,
+                    UI::Surface&   surface,
+                    KeyEventStage& next);
 
 public:
-    bool processEvent(const KeyEvent& event);
+    virtual void processKeyEvent(const KeyEvent& event) override;
     
 private:
     void fireBuiltIn(int             action,
@@ -41,6 +43,7 @@ private:
     KeyboardState&  mKeyboardState;
     UI::Surface&    mSurface;
     MenuDefinitions mMenuDefinitions;
+    KeyEventStage&  mNext;
     
 private:
     ActionProcessor(const ActionProcessor&) = delete;

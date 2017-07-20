@@ -62,15 +62,17 @@ public:
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
                                  UsbKeyboard&   usbKeyboard,
                                  KeyboardState& keyboardState,
-                                 UI::Surface&   surface)
+                                 UI::Surface&   surface,
+                                 KeyEventStage& next)
     : mKeyProcessor(keyProcessor)
     , mUsbKeyboard(usbKeyboard)
     , mKeyboardState(keyboardState)
     , mSurface(surface)
     , mMenuDefinitions(keyboardState)
+    , mNext(next)
 { }
 
-bool ActionProcessor::processEvent(const KeyEvent& event)
+void ActionProcessor::processKeyEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
     
@@ -147,20 +149,16 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
                                                mKeyProcessor,
                                                mUsbKeyboard);
                         
-                        record.create(recordStr, (combo.selectedItem() == 1));
-                        
-                        const auto& content(record.macro());
-
                         MacroType macroType((combo.selectedItem() == 2) ? MacroType::kInvert : MacroType::kSync);
 
                         macro.type = macroType;
                         macro.name = titleEntry.text();
                         macro.shortcut = shortcutEntry.text();
 
-                        macro.setContent(content.begin(),
-                                         content.begin() + record.macroSize());
+                        record.create(recordStr,
+                                      macro,
+                                      (combo.selectedItem() == 1));
                         
-
                         Storage storage;
                         
                         {
@@ -179,10 +177,11 @@ bool ActionProcessor::processEvent(const KeyEvent& event)
             }
             break;
         }
-        return true;
     }
-
-    return false;
+    else
+    {
+        mNext.processKeyEvent(event);
+    }
 }
 
 void ActionProcessor::fireBuiltIn(int             action,

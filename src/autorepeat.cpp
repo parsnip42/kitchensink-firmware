@@ -10,7 +10,7 @@ AutoRepeat::AutoRepeat(uint32_t repeatDelay,
     , mNextTime(0)
 { }
 
-void AutoRepeat::processEvent(const KeyEvent& keyEvent)
+void AutoRepeat::processKeyEvent(const KeyEvent& keyEvent)
 {
     if (keyEvent.pressed)
     {

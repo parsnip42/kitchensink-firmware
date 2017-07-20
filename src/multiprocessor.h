@@ -2,6 +2,7 @@
 #define INCLUDED_MULTIPROCESSOR_H
 
 #include "multiset.h"
+#include "keyeventstage.h"
 
 #include <cstdint>
 

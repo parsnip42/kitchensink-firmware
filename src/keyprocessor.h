@@ -23,13 +23,7 @@ public:
     
     uint32_t poll();
     
-    template <typename EventCallback>
-    void poll(const EventCallback& eventCallback);
-
-    template <typename EventCallback,
-              typename StateCallback>
-    void poll(const EventCallback& eventCallback,
-              const StateCallback& stateCallback);
+    void poll(KeyEventStage& stage);
 
     void delay(uint32_t timeMs);
 
@@ -85,18 +79,8 @@ void KeyProcessor::pushEvent(const KeyEvent& event)
     mEventQueue.pushBack(event);
 }
 
-template <typename EventCallback>
 inline
-void KeyProcessor::poll(const EventCallback& eventCallback)
-{
-    poll(eventCallback, [](){});
-}
-
-template <typename EventCallback,
-          typename StateCallback>
-inline
-void KeyProcessor::poll(const EventCallback& eventCallback,
-                        const StateCallback& stateCallback)
+void KeyProcessor::poll(KeyEventStage& stage)
 {
     auto timeMs(poll());
 
@@ -108,11 +92,10 @@ void KeyProcessor::poll(const EventCallback& eventCallback,
         switch (consumed)
         {
         case Consumed::kIgnored:
-            eventCallback(event);
+            stage.processKeyEvent(event);
             break;
         
         case Consumed::kStateChanged:
-            stateCallback();
             break;
 
         default:

@@ -1,9 +1,8 @@
 #include "ui/menu.h"
 #include "ui/keys.h"
-#include "autorepeat.h"
 #include "data/keycodes.h"
 #include "data/keymap.h"
-#include "modifierstate.h"
+#include "virtualkeyboard.h"
 
 #include <cstdint>
 #include <algorithm>
@@ -13,25 +12,18 @@ namespace UI
 
 void Menu::createMenu()
 {
-    AutoRepeat autoRepeat;
-    ModifierState modifierState;
+    VirtualKeyboard vKeyboard;
 
     mSurface.clear();
     redraw();
     
     while (1)
     {
-        mKeyProcessor.poll(
-            [&](const KeyEvent& event)
-            {
-                if (!modifierState.processEvent(event))
-                {
-                    autoRepeat.processEvent(event);
-                }
-            });
+        mKeyProcessor.poll(vKeyboard);
 
-        auto keyId(autoRepeat.activeKey());
-
+        auto state(vKeyboard.readState());
+        auto keyId(state.activeKey);
+        
         if (Keys::pageUp(keyId))
         {
             moveSelection(-5);
@@ -71,17 +63,8 @@ void Menu::createMenu()
             }
             else
             {
-                char newChar;
+                char newChar(state.activeChar);
 
-                if (modifierState.shift())
-                {
-                    newChar = KeyMap::getEntry(keyId.value()).shift;
-                }
-                else
-                {
-                    newChar = KeyMap::getEntry(keyId.value()).dflt; 
-                }
-                
                 if (newChar)
                 {
                     mFilter.insert(mFilter.end(), newChar);

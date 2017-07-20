@@ -167,29 +167,12 @@ void loop()
     ActionProcessor actionProcessor(keyProcessor,
                                     usbKeyboard,
                                     keyboardState,
-                                    surface);
+                                    surface,
+                                    usbKeyboard);
 
     while (1)
     {
-        keyProcessor.poll(
-            [&](const KeyEvent& event)
-            {
-                const auto& keyId(event.keyId);
-
-                if (keyId.type() == KeyId::Type::kKey)
-                {
-                    usbKeyboard.processKey(keyId.value(), event.pressed);
-                }
-                else if (keyId.type() == KeyId::Type::kAction)
-                {
-                    actionProcessor.processEvent(event);
-                }
-            },
-            [&]()
-            {
-                home.update();
-            });
-        
-        home.paint();
+        keyProcessor.poll(actionProcessor);        
+        //home.paint();
     }
 }

@@ -1,9 +1,8 @@
 #include "ui/textentry.h"
 
-#include "autorepeat.h"
 #include "data/keycodes.h"
 #include "keyprocessor.h"
-#include "modifierstate.h"
+#include "virtualkeyboard.h"
 #include "data/keymap.h"
 #include "ui/keys.h"
 #include "ui/surface.h"
@@ -33,22 +32,14 @@ TextEntry::TextEntry(Surface&         surface,
 
 bool TextEntry::focus()
 {
-    AutoRepeat autoRepeat;
-    ModifierState modifierState;
+    VirtualKeyboard vKeyboard;
 
     bool entered(false);
     bool flash(false);
     
     while (1)
     {
-        mKeyProcessor.poll(
-            [&](const KeyEvent& event)
-            {
-                if (!modifierState.processEvent(event))
-                {
-                    autoRepeat.processEvent(event);
-                }
-            });
+        mKeyProcessor.poll(vKeyboard);
         
         if (((millis() >> 9) & 1) ^ flash)
         {
@@ -56,7 +47,8 @@ bool TextEntry::focus()
             paintCursor(flash);
         }
 
-        auto keyId(autoRepeat.activeKey());
+        auto state(vKeyboard.readState());
+        auto keyId(state.activeKey);
 
         if (Keys::cancel(keyId))
         {
@@ -117,17 +109,8 @@ bool TextEntry::focus()
             default:
                 if (mText.length() < 24)
                 {
-                    char newChar;
+                    char newChar(state.activeChar);
                     
-                    if (modifierState.shift())
-                    {
-                        newChar = KeyMap::getEntry(keyId.value()).shift;
-                    }
-                    else
-                    {
-                        newChar = KeyMap::getEntry(keyId.value()).dflt; 
-                    }
-
                     if (newChar)
                     {
                         mText.insert(mText.begin() + mCursorPosition, newChar);
