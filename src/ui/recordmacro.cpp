@@ -43,8 +43,8 @@ bool RecordMacro::create(const StrRef& title,
         }
     }
 
-    macro.setContent(recorder.begin(),
-                     recorder.end());
+    macro.content.assign(recorder.begin(),
+                         recorder.end());
     
     mSurface.clear();
 

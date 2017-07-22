@@ -21,18 +21,6 @@ public:
     
 public:
     std::size_t size() const;
-    
-    template <typename Iterator>
-    void setMacro(std::size_t      index,
-                  const MacroType& type,
-                  const StrRef&    name,
-                  const Iterator&  begin,
-                  const Iterator&  end);
-    
-    void setMacro(std::size_t                            index,
-                  const MacroType&                       type,
-                  const StrRef&                          name,
-                  const std::initializer_list<KeyEvent>& press);
 
 private:
     MacroDataPool mMacroPool;
@@ -48,34 +36,10 @@ private:
 };
 
 
-template <typename Iterator>
-inline
-void MacroSet::setMacro(std::size_t      index,
-                        const MacroType& type,
-                        const StrRef&    name,
-                        const Iterator&  begin,
-                        const Iterator&  end)
-{
-    auto& macro(mMacroData[index]);
-
-    macro.type = type;
-    macro.name = name;
-    macro.setContent(begin, end);
-}
-
 inline
 std::size_t MacroSet::size() const
 {
     return mMacroPool.size();
-}
-
-inline
-void MacroSet::setMacro(std::size_t                            index,
-                        const MacroType&                       type,
-                        const StrRef&                          name,
-                        const std::initializer_list<KeyEvent>& press)
-{
-    setMacro(index, type, name, press.begin(), press.end());
 }
 
 inline

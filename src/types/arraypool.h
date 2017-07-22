@@ -33,7 +33,7 @@ public:
     bool insert(int index, Iterator begin, Iterator end);
 
     Content operator[](int index) const;
-
+    
 private:
     Pool        mPool;
     Index       mIndex;

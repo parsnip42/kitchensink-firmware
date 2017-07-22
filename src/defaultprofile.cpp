@@ -79,45 +79,95 @@ void init(KeyboardState& keyboardState)
 
     keyboardState.lockSet[8] = Lock("Game", KeyId::Layer(4));
 
-    keyboardState.macroSet.setMacro(0, MacroType::kInvert, "{", {
+    auto& macroSet(keyboardState.macroSet);
+    
+    {
+        auto& macro(macroSet[0]);
+
+        macro.type = MacroType::kInvert;
+        macro.name = "{";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(LBrace)),
-            });
+        };
+    }
+    
+    {
+        auto& macro(macroSet[1]);
 
-    keyboardState.macroSet.setMacro(1, MacroType::kInvert, "{",{
+        macro.type = MacroType::kInvert;
+        macro.name = "}";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(RBrace)),
-            });
+        };
+    }
+    
+    {
+        auto& macro(macroSet[2]);
 
-    keyboardState.macroSet.setMacro(2, MacroType::kInvert, "(",{
+        macro.type = MacroType::kInvert;
+        macro.name = "(";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(K9)),
-            });
+        };
+    }
 
-    keyboardState.macroSet.setMacro(3, MacroType::kInvert, ")",{
+  {
+        auto& macro(macroSet[3]);
+
+        macro.type = MacroType::kInvert;
+        macro.name = ")";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(K0)),
-            });
+        };
+    }
 
-    keyboardState.macroSet.setMacro(4, MacroType::kInvert, "<",{
+    {
+        auto& macro(macroSet[4]);
+
+        macro.type = MacroType::kInvert;
+        macro.name = "<";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(Comma)),
-            });
+        };
+    }
 
-    keyboardState.macroSet.setMacro(5, MacroType::kInvert, ">", {
+    {
+        auto& macro(macroSet[5]);
+
+        macro.type = MacroType::kInvert;
+        macro.name = ">";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(Dot)),
-            });
-    
-    keyboardState.macroSet.setMacro(6, MacroType::kInvert, "Ctrl+Spc", {
+        };
+    }
+
+    {
+        auto& macro(macroSet[6]);
+
+        macro.type = MacroType::kInvert;
+        macro.name = "Ctrl+Spc";
+        macro.content = {
             KeyEvent(KeyId(LCtrl)),
             KeyEvent(KeyId(Space)),
-            });
+        };
+    }
 
-    keyboardState.macroSet.setMacro(7, MacroType::kInvert, "_", {
+    {
+        auto& macro(macroSet[7]);
+
+        macro.type = MacroType::kInvert;
+        macro.name = "_";
+        macro.content = {
             KeyEvent(KeyId(LShift)),
             KeyEvent(KeyId(Minus)),
-            });
+        };
+    }
 
     keyboardState.multiSet[0].keys[0] = MainMenu();
     keyboardState.multiSet[0].keys[1] = Bootloader();

@@ -99,7 +99,8 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
                     }
                 }
 
-                macro.setContent(macroData.begin(), macroData.begin() + macroDataSize); 
+                macro.content.assign(macroData.begin(),
+                                     macroData.begin() + macroDataSize); 
             }
         }
     }
@@ -123,7 +124,7 @@ void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
 
     os.write("content=");
 
-    for (const auto& event : macro.content())
+    for (const auto& event : macro.content)
     {
         if (!event.pressed)
         {

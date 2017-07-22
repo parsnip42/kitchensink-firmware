@@ -1,5 +1,5 @@
 #include "macroprocessor.h"
-
+#include "types/range.h"
 #include "keyevent.h"
 
 void MacroProcessor::processKeyEvent(const KeyEvent& event)
@@ -13,7 +13,7 @@ void MacroProcessor::processKeyEvent(const KeyEvent& event)
         if (macroIndex < mMacroSet.size())
         {
             const auto& macro(mMacroSet[keyId.value()]);
-            const auto& content(macro.content());
+            const auto& content(macro.content);
             
             if (event.pressed)
             {
@@ -24,7 +24,9 @@ void MacroProcessor::processKeyEvent(const KeyEvent& event)
             }
             else if (macro.type == MacroType::kInvert)
             {
-                for (auto event : content.reverse())
+                Range<Macro::Content::const_iterator> range(content.begin(), content.end());
+                
+                for (auto event : range.reverse())
                 {
                     event.pressed = !event.pressed;
                     mNext.processKeyEvent(event);
