@@ -8,15 +8,14 @@
 #include "timed.h"
 
 class KsKeyboard;
-class KeyboardState;
 class KeyLocation;
 class LayerStack;
 
 class KeyProcessor
 {
 public:
-    KeyProcessor(KsKeyboard&    keyboard,
-                 KeyboardState& keyboardState);
+    KeyProcessor(KsKeyboard& keyboard,
+                 LayerStack& layerStack);
 
 public:
     void pushEvent(const KeyEvent& event);
@@ -35,20 +34,17 @@ private:
     bool consumeEvent(const KeyEvent& event,
                       uint32_t        timeMs);
     
-    void setLayer(LayerStack& layerStack,
-                  int         index,
-                  bool        enabled);
+    void setLayer(int index,
+                  bool enabled);
 
-    void pressLayer(LayerStack& layerStack,
-                    int         index);
+    void pressLayer(int index);
 
-    void releaseLayer(LayerStack& layerStack,
-                      int         index);
+    void releaseLayer(int index);
 
 private:
-    KsKeyboard&    mKeyboard;
-    KeyboardState& mKeyboardState;
-    EventQueue     mEventQueue;
+    KsKeyboard& mKeyboard;
+    LayerStack& mLayerStack;
+    EventQueue  mEventQueue;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;

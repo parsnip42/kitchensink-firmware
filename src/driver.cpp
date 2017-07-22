@@ -163,7 +163,7 @@ void loop()
                   keyboardState);
 
     KeyProcessor keyProcessor(keyboard,
-                              keyboardState);
+                              keyboardState.layerStack);
 
     ActionProcessor actionProcessor(keyProcessor,
                                     usbKeyboard,

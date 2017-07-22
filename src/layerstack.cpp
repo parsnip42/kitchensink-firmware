@@ -1,8 +1,6 @@
 #include "layerstack.h"
 #include "layer.h"
 
-#include <algorithm>
-
 KeyId LayerStack::at(int row, int column) const
 {
     KeyId keyId;

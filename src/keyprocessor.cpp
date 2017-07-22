@@ -6,10 +6,10 @@
 
 #include <elapsedMillis.h>
 
-KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
-                           KeyboardState& keyboardState)
+KeyProcessor::KeyProcessor(KsKeyboard& keyboard,
+                           LayerStack& layerStack)
     : mKeyboard(keyboard)
-    , mKeyboardState(keyboardState)
+    , mLayerStack(layerStack)
 { }
 
 uint32_t KeyProcessor::poll()
@@ -18,7 +18,7 @@ uint32_t KeyProcessor::poll()
     
     mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& event)
     {
-        auto keyId(mKeyboardState.layerStack.at(event.row, event.column));
+        auto keyId(mLayerStack.at(event.row, event.column));
         
         mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
     });
@@ -33,8 +33,7 @@ bool KeyProcessor::consumeEvent(const KeyEvent& event,
 
     if (keyId.type() == KeyId::Type::kLayer)
     {
-        setLayer(mKeyboardState.layerStack,
-                 keyId.value(),
+        setLayer(keyId.value(),
                  event.pressed);
         
         return true;
@@ -95,11 +94,11 @@ KeyLocation KeyProcessor::readKeyLocation()
             {
                 keyLocation.row    = event.row;
                 keyLocation.column = event.column;
-                keyLocation.layer  = mKeyboardState.layerStack.activeLayer(event.row, event.column);
+                keyLocation.layer  = mLayerStack.activeLayer(event.row, event.column);
                 complete = true;
             }
             
-            auto keyId(mKeyboardState.layerStack.at(event.row, event.column));
+            auto keyId(mLayerStack.at(event.row, event.column));
             
             mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
         });
@@ -113,38 +112,36 @@ KeyLocation KeyProcessor::readKeyLocation()
     return keyLocation;
 }
 
-void KeyProcessor::setLayer(LayerStack& layerStack,
-                            int         index,
-                            bool        enabled)
+void KeyProcessor::setLayer(int  index,
+                            bool enabled)
 {
-    if (enabled != layerStack.enabled(index))
+    if (enabled != mLayerStack.enabled(index))
     {
         if (enabled)
         {
-            pressLayer(layerStack, index);
-            layerStack.setLayer(index, enabled);
+            pressLayer(index);
+            mLayerStack.setLayer(index, enabled);
 
         }
         else
         {
-            layerStack.setLayer(index, enabled);
-            releaseLayer(layerStack, index);
+            mLayerStack.setLayer(index, enabled);
+            releaseLayer(index);
         }
     }
 }
 
-void KeyProcessor::pressLayer(LayerStack& layerStack,
-                              int         index)
+void KeyProcessor::pressLayer(int index)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
-        if (layerStack.activeLayer(event.row, event.column) < index)
+        if (mLayerStack.activeLayer(event.row, event.column) < index)
         {
-            auto next(layerStack.atIndex(index, event.row, event.column));
+            auto next(mLayerStack.atIndex(index, event.row, event.column));
             
             if (next != KeyId())
             {
-                auto current(layerStack.at(event.row, event.column));
+                auto current(mLayerStack.at(event.row, event.column));
                 
                 if (current != next)
                 {    
@@ -156,18 +153,17 @@ void KeyProcessor::pressLayer(LayerStack& layerStack,
     });
 }
 
-void KeyProcessor::releaseLayer(LayerStack& layerStack,
-                                int         index)
+void KeyProcessor::releaseLayer(int index)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
-        if (layerStack.activeLayer(event.row, event.column) < index)
+        if (mLayerStack.activeLayer(event.row, event.column) < index)
         {
-            auto current(layerStack.atIndex(index, event.row, event.column));
+            auto current(mLayerStack.atIndex(index, event.row, event.column));
 
             if (current != KeyId())
             {
-                auto next(layerStack.at(event.row, event.column));
+                auto next(mLayerStack.at(event.row, event.column));
                 
                 if (current != next)
                 {    
