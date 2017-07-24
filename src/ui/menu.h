@@ -2,11 +2,14 @@
 #define INCLUDED_UI_MENU_H
 
 #include "keyid.h"
+#include "keyeventstage.h"
+#include "keyeventbuffer.h"
 #include "keyprocessor.h"
 #include "types/strbuf.h"
 #include "types/strostream.h"
 #include "types/strref.h"
 #include "ui/surface.h"
+#include "virtualkeyboard.h"
 
 #include <cstdint>
 
@@ -15,7 +18,7 @@ class KeyProcessor;
 namespace UI
 {
 
-class Menu
+class Menu : public KeyEventStage
 {
 public:
     class Item
@@ -39,15 +42,17 @@ public:
 public:
     Menu(const DataSource& dataSource,
          Surface&          surface,
-         KeyProcessor&     keyProcessor);
+         KeyEventBuffer&   buffer,
+         KeyEventStage&    next);
 
 public:
-    void createMenu();
+    void redraw();
+    void poll();
 
+    virtual void processKeyEvent(const KeyEvent& event) override;
+    
 private:
     void moveSelection(int selectionOffset);
-    
-    void redraw();
     
     void paintMenu(int start,
                    int height);
@@ -64,9 +69,12 @@ private:
 private:
     const DataSource& mDataSource;
     Surface&          mSurface;
-    KeyProcessor&     mKeyProcessor;
     std::size_t       mSelected;
     StrBuf<12>        mFilter;
+    VirtualKeyboard   mVKeyboard;
+    bool              mQuit;
+    KeyEventBuffer&   mBuffer;
+    KeyEventStage&    mNext;
     
 private:
     Menu(const Menu&) = delete;
@@ -77,12 +85,15 @@ private:
 inline
 Menu::Menu(const DataSource& dataSource,
            Surface&          surface,
-           KeyProcessor&     keyProcessor)
+           KeyEventBuffer&   buffer,
+           KeyEventStage&    next)
     : mDataSource(dataSource)
     , mSurface(surface)
-    , mKeyProcessor(keyProcessor)
     , mSelected(0)
     , mFilter()
+    , mQuit(false)
+    , mBuffer(buffer)
+    , mNext(next)
 { }
 
 }

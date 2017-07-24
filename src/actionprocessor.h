@@ -20,7 +20,6 @@ public:
     
 public:
     ActionProcessor(KeyProcessor&  keyProcessor,
-                    UsbKeyboard&   usbKeyboard,
                     KeyboardState& keyboardState,
                     UI::Surface&   surface,
                     KeyEventStage& next);
@@ -39,7 +38,6 @@ private:
 
 private:
     KeyProcessor&   mKeyProcessor;
-    UsbKeyboard&    mUsbKeyboard;
     KeyboardState&  mKeyboardState;
     UI::Surface&    mSurface;
     MenuDefinitions mMenuDefinitions;

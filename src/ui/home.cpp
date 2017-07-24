@@ -2,6 +2,7 @@
 
 #include "keyboardstate.h"
 #include "ui/surface.h"
+#include "menudefinitions.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -11,15 +12,49 @@ namespace UI
 {
 
 Home::Home(Surface&             surface,
-           const KeyboardState& keyboardState)
+           const KeyboardState& keyboardState,
+           KeyEventBuffer&      buffer,
+           KeyEventStage&       next)
     : mSurface(surface)
     , mKeyboardState(keyboardState)
     , mDirty(false)
     , mLastUpdate(0)
+    , mBuffer(buffer)
+    , mNext(next)
 {
     std::fill(mPaintState.begin(),
               mPaintState.end(),
               0);
+}
+
+void Home::poll()
+{
+    while (!mBuffer.empty())
+    {
+        auto event(mBuffer.pop());
+        auto keyId(event.keyId);
+        
+        if (keyId.actionType() == KeyId::ActionType::kMenu)
+        {
+            if (event.pressed)
+            {
+                MenuDefinitions menuDefinitions(mKeyboardState);
+
+                auto action(event.keyId.value());
+                
+                UI::Menu menu(menuDefinitions.getDataSource(action),
+                              mSurface,
+                              mBuffer,
+                              mBuffer);
+                
+                menu.poll();
+            }
+        }
+        else
+        {
+            mNext.processKeyEvent(event);
+        }
+    }
 }
 
 void Home::update()

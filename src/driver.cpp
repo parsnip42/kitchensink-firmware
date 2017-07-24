@@ -16,6 +16,7 @@
 #include "ui/surface.h"
 #include "ui/home.h"
 #include "ui/text.h"
+#include "keyeventbuffer.h"
 
 #include "types/strbuf.h"
 #include "types/strostream.h"
@@ -159,17 +160,15 @@ void loop()
 
 
     
-    UI::Home home(surface,
-                  keyboardState);
-
     KeyProcessor keyProcessor(keyboard,
                               keyboardState.layerStack);
 
+    KeyEventBuffer eventBuffer(keyProcessor);
+    
     ActionProcessor actionProcessor(keyProcessor,
-                                    usbKeyboard,
                                     keyboardState,
                                     surface,
-                                    usbKeyboard);
+                                    eventBuffer);
     
     DelayProcessor delayProcessor(actionProcessor);
     
@@ -182,11 +181,17 @@ void loop()
     MultiProcessor multiProcessor(keyboardState.multiSet,
                                   macroProcessor);
     
+    UI::Home home(surface,
+                  keyboardState,
+                  eventBuffer,
+                  usbKeyboard);
+
     while (1)
     {
         auto timeMs(keyProcessor.poll(multiProcessor));
 
+        home.poll();
+        
         multiProcessor.tick(timeMs);
-        //home.paint();
     }
 }

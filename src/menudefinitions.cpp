@@ -27,7 +27,7 @@ const UI::ArrayDataSource::Item emptyMenuItems[] =
 namespace Impl
 {
 
-constexpr MacroDataSource::MacroDataSource(KeyboardState& keyboardState)
+MacroDataSource::MacroDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
@@ -46,7 +46,7 @@ std::size_t MacroDataSource::getItemCount() const
 }
 
 
-constexpr EditMacroDataSource::EditMacroDataSource(KeyboardState& keyboardState)
+EditMacroDataSource::EditMacroDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
@@ -64,7 +64,7 @@ std::size_t EditMacroDataSource::getItemCount() const
 }
 
 
-constexpr LockDataSource::LockDataSource(KeyboardState& keyboardState)
+LockDataSource::LockDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
@@ -82,7 +82,7 @@ std::size_t LockDataSource::getItemCount() const
 }
 
 
-constexpr KeyDataSource::KeyDataSource(KeyboardState& keyboardState)
+KeyDataSource::KeyDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
@@ -123,7 +123,7 @@ std::size_t KeyDataSource::getItemCount() const
 
 }
 
-MenuDefinitions::MenuDefinitions(KeyboardState& keyboardState)
+MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     : mMainMenuSource(mainMenuItems)
     , mEmptyMenuSource(emptyMenuItems)
     , mMacroDataSource(keyboardState)

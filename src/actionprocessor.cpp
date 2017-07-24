@@ -60,12 +60,10 @@ public:
 }
 
 ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
-                                 UsbKeyboard&   usbKeyboard,
                                  KeyboardState& keyboardState,
                                  UI::Surface&   surface,
                                  KeyEventStage& next)
     : mKeyProcessor(keyProcessor)
-    , mUsbKeyboard(usbKeyboard)
     , mKeyboardState(keyboardState)
     , mSurface(surface)
     , mMenuDefinitions(keyboardState)
@@ -86,8 +84,9 @@ void ActionProcessor::processKeyEvent(const KeyEvent& event)
             break;
             
         case KeyId::ActionType::kMenu:
-            fireMenu(event.keyId.value(),
-                     event);
+            mNext.processKeyEvent(event);
+            // fireMenu(event.keyId.value(),
+            //          event);
             break;
         case KeyId::ActionType::kEditMacro:
             if (event.pressed)
@@ -147,7 +146,7 @@ void ActionProcessor::processKeyEvent(const KeyEvent& event)
                         
                         UI::RecordMacro record(mSurface,
                                                mKeyProcessor,
-                                               mUsbKeyboard);
+                                               mNext);
                         
                         MacroType macroType((combo.selectedItem() == 2) ? MacroType::kInvert : MacroType::kSync);
 
@@ -261,14 +260,14 @@ void ActionProcessor::fireBuiltIn(int             action,
 void ActionProcessor::fireMenu(int             action,
                                const KeyEvent& event) const
 {
-    if (event.pressed)
-    {
-        UI::Menu menu(mMenuDefinitions.getDataSource(action),
-                      mSurface,
-                      mKeyProcessor);
+    // if (event.pressed)
+    // {
+    //     UI::Menu menu(mMenuDefinitions.getDataSource(action),
+    //                   mSurface,
+    //                   mKeyProcessor);
         
-        menu.createMenu();
-    }
+    //     menu.createMenu();
+    // }
 }
 
 void ActionProcessor::fireEdit() const

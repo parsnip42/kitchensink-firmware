@@ -13,7 +13,7 @@ namespace Impl
 class MacroDataSource : public UI::Menu::DataSource
 {
 public:
-    explicit constexpr MacroDataSource(KeyboardState& keyboardState);
+    explicit MacroDataSource(const KeyboardState& keyboardState);
 
 public:
     virtual void getItem(UI::Menu::Item& menuItem,
@@ -22,7 +22,7 @@ public:
     virtual std::size_t getItemCount() const;
 
 public:
-    KeyboardState& mKeyboardState;
+    const KeyboardState& mKeyboardState;
 
 private:
     MacroDataSource(const MacroDataSource&) = delete;
@@ -33,7 +33,7 @@ private:
 class EditMacroDataSource : public UI::Menu::DataSource
 {
 public:
-    explicit constexpr EditMacroDataSource(KeyboardState& keyboardState);
+    explicit EditMacroDataSource(const KeyboardState& keyboardState);
 
 public:
     virtual void getItem(UI::Menu::Item& menuItem,
@@ -42,7 +42,7 @@ public:
     virtual std::size_t getItemCount() const;
 
 public:
-    KeyboardState& mKeyboardState;
+    const KeyboardState& mKeyboardState;
 
 private:
     EditMacroDataSource(const EditMacroDataSource&) = delete;
@@ -53,7 +53,7 @@ private:
 class LockDataSource : public UI::Menu::DataSource
 {
 public:
-    explicit constexpr LockDataSource(KeyboardState& keyboardState);
+    explicit LockDataSource(const KeyboardState& keyboardState);
 
 public:
     virtual void getItem(UI::Menu::Item& menuItem,
@@ -62,7 +62,7 @@ public:
     virtual std::size_t getItemCount() const;
 
 public:
-    KeyboardState& mKeyboardState;
+    const KeyboardState& mKeyboardState;
     
 private:
     LockDataSource(const LockDataSource&) = delete;
@@ -72,7 +72,7 @@ private:
 class KeyDataSource : public UI::Menu::DataSource
 {
 public:
-    explicit constexpr KeyDataSource(KeyboardState& keyboardState);
+    explicit KeyDataSource(const KeyboardState& keyboardState);
 
 public:
     virtual void getItem(UI::Menu::Item& menuItem,
@@ -81,7 +81,7 @@ public:
     virtual std::size_t getItemCount() const;
 
 public:
-    KeyboardState& mKeyboardState;
+    const KeyboardState& mKeyboardState;
 
 private:
     KeyDataSource(const KeyDataSource&) = delete;
@@ -93,7 +93,7 @@ private:
 class MenuDefinitions
 {
 public:
-    explicit MenuDefinitions(KeyboardState& keyboardState);
+    explicit MenuDefinitions(const KeyboardState& keyboardState);
 
 public:
     const UI::Menu::DataSource& getDataSource(int id) const;

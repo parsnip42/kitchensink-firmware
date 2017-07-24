@@ -2,7 +2,6 @@
 #include "ui/keys.h"
 #include "data/keycodes.h"
 #include "data/keymap.h"
-#include "virtualkeyboard.h"
 
 #include <cstdint>
 #include <algorithm>
@@ -10,77 +9,80 @@
 namespace UI
 {
 
-void Menu::createMenu()
+void Menu::poll()
 {
-    VirtualKeyboard vKeyboard;
-
     mSurface.clear();
     redraw();
     
-    while (1)
+    while (!mQuit)
     {
-        mKeyProcessor.poll(vKeyboard);
+        mBuffer.nextKeyEvent(*this);
+    }
+    
+    mSurface.clear();
+}
 
-        auto state(vKeyboard.readState());
-        auto keyId(state.activeKey);
+void Menu::processKeyEvent(const KeyEvent& event)
+{
+    mVKeyboard.processKeyEvent(event);
         
-        if (Keys::pageUp(keyId))
-        {
-            moveSelection(-5);
-        }
-        else if (Keys::pageDown(keyId))
-        {
-            moveSelection(5);
-        }
-        else if (Keys::up(keyId))
-        {
-            moveSelection(-1);
-        }
-        else if (Keys::down(keyId))
-        {
-            moveSelection(1);
-        }
-        else if (Keys::ok(keyId))
-        {
-            Item item;
+    auto state(mVKeyboard.readState());
+    auto keyId(state.activeKey);
+        
+    if (Keys::pageUp(keyId))
+    {
+        moveSelection(-5);
+    }
+    else if (Keys::pageDown(keyId))
+    {
+        moveSelection(5);
+    }
+    else if (Keys::up(keyId))
+    {
+        moveSelection(-1);
+    }
+    else if (Keys::down(keyId))
+    {
+        moveSelection(1);
+    }
+    else if (Keys::ok(keyId))
+    {
+        Item item;
 
-            filteredItem(item, mSelected);
+        filteredItem(item, mSelected);
             
-            mKeyProcessor.pushEvent(KeyEvent(item.keyId, true));
-            mKeyProcessor.pushEvent(KeyEvent(item.keyId, false));
-            break;
-        }
-        else if (Keys::cancel(keyId))
+        mNext.processKeyEvent(KeyEvent(item.keyId, true));
+        mNext.processKeyEvent(KeyEvent(item.keyId, false));
+        mQuit = true;
+    }
+    else if (Keys::cancel(keyId))
+    {
+        mQuit = true;
+    }
+    else if (keyId.type() == KeyId::Type::kKey)
+    {
+        if (keyId.value() == KeyCodes::Backspace)
         {
-            break;
+            mFilter.erase(mFilter.end() - 1);
+            moveSelection(0);
         }
-        else if (keyId.type() == KeyId::Type::kKey)
+        else
         {
-            if (keyId.value() == KeyCodes::Backspace)
-            {
-                mFilter.erase(mFilter.end() - 1);
-                moveSelection(0);
-            }
-            else
-            {
-                char newChar(state.activeChar);
+            char newChar(state.activeChar);
 
-                if (newChar)
+            if (newChar)
+            {
+                mFilter.insert(mFilter.end(), newChar);
+
+                if (processExactFilterMatch())
                 {
-                    mFilter.insert(mFilter.end(), newChar);
-
-                    if (processExactFilterMatch())
-                    {
-                        break;
-                    }
-                    
-                    moveSelection(0);
+                    mQuit = true;
                 }
+                    
+                moveSelection(0);
             }
         }
     }
-
-    mSurface.clear();
 }
 
 
@@ -232,8 +234,8 @@ bool Menu::processExactFilterMatch()
         
         if (StrRef(item.shortcut).equalsCase(mFilter))
         {
-            mKeyProcessor.pushEvent(KeyEvent(item.keyId, true));
-            mKeyProcessor.pushEvent(KeyEvent(item.keyId, false));
+            mNext.processKeyEvent(KeyEvent(item.keyId, true));
+            mNext.processKeyEvent(KeyEvent(item.keyId, false));
             return true;
         }
     }

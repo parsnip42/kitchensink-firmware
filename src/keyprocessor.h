@@ -2,6 +2,7 @@
 #define INCLUDED_KEYPROCESSOR_H
 
 #include "eventqueue.h"
+#include "keyeventsource.h"
 #include "macroprocessor.h"
 #include "multiprocessor.h"
 #include "lockprocessor.h"
@@ -11,7 +12,7 @@ class KsKeyboard;
 class KeyLocation;
 class LayerStack;
 
-class KeyProcessor
+class KeyProcessor : public KeyEventSource
 {
 public:
     KeyProcessor(KsKeyboard& keyboard,
@@ -23,6 +24,11 @@ public:
     uint32_t poll();
     
     uint32_t poll(KeyEventStage& stage);
+
+    virtual void nextKeyEvent(KeyEventStage& next) override
+    {
+        poll(next);
+    }
 
     void untilKeyPress();
     
