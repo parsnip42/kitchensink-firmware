@@ -59,12 +59,10 @@ public:
 
 }
 
-ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
-                                 KeyboardState& keyboardState,
+ActionProcessor::ActionProcessor(KeyboardState& keyboardState,
                                  UI::Surface&   surface,
                                  KeyEventStage& next)
-    : mKeyProcessor(keyProcessor)
-    , mKeyboardState(keyboardState)
+    : mKeyboardState(keyboardState)
     , mSurface(surface)
     , mMenuDefinitions(keyboardState)
     , mNext(next)
@@ -72,189 +70,190 @@ ActionProcessor::ActionProcessor(KeyProcessor&  keyProcessor,
 
 void ActionProcessor::processKeyEvent(const KeyEvent& event)
 {
-    const auto& keyId(event.keyId);
+    mNext.processKeyEvent(event);
+    // const auto& keyId(event.keyId);
     
-    if (keyId.type() == KeyId::Type::kAction)
-    {
-        switch (keyId.actionType())
-        {
-        case KeyId::ActionType::kBuiltIn:
-            fireBuiltIn(event.keyId.value(),
-                        event);
-            break;
+    // if (keyId.type() == KeyId::Type::kAction)
+    // {
+    //     switch (keyId.actionType())
+    //     {
+    //     case KeyId::ActionType::kBuiltIn:
+    //         fireBuiltIn(event.keyId.value(),
+    //                     event);
+    //         break;
             
-        case KeyId::ActionType::kMenu:
-            mNext.processKeyEvent(event);
-            // fireMenu(event.keyId.value(),
-            //          event);
-            break;
-        case KeyId::ActionType::kEditMacro:
-            if (event.pressed)
-            {
-                auto macroIndex(keyId.value());
+    //     case KeyId::ActionType::kMenu:
+    //         mNext.processKeyEvent(event);
+    //         // fireMenu(event.keyId.value(),
+    //         //          event);
+    //         break;
+    //     case KeyId::ActionType::kEditMacro:
+    //         if (event.pressed)
+    //         {
+    //             auto macroIndex(keyId.value());
 
-                mSurface.clear();
+    //             mSurface.clear();
 
-                auto& macro(mKeyboardState.macroSet[macroIndex]);
+    //             auto& macro(mKeyboardState.macroSet[macroIndex]);
 
-                UI::TableLayout layout(72, UI::Surface::kWidth, 20, 8);
+    //             UI::TableLayout layout(72, UI::Surface::kWidth, 20, 8);
                 
-                UI::Label(mSurface,
-                          layout.next(),
-                          "Name",
-                          UI::Label::Justify::Right);
+    //             UI::Label(mSurface,
+    //                       layout.next(),
+    //                       "Name",
+    //                       UI::Label::Justify::Right);
 
-                UI::TextEntry titleEntry(mSurface,
-                                         mKeyProcessor,
-                                         layout.next(),
-                                         macro.name);
+    //             UI::TextEntry titleEntry(mSurface,
+    //                                      mKeyProcessor,
+    //                                      layout.next(),
+    //                                      macro.name);
                 
-                UI::Label(mSurface,
-                          layout.next(),
-                          "Shortcut",
-                          UI::Label::Justify::Right);
+    //             UI::Label(mSurface,
+    //                       layout.next(),
+    //                       "Shortcut",
+    //                       UI::Label::Justify::Right);
                 
-                UI::TextEntry shortcutEntry(mSurface,
-                                            mKeyProcessor,
-                                            layout.next(),
-                                            macro.shortcut);
+    //             UI::TextEntry shortcutEntry(mSurface,
+    //                                         mKeyProcessor,
+    //                                         layout.next(),
+    //                                         macro.shortcut);
 
-                MacroTypeDataSource ds;
+    //             MacroTypeDataSource ds;
                 
-                UI::Label(mSurface,
-                          layout.next(),
-                          "Type",
-                          UI::Label::Justify::Right);
+    //             UI::Label(mSurface,
+    //                       layout.next(),
+    //                       "Type",
+    //                       UI::Label::Justify::Right);
 
-                UI::Combo combo(mSurface,
-                                mKeyProcessor,
-                                layout.next(),
-                                ds,
-                                0);
+    //             UI::Combo combo(mSurface,
+    //                             mKeyProcessor,
+    //                             layout.next(),
+    //                             ds,
+    //                             0);
                 
-                if (titleEntry.focus() &&
-                    shortcutEntry.focus())
-                {
-                    if (combo.create())
-                    {
-                        StrBuf<20> recordStr;
-                        StrOStream ostream(recordStr);
+    //             if (titleEntry.focus() &&
+    //                 shortcutEntry.focus())
+    //             {
+    //                 if (combo.create())
+    //                 {
+    //                     StrBuf<20> recordStr;
+    //                     StrOStream ostream(recordStr);
                         
-                        ostream.appendStr("Recording Macro #")
-                               .appendInt(macroIndex);
+    //                     ostream.appendStr("Recording Macro #")
+    //                            .appendInt(macroIndex);
 
                         
-                        UI::RecordMacro record(mSurface,
-                                               mKeyProcessor,
-                                               mNext);
+    //                     UI::RecordMacro record(mSurface,
+    //                                            mKeyProcessor,
+    //                                            mNext);
                         
-                        MacroType macroType((combo.selectedItem() == 2) ? MacroType::kInvert : MacroType::kSync);
+    //                     MacroType macroType((combo.selectedItem() == 2) ? MacroType::kInvert : MacroType::kSync);
 
-                        macro.type = macroType;
-                        macro.name = titleEntry.text();
-                        macro.shortcut = shortcutEntry.text();
+    //                     macro.type = macroType;
+    //                     macro.name = titleEntry.text();
+    //                     macro.shortcut = shortcutEntry.text();
 
-                        record.create(recordStr,
-                                      macro,
-                                      (combo.selectedItem() == 1));
+    //                     record.create(recordStr,
+    //                                   macro,
+    //                                   (combo.selectedItem() == 1));
                         
-                        Storage storage;
+    //                     Storage storage;
                         
-                        {
-                            Serializer<MacroSet> s;
+    //                     {
+    //                         Serializer<MacroSet> s;
                             
-                            auto os(storage.write(Storage::Region::Macro));
+    //                         auto os(storage.write(Storage::Region::Macro));
 
-                            s.serialize(mKeyboardState.macroSet, os);
-                        }
+    //                         s.serialize(mKeyboardState.macroSet, os);
+    //                     }
                         
 
-                    }
-                }
+    //                 }
+    //             }
 
-                mSurface.clear();
-            }
-            break;
-        }
-    }
-    else
-    {
-        mNext.processKeyEvent(event);
-    }
+    //             mSurface.clear();
+    //         }
+    //         break;
+    //     }
+    // }
+    // else
+    // {
+    //     mNext.processKeyEvent(event);
+    // }
 }
 
 void ActionProcessor::fireBuiltIn(int             action,
                                   const KeyEvent& event) const
 {
-    switch (action)
-    {
-    case 0:
-    {
-        CtrlUtil::bootloader();
-        break;
-    }
+    // switch (action)
+    // {
+    // case 0:
+    // {
+    //     CtrlUtil::bootloader();
+    //     break;
+    // }
     
-    case 1:
-    {
-        if (event.pressed)
-        {            
-            UI::Text text(mSurface);
+    // case 1:
+    // {
+    //     if (event.pressed)
+    //     {            
+    //         UI::Text text(mSurface);
 
-            {
-                StrBuf<32> line;
-                StrOStream ostream(line);
+    //         {
+    //             StrBuf<32> line;
+    //             StrOStream ostream(line);
                 
-                ostream.appendStr("Free Memory: ")
-                       .appendInt(static_cast<int>(CtrlUtil::freeMemory()));
+    //             ostream.appendStr("Free Memory: ")
+    //                    .appendInt(static_cast<int>(CtrlUtil::freeMemory()));
             
-                text.appendLine(line);
-            }
+    //             text.appendLine(line);
+    //         }
 
-            {
-                text.appendLine("Running Benchmark..");
+    //         {
+    //             text.appendLine("Running Benchmark..");
 
-                auto start(millis());
-                for (int i(0); i < 1000; ++i)
-                {
-                    mKeyProcessor.poll();
-                }
-                auto end(millis());
+    //             auto start(millis());
+    //             for (int i(0); i < 1000; ++i)
+    //             {
+    //                 mKeyProcessor.poll();
+    //             }
+    //             auto end(millis());
 
-                {
-                    StrBuf<32> line;
-                    StrOStream ostream(line);
+    //             {
+    //                 StrBuf<32> line;
+    //                 StrOStream ostream(line);
 
-                    ostream.appendStr("  1000 polls: ")
-                           .appendInt(static_cast<int>(end-start))
-                           .appendStr("ms");
+    //                 ostream.appendStr("  1000 polls: ")
+    //                        .appendInt(static_cast<int>(end-start))
+    //                        .appendStr("ms");
 
-                    text.appendLine(line);
-                }
+    //                 text.appendLine(line);
+    //             }
 
-                {
-                    StrBuf<32> line;
-                    StrOStream ostream(line);
+    //             {
+    //                 StrBuf<32> line;
+    //                 StrOStream ostream(line);
 
-                    ostream.appendStr("  ")
-                           .appendInt(static_cast<int>(1000000 / (end-start)))
-                           .appendStr(" polls/s");
+    //                 ostream.appendStr("  ")
+    //                        .appendInt(static_cast<int>(1000000 / (end-start)))
+    //                        .appendStr(" polls/s");
 
-                    text.appendLine(line);
-                }
+    //                 text.appendLine(line);
+    //             }
 
-            }
+    //         }
 
-            mKeyProcessor.untilKeyPress();
-            mSurface.clear();
-        }
-        break;
-    }
+    //         mKeyProcessor.untilKeyPress();
+    //         mSurface.clear();
+    //     }
+    //     break;
+    // }
     
-    case 2:
-    {
-        break;
-    }
-    }
+    // case 2:
+    // {
+    //     break;
+    // }
+    // }
 }
 
 void ActionProcessor::fireMenu(int             action,

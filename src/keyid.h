@@ -15,7 +15,8 @@ public:
         kSMacro = 4,
         kAction = 5,
         kDelay  = 6,
-        kMulti  = 7
+        kMulti  = 7,
+        kTick   = 8
     };
 
     enum class LockType : uint8_t
@@ -46,6 +47,7 @@ public:
     static constexpr KeyId Macro(int macroId);
     static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Delay(uint32_t delayMs);
+    static constexpr KeyId Tick(uint32_t tickId);
 
 public:
     constexpr KeyId(int keyCode = 0);
@@ -62,7 +64,8 @@ public:
     constexpr ActionType actionType() const;
     constexpr LockType lockType() const;
     constexpr uint32_t delayMs() const;
-    
+    constexpr uint32_t tickId() const;
+
 private:
     uint8_t mType;
     uint8_t mValue;
@@ -138,6 +141,14 @@ constexpr KeyId KeyId::Delay(uint32_t delayMs)
 }
 
 inline
+constexpr KeyId KeyId::Tick(uint32_t tickId)
+{
+    return KeyId(Type::kDelay,
+                 (tickId >> 8) & 0xf,
+                 tickId & 0xff);
+}
+
+inline
 constexpr KeyId::KeyId(int keyCode)
     : mType(0)
     , mValue(keyCode & 0xff)
@@ -188,6 +199,12 @@ constexpr KeyId::LockType KeyId::lockType() const
 
 inline
 constexpr uint32_t KeyId::delayMs() const
+{
+    return (subType() << 8) | value();
+}
+
+inline
+constexpr uint32_t KeyId::tickId() const
 {
     return (subType() << 8) | value();
 }

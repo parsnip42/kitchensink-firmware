@@ -39,7 +39,7 @@ bool TextEntry::focus()
     
     while (1)
     {
-        mKeyProcessor.poll(vKeyboard);
+        // mKeyProcessor.poll(vKeyboard);
         
         if (((millis() >> 9) & 1) ^ flash)
         {

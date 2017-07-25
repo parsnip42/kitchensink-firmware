@@ -1,8 +1,7 @@
 #ifndef INCLUDED_UI_HOME_H
 #define INCLUDED_UI_HOME_H
 
-#include "keyeventstage.h"
-#include "keyeventbuffer.h"
+#include "keyeventpipeline.h"
 #include <array>
 
 class KeyboardState;
@@ -17,8 +16,7 @@ class Home
 public:
     Home(Surface&             surface,
          const KeyboardState& keyboardState,
-         KeyEventBuffer&      buffer,
-         KeyEventStage&       next);
+         KeyEventPipeline&    pipeline);
 
 public:
     void poll();
@@ -31,8 +29,7 @@ private:
     std::array<int, 30>  mPaintState;
     bool                 mDirty;
     uint32_t             mLastUpdate;
-    KeyEventBuffer&      mBuffer;
-    KeyEventStage&       mNext;
+    KeyEventPipeline&    mPipeline;
     
 private:
     Home(const Home&) = delete;

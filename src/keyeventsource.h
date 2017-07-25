@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYEVENTSOURCE_H
 #define INCLUDED_KEYEVENTSOURCE_H
 
-#include "keyevent.h"
+#include <cstdint>
 
 class KeyEventStage;
 
@@ -12,7 +12,7 @@ public:
     virtual ~KeyEventSource() = default;
 
 public:
-    virtual void nextKeyEvent(KeyEventStage& next) = 0;
+    virtual void pollKeyEvent(uint32_t timeMs) = 0;
 };
 
 #endif /* INCLUDED_KEYEVENTSOURCE_H */

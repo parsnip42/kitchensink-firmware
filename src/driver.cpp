@@ -17,6 +17,8 @@
 #include "ui/home.h"
 #include "ui/text.h"
 #include "keyeventbuffer.h"
+#include "timereventsource.h"
+#include "keyeventpipeline.h"
 
 #include "types/strbuf.h"
 #include "types/strostream.h"
@@ -158,15 +160,9 @@ void loop()
      // DefaultProfile::init(keyboardState);
 
 
-
+    KeyEventBuffer eventBuffer;
     
-    KeyProcessor keyProcessor(keyboard,
-                              keyboardState.layerStack);
-
-    KeyEventBuffer eventBuffer(keyProcessor);
-    
-    ActionProcessor actionProcessor(keyProcessor,
-                                    keyboardState,
+    ActionProcessor actionProcessor(keyboardState,
                                     surface,
                                     eventBuffer);
     
@@ -180,18 +176,27 @@ void loop()
     
     MultiProcessor multiProcessor(keyboardState.multiSet,
                                   macroProcessor);
+
+    KeyProcessor keyProcessor(keyboard,
+                              keyboardState.layerStack,
+                              multiProcessor);
+
+    
+                              
+
+    TimerEventSource timer(keyProcessor,
+                           multiProcessor);
+    
+    KeyEventPipeline pipeline(timer,
+                              eventBuffer,
+                              usbKeyboard);
     
     UI::Home home(surface,
                   keyboardState,
-                  eventBuffer,
-                  usbKeyboard);
+                  pipeline);
 
     while (1)
     {
-        auto timeMs(keyProcessor.poll(multiProcessor));
-
         home.poll();
-        
-        multiProcessor.tick(timeMs);
     }
 }

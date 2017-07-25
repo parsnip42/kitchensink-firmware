@@ -16,13 +16,18 @@ void Menu::poll()
     
     while (!mQuit)
     {
-        mBuffer.nextKeyEvent(*this);
+        mPipeline.poll([&](const KeyEvent& event,
+                           KeyEventStage&  next)
+                       {
+                           processKeyEvent(event, next);
+                       });
     }
     
     mSurface.clear();
 }
 
-void Menu::processKeyEvent(const KeyEvent& event)
+void Menu::processKeyEvent(const KeyEvent& event,
+                           KeyEventStage&  next)
 {
     mVKeyboard.processKeyEvent(event);
         
@@ -51,8 +56,8 @@ void Menu::processKeyEvent(const KeyEvent& event)
 
         filteredItem(item, mSelected);
             
-        mNext.processKeyEvent(KeyEvent(item.keyId, true));
-        mNext.processKeyEvent(KeyEvent(item.keyId, false));
+        next.processKeyEvent(KeyEvent(item.keyId, true));
+        next.processKeyEvent(KeyEvent(item.keyId, false));
         mQuit = true;
     }
     else if (Keys::cancel(keyId))
@@ -234,8 +239,8 @@ bool Menu::processExactFilterMatch()
         
         if (StrRef(item.shortcut).equalsCase(mFilter))
         {
-            mNext.processKeyEvent(KeyEvent(item.keyId, true));
-            mNext.processKeyEvent(KeyEvent(item.keyId, false));
+            // mNext.processKeyEvent(KeyEvent(item.keyId, true));
+            // mNext.processKeyEvent(KeyEvent(item.keyId, False));
             return true;
         }
     }

@@ -6,24 +6,28 @@
 
 #include <elapsedMillis.h>
 
-KeyProcessor::KeyProcessor(KsKeyboard& keyboard,
-                           LayerStack& layerStack)
+KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
+                           LayerStack&    layerStack,
+                           KeyEventStage& next)
     : mKeyboard(keyboard)
     , mLayerStack(layerStack)
+    , mNext(next)
 { }
 
-uint32_t KeyProcessor::poll()
+void KeyProcessor::pollKeyEvent(uint32_t timeMs)
 {
-    auto timeMs(millis());
-    
     mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& event)
     {
         auto keyId(mLayerStack.at(event.row, event.column));
-        
-        mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
-    });
-        
-    return timeMs;
+
+        auto keyEvent(KeyEvent(keyId, event.pressed));
+        auto consumed(consumeEvent(keyEvent, timeMs));
+
+        if (!consumed)
+        {
+            mNext.processKeyEvent(keyEvent);
+        }
+    });    
 }
 
 bool KeyProcessor::consumeEvent(const KeyEvent& event,
@@ -44,37 +48,10 @@ bool KeyProcessor::consumeEvent(const KeyEvent& event,
 
 void KeyProcessor::untilKeyPress()
 {
-    while (true)
-    {
-        poll();
-
-        if (!mEventQueue.empty())
-        {
-            auto event(mEventQueue.pop());
-
-            if (event.pressed)
-            {
-                break;
-            }
-        }
-    }
 }
 
 void KeyProcessor::untilIdle()
 {
-    while (true)
-    {
-        poll();
-        
-        if (!mEventQueue.empty())
-        {
-            mEventQueue.pop();
-        }
-        else if (!mKeyboard.any())
-        {
-            break;
-        }
-    }
 }
 
 KeyLocation KeyProcessor::readKeyLocation()

@@ -3,6 +3,7 @@
 
 #include "eventqueue.h"
 #include "keyeventsource.h"
+#include "keyeventstage.h"
 #include "macroprocessor.h"
 #include "multiprocessor.h"
 #include "lockprocessor.h"
@@ -15,20 +16,14 @@ class LayerStack;
 class KeyProcessor : public KeyEventSource
 {
 public:
-    KeyProcessor(KsKeyboard& keyboard,
-                 LayerStack& layerStack);
+    KeyProcessor(KsKeyboard&    keyboard,
+                 LayerStack&    layerStack,
+                 KeyEventStage& next);
 
 public:
-    void pushEvent(const KeyEvent& event);
-    
-    uint32_t poll();
-    
-    uint32_t poll(KeyEventStage& stage);
+    virtual void pollKeyEvent(uint32_t timeMs) override;
 
-    virtual void nextKeyEvent(KeyEventStage& next) override
-    {
-        poll(next);
-    }
+    void pushEvent(const KeyEvent& event);
 
     void untilKeyPress();
     
@@ -48,9 +43,10 @@ private:
     void releaseLayer(int index);
 
 private:
-    KsKeyboard& mKeyboard;
-    LayerStack& mLayerStack;
-    EventQueue  mEventQueue;
+    KsKeyboard&    mKeyboard;
+    LayerStack&    mLayerStack;
+    EventQueue     mEventQueue;
+    KeyEventStage& mNext;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;
@@ -62,25 +58,6 @@ inline
 void KeyProcessor::pushEvent(const KeyEvent& event)
 {
     mEventQueue.pushBack(event);
-}
-
-inline
-uint32_t KeyProcessor::poll(KeyEventStage& stage)
-{
-    auto timeMs(poll());
-
-    if (!mEventQueue.empty())
-    {
-        auto event(mEventQueue.pop());
-        auto consumed(consumeEvent(event, timeMs));
-
-        if (!consumed)
-        {
-            stage.processKeyEvent(event);
-        }
-    }
-
-    return timeMs;
 }
 
 #endif

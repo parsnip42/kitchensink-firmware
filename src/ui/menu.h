@@ -10,6 +10,7 @@
 #include "types/strref.h"
 #include "ui/surface.h"
 #include "virtualkeyboard.h"
+#include "keyeventpipeline.h"
 
 #include <cstdint>
 
@@ -18,7 +19,7 @@ class KeyProcessor;
 namespace UI
 {
 
-class Menu : public KeyEventStage
+class Menu
 {
 public:
     class Item
@@ -42,14 +43,14 @@ public:
 public:
     Menu(const DataSource& dataSource,
          Surface&          surface,
-         KeyEventBuffer&   buffer,
-         KeyEventStage&    next);
+         KeyEventPipeline& pipeline);
 
 public:
     void redraw();
     void poll();
 
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    void processKeyEvent(const KeyEvent& event,
+                         KeyEventStage&  next);
     
 private:
     void moveSelection(int selectionOffset);
@@ -73,8 +74,7 @@ private:
     StrBuf<12>        mFilter;
     VirtualKeyboard   mVKeyboard;
     bool              mQuit;
-    KeyEventBuffer&   mBuffer;
-    KeyEventStage&    mNext;
+    KeyEventPipeline& mPipeline;
     
 private:
     Menu(const Menu&) = delete;
@@ -85,15 +85,13 @@ private:
 inline
 Menu::Menu(const DataSource& dataSource,
            Surface&          surface,
-           KeyEventBuffer&   buffer,
-           KeyEventStage&    next)
+           KeyEventPipeline& pipeline)
     : mDataSource(dataSource)
     , mSurface(surface)
     , mSelected(0)
     , mFilter()
     , mQuit(false)
-    , mBuffer(buffer)
-    , mNext(next)
+    , mPipeline(pipeline)
 { }
 
 }

@@ -2,35 +2,25 @@
 #define INCLUDED_KEYEVENTBUFFER_H
 
 #include "keyeventstage.h"
-#include "keyeventsource.h"
 #include "keyevent.h"
 #include "types/circularbuffer.h"
 
 class KeyEventBuffer : public KeyEventStage
-                     , public KeyEventSource
 {
 public:
-    explicit KeyEventBuffer(KeyEventSource& prev);
+    KeyEventBuffer() = default;
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    virtual void nextKeyEvent(KeyEventStage& next) override;
 
 public:
     bool empty() const;
     KeyEvent pop();
 
 private:
-    KeyEventSource&              mPrev;
     CircularBuffer<KeyEvent, 40> mBuffer;
-
 };
 
-
-inline
-KeyEventBuffer::KeyEventBuffer(KeyEventSource& prev)
-    : mPrev(prev)
-{ }
 
 inline
 bool KeyEventBuffer::empty() const

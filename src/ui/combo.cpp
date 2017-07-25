@@ -45,7 +45,7 @@ bool Combo::create()
     
     while (1)
     {
-        mKeyProcessor.poll(autoRepeat);
+        // mKeyProcessor.poll(autoRepeat);
 
         auto keyId(autoRepeat.activeKey());
 

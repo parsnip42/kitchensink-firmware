@@ -19,8 +19,7 @@ public:
     static constexpr int kMaxActions = 10;
     
 public:
-    ActionProcessor(KeyProcessor&  keyProcessor,
-                    KeyboardState& keyboardState,
+    ActionProcessor(KeyboardState& keyboardState,
                     UI::Surface&   surface,
                     KeyEventStage& next);
 
@@ -37,7 +36,6 @@ private:
     void fireEdit() const;
 
 private:
-    KeyProcessor&   mKeyProcessor;
     KeyboardState&  mKeyboardState;
     UI::Surface&    mSurface;
     MenuDefinitions mMenuDefinitions;

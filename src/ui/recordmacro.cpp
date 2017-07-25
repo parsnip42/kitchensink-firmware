@@ -25,7 +25,7 @@ bool RecordMacro::create(const StrRef& title,
 
     while (!recorder.complete())
     {
-        mKeyProcessor.poll(recorder);
+        // mKeyProcessor.poll(recorder);
         
         if (!recorder.full())
         {

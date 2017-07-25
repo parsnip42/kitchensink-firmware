@@ -6,21 +6,18 @@
 
 #include <algorithm>
 #include <cstdio>
-#include <elapsedMillis.h>
 
 namespace UI
 {
 
 Home::Home(Surface&             surface,
            const KeyboardState& keyboardState,
-           KeyEventBuffer&      buffer,
-           KeyEventStage&       next)
+           KeyEventPipeline&    pipeline)
     : mSurface(surface)
     , mKeyboardState(keyboardState)
     , mDirty(false)
     , mLastUpdate(0)
-    , mBuffer(buffer)
-    , mNext(next)
+    , mPipeline(pipeline)
 {
     std::fill(mPaintState.begin(),
               mPaintState.end(),
@@ -29,9 +26,9 @@ Home::Home(Surface&             surface,
 
 void Home::poll()
 {
-    while (!mBuffer.empty())
+    mPipeline.poll([&](const KeyEvent& event,
+                       KeyEventStage&  next)
     {
-        auto event(mBuffer.pop());
         auto keyId(event.keyId);
         
         if (keyId.actionType() == KeyId::ActionType::kMenu)
@@ -44,17 +41,16 @@ void Home::poll()
                 
                 UI::Menu menu(menuDefinitions.getDataSource(action),
                               mSurface,
-                              mBuffer,
-                              mBuffer);
+                              mPipeline);
                 
                 menu.poll();
             }
         }
         else
         {
-            mNext.processKeyEvent(event);
+            next.processKeyEvent(event);
         }
-    }
+    });
 }
 
 void Home::update()
@@ -64,46 +60,46 @@ void Home::update()
 
 void Home::paint()
 {
-    if (!mDirty)
-    {
-        return;
-    }
+    // if (!mDirty)
+    // {
+    //     return;
+    // }
 
-    auto now(millis());
+    // auto now(millis());
     
-    if ((now - mLastUpdate) < 100)
-    {
-        return;
-    }
+    // if ((now - mLastUpdate) < 100)
+    // {
+    //     return;
+    // }
 
-    mLastUpdate = now;
-    mDirty = false;
+    // mLastUpdate = now;
+    // mDirty = false;
 
-    const auto& lockSet(mKeyboardState.lockSet);
+    // const auto& lockSet(mKeyboardState.lockSet);
     
-    for (int i = 0; i < 12; ++i)
-    {
-        if (lockSet[i].locked() && (mPaintState[i] == 0))
-        {
-            mPaintState[i] = 1;
-            mDirty = true;
-        }
-        else if (!lockSet[i].locked() && (mPaintState[i] > 0))
-        {
-            mPaintState[i] = 0;
-            mDirty = true;
-        }
-        else if (mPaintState[i] > 0 && mPaintState[i] < 0xf)
-        {
-            ++mPaintState[i];            
-            mDirty = true;
-        }
+    // for (int i = 0; i < 12; ++i)
+    // {
+    //     if (lockSet[i].locked() && (mPaintState[i] == 0))
+    //     {
+    //         mPaintState[i] = 1;
+    //         mDirty = true;
+    //     }
+    //     else if (!lockSet[i].locked() && (mPaintState[i] > 0))
+    //     {
+    //         mPaintState[i] = 0;
+    //         mDirty = true;
+    //     }
+    //     else if (mPaintState[i] > 0 && mPaintState[i] < 0xf)
+    //     {
+    //         ++mPaintState[i];            
+    //         mDirty = true;
+    //     }
         
-        mSurface.paintText(((i & 3) * 16),
-                           52-((i >> 2) * 14),
-                           lockSet[i].name,
-                           mPaintState[i], 0);
-    }
+    //     mSurface.paintText(((i & 3) * 16),
+    //                        52-((i >> 2) * 14),
+    //                        lockSet[i].name,
+    //                        mPaintState[i], 0);
+    // }
 }
 
 }
