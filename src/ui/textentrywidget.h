@@ -26,7 +26,7 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
 private:
-    void paintText(uint8_t color = 0xf);
+    void paintText();
     void paintCursor(bool visible);
 
 public:
@@ -39,6 +39,7 @@ private:
     Timer::Handle mFlashTimer;
     std::size_t   mCursorPosition;
     bool          mFlash;
+    bool          mFocused;
     
 private:
     TextEntryWidget(const TextEntryWidget&) = delete;

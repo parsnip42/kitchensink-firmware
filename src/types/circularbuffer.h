@@ -26,6 +26,7 @@ public:
     void pushBack(const T& value);
     void pushFront(const T& value);
     void insert(iterator position, const T& value);
+    void erase(iterator position);
     const T& peek() const;
     T pop();
 
@@ -85,6 +86,20 @@ void CircularBuffer<T, Capacity>::insert(typename CircularBuffer<T, Capacity>::i
 
 template <typename T, std::size_t Capacity>
 inline
+void CircularBuffer<T, Capacity>::erase(iterator position)
+{
+    auto next(position);
+
+    ++next;
+    
+    std::move(next, end(), position);
+
+    mEnd = (mEnd  + Capacity - 1) % Capacity;
+    mFull = false;
+}
+
+template <typename T, std::size_t Capacity>
+inline
 T CircularBuffer<T, Capacity>::pop()
 {
     T value(mData[mStart]);
@@ -94,6 +109,7 @@ T CircularBuffer<T, Capacity>::pop()
     
     return value;
 }
+
 template <typename T, std::size_t Capacity>
 inline
 const T& CircularBuffer<T, Capacity>::peek() const

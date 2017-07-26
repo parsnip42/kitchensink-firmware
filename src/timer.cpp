@@ -2,33 +2,32 @@
 
 #include "keyevent.h"
 
+Timer::Timer(KeyEventStage& next)
+    : mNext(next)
+{ }
+
 void Timer::pollKeyEvent(uint32_t timeMs)
 {
     if (!mTimerQueue.empty())
     {
-        auto entry(mTimerQueue.peek());
-        auto tickId(entry.value.tickId);
-        
-        if (entry.key <= timeMs)
+        if (mTimerQueue.peek().key <= timeMs)
         {
-            mTimerQueue.pop();
-            
-            if (mTimerActive[tickId])
+            auto entry(mTimerQueue.pop());
+            auto tickId(entry.value.tickId);
+            auto repeatDelayMs(entry.value.repeatDelayMs);
+                
+            if (repeatDelayMs > 0)
             {
-                auto repeatDelayMs(entry.value.repeatDelayMs);
-                
-                if (repeatDelayMs > 0)
-                {
-                    mTimerQueue.insert(TimerQueue::value_type(timeMs + repeatDelayMs,
-                                                              Entry(tickId, repeatDelayMs)));
-                }
-                else
-                {
-                    mTimerActive[tickId] = false;
-                }
-                
-                mNext.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
+                mTimerMap[tickId] = mTimerQueue.insert(
+                    TimerQueue::value_type(timeMs + repeatDelayMs,
+                                           Entry(tickId, repeatDelayMs)));
             }
+            else
+            {
+                mTimerMap[tickId] = TimerQueue::iterator();
+            }
+
+            mNext.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
         }
     }
 }
@@ -41,25 +40,36 @@ Timer::Handle Timer::schedule(uint32_t timeMs)
 Timer::Handle Timer::scheduleRepeating(uint32_t timeMs,
                                        uint32_t repeatDelayMs)
 {
-    for (std::size_t tickId(0); tickId < mTimerActive.size(); ++tickId)
+    for (uint16_t tickId(1); tickId < mTimerMap.size(); ++tickId)
     {
-        auto active(mTimerActive[tickId]);
-        
-        if (!active)
+        if (mTimerMap[tickId] == TimerQueue::iterator())
         {
-            active = true;
-            
-            mTimerQueue.insert(TimerQueue::value_type(timeMs,
-                                                      Entry(tickId, repeatDelayMs)));
+            mTimerMap[tickId] = mTimerQueue.insert(
+                TimerQueue::value_type(timeMs,
+                                       Entry(tickId, repeatDelayMs)));
             
             return Handle(this, tickId);
         }
     }
-
+    
     return Handle();
 }
 
 void Timer::cancel(const Timer::Handle& handle)
 {
-    mTimerActive[handle.tickId] = false;
+    auto& it(mTimerMap[handle.tickId]);
+
+    if (it != TimerQueue::iterator())
+    {
+        mTimerQueue.erase(it);
+        mTimerMap[handle.tickId] = TimerQueue::iterator();
+    }
 }
+
+
+
+
+
+
+
+

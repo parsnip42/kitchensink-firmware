@@ -15,6 +15,9 @@ public:
 
 private:
     typedef CircularBuffer<value_type, Capacity> Buffer;
+
+public:
+    typedef typename Buffer::iterator iterator;
     
 public:
     constexpr OrderedCircularBuffer() = default;
@@ -24,8 +27,13 @@ public:
     auto pop();
 
     bool empty() const;
-    bool insert(const value_type& value);
-
+    auto insert(const value_type& value);
+    void erase(iterator position);
+    
+public:
+    iterator begin() { return mBuffer.begin(); }
+    iterator end() { return mBuffer.end(); }
+    
 private:
      Buffer mBuffer;
 };
@@ -40,21 +48,23 @@ bool OrderedCircularBuffer<Key, Value, Capacity>::empty() const
 
 template <typename Key, typename Value, std::size_t Capacity>
 inline
-bool OrderedCircularBuffer<Key, Value, Capacity>::insert(const value_type& value)
+auto OrderedCircularBuffer<Key, Value, Capacity>::insert(const value_type& value)
 {
-    if (!mBuffer.full())
-    {
-        auto position(std::lower_bound(mBuffer.begin(),
-                                       mBuffer.end(),
-                                       value,
-                                       typename KVPair<Key, Value>::Less()));
+    auto position(std::lower_bound(mBuffer.begin(),
+                                   mBuffer.end(),
+                                   value,
+                                   typename KVPair<Key, Value>::Less()));
         
-        mBuffer.insert(position, value);
-        
-        return true;
-    }
-    
-    return false;
+    mBuffer.insert(position, value);
+
+    return position;
+}
+
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+void OrderedCircularBuffer<Key, Value, Capacity>::erase(iterator position)
+{
+    mBuffer.erase(position);
 }
 
 template <typename Key, typename Value, std::size_t Capacity>

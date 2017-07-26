@@ -12,56 +12,23 @@ private:
     typedef std::array<T, Capacity> Data;
     
 public:
-    typedef T                               value_type;
-    typedef T&                              reference_type;
-    typedef std::bidirectional_iterator_tag iterator_category;
-    typedef std::size_t                     distance_type;
-        
+    typedef T  value_type;
+    typedef T& reference_type;
+
+public:
+    CircularBufferIterator();
+
 private:
-    CircularBufferIterator(Data*       data,
-                           std::size_t index)
-        : mData(data)
-        , mIndex(index)
-    { }
+    CircularBufferIterator(Data* data,
+                           int   index);
         
 public:
-    reference_type operator*()
-    {
-        return (*mData)[mIndex];
-    }
-        
-    CircularBufferIterator& operator++()
-    {
-        mIndex = (mIndex + 1) % Capacity;
-
-        return *this;
-    };
-        
-    CircularBufferIterator operator++(int)
-    {
-        auto prev(*this);
-
-        ++(*this);
-
-        return prev;
-    };
-
-    CircularBufferIterator& operator--()
-    {
-        mIndex = (mIndex - 1) % Capacity;
-
-        return *this;
-    };
-        
-    CircularBufferIterator operator--(int)
-    {
-        auto prev(*this);
-
-        --(*this);
-
-        return prev;
-    };
-
+    T& operator*();
+    CircularBufferIterator& operator++();
+    CircularBufferIterator operator++(int);
+    CircularBufferIterator& operator--();
+    CircularBufferIterator operator--(int);
+    
 private:
     Data*       mData;
     std::size_t mIndex;
@@ -80,7 +47,8 @@ template <typename T, std::size_t Capacity>
 bool operator==(const CircularBufferIterator<T, Capacity>& lhs,
                 const CircularBufferIterator<T, Capacity>& rhs)
 {
-    return lhs.mIndex == rhs.mIndex;
+    return (lhs.mData == rhs.mData) &&
+        (lhs.mIndex == rhs.mIndex);
 }
 
 template <typename T, std::size_t Capacity>
@@ -89,5 +57,61 @@ bool operator!=(const CircularBufferIterator<T, Capacity>& lhs,
 {
     return !(lhs == rhs);
 }
+
+
+template <typename T, std::size_t Capacity>
+CircularBufferIterator<T, Capacity>::CircularBufferIterator()
+    : mData(nullptr)
+    , mIndex(0)
+{ }
+
+template <typename T, std::size_t Capacity>
+CircularBufferIterator<T, Capacity>::CircularBufferIterator(Data* data,
+                                                            int   index)
+    : mData(data)
+    , mIndex(index)
+{ }
+
+template <typename T, std::size_t Capacity>
+T& CircularBufferIterator<T, Capacity>::operator*()
+{
+    return (*mData)[mIndex];
+}
+
+template <typename T, std::size_t Capacity>
+CircularBufferIterator<T, Capacity>& CircularBufferIterator<T, Capacity>::operator++()
+{
+    mIndex = (mIndex + 1) % Capacity;
+    
+    return *this;
+};
+        
+template <typename T, std::size_t Capacity>
+CircularBufferIterator<T, Capacity> CircularBufferIterator<T, Capacity>::operator++(int)
+{
+    auto prev(*this);
+    
+    ++(*this);
+    
+    return prev;
+};
+
+template <typename T, std::size_t Capacity>
+CircularBufferIterator<T, Capacity>& CircularBufferIterator<T, Capacity>::operator--()
+{
+    mIndex = (mIndex + Capacity - 1) % Capacity;
+    
+    return *this;
+};
+
+template <typename T, std::size_t Capacity>
+CircularBufferIterator<T, Capacity> CircularBufferIterator<T, Capacity>::operator--(int)
+{
+    auto prev(*this);
+    
+    --(*this);
+    
+    return prev;
+};
 
 #endif

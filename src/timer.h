@@ -5,7 +5,6 @@
 #include "keyevent.h"
 #include "keyeventstage.h"
 #include "keyeventsource.h"
-#include "types/bitmask.h"
 #include "types/orderedcircularbuffer.h"
 
 #include <cstdint>
@@ -21,8 +20,7 @@ public:
 
     public:
         Handle();
-        Handle(Handle&&) = default;
-        
+        Handle(Handle&& lhs);
         ~Handle();
 
     public:
@@ -30,13 +28,13 @@ public:
         void cancel();
         
     public:
-        Handle& operator=(Handle&&) = default;
+        Handle& operator=(Handle&& lhs);
 
     private:
         Timer* mTimer;
 
     public:
-        uint32_t tickId;
+        uint16_t tickId;
 
     private:
         Handle(const Handle&) = delete;
@@ -51,17 +49,17 @@ private:
     {
     public:
         Entry();
-        Entry(uint32_t nTickId,
+        Entry(uint16_t nTickId,
               uint32_t nRepeatDelayMs);
 
     public:
-        uint32_t tickId;
         uint32_t repeatDelayMs;
+        uint16_t tickId;
     };
 
 private:
     typedef OrderedCircularBuffer<uint32_t, Entry, 20> TimerQueue;
-    typedef Bitmask<20>                                TimerMask;
+    typedef std::array<TimerQueue::iterator, 20>       TimerMap;
     
 public:
     explicit Timer(KeyEventStage& next);
@@ -75,7 +73,7 @@ public:
     void cancel(const Handle& handle);
     
 private:
-    TimerMask      mTimerActive;
+    TimerMap       mTimerMap;
     TimerQueue     mTimerQueue;
     KeyEventStage& mNext;
 };
@@ -83,10 +81,21 @@ private:
 
 inline
 Timer::Handle::Handle(Timer*   timer,
-               uint32_t nTickId)
+                      uint32_t nTickId)
     : mTimer(timer)
     , tickId(nTickId)
 { }
+
+inline
+Timer::Handle::Handle(Handle&& rhs)
+{
+    mTimer = rhs.mTimer;
+    tickId = rhs.tickId;
+
+    // lhs destructor shouldn't cancel timer - set it to null state
+    rhs.mTimer = nullptr;
+    rhs.tickId = 0;
+}
 
 inline
 Timer::Handle::Handle()
@@ -97,7 +106,16 @@ Timer::Handle::Handle()
 inline
 Timer::Handle::~Handle()
 {
-    // cancel();
+    cancel();
+}
+
+inline
+Timer::Handle& Timer::Handle::operator=(Handle&& rhs)
+{
+    std::swap(mTimer, rhs.mTimer);
+    std::swap(tickId, rhs.tickId);
+    
+    return *this;
 }
 
 inline
@@ -119,33 +137,15 @@ void Timer::Handle::cancel()
 
 inline
 Timer::Entry::Entry()
-    : tickId(0)
-    , repeatDelayMs(0)
+    : repeatDelayMs(0)
+    , tickId(0)
 { }
 
 inline
-Timer::Entry::Entry(uint32_t nTickId,
+Timer::Entry::Entry(uint16_t nTickId,
                     uint32_t nRepeatDelayMs)
-    : tickId(nTickId)
-    , repeatDelayMs(nRepeatDelayMs)
-{ }
-
-
-inline
-Timer::Timer(KeyEventStage& next)
-    : mNext(next)
+    : repeatDelayMs(nRepeatDelayMs)
+    , tickId(nTickId)
 { }
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-

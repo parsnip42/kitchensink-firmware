@@ -16,13 +16,16 @@ TextEntryWidget::TextEntryWidget(Surface&      surface,
     , mEventManager(eventManager)
     , mCursorPosition(1000)
     , mFlash(false)
+    , mFocused(false)
 { }
 
 void TextEntryWidget::redrawContent(bool focused)
 {
-    mSurface.rectangle(region.x, region.y, region.width, Surface::kFontHeight + 3, focused ? 0xf : 0x4);
-    paintText(focused ? 0xf : 0x4);
+    mFocused = focused;
     mFlash = focused;
+    
+    mSurface.rectangle(region.x, region.y, region.width, Surface::kFontHeight + 3, focused ? 0xf : 0x4);
+    paintText();
 
     paintCursor(mFlash);
     mFlashTimer = focused ? std::move(mEventManager.scheduleRepeating(500)) : Timer::Handle();
@@ -36,6 +39,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     {
         mFlash = !mFlash;
         paintCursor(mFlash);
+        return;
     }
 
     mCursorPosition = std::min(mCursorPosition, text.length());
@@ -47,11 +51,10 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
 
     if (keyId.type() == KeyId::Type::kKey && keyId.value())
     {
-        if (mFlash)
-        {
-            paintCursor(false);
-        }
-            
+        mFlash = true;
+        mFlashTimer = std::move(mEventManager.scheduleRepeating(500));
+        paintCursor(false);
+
         switch (keyId.value())
         {
         case 0:
@@ -67,6 +70,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
         case KeyCodes::Right:
             if (mCursorPosition < text.length())
             {
+
                 ++mCursorPosition;
             }
             break;
@@ -84,7 +88,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             {
                 text.erase(text.begin() + mCursorPosition - 1);
                 paintText();
-                    
+                
                 --mCursorPosition;
             }
             break;
@@ -99,30 +103,31 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
                     text.insert(text.begin() + mCursorPosition, newChar);
                         
                     paintText();
-                        
+
                     ++mCursorPosition;
                 }
             }
             break;
-        }    
-
-        if (mFlash)
-        {
-            paintCursor(true);
         }
+
+        paintCursor(true);
     }
 }
 
-void TextEntryWidget::paintText(uint8_t color)
+void TextEntryWidget::paintText()
 {
+    uint8_t color(mFocused ? 0xf : 0x4);
+    
     mSurface.paintText(region.x + 4, region.y + 2, text, color, 0);
     mSurface.paintText(region.x + 4 + (text.length() * Surface::kFontWidth), region.y + 2, " ", color, 0);
 }
 
 void TextEntryWidget::paintCursor(bool visible)
 {
-    auto fg(visible ? 0 : 0xf);
-    auto bg(visible ? 0xf : 0);
+    uint8_t color(mFocused ? 0xf : 0x4);
+
+    auto fg(visible ? 0 : color);
+    auto bg(visible ? color : 0);
     
     if (mCursorPosition < text.length())
     {
