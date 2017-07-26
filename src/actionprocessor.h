@@ -8,18 +8,12 @@
 #include <array>
 
 class KeyEvent;
-class KeyProcessor;
 class KeyboardState;
-class Surface;
 
 class ActionProcessor : public KeyEventStage
-{
-public:
-    static constexpr int kMaxActions = 10;
-    
+{    
 public:
     ActionProcessor(KeyboardState& keyboardState,
-                    Surface&       surface,
                     KeyEventStage& next);
 
 public:
@@ -29,16 +23,9 @@ private:
     void fireBuiltIn(int             action,
                      const KeyEvent& event) const;
     
-    void fireMenu(int             action,
-                  const KeyEvent& event) const;
-
-    void fireEdit() const;
-
 private:
-    KeyboardState&  mKeyboardState;
-    Surface&        mSurface;
-    MenuDefinitions mMenuDefinitions;
-    KeyEventStage&  mNext;
+    KeyboardState& mKeyboardState;
+    KeyEventStage& mNext;
     
 private:
     ActionProcessor(const ActionProcessor&) = delete;

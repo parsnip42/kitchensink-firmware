@@ -3,12 +3,13 @@
 #include "keyevent.h"
 
 #include <algorithm>
+#include <elapsedMillis.h>
 
-Timer::Timer(KeyEventStage& next)
-    : mNext(next)
+Timer::Timer()
 { }
 
-void Timer::pollKeyEvent(uint32_t timeMs)
+void Timer::pollKeyEvent(uint32_t       timeMs,
+                         KeyEventStage& next)
 {
     if (!mTimerQueue.empty())
     {
@@ -34,17 +35,17 @@ void Timer::pollKeyEvent(uint32_t timeMs)
                 }
             }
             
-            mNext.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
+            next.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
         }
     }
 }
 
-Timer::Handle Timer::schedule(uint32_t timeMs)
+Timer::Handle Timer::schedule(uint32_t delayMs)
 {
-    return scheduleRepeating(timeMs, 0);
+    return scheduleRepeating(delayMs, 0);
 }
 
-Timer::Handle Timer::scheduleRepeating(uint32_t timeMs,
+Timer::Handle Timer::scheduleRepeating(uint32_t delayMs,
                                        uint32_t repeatDelayMs)
 {
     for (uint16_t tickId(1); tickId < mTimerMap.size(); ++tickId)
@@ -53,6 +54,8 @@ Timer::Handle Timer::scheduleRepeating(uint32_t timeMs,
         
         if (currentMs == 0)
         {
+            auto timeMs(delayMs + millis());
+
             mTimerMap[tickId].currentMs = timeMs;
             mTimerMap[tickId].repeatDelayMs = repeatDelayMs;
             

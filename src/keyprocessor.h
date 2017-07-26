@@ -16,12 +16,12 @@ class LayerStack;
 class KeyProcessor : public KeyEventSource
 {
 public:
-    KeyProcessor(KsKeyboard&    keyboard,
-                 LayerStack&    layerStack,
-                 KeyEventStage& next);
+    KeyProcessor(KsKeyboard& keyboard,
+                 LayerStack& layerStack);
 
 public:
-    virtual void pollKeyEvent(uint32_t timeMs) override;
+    virtual void pollKeyEvent(uint32_t       timeMs,
+                              KeyEventStage& next) override;
 
     void untilKeyPress();
     
@@ -33,17 +33,19 @@ private:
     bool consumeEvent(const KeyEvent& event,
                       uint32_t        timeMs);
     
-    void setLayer(int index,
-                  bool enabled);
+    void setLayer(int            index,
+                  bool           enabled,
+                  KeyEventStage& next);
 
-    void pressLayer(int index);
+    void pressLayer(int            index,
+                    KeyEventStage& next);
 
-    void releaseLayer(int index);
+    void releaseLayer(int            index,
+                      KeyEventStage& next);
 
 private:
     KsKeyboard&    mKeyboard;
     LayerStack&    mLayerStack;
-    KeyEventStage& mNext;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;

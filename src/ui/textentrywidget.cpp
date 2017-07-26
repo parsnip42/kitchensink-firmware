@@ -26,7 +26,7 @@ void TextEntryWidget::redrawContent(bool focused)
     paintText();
 
     paintCursor(mFlash);
-    mFlashTimer = focused ? std::move(mEventManager.scheduleRepeating(500)) : Timer::Handle();
+    mFlashTimer = focused ? mEventManager.timer.scheduleRepeating(1000, 500) : Timer::Handle();
 }
 
 void TextEntryWidget::processKeyEvent(const KeyEvent& event)
@@ -47,10 +47,10 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     auto state(vKeyboard.readState());
     auto keyId(state.activeKey);
 
-    if (keyId.type() == KeyId::Type::kKey && keyId.value())
+    if (keyId.type() == KeyId::Type::kKey && keyId.value() && event.pressed)
     {
         mFlash = true;
-        mFlashTimer = std::move(mEventManager.scheduleRepeating(500));
+        mFlashTimer = mEventManager.timer.scheduleRepeating(1000, 500);
 
         paintCursor(false);
 

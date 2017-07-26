@@ -6,7 +6,10 @@
 #include "ui/combowidget.h"
 #include "ui/focusutil.h"
 #include "ui/keys.h"
+#include "ui/recordmacroscreen.h"
 
+#include "storage/storage.h"
+#include "serialize/serializer.h"
 #include "macro.h"
 
 namespace
@@ -46,9 +49,11 @@ MacroTypeDataSource mtds;
 
 EditMacroScreen::EditMacroScreen(Surface&      surface,
                                  EventManager& eventManager,
+                                 MacroSet&     macroSet,
                                  Macro&        macro)
     : mSurface(surface)
     , mEventManager(eventManager)
+    , mMacroSet(macroSet)
     , mMacro(macro)
     , mTitleEntry(surface,
                   eventManager)
@@ -113,14 +118,45 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
             FocusUtil::prev(mFocused,
                             { &mTitleEntry, &mShortcutEntry, &mTypeCombo });
         }
+        else if (Keys::cancel(keyId))
+        {
+            mSurface.clear();
+            return false;
+        }
         else if (Keys::ok(keyId))
         {
             if (!FocusUtil::next(mFocused,
                                  { &mTitleEntry, &mShortcutEntry, &mTypeCombo }))
             {
+                MacroType macroType((mTypeCombo.selectedItem == 2) ?
+                                    MacroType::kInvert :
+                                    MacroType::kSync);
+
+                mMacro.type = macroType;
                 mMacro.name = mTitleEntry.text;
                 mMacro.shortcut = mShortcutEntry.text;
+
+                RecordMacroScreen record(mSurface,
+                                         mEventManager,
+                                         mMacro,
+                                         (mTypeCombo.selectedItem == 1));
+
+                record.redraw();
                 
+                mEventManager.poll(
+                    [&](const KeyEvent& event,
+                        KeyEventStage&  next)
+                    {
+                        return record.processKeyEvent(event, next);
+                    });
+
+                Storage storage;
+                Serializer<MacroSet> s;
+                
+                auto os(storage.write(Storage::Region::Macro));
+                
+                s.serialize(mMacroSet, os);
+
                 mSurface.clear();
                 return false;
             }

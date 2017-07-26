@@ -16,8 +16,7 @@ public:
     typedef Content::const_iterator const_iterator;
     
 public:
-    KeyEventRecorder(bool           realtime,
-                     KeyEventStage& next);
+    KeyEventRecorder(bool realtime);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
@@ -35,7 +34,6 @@ private:
     Content        mContent;
     std::size_t    mSize;
     bool           mComplete;
-    KeyEventStage& mNext;
 };
 
 

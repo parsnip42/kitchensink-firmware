@@ -8,6 +8,7 @@ class EventManager;
 class KeyEvent;
 class KeyEventStage;
 class Macro;
+class MacroSet;
 class Surface;
 class Widget;
 
@@ -16,6 +17,7 @@ class EditMacroScreen
 public:
     EditMacroScreen(Surface&      surface,
                     EventManager& eventManager,
+                    MacroSet&     macroSet,
                     Macro&        macro);
     
 public:
@@ -25,6 +27,7 @@ public:
 private:
     Surface&        mSurface;
     EventManager&   mEventManager;
+    MacroSet&       mMacroSet;
     Macro&          mMacro;
     TextEntryWidget mTitleEntry;
     TextEntryWidget mShortcutEntry;

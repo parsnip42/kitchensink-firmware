@@ -46,7 +46,6 @@ private:
     Surface&                 mSurface;
     EventManager&            mEventManager;
     ComboWidget::DataSource& mDataSource;
-    std::size_t              mSelectedItem;
 
 private:
     ComboWidget(const ComboWidget&) = delete;

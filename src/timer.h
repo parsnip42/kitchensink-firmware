@@ -59,13 +59,14 @@ private:
 
 private:
     typedef OrderedCircularBuffer<uint32_t, uint16_t, 200> TimerQueue;
-    typedef std::array<Entry, 200>          TimerMap;
+    typedef std::array<Entry, 200>                         TimerMap;
     
 public:
-    explicit Timer(KeyEventStage& next);
+    Timer();
     
 public:
-    virtual void pollKeyEvent(uint32_t timeMs);
+    virtual void pollKeyEvent(uint32_t       timeMs,
+                              KeyEventStage& next) override;
 
     Handle schedule(uint32_t delayMs);
     Handle scheduleRepeating(uint32_t delayMs,
@@ -74,9 +75,12 @@ public:
     void cancel(const Handle& handle);
     
 private:
-    TimerMap       mTimerMap;
-    TimerQueue     mTimerQueue;
-    KeyEventStage& mNext;
+    TimerMap   mTimerMap;
+    TimerQueue mTimerQueue;
+
+private:
+    Timer(const Timer&) = delete;
+    Timer& operator=(const Timer&) = delete;
 };
 
 
@@ -91,6 +95,7 @@ inline
 Timer::Handle::Handle(Handle&& rhs)
 {
     mTimer = rhs.mTimer;
+
     tickId = rhs.tickId;
 
     // lhs destructor shouldn't cancel timer - set it to null state
@@ -107,7 +112,7 @@ Timer::Handle::Handle()
 inline
 Timer::Handle::~Handle()
 {
-    cancel();
+    // cancel();
 }
 
 inline

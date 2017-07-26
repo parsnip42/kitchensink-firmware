@@ -1,35 +1,45 @@
 #include "macroprocessor.h"
 #include "types/range.h"
 #include "keyevent.h"
+#include "macro.h"
 
 void MacroProcessor::processKeyEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
 
-    if (keyId.type() == KeyId::Type::kMacro)
+    if (mPlaybackTimer.matches(event))
+    {
+        playback();
+    }
+    else if (keyId.type() == KeyId::Type::kMacro)
     {
         auto macroIndex(keyId.value());
 
         if (macroIndex < mMacroSet.size())
         {
-            const auto& macro(mMacroSet[keyId.value()]);
-            const auto& content(macro.content);
-            
-            if (event.pressed)
+            if (!event.pressed && mCurrent->type == MacroType::kInvert)
             {
-                for (const auto& event : content)
-                {
-                    mNext.processKeyEvent(event);
-                }
-            }
-            else if (macro.type == MacroType::kInvert)
-            {
-                Range<Macro::Content::const_iterator> range(content.begin(), content.end());
+                Range<Macro::Content::const_iterator> range(mBegin, mEnd);
                 
                 for (auto event : range.reverse())
                 {
                     event.pressed = !event.pressed;
                     mNext.processKeyEvent(event);
+                }
+            }
+            else
+            {
+                if (event.pressed)
+                {
+                    mCurrent = &mMacroSet[keyId.value()];
+                    
+                    const auto& macro(mMacroSet[keyId.value()]);
+                    const auto& content(macro.content);
+                    
+                    mBegin = content.begin();
+                    mEnd = content.end();
+                    
+                    playback();
                 }
             }
         }
@@ -39,4 +49,34 @@ void MacroProcessor::processKeyEvent(const KeyEvent& event)
         mNext.processKeyEvent(event);
     }
 }
+
+void MacroProcessor::playback()
+{
+    if (mCurrent)
+    {
+        while (mBegin != mEnd)
+        {
+            const auto& event(*mBegin);
+            
+            if (event.keyId.type() == KeyId::Type::kDelay)
+            {
+                ++mBegin;
+                mPlaybackTimer = mTimer.schedule(event.keyId.delayMs());
+                return;
+            }
+            else
+            {
+                mNext.processKeyEvent(event);
+                ++mBegin;
+            }
+        }
+        
+        mCurrent = nullptr;
+    }
+}
+
+
+
+
+
 

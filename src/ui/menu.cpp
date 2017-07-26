@@ -33,7 +33,7 @@ bool Menu::processKeyEvent(const KeyEvent& event,
         
     auto state(mVKeyboard.readState());
     auto keyId(state.activeKey);
-        
+
     if (Keys::pageUp(keyId))
     {
         moveSelection(-5);
@@ -58,7 +58,7 @@ bool Menu::processKeyEvent(const KeyEvent& event,
             
         next.processKeyEvent(KeyEvent(item.keyId, true));
         next.processKeyEvent(KeyEvent(item.keyId, false));
-        //more = false;
+        more = false;
     }
     else if (Keys::cancel(keyId))
     {
@@ -91,7 +91,6 @@ bool Menu::processKeyEvent(const KeyEvent& event,
 
     return more;
 }
-
 
 void Menu::moveSelection(int selectionOffset)
 {

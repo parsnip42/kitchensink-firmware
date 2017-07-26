@@ -47,6 +47,7 @@ bool ScreenStack::processEvent(const KeyEvent& event)
 
             EditMacroScreen screen(mSurface,
                                    mEventManager,
+                                   mKeyboardState.macroSet,
                                    macro);
 
             screen.redraw();

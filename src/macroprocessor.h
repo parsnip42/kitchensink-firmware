@@ -3,6 +3,7 @@
 
 #include "keyeventstage.h"
 #include "macroset.h"
+#include "timer.h"
 
 class KeyEvent;
 class MacroSet;
@@ -10,15 +11,24 @@ class MacroSet;
 class MacroProcessor : public KeyEventStage
 {
 public:
-    MacroProcessor(const MacroSet& macroSet,
+    MacroProcessor(Timer&          timer,
+                   const MacroSet& macroSet,
                    KeyEventStage&  next);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-
+                                                                
 private:
-    const MacroSet& mMacroSet;
-    KeyEventStage&  mNext;
+    void playback();
+    
+private:
+    Timer&                         mTimer;
+    const MacroSet&                mMacroSet;
+    const Macro*                   mCurrent;
+    Macro::Content::const_iterator mBegin;
+    Macro::Content::const_iterator mEnd;
+    Timer::Handle                  mPlaybackTimer;
+    KeyEventStage&                 mNext;
     
 private:
     MacroProcessor(const MacroProcessor&) = delete;
@@ -27,9 +37,13 @@ private:
 
 
 inline
-MacroProcessor::MacroProcessor(const MacroSet& macroSet,
+MacroProcessor::MacroProcessor(Timer&          timer,
+                               const MacroSet& macroSet,
                                KeyEventStage&  next)
-    : mMacroSet(macroSet)
+    : mTimer(timer)
+    , mMacroSet(macroSet)
+    , mCurrent(nullptr)
+    , mPlaybackTimer()
     , mNext(next)
 { }
 

@@ -4,46 +4,32 @@
 #include "keyboardstate.h"
 #include "keylocation.h"
 
-#include <elapsedMillis.h>
-
 KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
-                           LayerStack&    layerStack,
-                           KeyEventStage& next)
+                           LayerStack&    layerStack)
     : mKeyboard(keyboard)
     , mLayerStack(layerStack)
-    , mNext(next)
 { }
 
-void KeyProcessor::pollKeyEvent(uint32_t timeMs)
+void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
+                                KeyEventStage& next)
 {
     mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& event)
     {
         auto keyId(mLayerStack.at(event.row, event.column));
 
         auto keyEvent(KeyEvent(keyId, event.pressed));
-        auto consumed(consumeEvent(keyEvent, timeMs));
 
-        if (!consumed)
+        if (keyId.type() == KeyId::Type::kLayer)
         {
-            mNext.processKeyEvent(keyEvent);
+            setLayer(keyId.value(),
+                     event.pressed,
+                     next);
         }
-    });    
-}
-
-bool KeyProcessor::consumeEvent(const KeyEvent& event,
-                                uint32_t        timeMs)
-{
-    auto keyId(event.keyId);
-
-    if (keyId.type() == KeyId::Type::kLayer)
-    {
-        setLayer(keyId.value(),
-                 event.pressed);
-        
-        return true;
-    }
-
-    return false;
+        else
+        {
+            next.processKeyEvent(keyEvent);
+        }
+    });
 }
 
 void KeyProcessor::untilKeyPress()
@@ -89,48 +75,51 @@ KeyLocation KeyProcessor::readKeyLocation()
     return keyLocation;
 }
 
-void KeyProcessor::setLayer(int  index,
-                            bool enabled)
+void KeyProcessor::setLayer(int            index,
+                            bool           enabled,
+                            KeyEventStage& next)
 {
     if (enabled != mLayerStack.enabled(index))
     {
         if (enabled)
         {
-            pressLayer(index);
+            pressLayer(index, next);
             mLayerStack.setLayer(index, enabled);
 
         }
         else
         {
             mLayerStack.setLayer(index, enabled);
-            releaseLayer(index);
+            releaseLayer(index, next);
         }
     }
 }
 
-void KeyProcessor::pressLayer(int index)
+void KeyProcessor::pressLayer(int            index,
+                              KeyEventStage& next)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
         if (mLayerStack.activeLayer(event.row, event.column) < index)
         {
-            auto next(mLayerStack.atIndex(index, event.row, event.column));
+            auto nextKey(mLayerStack.atIndex(index, event.row, event.column));
             
-            if (next != KeyId())
+            if (nextKey != KeyId())
             {
                 auto current(mLayerStack.at(event.row, event.column));
                 
-                if (current != next)
+                if (current != nextKey)
                 {    
-                    mNext.processKeyEvent(KeyEvent(current, false));
-                    mNext.processKeyEvent(KeyEvent(next, true));
+                    next.processKeyEvent(KeyEvent(current, false));
+                    next.processKeyEvent(KeyEvent(nextKey, true));
                 }
             }
         }
     });
 }
 
-void KeyProcessor::releaseLayer(int index)
+void KeyProcessor::releaseLayer(int          index,
+                                KeyEventStage& next)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
@@ -140,12 +129,12 @@ void KeyProcessor::releaseLayer(int index)
 
             if (current != KeyId())
             {
-                auto next(mLayerStack.at(event.row, event.column));
+                auto nextKey(mLayerStack.at(event.row, event.column));
                 
-                if (current != next)
+                if (current != nextKey)
                 {    
-                    mNext.processKeyEvent(KeyEvent(current, false));
-                    mNext.processKeyEvent(KeyEvent(next, true));
+                    next.processKeyEvent(KeyEvent(current, false));
+                    next.processKeyEvent(KeyEvent(nextKey, true));
                 }
             }            
         }

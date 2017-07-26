@@ -161,16 +161,16 @@ void loop()
      // DefaultProfile::init(keyboardState);
 
 
+    Timer timer;
+    
     KeyEventBuffer eventBuffer;
     
     ActionProcessor actionProcessor(keyboardState,
-                                    surface,
                                     eventBuffer);
     
-    DelayProcessor delayProcessor(actionProcessor);
-    
-    MacroProcessor macroProcessor(keyboardState.macroSet,
-                                  delayProcessor);
+    MacroProcessor macroProcessor(timer,
+                                  keyboardState.macroSet,
+                                  actionProcessor);
 
     LockProcessor lockProcessor(keyboardState.lockSet,
                                 macroProcessor);
@@ -179,19 +179,15 @@ void loop()
                                   macroProcessor);
 
     KeyProcessor keyProcessor(keyboard,
-                              keyboardState.layerStack,
-                              multiProcessor);
+                              keyboardState.layerStack);
 
     
-    EventManager eventManager(keyProcessor,
-                              eventBuffer);
+    EventManager eventManager(timer,
+                              keyProcessor,
+                              eventBuffer,
+                              multiProcessor,
+                              usbKeyboard);
     
-    // UI::Home home(surface,
-    //               keyboardState,
-    //               eventManager);
-
-    // home.poll();
-
     ScreenStack screenStack(keyboardState,
                             eventManager,
                             surface);

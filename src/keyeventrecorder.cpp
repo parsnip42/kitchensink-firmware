@@ -2,14 +2,12 @@
 
 #include <elapsedMillis.h>
 
-KeyEventRecorder::KeyEventRecorder(bool           realtime,
-                                   KeyEventStage& next)
+KeyEventRecorder::KeyEventRecorder(bool realtime)
     : mLastMs(0)
     , mRealtime(realtime)
     , mContent()
     , mSize(0)
     , mComplete(false)
-    , mNext(next)
 { }
 
 void KeyEventRecorder::processKeyEvent(const KeyEvent& event)
@@ -35,8 +33,6 @@ void KeyEventRecorder::processKeyEvent(const KeyEvent& event)
         {
             mContent[mSize++] = event;
         }
-        
-        mNext.processKeyEvent(event);
     }
     else
     {

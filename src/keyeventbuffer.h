@@ -18,7 +18,7 @@ public:
     KeyEvent pop();
 
 private:
-    CircularBuffer<KeyEvent, 40> mBuffer;
+    CircularBuffer<KeyEvent, 200> mBuffer;
 };
 
 

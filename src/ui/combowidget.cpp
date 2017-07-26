@@ -10,7 +10,8 @@
 ComboWidget::ComboWidget(Surface&                 surface,
                          EventManager&            eventManager,
                          ComboWidget::DataSource& dataSource)
-    : mSurface(surface)
+    : selectedItem(0)
+    , mSurface(surface)
     , mEventManager(eventManager)
     , mDataSource(dataSource)
 { }
@@ -33,7 +34,7 @@ void ComboWidget::redrawContent(bool focused)
     
     DataSource::ItemText text;
 
-    mDataSource.item(text, mSelectedItem);
+    mDataSource.item(text, selectedItem);
     
     mSurface.paintTextC(region.x + 20, region.y, region.width - 40, text, color, 0);
 }
@@ -55,7 +56,7 @@ void ComboWidget::processKeyEvent(const KeyEvent& event)
         
         if (Keys::right(keyId))
         {
-            ++mSelectedItem %= mDataSource.size();
+            ++selectedItem %= mDataSource.size();
             paintSelection();
         }
     }
@@ -65,7 +66,7 @@ void ComboWidget::paintSelection()
 {
     DataSource::ItemText text;
 
-    mDataSource.item(text, mSelectedItem);
+    mDataSource.item(text, selectedItem);
     
     mSurface.paintTextC(region.x + Surface::kFontWidth, region.y, region.width - (Surface::kFontWidth * 2), text, 0xf, 0);
 }

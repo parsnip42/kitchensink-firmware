@@ -12,33 +12,47 @@
 class EventManager
 {
 public:
-    EventManager(KeyEventSource& source,
-                 KeyEventBuffer& buffer);
+    EventManager(Timer&          nTimer,
+                 KeyEventSource& source,
+                 KeyEventBuffer& buffer,
+                 KeyEventStage&  input,
+                 KeyEventStage&  output);
 
 public:
     template <typename EventFunc>
     void poll(const EventFunc& eventFunc);
 
-    Timer::Handle schedule(uint32_t delayMs);
-    Timer::Handle scheduleRepeating(uint32_t delayMs);
     void cancel(const Timer::Handle& handle);
-
+    
+    KeyEventStage& output()
+    {
+        return mOutput;
+    }
+public:
+    Timer& timer;
+    
 private:
     uint32_t nowMs() const;
     
 private:
-    KeyEventSource&  mSource;
-    KeyEventBuffer&  mBuffer;
-    Timer            mTimer;
+    KeyEventSource& mSource;
+    KeyEventBuffer& mBuffer;
+    KeyEventStage&  mInput;
+    KeyEventStage&  mOutput;
 };
 
 
 inline
-EventManager::EventManager(KeyEventSource& source,
-                           KeyEventBuffer& buffer)
-    : mSource(source)
+EventManager::EventManager(Timer&          nTimer,
+                           KeyEventSource& source,
+                           KeyEventBuffer& buffer,
+                           KeyEventStage&  input,
+                           KeyEventStage&  output)
+    : timer(nTimer)
+    , mSource(source)
     , mBuffer(buffer)
-    , mTimer(buffer)
+    , mInput(input)
+    , mOutput(output)
 { }
 
 template <typename EventFunc>
@@ -48,8 +62,8 @@ void EventManager::poll(const EventFunc& eventFunc)
 
     while (more)
     {
-        mSource.pollKeyEvent(nowMs());
-        mTimer.pollKeyEvent(nowMs());
+        mSource.pollKeyEvent(nowMs(), mInput);
+        timer.pollKeyEvent(nowMs(), mInput);
         
         if (!mBuffer.empty())
         {

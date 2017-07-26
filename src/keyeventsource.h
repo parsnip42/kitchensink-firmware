@@ -12,7 +12,7 @@ public:
     virtual ~KeyEventSource() = default;
 
 public:
-    virtual void pollKeyEvent(uint32_t timeMs) = 0;
+    virtual void pollKeyEvent(uint32_t timeMs, KeyEventStage& next) = 0;
 };
 
 #endif /* INCLUDED_KEYEVENTSOURCE_H */
