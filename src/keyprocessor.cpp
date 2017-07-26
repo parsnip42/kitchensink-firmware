@@ -58,33 +58,33 @@ KeyLocation KeyProcessor::readKeyLocation()
 {
     KeyLocation keyLocation;
 
-    bool complete(false);
+    // bool complete(false);
 
-    while (!complete)
-    {
-        auto timeMs(millis());
+    // while (!complete)
+    // {
+    //     auto timeMs(millis());
 
-        mKeyboard.poll(timeMs,
-                       [&](const KsKeyboard::Event& event)
-        {
-            if (event.pressed)
-            {
-                keyLocation.row    = event.row;
-                keyLocation.column = event.column;
-                keyLocation.layer  = mLayerStack.activeLayer(event.row, event.column);
-                complete = true;
-            }
+    //     mKeyboard.poll(timeMs,
+    //                    [&](const KsKeyboard::Event& event)
+    //     {
+    //         if (event.pressed)
+    //         {
+    //             keyLocation.row    = event.row;
+    //             keyLocation.column = event.column;
+    //             keyLocation.layer  = mLayerStack.activeLayer(event.row, event.column);
+    //             complete = true;
+    //         }
             
-            auto keyId(mLayerStack.at(event.row, event.column));
+    //         auto keyId(mLayerStack.at(event.row, event.column));
             
-            mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
-        });
+    //         mEventQueue.pushBack(KeyEvent(keyId, event.pressed));
+    //     });
 
-        while (!mEventQueue.empty())
-        {
-            consumeEvent(mEventQueue.pop(), timeMs);
-        }
-    }
+    //     while (!mEventQueue.empty())
+    //     {
+    //         consumeEvent(mEventQueue.pop(), timeMs);
+    //     }
+    // }
     
     return keyLocation;
 }
@@ -122,8 +122,8 @@ void KeyProcessor::pressLayer(int index)
                 
                 if (current != next)
                 {    
-                    mEventQueue.pushBack(KeyEvent(current, false));
-                    mEventQueue.pushBack(KeyEvent(next, true));
+                    mNext.processKeyEvent(KeyEvent(current, false));
+                    mNext.processKeyEvent(KeyEvent(next, true));
                 }
             }
         }
@@ -144,8 +144,8 @@ void KeyProcessor::releaseLayer(int index)
                 
                 if (current != next)
                 {    
-                    mEventQueue.pushBack(KeyEvent(current, false));
-                    mEventQueue.pushBack(KeyEvent(next, true));
+                    mNext.processKeyEvent(KeyEvent(current, false));
+                    mNext.processKeyEvent(KeyEvent(next, true));
                 }
             }            
         }

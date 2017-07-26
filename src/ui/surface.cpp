@@ -1,10 +1,7 @@
-#include "surface.h"
+#include "ui/surface.h"
 #include "display.h"
 
 #include "types/strref.h"
-
-namespace UI
-{
 
 Surface::Surface(Display& display)
     : mDisplay(display)
@@ -156,4 +153,3 @@ void Surface::clear()
     mDisplay.scroll(0);
 }
 
-}

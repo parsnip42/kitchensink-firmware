@@ -2,10 +2,6 @@
 #define INCLUDED_LABEL_H
 
 class StrRef;
-
-namespace UI
-{
-
 class Surface;
 class Rectangle;
 
@@ -25,7 +21,5 @@ public:
           const StrRef&    text,
           Justify          justify);
 };
-
-}
 
 #endif /* INCLUDED_LABEL_H */

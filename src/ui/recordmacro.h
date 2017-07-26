@@ -1,19 +1,13 @@
-#ifndef INCLUDED_UI_RECORDMACRO_H
-#define INCLUDED_UI_RECORDMACRO_H
+#ifndef INCLUDED_RECORDMACRO_H
+#define INCLUDED_RECORDMACRO_H
 
 #include "types/strref.h"
 #include "keyevent.h"
 #include "keyeventrecorder.h"
 
-#include <array>
-
 class Macro;
 class KeyProcessor;
-
-namespace UI { class Surface; }
-
-namespace UI
-{
+class Surface;
 
 class RecordMacro
 {    
@@ -46,7 +40,5 @@ RecordMacro::RecordMacro(Surface&      surface,
     , mKeyProcessor(keyProcessor)
     , mNext(next)
 { }
-
-}
 
 #endif

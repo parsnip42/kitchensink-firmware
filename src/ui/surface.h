@@ -8,9 +8,6 @@
 class StrRef;
 class Display;
 
-namespace UI
-{
-
 class Surface
 {
 public:
@@ -82,7 +79,5 @@ constexpr Surface::ColorMap::ColorMap(uint8_t fg, uint8_t bg)
         uint8_t(fg | (fg << 4))
     }
 { }
-
-}
 
 #endif

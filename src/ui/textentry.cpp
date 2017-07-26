@@ -10,9 +10,6 @@
 
 #include <elapsedMillis.h>
 
-namespace UI
-{
-
 TextEntry::TextEntry(Surface&         surface,
                      KeyProcessor&    keyProcessor,
                      const Rectangle& rect,
@@ -24,9 +21,11 @@ TextEntry::TextEntry(Surface&         surface,
     , mWidth(rect.width)
     , mText(text)
     , mCursorPosition(mText.length())
+{ }
+
+void TextEntry::redraw()
 {
     mSurface.rectangle(mX, mY, mWidth, Surface::kFontHeight + 3);
-    
     paintText();
 }
 
@@ -157,6 +156,4 @@ void TextEntry::paintCursor(bool visible)
         mSurface.paintText(mX + 4 + (mText.length() * Surface::kFontWidth),
                            mY + 2, " ", fg, bg);
     }
-}
-
 }

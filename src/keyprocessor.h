@@ -23,8 +23,6 @@ public:
 public:
     virtual void pollKeyEvent(uint32_t timeMs) override;
 
-    void pushEvent(const KeyEvent& event);
-
     void untilKeyPress();
     
     void untilIdle();
@@ -45,19 +43,11 @@ private:
 private:
     KsKeyboard&    mKeyboard;
     LayerStack&    mLayerStack;
-    EventQueue     mEventQueue;
     KeyEventStage& mNext;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;
     KeyProcessor& operator=(const KeyProcessor&) = delete;
 };
-
-
-inline
-void KeyProcessor::pushEvent(const KeyEvent& event)
-{
-    mEventQueue.pushBack(event);
-}
 
 #endif

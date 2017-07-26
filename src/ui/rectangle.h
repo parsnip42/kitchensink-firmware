@@ -1,9 +1,6 @@
 #ifndef INCLUDED_RECTANGLE_H
 #define INCLUDED_RECTANGLE_H
 
-namespace UI
-{
-
 class Rectangle
 {
 public:
@@ -30,7 +27,5 @@ Rectangle::Rectangle(int nX,
     , width(nWidth)
     , height(nHeight)
 { }
-
-}
 
 #endif /* INCLUDED_RECTANGLE_H */

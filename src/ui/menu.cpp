@@ -14,21 +14,21 @@ void Menu::poll()
     mSurface.clear();
     redraw();
     
-    while (!mQuit)
-    {
-        mPipeline.poll([&](const KeyEvent& event,
-                           KeyEventStage&  next)
-                       {
-                           processKeyEvent(event, next);
-                       });
-    }
+    mEventManager.poll(
+        [&](const KeyEvent& event,
+            KeyEventStage&  next)
+        {
+            return processKeyEvent(event, next);
+        });
     
     mSurface.clear();
 }
 
-void Menu::processKeyEvent(const KeyEvent& event,
+bool Menu::processKeyEvent(const KeyEvent& event,
                            KeyEventStage&  next)
 {
+    bool more(true);
+    
     mVKeyboard.processKeyEvent(event);
         
     auto state(mVKeyboard.readState());
@@ -58,11 +58,11 @@ void Menu::processKeyEvent(const KeyEvent& event,
             
         next.processKeyEvent(KeyEvent(item.keyId, true));
         next.processKeyEvent(KeyEvent(item.keyId, false));
-        mQuit = true;
+        //more = false;
     }
     else if (Keys::cancel(keyId))
     {
-        mQuit = true;
+        more = false;
     }
     else if (keyId.type() == KeyId::Type::kKey)
     {
@@ -81,13 +81,15 @@ void Menu::processKeyEvent(const KeyEvent& event,
 
                 if (processExactFilterMatch())
                 {
-                    mQuit = true;
+                    more = false;
                 }
                     
                 moveSelection(0);
             }
         }
     }
+
+    return more;
 }
 
 

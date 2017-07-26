@@ -1,11 +1,8 @@
-#include "text.h"
+#include "ui/text.h"
 #include "timed.h"
 
 #include "ui/surface.h"
 #include "types/strref.h"
-
-namespace UI
-{
 
 Text::Text(Surface& surface)
     : mSurface(surface)
@@ -41,8 +38,5 @@ void Text::appendLine(const StrRef& text)
                   });
         }
     }
-}
-
-
 }
 

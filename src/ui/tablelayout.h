@@ -3,9 +3,6 @@
 
 #include "rectangle.h"
 
-namespace UI
-{
-
 class TableLayout
 {
 public:
@@ -25,6 +22,4 @@ private:
     int mMargin;
 };
 
-}
-
-#endif /* INCLUDED_TABLELAYOUT_H */
+#endif

@@ -1,7 +1,5 @@
-#include "font.h"
+#include "ui/font.h"
 
-namespace UI
-{
 namespace Font
 {
 
@@ -76,5 +74,4 @@ const uint8_t fontData[] =
     0x00,0x00,0x00,0x3c,0x00,0x00,0x00,0x00,0x00,0x00,
 };
 
-}
 }

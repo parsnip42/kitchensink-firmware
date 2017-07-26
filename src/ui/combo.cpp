@@ -7,9 +7,6 @@
 #include "ui/rectangle.h"
 #include "types/strref.h"
 
-namespace UI
-{
-
 Combo::Combo(Surface&           surface,
              KeyProcessor&      keyProcessor,
              const Rectangle&   rect,
@@ -85,6 +82,4 @@ void Combo::paintSelection()
     mDataSource.getItem(text, mSelectedItem);
     
     mSurface.paintTextC(mX + Surface::kFontWidth, mY, mWidth - (Surface::kFontWidth * 2), text, 0, 0xf);
-}
-
 }

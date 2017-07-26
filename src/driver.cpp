@@ -16,9 +16,11 @@
 #include "ui/surface.h"
 #include "ui/home.h"
 #include "ui/text.h"
+#include "ui/screenstack.h"
+
 #include "keyeventbuffer.h"
 #include "timereventsource.h"
-#include "keyeventpipeline.h"
+#include "eventmanager.h"
 
 #include "types/strbuf.h"
 #include "types/strostream.h"
@@ -35,9 +37,9 @@ void loop()
 
     display.init();
 
-    UI::Surface surface(display);
+    Surface surface(display);
 
-    UI::Text initLog(surface);
+    Text initLog(surface);
 
     initLog.appendLine("Start");
     initLog.appendLine("Configure");
@@ -187,16 +189,28 @@ void loop()
     TimerEventSource timer(keyProcessor,
                            multiProcessor);
     
-    KeyEventPipeline pipeline(timer,
-                              eventBuffer,
-                              usbKeyboard);
+    EventManager eventManager(timer,
+                              eventBuffer);
     
-    UI::Home home(surface,
-                  keyboardState,
-                  pipeline);
+    // UI::Home home(surface,
+    //               keyboardState,
+    //               eventManager);
 
-    while (1)
-    {
-        home.poll();
-    }
+    // home.poll();
+
+    ScreenStack screenStack(keyboardState,
+                            eventManager,
+                            surface);
+    
+    eventManager.poll(
+        [&](const KeyEvent& event,
+            KeyEventStage&  next)
+        {
+            if (!screenStack.processEvent(event))
+            {
+                usbKeyboard.processKeyEvent(event);
+            }
+
+            return true;
+        });
 }

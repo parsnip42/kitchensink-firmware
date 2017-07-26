@@ -1,11 +1,8 @@
-#ifndef INCLUDED_UI_TEXT_H
-#define INCLUDED_UI_TEXT_H
+#ifndef INCLUDED_TEXT_H
+#define INCLUDED_TEXT_H
 
 class StrRef;
-namespace UI { class Surface; }
-
-namespace UI
-{
+class Surface;
 
 class Text
 {
@@ -23,7 +20,5 @@ private:
     Text(const Text&) = delete;
     Text& operator=(const Text&) = delete;
 };
-
-}
 
 #endif

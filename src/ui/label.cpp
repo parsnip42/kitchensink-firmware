@@ -4,9 +4,6 @@
 #include "ui/surface.h"
 #include "ui/rectangle.h"
 
-namespace UI
-{
-
 Label::Label(Surface&         surface,
              const Rectangle& rect,
              const StrRef&    text,
@@ -31,4 +28,3 @@ Label::Label(Surface&         surface,
     surface.paintText(x & ~3, rect.y, text, 0x7, 0x0);
 }
 
-}

@@ -1,8 +1,5 @@
 #include "tablelayout.h"
 
-namespace UI
-{
-
 TableLayout::TableLayout(int titleWidth,
                          int width,
                          int height,
@@ -23,6 +20,4 @@ Rectangle TableLayout::next()
                      (current / 2) * mHeight,
                      (current % 2) ? (mWidth - (mTitleWidth + mMargin)) : mTitleWidth,
                      mHeight);
-}
-
 }

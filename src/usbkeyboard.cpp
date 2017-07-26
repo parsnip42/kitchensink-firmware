@@ -25,7 +25,8 @@ void UsbKeyboard::processKeyEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
     
-    if (keyId.type() == KeyId::Type::kKey)
+    if (keyId.type() == KeyId::Type::kKey
+        && keyId.value() != 0)
     {
         auto keyCode(keyId.value());
     

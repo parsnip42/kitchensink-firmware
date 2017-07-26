@@ -1,5 +1,5 @@
-#ifndef INCLUDED_UI_TEXTENTRY_H
-#define INCLUDED_UI_TEXTENTRY_H
+#ifndef INCLUDED_TEXTENTRY_H
+#define INCLUDED_TEXTENTRY_H
 
 #include "types/strbuf.h"
 #include "types/strref.h"
@@ -8,12 +8,8 @@
 
 class KeyId;
 class KeyProcessor;
-
-namespace UI { class Surface; }
-namespace UI { class Rectangle; }
-
-namespace UI
-{
+class Surface;
+class Rectangle;
 
 class TextEntry
 {
@@ -24,6 +20,7 @@ public:
               const StrRef&    text);
 
 public:
+    void redraw();
     bool focus();
 
     StrRef text() const;
@@ -51,8 +48,6 @@ inline
 StrRef TextEntry::text() const
 {
     return mText;
-}
-
 }
 
 #endif

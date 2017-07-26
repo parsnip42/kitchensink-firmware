@@ -8,9 +8,6 @@
 
 #include <cstdint>
 
-namespace UI
-{
-
 bool RecordMacro::create(const StrRef& title,
                          Macro&        macro,
                          bool          realtime)
@@ -49,6 +46,4 @@ bool RecordMacro::create(const StrRef& title,
     mSurface.clear();
 
     return true;
-}
-
 }

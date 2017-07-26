@@ -10,8 +10,7 @@
 class KeyEvent;
 class KeyProcessor;
 class KeyboardState;
-
-namespace UI { class Surface; };
+class Surface;
 
 class ActionProcessor : public KeyEventStage
 {
@@ -20,7 +19,7 @@ public:
     
 public:
     ActionProcessor(KeyboardState& keyboardState,
-                    UI::Surface&   surface,
+                    Surface&       surface,
                     KeyEventStage& next);
 
 public:
@@ -37,7 +36,7 @@ private:
 
 private:
     KeyboardState&  mKeyboardState;
-    UI::Surface&    mSurface;
+    Surface&        mSurface;
     MenuDefinitions mMenuDefinitions;
     KeyEventStage&  mNext;
     

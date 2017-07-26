@@ -10,7 +10,7 @@
 #include "types/strref.h"
 #include "ui/surface.h"
 #include "virtualkeyboard.h"
-#include "keyeventpipeline.h"
+#include "eventmanager.h"
 
 #include <cstdint>
 
@@ -43,13 +43,13 @@ public:
 public:
     Menu(const DataSource& dataSource,
          Surface&          surface,
-         KeyEventPipeline& pipeline);
+         EventManager&     eventManager);
 
 public:
     void redraw();
     void poll();
 
-    void processKeyEvent(const KeyEvent& event,
+    bool processKeyEvent(const KeyEvent& event,
                          KeyEventStage&  next);
     
 private:
@@ -74,7 +74,7 @@ private:
     StrBuf<12>        mFilter;
     VirtualKeyboard   mVKeyboard;
     bool              mQuit;
-    KeyEventPipeline& mPipeline;
+    EventManager&     mEventManager;
     
 private:
     Menu(const Menu&) = delete;
@@ -85,13 +85,13 @@ private:
 inline
 Menu::Menu(const DataSource& dataSource,
            Surface&          surface,
-           KeyEventPipeline& pipeline)
+           EventManager&     eventManager)
     : mDataSource(dataSource)
     , mSurface(surface)
     , mSelected(0)
     , mFilter()
     , mQuit(false)
-    , mPipeline(pipeline)
+    , mEventManager(eventManager)
 { }
 
 }

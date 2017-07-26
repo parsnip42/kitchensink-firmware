@@ -12,12 +12,12 @@ namespace UI
 
 Home::Home(Surface&             surface,
            const KeyboardState& keyboardState,
-           KeyEventPipeline&    pipeline)
+           EventManager&        eventManager)
     : mSurface(surface)
     , mKeyboardState(keyboardState)
     , mDirty(false)
     , mLastUpdate(0)
-    , mPipeline(pipeline)
+    , mEventManager(eventManager)
 {
     std::fill(mPaintState.begin(),
               mPaintState.end(),
@@ -26,31 +26,34 @@ Home::Home(Surface&             surface,
 
 void Home::poll()
 {
-    mPipeline.poll([&](const KeyEvent& event,
-                       KeyEventStage&  next)
-    {
-        auto keyId(event.keyId);
+    mEventManager.poll(
+        [&](const KeyEvent& event,
+            KeyEventStage&  next)
+        {
+            auto keyId(event.keyId);
         
-        if (keyId.actionType() == KeyId::ActionType::kMenu)
-        {
-            if (event.pressed)
+            if (keyId.actionType() == KeyId::ActionType::kMenu)
             {
-                MenuDefinitions menuDefinitions(mKeyboardState);
+                if (event.pressed)
+                {
+                    MenuDefinitions menuDefinitions(mKeyboardState);
 
-                auto action(event.keyId.value());
+                    auto action(event.keyId.value());
                 
-                UI::Menu menu(menuDefinitions.getDataSource(action),
-                              mSurface,
-                              mPipeline);
-                
-                menu.poll();
+                    UI::Menu menu(menuDefinitions.getDataSource(action),
+                                  mSurface,
+                                  mEventManager);
+
+                    menu.poll();
+                }
             }
-        }
-        else
-        {
-            next.processKeyEvent(event);
-        }
-    });
+            else
+            {
+                next.processKeyEvent(event);
+            }
+
+            return true;
+        });
 }
 
 void Home::update()

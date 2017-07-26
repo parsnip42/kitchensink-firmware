@@ -29,7 +29,7 @@
 namespace
 {
 
-class MacroTypeDataSource : public UI::Combo::DataSource
+class MacroTypeDataSource : public Combo::DataSource
 {
 public:
     virtual void getItem(ItemText&   text,
@@ -60,7 +60,7 @@ public:
 }
 
 ActionProcessor::ActionProcessor(KeyboardState& keyboardState,
-                                 UI::Surface&   surface,
+                                 Surface&       surface,
                                  KeyEventStage& next)
     : mKeyboardState(keyboardState)
     , mSurface(surface)

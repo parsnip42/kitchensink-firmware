@@ -1,15 +1,12 @@
-#ifndef INCLUDED_UI_COMBO_H
-#define INCLUDED_UI_COMBO_H
+#ifndef INCLUDED_COMBO_H
+#define INCLUDED_COMBO_H
 
 #include "types/strbuf.h"
 
 class KeyProcessor;
 
-namespace UI { class Surface; }
-namespace UI { class Rectangle; }
-
-namespace UI
-{
+class Surface;
+class Rectangle;
 
 class Combo
 {
@@ -62,6 +59,5 @@ std::size_t Combo::selectedItem() const
     return mSelectedItem;
 }
 
-}
 
 #endif

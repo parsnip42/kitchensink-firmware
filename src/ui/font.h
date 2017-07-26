@@ -1,10 +1,8 @@
-#ifndef INCLUDED_UI_FONT_H
-#define INCLUDED_UI_FONT_H
+#ifndef INCLUDED_FONT_H
+#define INCLUDED_FONT_H
 
 #include <cstdint>
 
-namespace UI
-{
 namespace Font
 {
 
@@ -14,7 +12,6 @@ constexpr int kCharCount = 95;
 
 extern const uint8_t fontData[];
 
-}
 }
 
 #endif

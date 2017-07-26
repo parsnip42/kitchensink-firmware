@@ -1,11 +1,9 @@
-#ifndef INCLUDED_UI_KEYS_H
-#define INCLUDED_UI_KEYS_H
+#ifndef INCLUDED_KEYS_H
+#define INCLUDED_KEYS_H
 
 #include "data/keycodes.h"
 #include "keyid.h"
 
-namespace UI
-{
 namespace Keys
 {
 
@@ -59,7 +57,6 @@ constexpr bool cancel(const KeyId& keyId)
             keyId == KeyId::Action(KeyId::ActionType::kMenu, 0));
 }
 
-}
 }
 
 #endif
