@@ -3,7 +3,7 @@
 #include "ui/tablelayout.h"
 #include "ui/label.h"
 #include "ui/surface.h"
-#include "ui/combo.h"
+#include "ui/combowidget.h"
 #include "ui/focusutil.h"
 #include "ui/keys.h"
 
@@ -12,11 +12,11 @@
 namespace
 {
 
-class MacroTypeDataSource : public Combo::DataSource
+class MacroTypeDataSource : public ComboWidget::DataSource
 {
 public:
-    virtual void getItem(ItemText&   text,
-                         std::size_t index) const
+    virtual void item(ItemText&   text,
+                      std::size_t index) const
     {
         switch (index)
         {
@@ -34,11 +34,13 @@ public:
         }
     }
     
-    virtual std::size_t getItemCount() const
+    virtual std::size_t size() const
     {
         return 3;
     }
 };
+
+MacroTypeDataSource mtds;
 
 }
 
@@ -52,7 +54,10 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
                   eventManager)
     , mShortcutEntry(surface,
                      eventManager)
-    , mFocused(&mTitleEntry)
+    , mTypeCombo(surface,
+                 eventManager,
+                 mtds)
+    , mFocused(&mTitleEntry)                 
 { }
 
 void EditMacroScreen::redraw()
@@ -84,12 +89,9 @@ void EditMacroScreen::redraw()
           "Type",
           Label::Justify::Right);
 
-    // Combo combo(mSurface,
-    //             mKeyProcessor,
-    //             layout.next(),
-    //             ds,
-    //             0);
-
+    mTypeCombo.region = layout.next();
+    mTypeCombo.selectedItem = 0;
+    mTypeCombo.redrawContent(false);
 }
 
 bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
@@ -101,21 +103,29 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
     {
         auto keyId(event.keyId);
 
-        if (Keys::ok(keyId) || Keys::down(keyId))
+        if (Keys::down(keyId))
         {
-            if (!FocusUtil::next(mFocused,
-                                 { &mTitleEntry, &mShortcutEntry }))
-            {
-                mSurface.clear();
-                return false;
-            }
+            FocusUtil::next(mFocused,
+                            { &mTitleEntry, &mShortcutEntry, &mTypeCombo });
         }
         else if (Keys::up(keyId))
         {
             FocusUtil::prev(mFocused,
-                            { &mTitleEntry, &mShortcutEntry });
+                            { &mTitleEntry, &mShortcutEntry, &mTypeCombo });
         }
-
+        else if (Keys::ok(keyId))
+        {
+            if (!FocusUtil::next(mFocused,
+                                 { &mTitleEntry, &mShortcutEntry, &mTypeCombo }))
+            {
+                mMacro.name = mTitleEntry.text;
+                mMacro.shortcut = mShortcutEntry.text;
+                
+                mSurface.clear();
+                return false;
+            }
+            
+        }
     }
         
     return true;

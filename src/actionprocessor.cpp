@@ -8,7 +8,6 @@
 #include "ui/menu.h"
 #include "ui/text.h"
 #include "ui/label.h"
-#include "ui/combo.h"
 #include "ui/recordmacro.h"
 #include "ui/tablelayout.h"
 
@@ -25,38 +24,38 @@
 
 #include <elapsedMillis.h>
 
-namespace
-{
+// namespace
+// {
 
-class MacroTypeDataSource : public Combo::DataSource
-{
-public:
-    virtual void getItem(ItemText&   text,
-                         std::size_t index) const
-    {
-        switch (index)
-        {
-        case 0:
-            text = "Normal";
-            break;
+// class MacroTypeDataSource : public Combo::DataSource
+// {
+// public:
+//     virtual void getItem(ItemText&   text,
+//                          std::size_t index) const
+//     {
+//         switch (index)
+//         {
+//         case 0:
+//             text = "Normal";
+//             break;
             
-        case 1:
-            text = "Realtime";
-            break;
+//         case 1:
+//             text = "Realtime";
+//             break;
             
-        case 2:
-            text = "Key Combination";
-            break;
-        }
-    }
+//         case 2:
+//             text = "Key Combination";
+//             break;
+//         }
+//     }
     
-    virtual std::size_t getItemCount() const
-    {
-        return 3;
-    }
-};
+//     virtual std::size_t getItemCount() const
+//     {
+//         return 3;
+//     }
+// };
 
-}
+// }
 
 ActionProcessor::ActionProcessor(KeyboardState& keyboardState,
                                  Surface&       surface,

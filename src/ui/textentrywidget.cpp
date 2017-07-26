@@ -8,8 +8,6 @@
 #include "ui/surface.h"
 #include "ui/rectangle.h"
 
-#include <elapsedMillis.h>
-
 TextEntryWidget::TextEntryWidget(Surface&      surface,
                                  EventManager& eventManager)
     : mSurface(surface)
@@ -95,7 +93,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             break;
                 
         default:
-            if (text.length() < 24)
+            if (text.length() < static_cast<std::size_t>(region.width / Surface::kFontWidth) - 2)
             {
                 char newChar(state.activeChar);
                     

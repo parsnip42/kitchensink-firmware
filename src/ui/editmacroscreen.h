@@ -2,6 +2,7 @@
 #define INCLUDED_EDITMACROSCREEN_H
 
 #include "ui/textentrywidget.h"
+#include "ui/combowidget.h"
 
 class EventManager;
 class KeyEvent;
@@ -27,6 +28,7 @@ private:
     Macro&          mMacro;
     TextEntryWidget mTitleEntry;
     TextEntryWidget mShortcutEntry;
+    ComboWidget     mTypeCombo;
     Widget*         mFocused;
 };
 
