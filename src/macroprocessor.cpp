@@ -17,9 +17,11 @@ void MacroProcessor::processKeyEvent(const KeyEvent& event)
 
         if (macroIndex < mMacroSet.size())
         {
-            if (!event.pressed && mCurrent->type == MacroType::kInvert)
+            if (!event.pressed && mMacroSet[macroIndex].type == MacroType::kInvert)
             {
-                Range<Macro::Content::const_iterator> range(mBegin, mEnd);
+                auto content(mMacroSet[macroIndex].content);
+                
+                Range<Macro::Content::const_iterator> range(content.begin(), content.end());
                 
                 for (auto event : range.reverse())
                 {

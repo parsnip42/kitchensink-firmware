@@ -1,5 +1,5 @@
-#ifndef INCLUDED_MACRORECORDER_H
-#define INCLUDED_MACRORECORDER_H
+#ifndef INCLUDED_KEYEVENTRECORDER_H
+#define INCLUDED_KEYEVENTRECORDER_H
 
 #include "keyevent.h"
 #include "keyeventstage.h"
@@ -67,4 +67,4 @@ bool KeyEventRecorder::full() const
     return mSize == mContent.size();
 }
 
-#endif /* INCLUDED_MACRORECORDER_H */
+#endif

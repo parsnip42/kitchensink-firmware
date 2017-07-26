@@ -14,24 +14,27 @@ void KeyEventRecorder::processKeyEvent(const KeyEvent& event)
 {
     if (event.keyId != KeyId::Action(KeyId::ActionType::kMenu, 0))
     {
-        if (mSize < mContent.size())
+        if (event.keyId.type() != KeyId::Type::kTick)
         {
-            if (mRealtime)
+            if (mSize < mContent.size())
             {
-                auto nowMs(millis());
-                
-                if (mLastMs != 0)
+                if (mRealtime)
                 {
-                    mContent[mSize++] = KeyEvent(KeyId::Delay(nowMs - mLastMs));    
+                    auto nowMs(millis());
+                    
+                    if (mLastMs != 0)
+                    {
+                        mContent[mSize++] = KeyEvent(KeyId::Delay(nowMs - mLastMs));    
+                    }
+                    
+                    mLastMs = nowMs;
                 }
-                
-                mLastMs = nowMs;
             }
-        }
-
-        if (mSize < mContent.size())
-        {
-            mContent[mSize++] = event;
+            
+            if (mSize < mContent.size())
+            {
+                mContent[mSize++] = event;
+            }
         }
     }
     else
