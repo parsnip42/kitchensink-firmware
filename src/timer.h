@@ -58,8 +58,8 @@ private:
     };
 
 private:
-    typedef OrderedCircularBuffer<uint32_t, Entry, 20> TimerQueue;
-    typedef std::array<TimerQueue::iterator, 20>       TimerMap;
+    typedef OrderedCircularBuffer<uint32_t, Entry, 200> TimerQueue;
+    typedef std::array<TimerQueue::iterator, 200>       TimerMap;
     
 public:
     explicit Timer(KeyEventStage& next);
@@ -70,6 +70,7 @@ public:
     Handle schedule(uint32_t delayMs);
     Handle scheduleRepeating(uint32_t delayMs,
                              uint32_t repeatDelayMs);
+
     void cancel(const Handle& handle);
     
 private:

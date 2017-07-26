@@ -14,13 +14,13 @@ void Timer::pollKeyEvent(uint32_t timeMs)
         {
             auto entry(mTimerQueue.pop());
             auto tickId(entry.value.tickId);
+
             auto repeatDelayMs(entry.value.repeatDelayMs);
                 
             if (repeatDelayMs > 0)
             {
                 mTimerMap[tickId] = mTimerQueue.insert(
-                    TimerQueue::value_type(timeMs + repeatDelayMs,
-                                           Entry(tickId, repeatDelayMs)));
+                    TimerQueue::value_type(timeMs + repeatDelayMs, entry.value));
             }
             else
             {
@@ -61,7 +61,8 @@ void Timer::cancel(const Timer::Handle& handle)
 
     if (it != TimerQueue::iterator())
     {
-        mTimerQueue.erase(it);
+        (*it).value = Entry();
+        //mTimerQueue.erase(it);
         mTimerMap[handle.tickId] = TimerQueue::iterator();
     }
 }

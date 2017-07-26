@@ -143,7 +143,7 @@ constexpr KeyId KeyId::Delay(uint32_t delayMs)
 inline
 constexpr KeyId KeyId::Tick(uint32_t tickId)
 {
-    return KeyId(Type::kDelay,
+    return KeyId(Type::kTick,
                  (tickId >> 8) & 0xf,
                  tickId & 0xff);
 }

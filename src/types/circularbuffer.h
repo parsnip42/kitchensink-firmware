@@ -94,7 +94,7 @@ void CircularBuffer<T, Capacity>::erase(iterator position)
     
     std::move(next, end(), position);
 
-    mEnd = (mEnd  + Capacity - 1) % Capacity;
+    mEnd = (mEnd + Capacity - 1) % Capacity;
     mFull = false;
 }
 

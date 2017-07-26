@@ -207,3 +207,156 @@ TEST(CircularBuffer, iterate)
     ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
                            values.begin()));
 }
+
+TEST(CircularBuffer, Erase)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+    cb.pushBack(3);
+
+    auto it(cb.begin());
+
+    ++it;
+    ++it;
+
+    cb.erase(it);
+
+    std::vector<int> values({ 0, 1, 3 });
+
+    ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                           values.begin()));
+}
+
+TEST(CircularBuffer, EraseOverflow)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushBack(9);
+    cb.pushBack(9);
+    cb.pushBack(9);
+
+    cb.pop();
+    cb.pop();
+    cb.pop();
+
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+    cb.pushBack(3);
+
+    auto it(cb.begin());
+
+    ++it;
+
+    cb.erase(it);
+    cb.erase(it);
+
+    std::vector<int> values({ 0, 3 });
+
+    ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                           values.begin()));
+}
+
+TEST(CircularBuffer, EraseFirst)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+
+    {
+        cb.erase(cb.begin());
+
+        std::vector<int> values({ 1, 2 });
+
+        ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                               values.begin()));
+    }
+
+    {
+        cb.erase(cb.begin());
+
+        std::vector<int> values({ 2 });
+
+        ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                               values.begin()));
+    }
+
+    {
+        cb.erase(cb.begin());
+        ASSERT_TRUE(cb.empty());
+    }
+
+}
+
+TEST(CircularBuffer, EraseLast)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(2);
+
+
+    {
+        auto it(cb.end());
+        
+        --it;
+    
+        cb.erase(it);
+        
+        std::vector<int> values({ 0, 1 });
+        
+        ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                               values.begin()));
+    }
+
+    {
+        auto it(cb.end());
+        
+        --it;
+    
+        cb.erase(it);
+        
+        std::vector<int> values({ 0 });
+        
+        ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                               values.begin()));
+    }
+
+
+    {
+        auto it(cb.end());
+        
+        --it;
+    
+        cb.erase(it);
+        ASSERT_TRUE(cb.empty());
+    }
+
+}
+
+TEST(CircularBuffer, Insert)
+{
+    CircularBuffer<int, 5> cb;
+
+    cb.pushBack(0);
+    cb.pushBack(1);
+    cb.pushBack(3);
+
+    auto it(cb.begin());
+
+    ++it;
+    ++it;
+
+    cb.insert(it, 2);
+
+    std::vector<int> values({ 0, 1, 2, 3 });
+
+    ASSERT_TRUE(std::equal(cb.begin(), cb.end(),
+                           values.begin()));
+}
