@@ -44,7 +44,7 @@ public:
                     uint8_t       fg = 0xf,
                     uint8_t       bg = 0);
 
-    void rectangle(int x, int y, int w, int h);
+    void rectangle(int x, int y, int w, int h, uint8_t color = 0xf);
 
     void initRegion(int x, int y, int w, int h);
     void clearRegion(int x, int y, int w, int h);

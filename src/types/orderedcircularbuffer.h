@@ -12,6 +12,9 @@ class OrderedCircularBuffer
 {
 public:
     typedef KVPair<Key, Value> value_type;
+
+private:
+    typedef CircularBuffer<value_type, Capacity> Buffer;
     
 public:
     constexpr OrderedCircularBuffer() = default;
@@ -21,11 +24,10 @@ public:
     auto pop();
 
     bool empty() const;
-    bool insert(const Key& key, const Value& value);
-    bool insert(Key&& key, Value&& value);
+    bool insert(const value_type& value);
 
 private:
-    CircularBuffer<value_type, Capacity> mBuffer;
+     Buffer mBuffer;
 };
 
 
@@ -38,29 +40,16 @@ bool OrderedCircularBuffer<Key, Value, Capacity>::empty() const
 
 template <typename Key, typename Value, std::size_t Capacity>
 inline
-bool OrderedCircularBuffer<Key, Value, Capacity>::insert(const Key&   key,
-                                                         const Value& value)
+bool OrderedCircularBuffer<Key, Value, Capacity>::insert(const value_type& value)
 {
     if (!mBuffer.full())
     {
-        mBuffer.pushBack(value_type(key, value));
-        // std::sort(mBuffer.begin(), mBuffer.end());
+        auto position(std::lower_bound(mBuffer.begin(),
+                                       mBuffer.end(),
+                                       value,
+                                       typename KVPair<Key, Value>::Less()));
         
-        return true;
-    }
-    
-    return false;
-}
-
-template <typename Key, typename Value, std::size_t Capacity>
-inline
-bool OrderedCircularBuffer<Key, Value, Capacity>::insert(Key&&   key,
-                                                         Value&& value)
-{
-    if (!mBuffer.full())
-    {
-        mBuffer.pushBack(value_type(key, value));
-        // std::sort(mBuffer.begin(), mBuffer.end());
+        mBuffer.insert(position, value);
         
         return true;
     }

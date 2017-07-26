@@ -4,6 +4,7 @@
 #include "ui/label.h"
 #include "ui/surface.h"
 #include "ui/combo.h"
+#include "ui/focusutil.h"
 #include "ui/keys.h"
 
 #include "macro.h"
@@ -65,7 +66,7 @@ void EditMacroScreen::redraw()
 
     mTitleEntry.region = layout.next();
     mTitleEntry.text = mMacro.name;
-    mTitleEntry.redraw();
+    mTitleEntry.redrawContent(true);
                 
     Label(mSurface,
           layout.next(),
@@ -74,7 +75,7 @@ void EditMacroScreen::redraw()
     
     mShortcutEntry.region = layout.next();
     mShortcutEntry.text = mMacro.shortcut;
-    mShortcutEntry.redraw();
+    mShortcutEntry.redrawContent(false);
 
     MacroTypeDataSource ds;
                 
@@ -102,11 +103,8 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
 
         if (Keys::ok(keyId) || Keys::down(keyId))
         {
-            if (mFocused == &mTitleEntry)
-            {
-                mFocused = &mShortcutEntry;
-            }
-            else if (mFocused == &mShortcutEntry)
+            if (!FocusUtil::next(mFocused,
+                                 { &mTitleEntry, &mShortcutEntry }))
             {
                 mSurface.clear();
                 return false;
@@ -114,10 +112,8 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
         }
         else if (Keys::up(keyId))
         {
-            if (mFocused == &mShortcutEntry)
-            {
-                mFocused = &mTitleEntry;
-            }
+            FocusUtil::prev(mFocused,
+                            { &mTitleEntry, &mShortcutEntry });
         }
 
     }

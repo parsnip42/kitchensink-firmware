@@ -2,8 +2,10 @@
 #define INCLUDED_CIRCULARBUFFER_H
 
 #include <array>
+#include <algorithm>
 #include <cstdint>
-#include <iterator>
+
+#include "types/circularbufferiterator.h"
 
 template <typename T, std::size_t Capacity>
 class CircularBuffer
@@ -12,58 +14,7 @@ private:
     typedef std::array<T, Capacity> Data;
 
 public:
-    class iterator
-    {
-    public:
-        typedef T                         value_type;
-        typedef T&                        reference_type;
-        typedef std::forward_iterator_tag iterator_category;
-        typedef std::size_t               distance_type;
-        
-    private:
-        iterator(Data&       data,
-                 std::size_t index)
-            : mData(data)
-            , mIndex(index)
-        { }
-        
-    public:
-        reference_type operator*()
-        {
-            return mData[mIndex];
-        }
-        
-        void operator++(int)
-        {
-            mIndex = ++mIndex % Capacity;
-        };
-        
-        iterator operator++()
-        {
-            auto prev(*this);
-
-            ++(*this);
-
-            return prev;
-        };
-
-        bool operator==(const iterator& rhs)
-        {
-            return mIndex == rhs.mIndex;
-        };
-        
-        bool operator!=(const iterator& rhs)
-        {
-            return mIndex != rhs.mIndex;
-        };
-
-    private:
-        Data&       mData;
-        std::size_t mIndex;
-
-    private:
-        friend class CircularBuffer;
-    };
+    typedef CircularBufferIterator<T, Capacity> iterator;
     
 public:
     constexpr CircularBuffer();
@@ -74,6 +25,7 @@ public:
     constexpr bool empty() const;
     void pushBack(const T& value);
     void pushFront(const T& value);
+    void insert(iterator position, const T& value);
     const T& peek() const;
     T pop();
 
@@ -87,23 +39,6 @@ private:
     std::size_t mEnd;
     bool        mFull;
 };
-
-template <typename T, std::size_t Capacity>
-inline
-bool operator==(const typename CircularBuffer<T, Capacity>::iterator& lhs,
-                const typename CircularBuffer<T, Capacity>::iterator& rhs)
-{
-    return lhs.mIndex == rhs.mIndex;
-}
-
-template <typename T, std::size_t Capacity>
-inline
-bool operator!=(const typename CircularBuffer<T, Capacity>::iterator& lhs,
-                const typename CircularBuffer<T, Capacity>::iterator& rhs)
-{
-    return !(*lhs == *rhs);
-}
-
 
 template <typename T, std::size_t Capacity>
 inline
@@ -131,6 +66,21 @@ void CircularBuffer<T, Capacity>::pushFront(const T& value)
     mData[mStart] = value;
 
     mFull = (mStart == mEnd);
+}
+
+template <typename T, std::size_t Capacity>
+inline
+void CircularBuffer<T, Capacity>::insert(typename CircularBuffer<T, Capacity>::iterator position,
+                                         const T&                                       value)
+{
+    auto endRange(end());
+    
+    mEnd = (mEnd + 1) % Capacity;
+    mFull = (mStart == mEnd);
+
+    std::move_backward(position, endRange, end());
+
+    *position = value;
 }
 
 template <typename T, std::size_t Capacity>
@@ -180,14 +130,14 @@ template <typename T, std::size_t Capacity>
 inline
 typename CircularBuffer<T, Capacity>::iterator CircularBuffer<T, Capacity>::begin()
 {
-    return iterator(mData, mStart);
+    return iterator(&mData, mStart);
 }
 
 template <typename T, std::size_t Capacity>
 inline
 typename CircularBuffer<T, Capacity>::iterator CircularBuffer<T, Capacity>::end()
 {
-    return iterator(mData, mEnd);
+    return iterator(&mData, mEnd);
 }
 
 #endif

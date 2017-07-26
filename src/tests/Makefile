@@ -1,8 +1,7 @@
 AR = ar
 CPP = clang++
 CPP_FLAGS = -g -std=c++11 -Wall -Werror -I. -I..
-#CPP_FILES = $(wildcard *.cpp)
-CPP_FILES = bitmask.t.cpp
+CPP_FILES = $(wildcard *.cpp)
 O_FILES = $(CPP_FILES:.cpp=.o)
 TARGET = tests
 GTEST_DIR = /usr/src/gtest

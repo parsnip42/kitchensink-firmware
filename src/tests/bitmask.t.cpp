@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "bitmask.h"
+#include "types/bitmask.h"
 
 TEST(Bitmask, Default)
 {

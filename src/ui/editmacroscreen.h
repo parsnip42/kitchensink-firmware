@@ -8,6 +8,7 @@ class KeyEvent;
 class KeyEventStage;
 class Macro;
 class Surface;
+class Widget;
 
 class EditMacroScreen
 {
@@ -26,7 +27,7 @@ private:
     Macro&          mMacro;
     TextEntryWidget mTitleEntry;
     TextEntryWidget mShortcutEntry;
-    KeyEventStage*  mFocused;
+    Widget*         mFocused;
 };
 
 #endif

@@ -42,27 +42,27 @@ void Surface::paintTextC(int           x,
     }
 }
 
-void Surface::rectangle(int x, int y, int w, int h)
+void Surface::rectangle(int x, int y, int w, int h, uint8_t color)
 {
     mDisplay.initRegion(x, y, w, 1);
     
     for (int i = 0; i < (w >> 1); ++i)
     {
-        mDisplay.writeData(0xff);
+        mDisplay.writeData(color << 4 | color);
     }
 
     mDisplay.initRegion(x, y + h, w, 1);
     
     for (int i = 0; i < (w >> 1); ++i)
     {
-        mDisplay.writeData(0xff);
+        mDisplay.writeData(color << 4 | color);
     }
 
     mDisplay.initRegion(x, y + 1, 4, h - 1);
     
     for (int i = 0; i < h - 1; ++i)
     {
-        mDisplay.writeData(0xf0);
+        mDisplay.writeData(color << 4);
         mDisplay.writeData(0x0);
     }
     
@@ -70,7 +70,7 @@ void Surface::rectangle(int x, int y, int w, int h)
     
     for (int i = 0; i < h - 1; ++i)
     {
-        mDisplay.writeData(0xf0);
+        mDisplay.writeData(color << 4);
         mDisplay.writeData(0x0);
     }
 }

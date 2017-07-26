@@ -1,9 +1,19 @@
 #ifndef INCLUDED_KVPAIR_H
 #define INCLUDED_KVPAIR_H
 
+#include <utility>
+
 template <typename Key, typename Value>
 class KVPair
 {
+public:
+    class Less
+    {
+    public:
+        bool operator()(const KVPair<Key, Value>& a,
+                        const KVPair<Key, Value>& b);
+    };
+    
 public:
     KVPair() = default;
     
@@ -14,9 +24,18 @@ public:
            Value&& nValue);
 
 public:
-    Key  key;
+    Key   key;
     Value value;
 };
+
+
+template <typename Key, typename Value>
+inline
+bool KVPair<Key, Value>::Less::operator()(const KVPair<Key, Value>& a,
+                                          const KVPair<Key, Value>& b)
+{
+    return a.key < b.key;
+}
 
 
 template <typename Key, typename Value>
@@ -31,8 +50,8 @@ template <typename Key, typename Value>
 inline
 KVPair<Key, Value>::KVPair(Key&&   nKey,
                            Value&& nValue)
-    : key(nKey)
-    , value(nValue)
+    : key(std::move(nKey))
+    , value(std::move(nValue))
 { }
 
 

@@ -58,6 +58,10 @@ private:
         uint32_t tickId;
         uint32_t repeatDelayMs;
     };
+
+private:
+    typedef OrderedCircularBuffer<uint32_t, Entry, 20> TimerQueue;
+    typedef Bitmask<20>                                TimerMask;
     
 public:
     explicit Timer(KeyEventStage& next);
@@ -69,11 +73,11 @@ public:
     Handle scheduleRepeating(uint32_t delayMs,
                              uint32_t repeatDelayMs);
     void cancel(const Handle& handle);
-        
+    
 private:
-    Bitmask<20>                                mTimerActive;
-    OrderedCircularBuffer<uint32_t, Entry, 20> mTimerQueue;
-    KeyEventStage&                             mNext;
+    TimerMask      mTimerActive;
+    TimerQueue     mTimerQueue;
+    KeyEventStage& mNext;
 };
 
 
@@ -93,7 +97,7 @@ Timer::Handle::Handle()
 inline
 Timer::Handle::~Handle()
 {
-    cancel();
+    // cancel();
 }
 
 inline

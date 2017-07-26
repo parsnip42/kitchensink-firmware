@@ -6,6 +6,7 @@
 #include "types/strref.h"
 #include "ui/rectangle.h"
 #include "eventmanager.h"
+#include "ui/widget.h"
 
 #include <cstdint>
 
@@ -14,18 +15,18 @@ class KeyEvent;
 class EventManager;
 class Surface;
 
-class TextEntryWidget : public KeyEventStage
+class TextEntryWidget : public Widget
 {
 public:
     TextEntryWidget(Surface&      surface,
                     EventManager& eventManager);
 
 public:
-    void redraw();
+    virtual void redrawContent(bool focused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;
 
 private:
-    void paintText();
+    void paintText(uint8_t color = 0xf);
     void paintCursor(bool visible);
 
 public:

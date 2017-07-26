@@ -19,7 +19,8 @@ void Timer::pollKeyEvent(uint32_t timeMs)
                 
                 if (repeatDelayMs > 0)
                 {
-                    mTimerQueue.insert(timeMs + repeatDelayMs, Entry(tickId, repeatDelayMs));
+                    mTimerQueue.insert(TimerQueue::value_type(timeMs + repeatDelayMs,
+                                                              Entry(tickId, repeatDelayMs)));
                 }
                 else
                 {
@@ -34,21 +35,7 @@ void Timer::pollKeyEvent(uint32_t timeMs)
 
 Timer::Handle Timer::schedule(uint32_t timeMs)
 {
-    for (std::size_t tickId(0); tickId < mTimerActive.size(); ++tickId)
-    {
-        auto active(mTimerActive[tickId]);
-        
-        if (!active)
-        {
-            active = true;
-            
-            mTimerQueue.insert(timeMs, Entry(tickId, 0));
-            
-            return Handle(this, tickId);
-        }
-    }
-
-    return Handle();
+    return scheduleRepeating(timeMs, 0);
 }
 
 Timer::Handle Timer::scheduleRepeating(uint32_t timeMs,
@@ -62,7 +49,8 @@ Timer::Handle Timer::scheduleRepeating(uint32_t timeMs,
         {
             active = true;
             
-            mTimerQueue.insert(timeMs, Entry(tickId, repeatDelayMs));
+            mTimerQueue.insert(TimerQueue::value_type(timeMs,
+                                                      Entry(tickId, repeatDelayMs)));
             
             return Handle(this, tickId);
         }
