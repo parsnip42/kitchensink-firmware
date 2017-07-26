@@ -1,6 +1,8 @@
 #ifndef INCLUDED_EDITMACROSCREEN_H
 #define INCLUDED_EDITMACROSCREEN_H
 
+#include "ui/textentrywidget.h"
+
 class EventManager;
 class KeyEvent;
 class KeyEventStage;
@@ -19,9 +21,12 @@ public:
     bool processKeyEvent(const KeyEvent& event,
                          KeyEventStage&  next);
 private:
-    Surface&      mSurface;
-    EventManager& mEventManager;
-    Macro&        mMacro;
+    Surface&        mSurface;
+    EventManager&   mEventManager;
+    Macro&          mMacro;
+    TextEntryWidget mTitleEntry;
+    TextEntryWidget mShortcutEntry;
+    KeyEventStage*  mFocused;
 };
 
 #endif

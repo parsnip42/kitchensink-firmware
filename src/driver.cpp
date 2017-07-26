@@ -19,7 +19,6 @@
 #include "ui/screenstack.h"
 
 #include "keyeventbuffer.h"
-#include "timereventsource.h"
 #include "eventmanager.h"
 
 #include "types/strbuf.h"
@@ -184,12 +183,7 @@ void loop()
                               multiProcessor);
 
     
-                              
-
-    TimerEventSource timer(keyProcessor,
-                           multiProcessor);
-    
-    EventManager eventManager(timer,
+    EventManager eventManager(keyProcessor,
                               eventBuffer);
     
     // UI::Home home(surface,

@@ -4,6 +4,8 @@
 class Rectangle
 {
 public:
+    Rectangle();
+
     Rectangle(int nX,
               int nY,
               int nWidth,
@@ -16,6 +18,14 @@ public:
     int height;
 };
 
+
+inline
+Rectangle::Rectangle()
+    : x(0)
+    , y(0)
+    , width(0)
+    , height(0)
+{ }
 
 inline
 Rectangle::Rectangle(int nX,

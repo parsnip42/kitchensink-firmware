@@ -1,10 +1,10 @@
 #include "ui/editmacroscreen.h"
 
 #include "ui/tablelayout.h"
-#include "ui/textentry.h"
 #include "ui/label.h"
 #include "ui/surface.h"
 #include "ui/combo.h"
+#include "ui/keys.h"
 
 #include "macro.h"
 
@@ -47,6 +47,11 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     : mSurface(surface)
     , mEventManager(eventManager)
     , mMacro(macro)
+    , mTitleEntry(surface,
+                  eventManager)
+    , mShortcutEntry(surface,
+                     eventManager)
+    , mFocused(&mTitleEntry)
 { }
 
 void EditMacroScreen::redraw()
@@ -58,20 +63,18 @@ void EditMacroScreen::redraw()
           "Name",
           Label::Justify::Right);
 
-    // TextEntry titleEntry(mSurface,
-    //                      mKeyProcessor,
-    //                      layout.next(),
-    //                      mMacro.name);
+    mTitleEntry.region = layout.next();
+    mTitleEntry.text = mMacro.name;
+    mTitleEntry.redraw();
                 
     Label(mSurface,
           layout.next(),
           "Shortcut",
           Label::Justify::Right);
-                
-    // TextEntry shortcutEntry(mSurface,
-    //                         mKeyProcessor,
-    //                         layout.next(),
-    //                         mMacro.shortcut);
+    
+    mShortcutEntry.region = layout.next();
+    mShortcutEntry.text = mMacro.shortcut;
+    mShortcutEntry.redraw();
 
     MacroTypeDataSource ds;
                 
@@ -91,5 +94,33 @@ void EditMacroScreen::redraw()
 bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
                                       KeyEventStage&  next)
 {
+    mFocused->processKeyEvent(event);
+
+    if (event.pressed)
+    {
+        auto keyId(event.keyId);
+
+        if (Keys::ok(keyId) || Keys::down(keyId))
+        {
+            if (mFocused == &mTitleEntry)
+            {
+                mFocused = &mShortcutEntry;
+            }
+            else if (mFocused == &mShortcutEntry)
+            {
+                mSurface.clear();
+                return false;
+            }
+        }
+        else if (Keys::up(keyId))
+        {
+            if (mFocused == &mShortcutEntry)
+            {
+                mFocused = &mTitleEntry;
+            }
+        }
+
+    }
+        
     return true;
 }

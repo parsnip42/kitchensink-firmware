@@ -7,7 +7,6 @@
 #include "ui/surface.h"
 #include "ui/menu.h"
 #include "ui/text.h"
-#include "ui/textentry.h"
 #include "ui/label.h"
 #include "ui/combo.h"
 #include "ui/recordmacro.h"
