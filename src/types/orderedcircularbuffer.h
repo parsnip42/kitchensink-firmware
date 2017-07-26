@@ -52,8 +52,7 @@ auto OrderedCircularBuffer<Key, Value, Capacity>::insert(const value_type& value
 {
     auto position(std::lower_bound(mBuffer.begin(),
                                    mBuffer.end(),
-                                   value,
-                                   typename KVPair<Key, Value>::Less()));
+                                   value));
         
     mBuffer.insert(position, value);
 

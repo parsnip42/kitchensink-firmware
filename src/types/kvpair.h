@@ -7,14 +7,6 @@ template <typename Key, typename Value>
 class KVPair
 {
 public:
-    class Less
-    {
-    public:
-        bool operator()(const KVPair<Key, Value>& a,
-                        const KVPair<Key, Value>& b);
-    };
-    
-public:
     KVPair() = default;
     
     KVPair(const Key&   nKey,
@@ -28,15 +20,29 @@ public:
     Value value;
 };
 
-
 template <typename Key, typename Value>
 inline
-bool KVPair<Key, Value>::Less::operator()(const KVPair<Key, Value>& a,
-                                          const KVPair<Key, Value>& b)
+bool operator<(const KVPair<Key, Value>& a,
+               const KVPair<Key, Value>& b)
 {
     return a.key < b.key;
 }
 
+template <typename Key, typename Value>
+inline
+bool operator<(const KVPair<Key, Value>& a,
+               const Key&               b)
+{
+    return a.key < b;
+}
+
+template <typename Key, typename Value>
+inline
+bool operator<(const Key&                a,
+               const KVPair<Key, Value>& b)
+{
+    return a < b.key;
+}
 
 template <typename Key, typename Value>
 inline

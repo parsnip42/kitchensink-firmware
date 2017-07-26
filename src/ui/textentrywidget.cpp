@@ -53,6 +53,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     {
         mFlash = true;
         mFlashTimer = std::move(mEventManager.scheduleRepeating(500));
+
         paintCursor(false);
 
         switch (keyId.value())

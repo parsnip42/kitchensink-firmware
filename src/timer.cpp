@@ -1,6 +1,8 @@
 #include "timer.h"
-
+#include "types/range.h"
 #include "keyevent.h"
+
+#include <algorithm>
 
 Timer::Timer(KeyEventStage& next)
     : mNext(next)
@@ -13,20 +15,25 @@ void Timer::pollKeyEvent(uint32_t timeMs)
         if (mTimerQueue.peek().key <= timeMs)
         {
             auto entry(mTimerQueue.pop());
-            auto tickId(entry.value.tickId);
+            auto tickId(entry.value);
 
-            auto repeatDelayMs(entry.value.repeatDelayMs);
+            if (mTimerMap[tickId].currentMs != 0)
+            {
+                auto repeatDelayMs(mTimerMap[tickId].repeatDelayMs);
                 
-            if (repeatDelayMs > 0)
-            {
-                mTimerMap[tickId] = mTimerQueue.insert(
-                    TimerQueue::value_type(timeMs + repeatDelayMs, entry.value));
+                if (repeatDelayMs > 0)
+                {
+                    auto currentMs(timeMs + repeatDelayMs);
+                    
+                    mTimerMap[tickId].currentMs = currentMs;
+                    mTimerQueue.insert(TimerQueue::value_type(currentMs, tickId));
+                }
+                else
+                {
+                    mTimerMap[tickId].currentMs = 0;
+                }
             }
-            else
-            {
-                mTimerMap[tickId] = TimerQueue::iterator();
-            }
-
+            
             mNext.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
         }
     }
@@ -42,30 +49,49 @@ Timer::Handle Timer::scheduleRepeating(uint32_t timeMs,
 {
     for (uint16_t tickId(1); tickId < mTimerMap.size(); ++tickId)
     {
-        if (mTimerMap[tickId] == TimerQueue::iterator())
+        auto currentMs(mTimerMap[tickId].currentMs);
+        
+        if (currentMs == 0)
         {
-            mTimerMap[tickId] = mTimerQueue.insert(
-                TimerQueue::value_type(timeMs,
-                                       Entry(tickId, repeatDelayMs)));
+            mTimerMap[tickId].currentMs = timeMs;
+            mTimerMap[tickId].repeatDelayMs = repeatDelayMs;
+            
+            mTimerQueue.insert(
+                TimerQueue::value_type(timeMs, tickId));
             
             return Handle(this, tickId);
         }
     }
-    
+
     return Handle();
 }
 
 void Timer::cancel(const Timer::Handle& handle)
 {
-    auto& it(mTimerMap[handle.tickId]);
+    Range<TimerQueue::iterator> range(
+        std::equal_range(mTimerQueue.begin(),
+                         mTimerQueue.end(),
+                         mTimerMap[handle.tickId].currentMs));
 
-    if (it != TimerQueue::iterator())
+    for (auto it(range.begin()); it != range.end(); ++it)
     {
-        (*it).value = Entry();
-        //mTimerQueue.erase(it);
-        mTimerMap[handle.tickId] = TimerQueue::iterator();
+        if ((*it).value == handle.tickId)
+        {
+            mTimerQueue.erase(it);
+            break;
+        }
     }
+    
+    mTimerMap[handle.tickId].currentMs = 0;
 }
+
+
+
+
+
+
+
+
 
 
 

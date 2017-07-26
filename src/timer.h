@@ -49,17 +49,17 @@ private:
     {
     public:
         Entry();
-        Entry(uint16_t nTickId,
+        Entry(uint32_t currentMs,
               uint32_t nRepeatDelayMs);
 
     public:
+        uint32_t currentMs;
         uint32_t repeatDelayMs;
-        uint16_t tickId;
     };
 
 private:
-    typedef OrderedCircularBuffer<uint32_t, Entry, 200> TimerQueue;
-    typedef std::array<TimerQueue::iterator, 200>       TimerMap;
+    typedef OrderedCircularBuffer<uint32_t, uint16_t, 200> TimerQueue;
+    typedef std::array<Entry, 200>          TimerMap;
     
 public:
     explicit Timer(KeyEventStage& next);
@@ -138,15 +138,15 @@ void Timer::Handle::cancel()
 
 inline
 Timer::Entry::Entry()
-    : repeatDelayMs(0)
-    , tickId(0)
+    : currentMs(0)
+    , repeatDelayMs(0)
 { }
 
 inline
-Timer::Entry::Entry(uint16_t nTickId,
+Timer::Entry::Entry(uint32_t nCurrentMs,
                     uint32_t nRepeatDelayMs)
-    : repeatDelayMs(nRepeatDelayMs)
-    , tickId(nTickId)
+    : currentMs(nCurrentMs)
+    , repeatDelayMs(nRepeatDelayMs)
 { }
 
 #endif

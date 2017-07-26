@@ -11,6 +11,8 @@ public:
     
     constexpr Range(const T& begin,
                     const T& end);
+    
+    constexpr Range(const std::pair<T, T>& range);
 
 public:
     constexpr const T& begin() const;
@@ -34,6 +36,13 @@ constexpr Range<T>::Range(const T& begin,
                           const T& end)
     : mBegin(begin)
     , mEnd(end)
+{ }
+
+template <typename T>
+inline
+constexpr Range<T>::Range(const std::pair<T, T>& range)
+    : mBegin(range.first)
+    , mEnd(range.second)
 { }
 
 template <typename T>
