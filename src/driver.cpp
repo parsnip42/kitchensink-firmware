@@ -20,6 +20,7 @@
 
 #include "keyeventbuffer.h"
 #include "eventmanager.h"
+#include "topleveleventstage.h"
 
 #include "types/strbuf.h"
 #include "types/strostream.h"
@@ -163,10 +164,10 @@ void loop()
 
     Timer timer;
     
-    KeyEventBuffer eventBuffer;
+    ToplevelEventStage toplevel(usbKeyboard);
     
     ActionProcessor actionProcessor(keyboardState,
-                                    eventBuffer);
+                                    toplevel);
     
     MacroProcessor macroProcessor(keyboardState.macroSet,
                                   timer,
@@ -181,27 +182,20 @@ void loop()
 
     KeyProcessor keyProcessor(keyboard,
                               keyboardState.layerStack);
-
     
     EventManager eventManager(timer,
                               keyProcessor,
-                              eventBuffer,
                               multiProcessor,
+                              toplevel,
                               usbKeyboard);
     
     ScreenStack screenStack(keyboardState,
                             eventManager,
-                            surface);
-    
-    eventManager.poll(
-        [&](const KeyEvent& event,
-            KeyEventStage&  next)
-        {
-            if (!screenStack.processEvent(event))
-            {
-                usbKeyboard.processKeyEvent(event);
-            }
+                            surface,
+                            usbKeyboard);
 
-            return true;
-        });
+    while (1)
+    {
+        eventManager.poll(screenStack);
+    }
 }

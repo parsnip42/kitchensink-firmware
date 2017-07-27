@@ -12,13 +12,18 @@ namespace UI
 
 void Menu::poll()
 {
+                
     redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
+
+    // EventManager::RefocusGuard guard(mEventManager,
+    //                                  *this);
+
     while (!mQuit)
     {
-        mEventManager.pollStage(autoRepeat);
+        mEventManager.poll(autoRepeat);
     }
 }
 
@@ -56,8 +61,8 @@ void Menu::processKeyEvent(const KeyEvent& event)
 
         filteredItem(item, mSelected);
             
-        mEventManager.buffer().processKeyEvent(KeyEvent(item.keyId, true));
-        mEventManager.buffer().processKeyEvent(KeyEvent(item.keyId, false));
+        mEventManager.processKeyEvent(KeyEvent(item.keyId, true));
+        mEventManager.processKeyEvent(KeyEvent(item.keyId, false));
         mQuit = true;
     }
     else if (Keys::cancel(keyId))

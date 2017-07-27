@@ -75,7 +75,7 @@ void EditMacroScreen::poll()
                           *this);
     while (!mQuit)
     {
-        mEventManager.pollStage(autoRepeat);
+        mEventManager.poll(autoRepeat);
     }
 }
 

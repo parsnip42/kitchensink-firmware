@@ -6,7 +6,7 @@
 
 #include "ui/editmacroscreen.h"
 
-bool ScreenStack::processEvent(const KeyEvent& event)
+void ScreenStack::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
         
@@ -17,7 +17,7 @@ bool ScreenStack::processEvent(const KeyEvent& event)
             MenuDefinitions menuDefinitions(mKeyboardState);
 
             auto action(event.keyId.value());
-                
+            
             UI::Menu menu(menuDefinitions.getDataSource(action),
                           mSurface,
                           mEventManager);
@@ -27,11 +27,8 @@ bool ScreenStack::processEvent(const KeyEvent& event)
             mSurface.clear();
         }
 
-        return true;
     }
-
-
-    if (keyId.actionType() == KeyId::ActionType::kEditMacro)
+    else if (keyId.actionType() == KeyId::ActionType::kEditMacro)
     {
         if (event.pressed)
         {
@@ -46,6 +43,8 @@ bool ScreenStack::processEvent(const KeyEvent& event)
             screen.poll();
         }
     }
-    
-    return false;
+    else
+    {
+        mNext.processKeyEvent(event);
+    }
 }

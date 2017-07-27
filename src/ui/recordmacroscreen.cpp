@@ -16,7 +16,7 @@ void RecordMacroScreen::poll()
     
     while (!mRecorder.complete())
     {
-        mEventManager.pollStage(*this);
+        mEventManager.poll(*this);
     }
 }
 
@@ -44,7 +44,7 @@ void RecordMacroScreen::redraw()
 
 void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
 {
-    mEventManager.output().processKeyEvent(event);
+    mEventManager.defaultOutput.processKeyEvent(event);
     mRecorder.processKeyEvent(event);
 
     if (!mRecorder.full())

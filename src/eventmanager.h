@@ -7,95 +7,70 @@
 #include "keyevent.h"
 #include "keyprocessor.h"
 #include "timer.h"
+#include "topleveleventstage.h"
 
 #include <cstdint>
 
-class EventManager
+class EventManager : public KeyEventStage
 {
 public:
-    EventManager(Timer&          nTimer,
-                 KeyProcessor  & source,
-                 KeyEventBuffer& buffer,
-                 KeyEventStage&  input,
-                 KeyEventStage&  output);
-
-public:
-    template <typename EventFunc>
-    void poll(const EventFunc& eventFunc);
-
-    void pollStage(KeyEventStage& output);
-
-    void cancel(const Timer::Handle& handle);
+    class RefocusGuard
+    {
+    public:
+        explicit RefocusGuard(EventManager&  eventManager,
+                              KeyEventStage& next);
+        ~RefocusGuard();
+        
+    private:
+        EventManager& mEventManager;
+    };
     
-    KeyEventStage& buffer()
-    {
-        return mBuffer;
-    }
-
-    KeyEventStage& output()
-    {
-        return mOutput;
-    }
+public:
+    EventManager(Timer&              nTimer,
+                 KeyProcessor&       source,
+                 KeyEventStage&      input,
+                 ToplevelEventStage& toplevel,
+                 KeyEventStage&      nDefaultOutput);
 
 public:
-    Timer& timer;
-    KeyProcessor&   mSource;
+    virtual void processKeyEvent(const KeyEvent& event) override;
+
+    void poll(KeyEventStage& output);
+
+public:
+    Timer&         timer;
+    KeyEventStage& defaultOutput;
     
 private:
     uint32_t nowMs() const;
     
 private:
-    KeyEventBuffer& mBuffer;
-    KeyEventStage&  mInput;
-    KeyEventStage&  mOutput;
+    KeyProcessor&       mSource;
+    KeyEventBuffer      mBuffer;
+    KeyEventStage&      mInput;
+    ToplevelEventStage& mToplevel;
+
+private:
+    EventManager(const EventManager&) = delete;
+    EventManager& operator=(const EventManager&) = delete;
+    
+private:
+    friend class RefocusGuard;
 };
 
-
 inline
-EventManager::EventManager(Timer&          nTimer,
-                           KeyProcessor&   source,
-                           KeyEventBuffer& buffer,
-                           KeyEventStage&  input,
-                           KeyEventStage&  output)
-    : timer(nTimer)
-    , mSource(source)
-    , mBuffer(buffer)
-    , mInput(input)
-    , mOutput(output)
-{ }
-
-template <typename EventFunc>
-inline
-void EventManager::poll(const EventFunc& eventFunc)
+EventManager::RefocusGuard::RefocusGuard(EventManager& eventManager,
+                                         KeyEventStage&      next)
+    : mEventManager(eventManager)
 {
-    bool more(true);
-    
-    mSource.releaseAll(mInput);
-    
-    while (more)
-    {
-        mSource.pollKeyEvent(nowMs(), mInput);
-        timer.pollKeyEvent(nowMs(), mInput);
-        
-        if (!mBuffer.empty())
-        {
-            more = eventFunc(mBuffer.pop(), mBuffer);
-        }
-    }
-
-    mSource.pressAll(mInput);
+    mEventManager.mSource.releaseAll(mEventManager.mInput);
+    mEventManager.mSource.pressAll(next);
 }
 
 inline
-void EventManager::pollStage(KeyEventStage& output)
+EventManager::RefocusGuard::~RefocusGuard()
 {
-    mSource.pollKeyEvent(nowMs(), mInput);
-    timer.pollKeyEvent(nowMs(), mInput);
-    
-    if (!mBuffer.empty())
-    {
-        output.processKeyEvent(mBuffer.pop());
-    }
+    mEventManager.mSource.pressAll(mEventManager.mInput);
 }
 
 #endif

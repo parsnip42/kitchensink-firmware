@@ -2,37 +2,42 @@
 #define INCLUDED_SCREENSTACK_H
 
 #include "keyevent.h"
+#include "keyeventstage.h"
 
 class EventManager;
 class KeyboardState;
 class Surface;
 
-class ScreenStack
+class ScreenStack : public KeyEventStage
 {
 public:
     ScreenStack(KeyboardState& keyboardState,
                 EventManager&  eventManager,
-                Surface&       surface);
+                Surface&       surface,
+                KeyEventStage& next);
 
 public:
-    bool processEvent(const KeyEvent& event);
+    void processKeyEvent(const KeyEvent& event) override;
     
 private:
     int            mStackSize;
     KeyboardState& mKeyboardState;
     EventManager&  mEventManager;
     Surface&       mSurface;
+    KeyEventStage& mNext;
 };
 
 
 inline
 ScreenStack::ScreenStack(KeyboardState& keyboardState,
                          EventManager&  eventManager,
-                         Surface&       surface)
+                         Surface&       surface,
+                         KeyEventStage& next)
     : mStackSize(0)
     , mKeyboardState(keyboardState)
     , mEventManager(eventManager)
     , mSurface(surface)
+    , mNext(next)
 { }
 
 #endif /* INCLUDED_SCREENSTACK_H */

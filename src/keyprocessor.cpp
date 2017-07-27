@@ -80,8 +80,8 @@ void KeyProcessor::pressAll(KeyEventStage& next)
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
         auto keyId(mLayerStack.at(event.row, event.column));
-        auto keyEvent(KeyEvent(keyId, event.pressed));
-
+        auto keyEvent(KeyEvent(keyId, true));
+        
         next.processKeyEvent(keyEvent);
     });
 }
@@ -91,9 +91,8 @@ void KeyProcessor::releaseAll(KeyEventStage& next)
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
         auto keyId(mLayerStack.at(event.row, event.column));
-        auto keyEvent(KeyEvent(keyId, event.pressed));
+        auto keyEvent(KeyEvent(keyId, false));
 
-        keyEvent.pressed = false;
         next.processKeyEvent(keyEvent);
     });
 }

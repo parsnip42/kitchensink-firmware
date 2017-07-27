@@ -46,13 +46,13 @@ public:
          EventManager&     eventManager);
 
 public:
-    void redraw();
+    virtual void processKeyEvent(const KeyEvent& event) override;
 
     void poll();
     
-    virtual void processKeyEvent(const KeyEvent& event) override;
-    
 private:
+    void redraw();
+    
     void moveSelection(int selectionOffset);
     
     void paintMenu(int start,
