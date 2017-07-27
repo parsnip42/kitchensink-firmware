@@ -2,6 +2,7 @@
 #define INCLUDED_SMARTKEY_H
 
 #include "keyid.h"
+#include "types/strbuf.h"
 
 class SmartKey
 {
@@ -19,10 +20,11 @@ public:
     SmartKey();
     
 public:
-    KeyId keyId;
-    KeyId auxKeyId;
-    Type  type;
-    bool  triggered;
+    StrBuf<12> name;
+    KeyId      keyId;
+    KeyId      auxKeyId;
+    Type       type;
+    bool       triggered;
 };
 
 inline

@@ -20,7 +20,7 @@ void MultiProcessor::processKeyEvent(const KeyEvent& event)
         {
             if (event.pressed)
             {
-                mReleaseTimer = mTimer.scheduleRepeating(200, 200);
+                mReleaseTimer = mTimer.schedule(400);
                 mMultiSet[multiId].press();
             }
             else

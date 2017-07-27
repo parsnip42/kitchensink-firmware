@@ -28,7 +28,7 @@ public:
     bool trigger(KeyEventStage& next);
 
 public:
-    StrBuf<12>           title;
+    StrBuf<12>           name;
     std::array<KeyId, 5> keys;
 
 private:

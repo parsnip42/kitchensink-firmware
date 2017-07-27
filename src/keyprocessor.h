@@ -3,9 +3,6 @@
 
 #include "keyeventsource.h"
 #include "keyeventstage.h"
-#include "macroprocessor.h"
-#include "multiprocessor.h"
-#include "lockprocessor.h"
 
 class KsKeyboard;
 class KeyLocation;
@@ -45,8 +42,8 @@ private:
                       KeyEventStage& next);
     
 private:
-    KsKeyboard&    mKeyboard;
-    LayerStack&    mLayerStack;
+    KsKeyboard& mKeyboard;
+    LayerStack& mLayerStack;
     
 private:
     KeyProcessor(const KeyProcessor&) = delete;

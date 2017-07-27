@@ -3,6 +3,9 @@
 #include "keyevent.h"
 #include "eventmanager.h"
 
+#include "types/strbuf.h"
+#include "types/strostream.h"
+
 #include <elapsedMillis.h>
 
 namespace

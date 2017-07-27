@@ -118,7 +118,9 @@ void Menu::redraw()
 {
     if (mFilter.empty())
     {
-        paintMenu(0, Surface::kHeight);
+        // paintMenu(0, Surface::kHeight);
+        mSurface.paintTextC(0, 0, Surface::kWidth, "Main Menu", 0xf, 0x3);
+        paintMenu(Surface::kFontHeight, Surface::kHeight - Surface::kFontHeight);
     }
     else
     {
@@ -130,7 +132,7 @@ void Menu::redraw()
 void Menu::paintMenu(int start,
                      int height)
 {    
-    static const Surface::ColorMap colorMap(0xf, 0x0);
+    static const Surface::ColorMap colorMap(0x7, 0x0);
     static const Surface::ColorMap invColorMap(0x0, 0xf);
 
     auto itemCount(filteredItemCount());

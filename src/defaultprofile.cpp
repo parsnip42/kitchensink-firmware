@@ -9,18 +9,6 @@ namespace DefaultProfile
 
 namespace
 {
-constexpr int kLCtrl  = 0;
-constexpr int kLShift = 1;
-constexpr int kLAlt   = 2;
-constexpr int kLGui   = 3;
-constexpr int kRCtrl  = 4;
-constexpr int kRShift = 5;
-constexpr int kRAlt   = 6;
-constexpr int kRGui   = 7;
-}
-
-namespace
-{
 constexpr KeyId Macro(int macroId)
 {
     return KeyId::Macro(macroId);
@@ -71,18 +59,6 @@ constexpr KeyId Multi(int index)
 void init(KeyboardState& keyboardState)
 {
     using namespace KeyCodes;
-
-
-    keyboardState.lockSet[kLCtrl]  = Lock("LCtrl",  LCtrl);
-    keyboardState.lockSet[kLShift] = Lock("LShift", LShift);
-    keyboardState.lockSet[kLAlt]   = Lock("LAlt",   LAlt);
-    keyboardState.lockSet[kLGui]   = Lock("LGui",   LGui);
-    keyboardState.lockSet[kRCtrl]  = Lock("RCtrl",  RCtrl);
-    keyboardState.lockSet[kRShift] = Lock("RShift", RShift);
-    keyboardState.lockSet[kRAlt]   = Lock("RAlt",   RAlt);
-    keyboardState.lockSet[kRGui]   = Lock("RGui",   RGui);
-
-    keyboardState.lockSet[8] = Lock("Game", KeyId::Layer(4));
 
     auto& macroSet(keyboardState.macroSet);
     
@@ -174,19 +150,19 @@ void init(KeyboardState& keyboardState)
         };
     }
 
-    keyboardState.multiSet[0].keys[0] = MainMenu();
-    keyboardState.multiSet[0].keys[1] = Bootloader();
-
-    // keyboardState.smartKeySet[0].type = SmartKey::Type::kPair;
-    // keyboardState.smartKeySet[0].keyId = A;
-    // keyboardState.smartKeySet[0].auxKeyId = B;
-
-    // keyboardState.smartKeySet[0].type = SmartKey::Type::kHoldAutoRelease;
-    // keyboardState.smartKeySet[0].keyId = LShift;
-
-    keyboardState.smartKeySet[0].type = SmartKey::Type::kHoldOrTap;
+    keyboardState.multiSet[0].keys[0] = LShift;
+    keyboardState.multiSet[0].keys[2] = KeyId::Smart(0);
+    
+    keyboardState.smartKeySet[0].name = "LShift Toggle";
+    keyboardState.smartKeySet[0].type = SmartKey::Type::kToggle;
     keyboardState.smartKeySet[0].keyId = LShift;
-    keyboardState.smartKeySet[0].auxKeyId = Space;
+    
+    keyboardState.multiSet[1].keys[0] = RShift;
+    keyboardState.multiSet[1].keys[2] = KeyId::Smart(1);
+
+    keyboardState.smartKeySet[1].name = "RShift Toggle";
+    keyboardState.smartKeySet[1].type = SmartKey::Type::kToggle;
+    keyboardState.smartKeySet[1].keyId = RShift;        
 
     auto& layerStack(keyboardState.layerStack);
     
@@ -194,10 +170,10 @@ void init(KeyboardState& keyboardState)
 
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
-            { { KeyId::Smart(0), NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },
+            { { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },
             { { Esc, Macro(7), Q, W, E, R, T, Tab, Macro(12), Macro(13),                    /**/ Macro(23),  Macro(24), Backspace, Y, U, I, O, P, LBrace, RBrace } },
             { { 0, Layer(2), A, S, D, F, G, 0, Macro(14), Macro(15),                        /**/ Macro(25),  Macro(26), 0, H, J, K, L, Semicolon, Enter } },
-            { { 0, LShift, Z, X, C, V, B, 0, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(1), Quote, N, M, Comma, Dot, Slash, RShift } },
+            { { 0, Multi(0), Z, X, C, V, B, 0, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(1), Quote, N, M, Comma, Dot, Slash, Multi(1) } },
             { { 0, Y, U, I, O, P,
                 LCtrl, Layer(1), LAlt, 0,                                     /**/ 0,LAlt, Space, RCtrl, End, Left, Up, Down, Right } }
         } };

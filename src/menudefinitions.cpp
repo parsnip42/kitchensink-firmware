@@ -9,10 +9,11 @@ namespace
 
 const UI::ArrayDataSource::Item mainMenuItems[] =
 {
-    UI::ArrayDataSource::Item("Keys", KeyId::Action(KeyId::ActionType::kMenu, 4)),
     UI::ArrayDataSource::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
+    UI::ArrayDataSource::Item("Keys", KeyId::Action(KeyId::ActionType::kMenu, 4)),
     UI::ArrayDataSource::Item("Edit Macros", KeyId::Action(KeyId::ActionType::kMenu, 2)),
-    UI::ArrayDataSource::Item("Key Locks", KeyId::Action(KeyId::ActionType::kMenu, 3)),
+    UI::ArrayDataSource::Item("Multi Keys", KeyId::Action(KeyId::ActionType::kMenu, 6)),
+    UI::ArrayDataSource::Item("Smart Keys", KeyId::Action(KeyId::ActionType::kMenu, 3)),
     UI::ArrayDataSource::Item("System", KeyId::Action(KeyId::ActionType::kMenu, 5)),
     UI::ArrayDataSource::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
 };
@@ -69,24 +70,39 @@ std::size_t EditMacroDataSource::getItemCount() const
     return mKeyboardState.macroSet.size();
 }
 
-
-LockDataSource::LockDataSource(const KeyboardState& keyboardState)
+MultiKeyDataSource::MultiKeyDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void LockDataSource::getItem(UI::Menu::Item& menuItem,
-                             std::size_t     index) const
+void MultiKeyDataSource::getItem(UI::Menu::Item& menuItem,
+                                 std::size_t     index) const
 {
     
-    menuItem.title = mKeyboardState.lockSet[index].name;
-    menuItem.keyId = KeyId::Lock(KeyId::LockType::kToggle, index);
+    menuItem.title = mKeyboardState.multiSet[index].name;
+    menuItem.keyId = KeyId::Multi(index);
 }
 
-std::size_t LockDataSource::getItemCount() const
+std::size_t MultiKeyDataSource::getItemCount() const
 {
-    return mKeyboardState.lockSet.size();
+    return mKeyboardState.multiSet.size();
 }
 
+SmartKeyDataSource::SmartKeyDataSource(const KeyboardState& keyboardState)
+    : mKeyboardState(keyboardState)
+{ }
+
+void SmartKeyDataSource::getItem(UI::Menu::Item& menuItem,
+                                 std::size_t     index) const
+{
+    
+    menuItem.title = mKeyboardState.smartKeySet[index].name;
+    menuItem.keyId = KeyId::Smart(index);
+}
+
+std::size_t SmartKeyDataSource::getItemCount() const
+{
+    return mKeyboardState.smartKeySet.size();
+}
 
 KeyDataSource::KeyDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
@@ -135,7 +151,8 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mEmptyMenuSource(emptyMenuItems)
     , mMacroDataSource(keyboardState)
     , mEditMacroDataSource(keyboardState)
-    , mLockDataSource(keyboardState)
+    , mMultiKeyDataSource(keyboardState)
+    , mSmartKeyDataSource(keyboardState)
     , mKeyDataSource(keyboardState)
 { }
 
@@ -150,11 +167,13 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
     case 2:
         return mEditMacroDataSource;
     case 3:
-        return mLockDataSource;
+        return mSmartKeyDataSource;
     case 4:
         return mKeyDataSource;
     case 5:
         return mSystemMenuSource;
+    case 6:
+        return mMultiKeyDataSource;
     default:
         return mEmptyMenuSource;
     }

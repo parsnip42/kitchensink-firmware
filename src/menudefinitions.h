@@ -49,11 +49,10 @@ private:
     EditMacroDataSource& operator=(const EditMacroDataSource&) = delete;
 };
 
-
-class LockDataSource : public UI::Menu::DataSource
+class MultiKeyDataSource : public UI::Menu::DataSource
 {
 public:
-    explicit LockDataSource(const KeyboardState& keyboardState);
+    explicit MultiKeyDataSource(const KeyboardState& keyboardState);
 
 public:
     virtual void getItem(UI::Menu::Item& menuItem,
@@ -65,8 +64,28 @@ public:
     const KeyboardState& mKeyboardState;
     
 private:
-    LockDataSource(const LockDataSource&) = delete;
-    LockDataSource& operator=(const LockDataSource&) = delete;
+    MultiKeyDataSource(const MultiKeyDataSource&) = delete;
+    MultiKeyDataSource& operator=(const MultiKeyDataSource&) = delete;
+};
+
+
+class SmartKeyDataSource : public UI::Menu::DataSource
+{
+public:
+    explicit SmartKeyDataSource(const KeyboardState& keyboardState);
+
+public:
+    virtual void getItem(UI::Menu::Item& menuItem,
+                         std::size_t     index) const;
+
+    virtual std::size_t getItemCount() const;
+
+public:
+    const KeyboardState& mKeyboardState;
+    
+private:
+    SmartKeyDataSource(const SmartKeyDataSource&) = delete;
+    SmartKeyDataSource& operator=(const SmartKeyDataSource&) = delete;
 };
 
 class KeyDataSource : public UI::Menu::DataSource
@@ -105,7 +124,8 @@ private:
 
     const Impl::MacroDataSource     mMacroDataSource;
     const Impl::EditMacroDataSource mEditMacroDataSource;
-    const Impl::LockDataSource      mLockDataSource;
+    const Impl::MultiKeyDataSource  mMultiKeyDataSource;
+    const Impl::SmartKeyDataSource  mSmartKeyDataSource;
     const Impl::KeyDataSource       mKeyDataSource;
 
 private:

@@ -8,6 +8,8 @@
 #include "serialize/serializer.h"
 #include "serialize/iniformat.h"
 #include "smartkeyprocessor.h"
+#include "macroprocessor.h"
+#include "multiprocessor.h"
 
 #include "storage/storage.h"
 
