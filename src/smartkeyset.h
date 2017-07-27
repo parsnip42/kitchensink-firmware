@@ -2,9 +2,10 @@
 #define INCLUDED_SMARTKEYSET_H
 
 #include "smartkey.h"
+#include "config.h"
 
 #include <array>
 
-typedef std::array<SmartKey, 10> SmartKeySet;
+typedef std::array<SmartKey, Config::kSmartKeyCount> SmartKeySet;
 
 #endif

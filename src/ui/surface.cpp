@@ -80,13 +80,15 @@ void Surface::initRegion(int x, int y, int w, int h)
     mDisplay.initRegion(x, y, w, h);
 }
 
-void Surface::clearRegion(int x, int y, int w, int h)
+void Surface::clearRegion(int x, int y, int w, int h, uint8_t color)
 {
+    const uint8_t val(color | color << 4);
+    
     mDisplay.initRegion(x, y, w, h);
 
     for (int i = 0; i < (w * h) / 2; ++i)
     {
-        mDisplay.writeData(0x0);
+        mDisplay.writeData(val);
     }
 }
 
@@ -110,7 +112,9 @@ void Surface::paintTextLine(const StrRef&   text,
         mDisplay.writeData(colorMap.data[(data >> 6) & 0x3]);
         mDisplay.writeData(colorMap.data[(data >> 4) & 0x3]);
         mDisplay.writeData(colorMap.data[(data >> 2) & 0x3]);
-        mDisplay.writeData(colorMap.data[data & 0x3]);
+        // mDisplay.writeData(0);
+        //mDisplay.writeData(0);
+        // mDisplay.writeData(colorMap.data[data & 0x3]);
     }   
 }
 
@@ -122,7 +126,7 @@ void Surface::paintTextLineC(const StrRef&   text,
     auto hWidth(width / 2);
     
     int prePad(0);
-    int textLen(text.length() * 4);
+    int textLen(text.length() * (kFontWidth / 2));
 
     if (hWidth > textLen)
     {

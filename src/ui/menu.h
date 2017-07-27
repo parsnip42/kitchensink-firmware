@@ -41,7 +41,8 @@ public:
     };
 
 public:
-    Menu(const DataSource& dataSource,
+    Menu(const StrRef&     title,
+         const DataSource& dataSource,
          Surface&          surface,
          EventManager&     eventManager);
 
@@ -68,6 +69,7 @@ private:
     std::size_t filteredItemCount();
     
 private:
+    StrRef            mTitle;
     const DataSource& mDataSource;
     Surface&          mSurface;
     std::size_t       mSelected;
@@ -83,10 +85,12 @@ private:
 
 
 inline
-Menu::Menu(const DataSource& dataSource,
+Menu::Menu(const StrRef&     title,
+           const DataSource& dataSource,
            Surface&          surface,
            EventManager&     eventManager)
-    : mDataSource(dataSource)
+    : mTitle(title)
+    , mDataSource(dataSource)
     , mSurface(surface)
     , mSelected(0)
     , mFilter()

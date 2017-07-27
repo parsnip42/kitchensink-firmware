@@ -6,8 +6,9 @@
 namespace Font
 {
 
-constexpr int kWidth = 8;
-constexpr int kHeight = 14;
+constexpr int kWidth = 6;
+constexpr int kHeight = 12;
+constexpr int kBpp = 4;
 constexpr int kCharCount = 95;
 
 extern const uint8_t fontData[];

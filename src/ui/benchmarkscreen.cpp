@@ -2,9 +2,11 @@
 
 #include "keyevent.h"
 #include "eventmanager.h"
+#include "ui/surface.h"
 
 #include "types/strbuf.h"
 #include "types/strostream.h"
+#include "ctrlutil.h"
 
 #include <elapsedMillis.h>
 
@@ -25,6 +27,7 @@ public:
 BenchmarkScreen::BenchmarkScreen(Surface&      surface,
                                  EventManager& eventManager)
     : mEventManager(eventManager)
+    , mSurface(surface)
     , mTextScreen(surface)
     , mQuit(false)
 { }
@@ -41,6 +44,16 @@ void BenchmarkScreen::poll()
 {
     mTextScreen.init();
     
+    {
+        StrBuf<32> line;
+        StrOStream ostream(line);
+                
+        ostream.appendStr("Free Memory: ")
+               .appendInt(static_cast<int>(CtrlUtil::freeMemory()));
+            
+        mTextScreen.appendLine(line);
+    }
+
     mTextScreen.appendLine("Running Benchmark..");
 
     auto start(millis());
@@ -55,27 +68,39 @@ void BenchmarkScreen::poll()
     auto end(millis());
 
     {
-        StrBuf<32> line;
+        StrBuf<64> line;
         StrOStream ostream(line);
 
         ostream.appendStr("  1000 polls: ")
-        .appendInt(static_cast<int>(end-start))
-        .appendStr("ms");
+               .appendInt(static_cast<int>(end-start))
+               .appendStr("ms (")
+               .appendInt(static_cast<int>(1000000 / (end-start)))
+               .appendStr(" polls/s)");
 
         mTextScreen.appendLine(line);
     }
-
+    
     {
-        StrBuf<32> line;
-        StrOStream ostream(line);
+        auto start(millis());
 
-        ostream.appendStr("  ")
-        .appendInt(static_cast<int>(1000000 / (end-start)))
-        .appendStr(" polls/s");
+        for (int i(0); i < 1000; ++i)
+        {
+            mSurface.clearRegion(Surface::kWidth - 32, Surface::kHeight - 32, 32, 32, (i & 1) ? 0xf : 0);
+        }
+    
+        auto end(millis());
+        {
+            StrBuf<32> line;
+            StrOStream ostream(line);
 
-        mTextScreen.appendLine(line);
+            ostream.appendStr("  1000 rects: ")
+            .appendInt(static_cast<int>(end-start))
+            .appendStr("ms");
+
+            mTextScreen.appendLine(line);
+        }
     }
-
+    
     while (!mQuit)
     {
         mEventManager.poll(*this);

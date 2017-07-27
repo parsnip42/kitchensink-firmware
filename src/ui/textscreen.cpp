@@ -19,7 +19,7 @@ void TextScreen::appendLine(const StrRef& text)
 
     for (int y(0); y < Surface::kFontHeight; ++y)
     {
-        mSurface.clearRegion(0, y + (mLines * Surface::kFontHeight), Surface::kWidth, 1);
+        mSurface.clearRegion(0, y + (mLines * Surface::kFontHeight), Surface::kWidth, 1, 0x0);
         mSurface.initRegion(0, y + (mLines * Surface::kFontHeight), Surface::kFontWidth * text.length(), 1);
         mSurface.paintTextLine(text, y, colors);
     }

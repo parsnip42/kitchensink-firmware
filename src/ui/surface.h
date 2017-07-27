@@ -47,7 +47,7 @@ public:
     void rectangle(int x, int y, int w, int h, uint8_t color = 0xf);
 
     void initRegion(int x, int y, int w, int h);
-    void clearRegion(int x, int y, int w, int h);
+    void clearRegion(int x, int y, int w, int h, uint8_t color);
 
     void paintTextLine(const StrRef&   text,
                        const int       line,

@@ -3,10 +3,11 @@
 
 #include "keyevent.h"
 #include "types/arraypool.h"
+#include "config.h"
 
 #include <array>
 
-class MacroDataPool : public ArrayPool<std::array<KeyEvent, 1024>, 30>
+class MacroDataPool : public ArrayPool<std::array<KeyEvent, Config::kMacroPoolSize>, Config::kMacroCount>
 {
 public:
     MacroDataPool() = default;
@@ -16,4 +17,4 @@ private:
     MacroDataPool& operator=(const MacroDataPool&);
 };
 
-#endif /* INCLUDED_MACRODATAPOOL_H */
+#endif

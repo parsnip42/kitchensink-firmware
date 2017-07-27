@@ -19,7 +19,8 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
 
             auto action(event.keyId.value());
             
-            UI::Menu menu(menuDefinitions.getDataSource(action),
+            UI::Menu menu(menuDefinitions.getTitle(action),
+                          menuDefinitions.getDataSource(action),
                           mSurface,
                           mEventManager);
 

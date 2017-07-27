@@ -27,8 +27,8 @@ void ComboWidget::redrawContent(bool focused)
     }
     else
     {
-        mSurface.clearRegion(region.x, region.y, Surface::kFontWidth, Surface::kFontHeight);
-        mSurface.clearRegion(region.x + region.width - Surface::kFontWidth, region.y, Surface::kFontWidth, Surface::kFontHeight);
+        mSurface.clearRegion(region.x, region.y, Surface::kFontWidth, Surface::kFontHeight, 0x0);
+        mSurface.clearRegion(region.x + region.width - Surface::kFontWidth, region.y, Surface::kFontWidth, Surface::kFontHeight, 0x0);
 
     }
     
@@ -68,5 +68,10 @@ void ComboWidget::paintSelection()
 
     mDataSource.item(text, selectedItem);
     
-    mSurface.paintTextC(region.x + Surface::kFontWidth, region.y, region.width - (Surface::kFontWidth * 2), text, 0xf, 0);
+    mSurface.paintTextC(region.x + Surface::kFontWidth,
+                        region.y,
+                        region.width - (Surface::kFontWidth * 2),
+                        text,
+                        0xf,
+                        0);
 }

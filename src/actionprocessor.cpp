@@ -1,7 +1,7 @@
 #include "actionprocessor.h"
-#include "ctrlutil.h"
 #include "keyboardstate.h"
 #include "keylocation.h"
+#include "ctrlutil.h"
 
 #include "types/strbuf.h"
 #include "types/strostream.h"
@@ -47,29 +47,5 @@ void ActionProcessor::fireBuiltIn(int             action,
     default:
         break;
     }
-    
-    // case 1:
-    // {
-    //     if (event.pressed)
-    //     {            
-    //         UI::Text text(mSurface);
-
-    //         {
-    //             StrBuf<32> line;
-    //             StrOStream ostream(line);
-                
-    //             ostream.appendStr("Free Memory: ")
-    //                    .appendInt(static_cast<int>(CtrlUtil::freeMemory()));
-            
-    //             text.appendLine(line);
-    //         }
-
-    // }
-    
-    // case 2:
-    // {
-    //     break;
-    // }
-    // }
 }
 

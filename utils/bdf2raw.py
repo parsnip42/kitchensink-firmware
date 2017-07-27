@@ -20,7 +20,7 @@ def read_raw(f):
 def main():
     data = {}
     
-    with open('ter-u14n.bdf') as f:
+    with open('ter-u12n.bdf') as f:
         for line in f:
             line = line.rstrip('\n')
             
@@ -44,10 +44,13 @@ def main():
         'braceleft', 'bar', 'braceright', 'asciitilde', 'uni2714'
     ]
     
-    for y in range(0, 14):
+    for y in range(0, 12):
         for glyph in glyphs:
-            array.append('0x{:02x}'.format(data[glyph][y]))
-            
+            try:
+                array.append('0x{:02x}'.format(data[glyph][y]))
+            except:
+                array.append('0x{:02x}'.format(0))
+                
     print 'constexpr uint8_t charset[] ='
     print '{'
     

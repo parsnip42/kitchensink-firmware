@@ -7,6 +7,7 @@
 #include "macrodatapool.h"
 #include "types/strref.h"
 #include "types/strbuf.h"
+#include "config.h"
 
 #include <array>
 #include <initializer_list>
@@ -14,7 +15,7 @@
 class MacroSet
 {
 private:
-    typedef std::array<Macro, 30> MacroData;
+    typedef std::array<Macro, Config::kMacroCount> MacroData;
 
 public:
     MacroSet();

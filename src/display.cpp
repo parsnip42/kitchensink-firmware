@@ -16,18 +16,42 @@ const int dc = 21;
 const int reset = 22;
 const int csrw = 23;
 
-// void writeBus(unsigned char data, int type)
-// {
-//     digitalWriteFast(dc, type);
-//     digitalWriteFast(csrw, 0);
+inline void writeByte(uint8_t data, int type) __attribute__((always_inline, unused));
+inline void writeByte(uint8_t data, int type)
+{
+    digitalWriteFast(21, type);
+    digitalWriteFast(23, 0);
 
-//     for (size_t i = 0; i < db_count; ++i)
-//     {
-//         digitalWriteFast(db[i], (data >> i) & 1);
-//     }
+#if defined(__MK20DX128__) || defined(__MK20DX256__)
+
+    static uint8_t lastData(0);
     
-//     digitalWriteFast(csrw, 1);
-// }
+    uint8_t toggle(data ^ lastData);
+
+    GPIOA_PTOR = ((toggle >> 3) & 0x3) << 12;
+    GPIOB_PTOR = (toggle & 0x3) << 16;
+    GPIOD_PTOR = (((toggle >> 2) & 1) |
+                  (((toggle >> 5) & 1) << 7) |
+                  (((toggle >> 6) & 1) << 4) |
+                  (((toggle >> 7) & 1) << 2));
+
+    lastData = data;
+    
+#else
+        
+    digitalWriteFast(0, data & 1);
+    digitalWriteFast(1, (data >> 1) & 1);
+    digitalWriteFast(2, (data >> 2) & 1);
+    digitalWriteFast(3, (data >> 3) & 1);
+    digitalWriteFast(4, (data >> 4) & 1);
+    digitalWriteFast(5, (data >> 5) & 1);
+    digitalWriteFast(6, (data >> 6) & 1);
+    digitalWriteFast(7, (data >> 7) & 1);
+    
+#endif
+    
+    digitalWriteFast(23, 1);
+}
 
 }
 
@@ -118,32 +142,12 @@ void Display::clear()
 
 void Display::writeInst(uint8_t data)
 {
-    digitalWriteFast(21, 0);
-    digitalWriteFast(23, 0);
-    digitalWriteFast(0, data & 1);
-    digitalWriteFast(1, (data >> 1) & 1);
-    digitalWriteFast(2, (data >> 2) & 1);
-    digitalWriteFast(3, (data >> 3) & 1);
-    digitalWriteFast(4, (data >> 4) & 1);
-    digitalWriteFast(5, (data >> 5) & 1);
-    digitalWriteFast(6, (data >> 6) & 1);
-    digitalWriteFast(7, (data >> 7) & 1);
-    digitalWriteFast(23, 1);
+    writeByte(data, 0);
 }
 
 void Display::writeData(uint8_t data)
 {
-    digitalWriteFast(21, 1);
-    digitalWriteFast(23, 0);
-    digitalWriteFast(0, data & 1);
-    digitalWriteFast(1, (data >> 1) & 1);
-    digitalWriteFast(2, (data >> 2) & 1);
-    digitalWriteFast(3, (data >> 3) & 1);
-    digitalWriteFast(4, (data >> 4) & 1);
-    digitalWriteFast(5, (data >> 5) & 1);
-    digitalWriteFast(6, (data >> 6) & 1);
-    digitalWriteFast(7, (data >> 7) & 1);
-    digitalWriteFast(23, 1);
+    writeByte(data, 1);
 }
 
 void Display::initRegion(int x, int y, int w, int h)

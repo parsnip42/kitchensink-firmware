@@ -20,6 +20,7 @@ public:
     
 private:
     EventManager& mEventManager;
+    Surface&      mSurface;
     TextScreen    mTextScreen;
     bool          mQuit;
 };

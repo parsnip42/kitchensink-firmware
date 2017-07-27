@@ -138,7 +138,7 @@ void TextEntryWidget::paintCursor(bool visible)
     }
     else
     {        
-        mSurface.paintText(region.x + 4 + (text.length() * Surface::kFontWidth),
-                           region.y + 2, " ", fg, bg);
+        mSurface.clearRegion(region.x + 4 + (text.length() * Surface::kFontWidth),
+                             region.y + 2, Surface::kFontWidth, Surface::kFontHeight + 4, visible ? 0xf : 0x0);
     }
 }

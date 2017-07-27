@@ -115,6 +115,7 @@ public:
     explicit MenuDefinitions(const KeyboardState& keyboardState);
 
 public:
+    StrRef getTitle(int id) const;
     const UI::Menu::DataSource& getDataSource(int id) const;
 
 private:

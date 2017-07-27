@@ -15,13 +15,13 @@ const UI::ArrayDataSource::Item mainMenuItems[] =
     UI::ArrayDataSource::Item("Multi Keys", KeyId::Action(KeyId::ActionType::kMenu, 6)),
     UI::ArrayDataSource::Item("Smart Keys", KeyId::Action(KeyId::ActionType::kMenu, 3)),
     UI::ArrayDataSource::Item("System", KeyId::Action(KeyId::ActionType::kMenu, 5)),
-    UI::ArrayDataSource::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
 };
 
 const UI::ArrayDataSource::Item systemMenuItems[] =
 {
     UI::ArrayDataSource::Item("Storage", KeyId::Action(KeyId::ActionType::kScreen, 0)),
-    UI::ArrayDataSource::Item("Benchmark", KeyId::Action(KeyId::ActionType::kScreen, 1))
+    UI::ArrayDataSource::Item("Benchmark", KeyId::Action(KeyId::ActionType::kScreen, 1)),
+    UI::ArrayDataSource::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
 };
 
 const UI::ArrayDataSource::Item emptyMenuItems[] =
@@ -179,3 +179,25 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
     }
 }
 
+StrRef MenuDefinitions::getTitle(int id) const
+{
+    switch (id)
+    {
+    case 0:
+        return "Main Menu";
+    case 1:
+        return "Macros";
+    case 2:
+        return "Edit Macros";
+    case 3:
+        return "Smart Keys";
+    case 4:
+        return "Keys";
+    case 5:
+        return "System";
+    case 6:
+        return "Multi Keys";
+    default:
+        return "";
+    }
+}

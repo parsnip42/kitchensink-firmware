@@ -4,6 +4,7 @@
 #include "types/bitmask.h"
 #include "keyid.h"
 #include "layer.h"
+#include "config.h"
 
 #include <array>
 #include <cstdint>
@@ -11,7 +12,7 @@
 class LayerStack
 {
 private:
-    static constexpr std::size_t MaxLayers = 10;
+    static constexpr std::size_t MaxLayers = Config::kLayerCount;
     
     typedef std::array<Layer, MaxLayers> Layers;
     typedef Bitmask<MaxLayers>           LayerMask;

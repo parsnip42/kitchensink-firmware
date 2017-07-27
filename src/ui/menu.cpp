@@ -118,14 +118,19 @@ void Menu::redraw()
 {
     if (mFilter.empty())
     {
-        // paintMenu(0, Surface::kHeight);
-        mSurface.paintTextC(0, 0, Surface::kWidth, "Main Menu", 0xf, 0x3);
-        paintMenu(Surface::kFontHeight, Surface::kHeight - Surface::kFontHeight);
+        mSurface.paintTextC(0, 0, Surface::kWidth, mTitle, 0xf, 0x0);
+        mSurface.clearRegion(20, Surface::kFontHeight, Surface::kWidth - 40, 1, 0xf);
+        paintMenu(Surface::kFontHeight + 2, Surface::kHeight - (Surface::kFontHeight + 2));
     }
     else
     {
+        
         mSurface.paintTextC(0, 0, Surface::kWidth, mFilter, 0x7);
-        paintMenu(Surface::kFontHeight, Surface::kHeight - Surface::kFontHeight);
+        mSurface.clearRegion(20, Surface::kFontHeight, Surface::kWidth - 40, 1, 0xf);
+
+        //paintMenu(Surface::kFontHeight, Surface::kHeight - Surface::kFontHeight);
+
+        paintMenu(Surface::kFontHeight + 2, Surface::kHeight - (Surface::kFontHeight + 2));
     }
 }
 
