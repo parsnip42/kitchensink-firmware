@@ -1,15 +1,15 @@
 #ifndef INCLUDED_RECORDMACROSCREEN_H
 #define INCLUDED_RECORDMACROSCREEN_H
 
-#include "types/strref.h"
 #include "keyevent.h"
 #include "keyeventrecorder.h"
+#include "keyeventstage.h"
 
 class Macro;
 class EventManager;
 class Surface;
 
-class RecordMacroScreen
+class RecordMacroScreen : public KeyEventStage
 {    
 public:
     RecordMacroScreen(Surface&       surface,
@@ -18,9 +18,12 @@ public:
                       bool           realtime);
 
 public:
+    virtual void processKeyEvent(const KeyEvent& event);
+
+    void poll();
+    
+private:
     void redraw();
-    bool processKeyEvent(const KeyEvent& event,
-                         KeyEventStage&  next);
     
 private:
     Surface&         mSurface;

@@ -1,45 +1,39 @@
 #include "autorepeat.h"
 
-#include <elapsedMillis.h>
-
-AutoRepeat::AutoRepeat(uint32_t repeatDelay,
-                       uint32_t repeatRate)
-    : mRepeatDelay(repeatDelay)
-    , mRepeatRate(repeatRate)
-    , mKeyId()
-    , mNextTime(0)
+AutoRepeat::AutoRepeat(Timer&         timer,
+                       KeyEventStage& next)
+    : repeatDelay(660)
+    , repeatRate(40)
+    , mTimer(timer)
+    , mNext(next)
 { }
 
-void AutoRepeat::processKeyEvent(const KeyEvent& keyEvent)
+void AutoRepeat::processKeyEvent(const KeyEvent& event)
 {
-    if (keyEvent.pressed)
-    {
-        mKeyId = keyEvent.keyId;
-        mNextTime = 0;
-    }
-    else
-    {             
-        mKeyId = KeyId();
-    }
-}
-
-KeyId AutoRepeat::activeKey()
-{
-    if (mNextTime == 0 && mKeyId != KeyId())
-    {
-        mNextTime = millis() + mRepeatDelay;
-        return mKeyId;
-    }
-
-    auto now(millis());
+    auto keyId(event.keyId);
     
-    if (mNextTime <= now)
+    if (mRepeatTimer.matches(event))
     {
-        mNextTime = now + mRepeatRate;
-        return mKeyId;
+        if (mKeyId != KeyId())
+        {
+            mNext.processKeyEvent(KeyEvent(mKeyId, true));
+            mNext.processKeyEvent(KeyEvent(mKeyId, false));
+        }
     }
     else
     {
-        return KeyId();
+        if (event.pressed && keyId.type() == KeyId::Type::kKey)
+        {
+            mKeyId = keyId;
+            mRepeatTimer = mTimer.scheduleRepeating(repeatDelay,
+                                                    repeatRate);
+        }
+        else if (keyId == mKeyId)
+        {
+            mRepeatTimer.cancel();
+            keyId = KeyId();
+        }
+
+        mNext.processKeyEvent(event);
     }
 }

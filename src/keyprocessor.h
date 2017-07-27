@@ -29,6 +29,9 @@ public:
 
     KeyLocation readKeyLocation();
 
+    void pressAll(KeyEventStage& next);
+    void releaseAll(KeyEventStage& next);
+
 private:
     bool consumeEvent(const KeyEvent& event,
                       uint32_t        timeMs);
@@ -42,7 +45,7 @@ private:
 
     void releaseLayer(int            index,
                       KeyEventStage& next);
-
+    
 private:
     KsKeyboard&    mKeyboard;
     LayerStack&    mLayerStack;

@@ -1,31 +1,39 @@
 #include "virtualkeyboard.h"
 
+#include "keyevent.h"
 #include "data/keymap.h"
 
-void VirtualKeyboard::processKeyEvent(const KeyEvent& keyEvent)
+VirtualKeyboard::VirtualKeyboard()
 {
-    if (!mModifierState.processEvent(keyEvent))
-    {
-        mAutoRepeat.processKeyEvent(keyEvent);
-    }
+    state.activeKey = KeyId();
+    state.activeChar = '\0';
 }
 
-VirtualKeyboard::State VirtualKeyboard::readState()
+void VirtualKeyboard::processKeyEvent(const KeyEvent& event)
 {
-    State state;
-
-    auto activeKey(mAutoRepeat.activeKey());
-
-    state.activeKey = activeKey;
-
-    if (mModifierState.shift())
+    if (!mModifierState.processEvent(event))
     {
-        state.activeChar = KeyMap::getEntry(activeKey.value()).shift;
-    }
-    else
-    {
-        state.activeChar = KeyMap::getEntry(activeKey.value()).dflt; 
-    }
+        auto keyId(event.keyId);
 
-    return state;
+        if (keyId.type() == KeyId::Type::kKey)
+        {
+            if (event.pressed)
+            {
+                if (mModifierState.shift())
+                {
+                    state.activeChar = KeyMap::getEntry(keyId.value()).shift;
+                }
+                else
+                {
+                    state.activeChar = KeyMap::getEntry(keyId.value()).dflt; 
+                }
+            }
+            else if (keyId == state.activeKey && !event.pressed)
+            {
+                state.activeChar = '\0';
+            }
+        }
+
+        state.activeKey = keyId;
+    }
 }

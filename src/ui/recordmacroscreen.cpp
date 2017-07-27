@@ -9,6 +9,17 @@
 
 #include <cstdint>
 
+
+void RecordMacroScreen::poll()
+{
+    redraw();
+    
+    while (!mRecorder.complete())
+    {
+        mEventManager.pollStage(*this);
+    }
+}
+
 void RecordMacroScreen::redraw()
 {
     mSurface.clear();
@@ -31,8 +42,7 @@ void RecordMacroScreen::redraw()
     }
 }
 
-bool RecordMacroScreen::processKeyEvent(const KeyEvent& event,
-                                        KeyEventStage&  next)
+void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
 {
     mEventManager.output().processKeyEvent(event);
     mRecorder.processKeyEvent(event);
@@ -52,13 +62,9 @@ bool RecordMacroScreen::processKeyEvent(const KeyEvent& event,
         mSurface.paintText(0, 40, "Macro Full", 0xf, 0);
     }
 
-    auto complete(mRecorder.complete());
-
-    if (complete)
+    if (mRecorder.complete())
     {
         mMacro.content.assign(mRecorder.begin(),
                               mRecorder.end());
     }
-    
-    return !complete;
 }

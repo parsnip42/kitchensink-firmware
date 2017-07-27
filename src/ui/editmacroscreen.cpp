@@ -7,6 +7,7 @@
 #include "ui/focusutil.h"
 #include "ui/keys.h"
 #include "ui/recordmacroscreen.h"
+#include "autorepeat.h"
 
 #include "storage/storage.h"
 #include "serialize/serializer.h"
@@ -62,8 +63,21 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mTypeCombo(surface,
                  eventManager,
                  mtds)
-    , mFocused(&mTitleEntry)                 
+    , mFocused(&mTitleEntry)
+    , mQuit(false)
 { }
+
+void EditMacroScreen::poll()
+{
+    redraw();
+    
+    AutoRepeat autoRepeat(mEventManager.timer,
+                          *this);
+    while (!mQuit)
+    {
+        mEventManager.pollStage(autoRepeat);
+    }
+}
 
 void EditMacroScreen::redraw()
 {
@@ -99,8 +113,7 @@ void EditMacroScreen::redraw()
     mTypeCombo.redrawContent(false);
 }
 
-bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
-                                      KeyEventStage&  next)
+void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
     mFocused->processKeyEvent(event);
 
@@ -121,7 +134,7 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
         else if (Keys::cancel(keyId))
         {
             mSurface.clear();
-            return false;
+            mQuit = true;
         }
         else if (Keys::ok(keyId))
         {
@@ -141,14 +154,7 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
                                          mMacro,
                                          (mTypeCombo.selectedItem == 1));
 
-                record.redraw();
-                
-                mEventManager.poll(
-                    [&](const KeyEvent& event,
-                        KeyEventStage&  next)
-                    {
-                        return record.processKeyEvent(event, next);
-                    });
+                record.poll();
 
                 Storage storage;
                 Serializer<MacroSet> s;
@@ -158,11 +164,9 @@ bool EditMacroScreen::processKeyEvent(const KeyEvent& event,
                 s.serialize(mMacroSet, os);
 
                 mSurface.clear();
-                return false;
+
+                mQuit = true;
             }
-            
         }
     }
-        
-    return true;
 }

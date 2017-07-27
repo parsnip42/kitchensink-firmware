@@ -19,7 +19,7 @@ class KeyProcessor;
 namespace UI
 {
 
-class Menu
+class Menu : public KeyEventStage
 {
 public:
     class Item
@@ -47,10 +47,10 @@ public:
 
 public:
     void redraw();
-    void poll();
 
-    bool processKeyEvent(const KeyEvent& event,
-                         KeyEventStage&  next);
+    void poll();
+    
+    virtual void processKeyEvent(const KeyEvent& event) override;
     
 private:
     void moveSelection(int selectionOffset);

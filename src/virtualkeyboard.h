@@ -1,8 +1,8 @@
 #ifndef INCLUDED_VIRTUALKEYBOARD_H
 #define INCLUDED_VIRTUALKEYBOARD_H
 
+#include "keyid.h"
 #include "keyeventstage.h"
-#include "autorepeat.h"
 #include "modifierstate.h"
 
 class VirtualKeyboard : public KeyEventStage
@@ -16,16 +16,15 @@ public:
     };
         
 public:
-    VirtualKeyboard() = default;
+    VirtualKeyboard();
 
 public:
     virtual void processKeyEvent(const KeyEvent& keyEvent) override;
 
 public:
-    State readState();
+    State state;
     
 private:
-    AutoRepeat    mAutoRepeat;
     ModifierState mModifierState;
 
 };

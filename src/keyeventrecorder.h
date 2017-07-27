@@ -16,7 +16,7 @@ public:
     typedef Content::const_iterator const_iterator;
     
 public:
-    KeyEventRecorder(bool realtime);
+    explicit KeyEventRecorder(bool realtime);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;

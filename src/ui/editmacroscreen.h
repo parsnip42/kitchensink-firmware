@@ -3,16 +3,16 @@
 
 #include "ui/textentrywidget.h"
 #include "ui/combowidget.h"
+#include "keyeventstage.h"
 
 class EventManager;
 class KeyEvent;
-class KeyEventStage;
 class Macro;
 class MacroSet;
 class Surface;
 class Widget;
 
-class EditMacroScreen
+class EditMacroScreen : public KeyEventStage
 {
 public:
     EditMacroScreen(Surface&      surface,
@@ -21,9 +21,13 @@ public:
                     Macro&        macro);
     
 public:
+    virtual void processKeyEvent(const KeyEvent& event) override;
+    
+    void poll();
+
+private:
     void redraw();
-    bool processKeyEvent(const KeyEvent& event,
-                         KeyEventStage&  next);
+    
 private:
     Surface&        mSurface;
     EventManager&   mEventManager;
@@ -33,6 +37,7 @@ private:
     TextEntryWidget mShortcutEntry;
     ComboWidget     mTypeCombo;
     Widget*         mFocused;
+    bool            mQuit;
 };
 
 #endif

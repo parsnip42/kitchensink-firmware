@@ -44,7 +44,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     
     vKeyboard.processKeyEvent(event);
 
-    auto state(vKeyboard.readState());
+    const auto& state(vKeyboard.state);
     auto keyId(state.activeKey);
 
     if (keyId.type() == KeyId::Type::kKey && keyId.value() && event.pressed)

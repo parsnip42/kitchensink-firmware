@@ -75,6 +75,29 @@ KeyLocation KeyProcessor::readKeyLocation()
     return keyLocation;
 }
 
+void KeyProcessor::pressAll(KeyEventStage& next)
+{
+    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    {
+        auto keyId(mLayerStack.at(event.row, event.column));
+        auto keyEvent(KeyEvent(keyId, event.pressed));
+
+        next.processKeyEvent(keyEvent);
+    });
+}
+
+void KeyProcessor::releaseAll(KeyEventStage& next)
+{
+    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    {
+        auto keyId(mLayerStack.at(event.row, event.column));
+        auto keyEvent(KeyEvent(keyId, event.pressed));
+
+        keyEvent.pressed = false;
+        next.processKeyEvent(keyEvent);
+    });
+}
+
 void KeyProcessor::setLayer(int            index,
                             bool           enabled,
                             KeyEventStage& next)

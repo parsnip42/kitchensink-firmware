@@ -5,6 +5,7 @@
 #include "keyeventstage.h"
 #include "keyeventsource.h"
 #include "keyevent.h"
+#include "keyprocessor.h"
 #include "timer.h"
 
 #include <cstdint>
@@ -13,7 +14,7 @@ class EventManager
 {
 public:
     EventManager(Timer&          nTimer,
-                 KeyEventSource& source,
+                 KeyProcessor  & source,
                  KeyEventBuffer& buffer,
                  KeyEventStage&  input,
                  KeyEventStage&  output);
@@ -22,20 +23,28 @@ public:
     template <typename EventFunc>
     void poll(const EventFunc& eventFunc);
 
+    void pollStage(KeyEventStage& output);
+
     void cancel(const Timer::Handle& handle);
     
+    KeyEventStage& buffer()
+    {
+        return mBuffer;
+    }
+
     KeyEventStage& output()
     {
         return mOutput;
     }
+
 public:
     Timer& timer;
+    KeyProcessor&   mSource;
     
 private:
     uint32_t nowMs() const;
     
 private:
-    KeyEventSource& mSource;
     KeyEventBuffer& mBuffer;
     KeyEventStage&  mInput;
     KeyEventStage&  mOutput;
@@ -44,7 +53,7 @@ private:
 
 inline
 EventManager::EventManager(Timer&          nTimer,
-                           KeyEventSource& source,
+                           KeyProcessor&   source,
                            KeyEventBuffer& buffer,
                            KeyEventStage&  input,
                            KeyEventStage&  output)
@@ -56,10 +65,13 @@ EventManager::EventManager(Timer&          nTimer,
 { }
 
 template <typename EventFunc>
+inline
 void EventManager::poll(const EventFunc& eventFunc)
 {
     bool more(true);
-
+    
+    mSource.releaseAll(mInput);
+    
     while (more)
     {
         mSource.pollKeyEvent(nowMs(), mInput);
@@ -70,11 +82,23 @@ void EventManager::poll(const EventFunc& eventFunc)
             more = eventFunc(mBuffer.pop(), mBuffer);
         }
     }
+
+    mSource.pressAll(mInput);
+}
+
+inline
+void EventManager::pollStage(KeyEventStage& output)
+{
+    mSource.pollKeyEvent(nowMs(), mInput);
+    timer.pollKeyEvent(nowMs(), mInput);
+    
+    if (!mBuffer.empty())
+    {
+        output.processKeyEvent(mBuffer.pop());
+    }
 }
 
 #endif
-
-
 
 
 

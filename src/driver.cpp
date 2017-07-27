@@ -168,14 +168,15 @@ void loop()
     ActionProcessor actionProcessor(keyboardState,
                                     eventBuffer);
     
-    MacroProcessor macroProcessor(timer,
-                                  keyboardState.macroSet,
+    MacroProcessor macroProcessor(keyboardState.macroSet,
+                                  timer,
                                   actionProcessor);
 
     LockProcessor lockProcessor(keyboardState.lockSet,
                                 macroProcessor);
     
     MultiProcessor multiProcessor(keyboardState.multiSet,
+                                  timer,
                                   macroProcessor);
 
     KeyProcessor keyProcessor(keyboard,

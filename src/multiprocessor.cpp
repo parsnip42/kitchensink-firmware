@@ -3,20 +3,13 @@
 #include "eventqueue.h"
 #include "keyevent.h"
 
-#include <elapsedMillis.h>
-
-void MultiProcessor::tick(uint32_t timeMs)
+void MultiProcessor::processKeyEvent(const KeyEvent& event)
 {
-    if (timeMs >= mTapTime + 200)
+    if (mReleaseTimer.matches(event))
     {
         mMultiSet[mLast].trigger(mNext);
     }
-}   
-
-void MultiProcessor::processKeyEvent(const KeyEvent& event)
-{
-    auto timeMs(millis());
-
+    
     const auto& keyId(event.keyId);
 
     if (keyId.type() == KeyId::Type::kMulti)
@@ -27,7 +20,7 @@ void MultiProcessor::processKeyEvent(const KeyEvent& event)
         {
             if (event.pressed)
             {
-                mTapTime = timeMs;
+                mReleaseTimer = mTimer.schedule(200);
                 mMultiSet[multiId].press();
             }
             else

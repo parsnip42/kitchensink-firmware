@@ -95,7 +95,6 @@ inline
 Timer::Handle::Handle(Handle&& rhs)
 {
     mTimer = rhs.mTimer;
-
     tickId = rhs.tickId;
 
     // lhs destructor shouldn't cancel timer - set it to null state
@@ -112,7 +111,7 @@ Timer::Handle::Handle()
 inline
 Timer::Handle::~Handle()
 {
-    // cancel();
+    cancel();
 }
 
 inline
@@ -120,7 +119,7 @@ Timer::Handle& Timer::Handle::operator=(Handle&& rhs)
 {
     std::swap(mTimer, rhs.mTimer);
     std::swap(tickId, rhs.tickId);
-    
+
     return *this;
 }
 
@@ -139,6 +138,7 @@ void Timer::Handle::cancel()
     }
     
     mTimer = nullptr;
+    tickId = 0;
 }
 
 inline

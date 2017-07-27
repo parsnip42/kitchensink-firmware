@@ -3,26 +3,30 @@
 
 #include "keyevent.h"
 #include "keyeventstage.h"
+#include "timer.h"
 
 #include <cstdint>
 
 class AutoRepeat : public KeyEventStage
 {
 public:
-    explicit AutoRepeat(uint32_t repeatDelay = 660,
-                        uint32_t repeatRate = 40);
+    explicit AutoRepeat(Timer&         timer,
+                        KeyEventStage& next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& keyEvent) override;
+    virtual void processKeyEvent(const KeyEvent& event) override;
 
     KeyId activeKey();
+
+public:
+    uint32_t repeatDelay;
+    uint32_t repeatRate;
     
 private:
-    const uint32_t mRepeatDelay;
-    const uint32_t mRepeatRate;
+    Timer&         mTimer;
+    Timer::Handle  mRepeatTimer;
     KeyId          mKeyId;
-    uint32_t       mNextTime;
-
+    KeyEventStage& mNext;
 };
 
 #endif

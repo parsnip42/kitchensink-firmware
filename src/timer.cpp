@@ -18,6 +18,8 @@ void Timer::pollKeyEvent(uint32_t       timeMs,
             auto entry(mTimerQueue.pop());
             auto tickId(entry.value);
 
+            next.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
+
             if (mTimerMap[tickId].currentMs != 0)
             {
                 auto repeatDelayMs(mTimerMap[tickId].repeatDelayMs);
@@ -35,7 +37,6 @@ void Timer::pollKeyEvent(uint32_t       timeMs,
                 }
             }
             
-            next.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
         }
     }
 }

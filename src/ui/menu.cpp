@@ -2,6 +2,7 @@
 #include "ui/keys.h"
 #include "data/keycodes.h"
 #include "data/keymap.h"
+#include "autorepeat.h"
 
 #include <cstdint>
 #include <algorithm>
@@ -11,29 +12,28 @@ namespace UI
 
 void Menu::poll()
 {
-    mSurface.clear();
     redraw();
     
-    mEventManager.poll(
-        [&](const KeyEvent& event,
-            KeyEventStage&  next)
-        {
-            return processKeyEvent(event, next);
-        });
-    
-    mSurface.clear();
+    AutoRepeat autoRepeat(mEventManager.timer,
+                          *this);
+    while (!mQuit)
+    {
+        mEventManager.pollStage(autoRepeat);
+    }
 }
 
-bool Menu::processKeyEvent(const KeyEvent& event,
-                           KeyEventStage&  next)
+void Menu::processKeyEvent(const KeyEvent& event)
 {
-    bool more(true);
-    
     mVKeyboard.processKeyEvent(event);
         
-    auto state(mVKeyboard.readState());
-    auto keyId(state.activeKey);
+    const auto& state(mVKeyboard.state);
+    auto keyId(event.keyId);
 
+    if (!event.pressed)
+    {
+        return;
+    }
+    
     if (Keys::pageUp(keyId))
     {
         moveSelection(-5);
@@ -56,13 +56,13 @@ bool Menu::processKeyEvent(const KeyEvent& event,
 
         filteredItem(item, mSelected);
             
-        next.processKeyEvent(KeyEvent(item.keyId, true));
-        next.processKeyEvent(KeyEvent(item.keyId, false));
-        more = false;
+        mEventManager.buffer().processKeyEvent(KeyEvent(item.keyId, true));
+        mEventManager.buffer().processKeyEvent(KeyEvent(item.keyId, false));
+        mQuit = true;
     }
     else if (Keys::cancel(keyId))
     {
-        more = false;
+        mQuit = true;
     }
     else if (keyId.type() == KeyId::Type::kKey)
     {
@@ -81,15 +81,13 @@ bool Menu::processKeyEvent(const KeyEvent& event,
 
                 if (processExactFilterMatch())
                 {
-                    more = false;
+                    mQuit = true;
                 }
                     
                 moveSelection(0);
             }
         }
     }
-
-    return more;
 }
 
 void Menu::moveSelection(int selectionOffset)

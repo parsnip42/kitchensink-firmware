@@ -11,8 +11,8 @@ class MacroSet;
 class MacroProcessor : public KeyEventStage
 {
 public:
-    MacroProcessor(Timer&          timer,
-                   const MacroSet& macroSet,
+    MacroProcessor(const MacroSet& macroSet,
+                   Timer&          timer,
                    KeyEventStage&  next);
 
 public:
@@ -22,8 +22,8 @@ private:
     void playback();
     
 private:
-    Timer&                         mTimer;
     const MacroSet&                mMacroSet;
+    Timer&                         mTimer;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;
@@ -37,11 +37,11 @@ private:
 
 
 inline
-MacroProcessor::MacroProcessor(Timer&          timer,
-                               const MacroSet& macroSet,
+MacroProcessor::MacroProcessor(const MacroSet& macroSet,
+                               Timer&          timer,
                                KeyEventStage&  next)
-    : mTimer(timer)
-    , mMacroSet(macroSet)
+    : mMacroSet(macroSet)
+    , mTimer(timer)
     , mCurrent(nullptr)
     , mPlaybackTimer()
     , mNext(next)

@@ -3,10 +3,8 @@
 
 #include "keyid.h"
 #include "types/strbuf.h"
-#include "types/strref.h"
 
 #include <array>
-#include <initializer_list>
 
 class Layer
 {

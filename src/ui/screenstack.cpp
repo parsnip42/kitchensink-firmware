@@ -22,15 +22,8 @@ bool ScreenStack::processEvent(const KeyEvent& event)
                           mSurface,
                           mEventManager);
 
-            menu.redraw();
+            menu.poll();
             
-            mEventManager.poll(
-                [&](const KeyEvent& event,
-                    KeyEventStage&  next)
-                {
-                    return menu.processKeyEvent(event, next);
-                });
-
             mSurface.clear();
         }
 
@@ -50,14 +43,7 @@ bool ScreenStack::processEvent(const KeyEvent& event)
                                    mKeyboardState.macroSet,
                                    macro);
 
-            screen.redraw();
-
-            mEventManager.poll(
-                [&](const KeyEvent& event,
-                    KeyEventStage&  next)
-                {
-                    return screen.processKeyEvent(event, next);
-                });
+            screen.poll();
         }
     }
     
