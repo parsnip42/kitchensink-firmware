@@ -16,7 +16,8 @@ public:
         kAction = 5,
         kDelay  = 6,
         kMulti  = 7,
-        kTick   = 8
+        kTick   = 8,
+        kSmart  = 9
     };
 
     enum class LockType : uint8_t
@@ -49,6 +50,7 @@ public:
     static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Delay(uint32_t delayMs);
     static constexpr KeyId Tick(uint32_t tickId);
+    static constexpr KeyId Smart(int keyId);
 
 public:
     constexpr KeyId(int keyCode = 0);
@@ -147,6 +149,12 @@ constexpr KeyId KeyId::Tick(uint32_t tickId)
     return KeyId(Type::kTick,
                  (tickId >> 8) & 0xf,
                  tickId & 0xff);
+}
+
+inline
+constexpr KeyId KeyId::Smart(int keyId)
+{
+    return KeyId(Type::kSmart, keyId);
 }
 
 inline

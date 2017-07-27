@@ -3,7 +3,6 @@
 
 #include "lockset.h"
 #include "keyeventstage.h"
-#include "tapping.h"
 
 class KeyEvent;
 
@@ -17,7 +16,6 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
 private:
-    Tapping        mTapping;
     LockSet&       mLockSet;
     KeyEventStage& mNext;
 };
@@ -26,8 +24,7 @@ private:
 inline
 LockProcessor::LockProcessor(LockSet&       lockSet,
                              KeyEventStage& next)
-    : mTapping(500)
-    , mLockSet(lockSet)
+    : mLockSet(lockSet)
     , mNext(next)
 { }
 

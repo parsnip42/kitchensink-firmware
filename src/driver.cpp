@@ -7,6 +7,7 @@
 #include "usbkeyboard.h"
 #include "serialize/serializer.h"
 #include "serialize/iniformat.h"
+#include "smartkeyprocessor.h"
 
 #include "storage/storage.h"
 
@@ -173,12 +174,12 @@ void loop()
                                   timer,
                                   actionProcessor);
 
-    LockProcessor lockProcessor(keyboardState.lockSet,
-                                macroProcessor);
-    
+    SmartKeyProcessor smartKeyProcessor(keyboardState.smartKeySet,
+                                        macroProcessor);
+
     MultiProcessor multiProcessor(keyboardState.multiSet,
                                   timer,
-                                  macroProcessor);
+                                  smartKeyProcessor);
 
     KeyProcessor keyProcessor(keyboard,
                               keyboardState.layerStack);

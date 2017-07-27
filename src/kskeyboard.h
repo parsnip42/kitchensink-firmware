@@ -4,7 +4,6 @@
 #include "keymatrixevent.h"
 #include "keyboardplate.h"
 #include "layerstack.h"
-#include "tapping.h"
 
 #include <cstdint>
 
