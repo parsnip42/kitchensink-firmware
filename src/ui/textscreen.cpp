@@ -1,17 +1,19 @@
-#include "ui/text.h"
-#include "timed.h"
+#include "ui/textscreen.h"
 
 #include "ui/surface.h"
 #include "types/strref.h"
 
-Text::Text(Surface& surface)
+TextScreen::TextScreen(Surface& surface)
     : mSurface(surface)
     , mLines(0)
+{ }
+
+void TextScreen::init()
 {
     mSurface.clear();
 }
 
-void Text::appendLine(const StrRef& text)
+void TextScreen::appendLine(const StrRef& text)
 {
     const Surface::ColorMap colors(0xf, 0);
 
@@ -32,10 +34,7 @@ void Text::appendLine(const StrRef& text)
         
         for (int i(scrollStart); i <= scrollEnd; ++i)
         {
-            Timed(4, [&]()
-                  {
-                      mSurface.scroll(i);
-                  });
+            mSurface.scroll(i);
         }
     }
 }

@@ -13,8 +13,14 @@ const UI::ArrayDataSource::Item mainMenuItems[] =
     UI::ArrayDataSource::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
     UI::ArrayDataSource::Item("Edit Macros", KeyId::Action(KeyId::ActionType::kMenu, 2)),
     UI::ArrayDataSource::Item("Key Locks", KeyId::Action(KeyId::ActionType::kMenu, 3)),
-    UI::ArrayDataSource::Item("System", KeyId::Action(KeyId::ActionType::kBuiltIn, 1)),
+    UI::ArrayDataSource::Item("System", KeyId::Action(KeyId::ActionType::kMenu, 5)),
     UI::ArrayDataSource::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
+};
+
+const UI::ArrayDataSource::Item systemMenuItems[] =
+{
+    UI::ArrayDataSource::Item("Storage", KeyId::Action(KeyId::ActionType::kScreen, 0)),
+    UI::ArrayDataSource::Item("Benchmark", KeyId::Action(KeyId::ActionType::kScreen, 1))
 };
 
 const UI::ArrayDataSource::Item emptyMenuItems[] =
@@ -125,6 +131,7 @@ std::size_t KeyDataSource::getItemCount() const
 
 MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     : mMainMenuSource(mainMenuItems)
+    , mSystemMenuSource(systemMenuItems)
     , mEmptyMenuSource(emptyMenuItems)
     , mMacroDataSource(keyboardState)
     , mEditMacroDataSource(keyboardState)
@@ -146,6 +153,8 @@ const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
         return mLockDataSource;
     case 4:
         return mKeyDataSource;
+    case 5:
+        return mSystemMenuSource;
     default:
         return mEmptyMenuSource;
     }

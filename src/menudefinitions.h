@@ -100,6 +100,7 @@ public:
 
 private:
     const UI::ArrayDataSource mMainMenuSource;
+    const UI::ArrayDataSource mSystemMenuSource;
     const UI::ArrayDataSource mEmptyMenuSource;
 
     const Impl::MacroDataSource     mMacroDataSource;

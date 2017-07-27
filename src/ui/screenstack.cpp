@@ -3,8 +3,9 @@
 #include "keyboardstate.h"
 #include "menudefinitions.h"
 #include "ui/menu.h"
-
 #include "ui/editmacroscreen.h"
+#include "ui/storagescreen.h"
+#include "ui/benchmarkscreen.h"
 
 void ScreenStack::processKeyEvent(const KeyEvent& event)
 {
@@ -23,10 +24,40 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
                           mEventManager);
 
             menu.poll();
-            
             mSurface.clear();
         }
 
+    }
+    else if (keyId.actionType() == KeyId::ActionType::kScreen)
+    {
+        if (event.pressed)
+        {
+            switch (keyId.value())
+            {
+            case 0:
+            {
+                StorageScreen storage(mSurface,
+                                      mEventManager);
+
+                storage.poll();
+                mSurface.clear();
+                break;
+            }
+
+            case 1:
+            {
+                BenchmarkScreen benchmark(mSurface,
+                                          mEventManager);
+
+                benchmark.poll();
+                mSurface.clear();
+                break;
+            }
+
+            default:
+                break;
+            }
+        }
     }
     else if (keyId.actionType() == KeyId::ActionType::kEditMacro)
     {

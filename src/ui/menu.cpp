@@ -11,8 +11,7 @@ namespace UI
 {
 
 void Menu::poll()
-{
-                
+{  
     redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,

@@ -62,9 +62,10 @@ private:
     friend class RefocusGuard;
 };
 
+
 inline
-EventManager::RefocusGuard::RefocusGuard(EventManager& eventManager,
-                                         KeyEventStage&      next)
+EventManager::RefocusGuard::RefocusGuard(EventManager&  eventManager,
+                                         KeyEventStage& next)
     : mEventManager(eventManager)
 {
     mEventManager.mSource.releaseAll(mEventManager.mInput);

@@ -34,7 +34,8 @@ public:
     {
         kBuiltIn   = 0,
         kMenu      = 1,
-        kEditMacro = 2
+        kScreen    = 2,
+        kEditMacro = 3
     };
 
 public:

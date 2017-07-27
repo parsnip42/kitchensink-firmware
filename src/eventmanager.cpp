@@ -23,8 +23,7 @@ void EventManager::poll(KeyEventStage& output)
 {
     auto now(nowMs());
 
-    ToplevelEventStage::OutputGuard guard(mToplevel,
-                                          output);
+    ToplevelEventStage::OutputGuard guard(mToplevel, output);
         
     mBuffer.pollKeyEvent(now, mInput);
     timer.pollKeyEvent(now, mInput);

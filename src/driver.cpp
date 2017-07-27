@@ -1,5 +1,4 @@
 #include "actionprocessor.h"
-#include "delayprocessor.h"
 #include "defaultprofile.h"
 #include "display.h"
 #include "kskeyboard.h"
@@ -15,7 +14,6 @@
 
 #include "ui/surface.h"
 #include "ui/home.h"
-#include "ui/text.h"
 #include "ui/screenstack.h"
 
 #include "keyeventbuffer.h"
@@ -39,39 +37,39 @@ void loop()
 
     Surface surface(display);
 
-    Text initLog(surface);
+    // Text initLog(surface);
 
-    initLog.appendLine("Start");
-    initLog.appendLine("Configure");
+    // initLog.appendLine("Start");
+    // initLog.appendLine("Configure");
 
-    Storage storage;
+    // Storage storage;
     
-    if (storage.state())
-    {
-        StrBuf<48> sdErr;
+    // if (storage.state())
+    // {
+    //     StrBuf<48> sdErr;
 
-        StrOStream out(sdErr);
+    //     StrOStream out(sdErr);
         
-        out.appendStr("SD Failed : ")
-           .appendInt(storage.state());
+    //     out.appendStr("SD Failed : ")
+    //        .appendInt(storage.state());
 
-        initLog.appendLine(sdErr);
-    }
-    else
-    {
-        StrBuf<48> sdInfo;
-        StrOStream out(sdInfo);
+    //     initLog.appendLine(sdErr);
+    // }
+    // else
+    // {
+    //     StrBuf<48> sdInfo;
+    //     StrOStream out(sdInfo);
         
-        out.appendStr("SD OK : ")
-           .appendInt(storage.capacityMb())
-           .appendStr("MB / FAT")
-           .appendInt(storage.fatType());
+    //     out.appendStr("SD OK : ")
+    //        .appendInt(storage.capacityMb())
+    //        .appendStr("MB / FAT")
+    //        .appendInt(storage.fatType());
         
-        initLog.appendLine(sdInfo);
-    }
+    //     initLog.appendLine(sdInfo);
+    // }
     
 
-    surface.clear();
+    // surface.clear();
     
     UsbKeyboard usbKeyboard;
     
@@ -152,6 +150,8 @@ void loop()
     // }
     
     {
+        Storage storage;
+        
         auto is(storage.read(Storage::Region::Macro));
         Serializer<MacroSet> s;
         

@@ -6,7 +6,6 @@
 #include "macroprocessor.h"
 #include "multiprocessor.h"
 #include "lockprocessor.h"
-#include "timed.h"
 
 class KsKeyboard;
 class KeyLocation;
