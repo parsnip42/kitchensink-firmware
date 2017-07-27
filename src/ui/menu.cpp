@@ -243,8 +243,8 @@ bool Menu::processExactFilterMatch()
         
         if (StrRef(item.shortcut).equalsCase(mFilter))
         {
-            // mNext.processKeyEvent(KeyEvent(item.keyId, true));
-            // mNext.processKeyEvent(KeyEvent(item.keyId, False));
+            mEventManager.processKeyEvent(KeyEvent(item.keyId, true));
+            mEventManager.processKeyEvent(KeyEvent(item.keyId, false));
             return true;
         }
     }

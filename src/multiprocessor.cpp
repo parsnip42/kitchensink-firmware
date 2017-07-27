@@ -1,6 +1,5 @@
 #include "multiprocessor.h"
 
-#include "eventqueue.h"
 #include "keyevent.h"
 
 void MultiProcessor::processKeyEvent(const KeyEvent& event)
@@ -8,6 +7,7 @@ void MultiProcessor::processKeyEvent(const KeyEvent& event)
     if (mReleaseTimer.matches(event))
     {
         mMultiSet[mLast].trigger(mNext);
+        return;
     }
     
     const auto& keyId(event.keyId);

@@ -23,6 +23,10 @@ public:
         
     private:
         EventManager& mEventManager;
+
+    private:
+        RefocusGuard(const RefocusGuard&);
+        RefocusGuard& operator=(const RefocusGuard&);
     };
     
 public:
@@ -45,8 +49,8 @@ private:
     uint32_t nowMs() const;
     
 private:
-    KeyProcessor&       mSource;
     KeyEventBuffer      mBuffer;
+    KeyProcessor&       mSource;
     KeyEventStage&      mInput;
     ToplevelEventStage& mToplevel;
 

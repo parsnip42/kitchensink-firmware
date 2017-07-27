@@ -1,7 +1,6 @@
 #include "lock.h"
 
 #include "keyeventstage.h"
-#include "eventqueue.h"
 
 bool Lock::processEvent(const KeyEvent& keyEvent,
                         uint8_t         taps,

@@ -7,7 +7,6 @@
 
 #include <cstdint>
 
-class EventQueue;
 class KeyEvent;
 
 class MultiProcessor : public KeyEventStage

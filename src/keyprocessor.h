@@ -1,7 +1,6 @@
 #ifndef INCLUDED_KEYPROCESSOR_H
 #define INCLUDED_KEYPROCESSOR_H
 
-#include "eventqueue.h"
 #include "keyeventsource.h"
 #include "keyeventstage.h"
 #include "macroprocessor.h"
