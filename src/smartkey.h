@@ -16,13 +16,19 @@ public:
     };
     
 public:
-    SmartKey() = default;
+    SmartKey();
     
 public:
     KeyId keyId;
     KeyId auxKeyId;
     Type  type;
-    bool  held;
+    bool  triggered;
 };
+
+inline
+SmartKey::SmartKey()
+    : type(kToggle)
+    , triggered(false)
+{ }
 
 #endif
