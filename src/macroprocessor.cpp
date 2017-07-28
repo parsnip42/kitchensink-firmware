@@ -3,6 +3,16 @@
 #include "keyevent.h"
 #include "macro.h"
 
+MacroProcessor::MacroProcessor(const MacroSet& macroSet,
+                               Timer&          timer,
+                               KeyEventStage&  next)
+    : mMacroSet(macroSet)
+    , mTimer(timer)
+    , mCurrent(nullptr)
+    , mPlaybackTimer()
+    , mNext(next)
+{ }
+
 void MacroProcessor::processKeyEvent(const KeyEvent& event)
 {
     const auto& keyId(event.keyId);
@@ -63,6 +73,7 @@ void MacroProcessor::playback()
             if (event.keyId.type() == KeyId::Type::kDelay)
             {
                 ++mBegin;
+                
                 mPlaybackTimer = mTimer.schedule(event.keyId.delayMs());
                 return;
             }

@@ -5,7 +5,8 @@ TARGET = $(notdir $(CURDIR))
 TEENSY = 31
 
 # Set to 24000000, 48000000, or 96000000 to set CPU core speed
-TEENSY_CORE_SPEED = 24000000
+TEENSY_CORE_SPEED = 48000000
+#24000000
 #48000000
 
 # Some libraries will require this to be defined
@@ -50,7 +51,7 @@ COMPILERPATH = $(TOOLSPATH)/arm/bin
 #************************************************************************
 
 # CPPFLAGS = compiler options for C and C++
-CPPFLAGS = -Wall -g -Os -mthumb -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DARDUINO -DTEENSYDUINO=124 -DF_CPU=$(TEENSY_CORE_SPEED) -Isrc -I$(COREPATH)
+CPPFLAGS = -Wall -g -Os -mthumb --specs=nano.specs -ffunction-sections -fdata-sections -nostdlib -MMD $(OPTIONS) -DARDUINO -DTEENSYDUINO=124 -DF_CPU=$(TEENSY_CORE_SPEED) -Isrc -I$(COREPATH)
 
 # compiler options for C++ only
 CXXFLAGS = -std=gnu++14 -felide-constructors -fno-exceptions -fno-rtti
@@ -59,7 +60,7 @@ CXXFLAGS = -std=gnu++14 -felide-constructors -fno-exceptions -fno-rtti
 CFLAGS =
 
 # linker options
-LDFLAGS = -Os -Wl,--gc-sections -mthumb --specs=nosys.specs
+LDFLAGS = -Os -Wl,--gc-sections -mthumb --specs=nano.specs
 
 # additional libraries to link
 LIBS = -lm 

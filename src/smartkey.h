@@ -3,6 +3,7 @@
 
 #include "keyid.h"
 #include "types/strbuf.h"
+#include "config.h"
 
 class SmartKey
 {
@@ -20,11 +21,11 @@ public:
     SmartKey();
     
 public:
-    StrBuf<12> name;
-    KeyId      keyId;
-    KeyId      auxKeyId;
-    Type       type;
-    bool       triggered;
+    StrBuf<Config::kSmartKeyNameLen> name;
+    KeyId                            keyId;
+    KeyId                            auxKeyId;
+    Type                             type;
+    bool                             triggered;
 };
 
 inline

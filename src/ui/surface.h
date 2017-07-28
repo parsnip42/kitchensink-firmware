@@ -43,6 +43,13 @@ public:
                     const StrRef& text,
                     uint8_t       fg = 0xf,
                     uint8_t       bg = 0);
+    
+    void paintTextL(int           x,
+                    int           y,
+                    int           width,
+                    const StrRef& text,
+                    uint8_t       fg = 0xf,
+                    uint8_t       bg = 0);
 
     void rectangle(int x, int y, int w, int h, uint8_t color = 0xf);
 
@@ -54,6 +61,11 @@ public:
                        const ColorMap& colorMap);
     
     void paintTextLineC(const StrRef&   text,
+                        const int       width,
+                        const int       line,
+                        const ColorMap& colorMap);
+    
+    void paintTextLineL(const StrRef&   text,
                         const int       width,
                         const int       line,
                         const ColorMap& colorMap);

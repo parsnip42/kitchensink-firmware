@@ -119,19 +119,14 @@ void Menu::redraw()
     if (mFilter.empty())
     {
         mSurface.paintTextC(0, 0, Surface::kWidth, mTitle, 0xf, 0x0);
-        mSurface.clearRegion(20, Surface::kFontHeight, Surface::kWidth - 40, 1, 0xf);
-        paintMenu(Surface::kFontHeight + 2, Surface::kHeight - (Surface::kFontHeight + 2));
     }
     else
-    {
-        
+    {   
         mSurface.paintTextC(0, 0, Surface::kWidth, mFilter, 0x7);
-        mSurface.clearRegion(20, Surface::kFontHeight, Surface::kWidth - 40, 1, 0xf);
-
-        //paintMenu(Surface::kFontHeight, Surface::kHeight - Surface::kFontHeight);
-
-        paintMenu(Surface::kFontHeight + 2, Surface::kHeight - (Surface::kFontHeight + 2));
     }
+    
+    mSurface.clearRegion(20, Surface::kFontHeight, Surface::kWidth - 40, 1, 0x7);
+    paintMenu(Surface::kFontHeight + 2, Surface::kHeight - (Surface::kFontHeight + 2));
 }
 
 void Menu::paintMenu(int start,
@@ -169,9 +164,6 @@ void Menu::paintMenu(int start,
         std::size_t menuItem(menuPosition / Surface::kFontHeight);
         int menuItemOffset(menuPosition % Surface::kFontHeight);
 
-        StrBuf<48> text;
-        KeyId keyId;
-
         // FIXME: This should really iterate rather than performing a linear
         // search across the entire list from the start.
         Item item;
@@ -184,8 +176,18 @@ void Menu::paintMenu(int start,
         // bottom of the rendered region, whichever comes first.
         while (y < height && menuItemOffset < Surface::kFontHeight)
         {
-            mSurface.paintTextLineC(item.title, Surface::kWidth, menuItemOffset, colors);
-
+            if (item.shortcut.empty())
+            {
+                mSurface.paintTextLineC(item.title, Surface::kWidth, menuItemOffset, colors);
+            }
+            else
+            {
+                auto titleWidth(Surface::kWidth / 2);
+                
+                mSurface.paintTextLineC(item.title, titleWidth, menuItemOffset, colors);
+                mSurface.paintTextLineC(item.shortcut, Surface::kWidth - titleWidth, menuItemOffset, colors);
+            }
+            
             ++menuItemOffset;
             ++y;
         }

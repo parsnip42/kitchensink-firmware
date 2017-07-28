@@ -14,7 +14,7 @@ void Surface::paintText(int           x,
                         uint8_t       bg)
 {
     auto len(text.length());
-    
+
     initRegion(x, y, len * kFontWidth, kFontHeight);
 
     const ColorMap colorMap(fg, bg);
@@ -39,6 +39,23 @@ void Surface::paintTextC(int           x,
     for (int line(0); line < kFontHeight; ++line)
     {
         paintTextLineC(text, width, line, colorMap);
+    }
+}
+
+void Surface::paintTextL(int           x,
+                         int           y,
+                         int           width,
+                         const StrRef& text,
+                         uint8_t       fg,
+                         uint8_t       bg)
+{
+    initRegion(x, y, width, kFontHeight);
+
+    const ColorMap colorMap(fg, bg);
+
+    for (int line(0); line < kFontHeight; ++line)
+    {
+        paintTextLineL(text, width, line, colorMap);
     }
 }
 
@@ -141,6 +158,21 @@ void Surface::paintTextLineC(const StrRef&   text,
     paintTextLine(text, line, colorMap);
 
     for (int i(0); i < (hWidth - (textLen + prePad)); ++i)
+    {
+        mDisplay.writeData(colorMap.data[0]);
+    }
+}
+
+void Surface::paintTextLineL(const StrRef&   text,
+                             const int       width,
+                             const int       line,
+                             const ColorMap& colorMap)
+{
+    paintTextLine(text, line, colorMap);
+
+    auto padLen(width - (static_cast<int>(text.length()) * kFontWidth));
+    
+    for (int i(0); i < padLen / 2; ++i)
     {
         mDisplay.writeData(colorMap.data[0]);
     }

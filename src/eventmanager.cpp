@@ -25,8 +25,8 @@ void EventManager::poll(KeyEventStage& output)
 
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
         
-    mBuffer.pollKeyEvent(now, mInput);
-    timer.pollKeyEvent(now, mInput);
+    mBuffer.pollKeyEvent(mInput);
+    timer.pollKeyEvent(mInput);
     mSource.pollKeyEvent(now, mInput);
 }
 

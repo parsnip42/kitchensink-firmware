@@ -3,6 +3,7 @@
 
 #include "keyid.h"
 #include "types/strbuf.h"
+#include "config.h"
 
 #include <array>
 
@@ -12,13 +13,10 @@ class KeyEventStage;
 class Multi
 {
 public:
-    Multi()
-        : mTaps(0)
-        , mReleased(false)
-        , mTriggered(false)
-    {
-
-    }
+    typedef std::array<KeyId, Config::kMultiKeyKeyCount> Keys;
+    
+public:
+    Multi();
     
 public:
     KeyId key(int taps);
@@ -28,8 +26,8 @@ public:
     bool trigger(KeyEventStage& next);
 
 public:
-    StrBuf<12>           name;
-    std::array<KeyId, 5> keys;
+    StrBuf<Config::kMultiKeyNameLen> name;
+    Keys                             keys;
 
 private:
     uint8_t mTaps;
@@ -37,6 +35,14 @@ private:
     bool    mReleased;
     bool    mTriggered;
 };
+
+
+inline
+Multi::Multi()
+    : mTaps(0)
+    , mReleased(false)
+    , mTriggered(false)
+{ }
 
 inline
 KeyId Multi::key(int taps)
@@ -51,4 +57,4 @@ KeyId Multi::key(int taps)
     return KeyId();
 }
 
-#endif /* INCLUDED_MULTI_H */
+#endif

@@ -24,6 +24,7 @@ private:
         
 public:
     T& operator*();
+    T* operator->();
     CircularBufferIterator& operator++();
     CircularBufferIterator operator++(int);
     CircularBufferIterator& operator--();
@@ -76,6 +77,12 @@ template <typename T, std::size_t Capacity>
 T& CircularBufferIterator<T, Capacity>::operator*()
 {
     return (*mData)[mIndex];
+}
+
+template <typename T, std::size_t Capacity>
+T* CircularBufferIterator<T, Capacity>::operator->()
+{
+    return &(**this);
 }
 
 template <typename T, std::size_t Capacity>

@@ -3,6 +3,7 @@
 
 #include "keyid.h"
 #include "types/strbuf.h"
+#include "config.h"
 
 #include <array>
 
@@ -24,8 +25,8 @@ public:
     void clear();
     
 public:
-    StrBuf<12> name;
-    Mapping    mapping;
+    StrBuf<Config::kLayerNameLen> name;
+    Mapping                       mapping;
 };
 
 #endif

@@ -73,6 +73,7 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
                                    macro);
 
             screen.poll();
+            mSurface.clear();
         }
     }
     else

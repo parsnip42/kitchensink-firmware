@@ -35,16 +35,4 @@ private:
     MacroProcessor& operator=(const MacroProcessor&) = delete;
 };
 
-
-inline
-MacroProcessor::MacroProcessor(const MacroSet& macroSet,
-                               Timer&          timer,
-                               KeyEventStage&  next)
-    : mMacroSet(macroSet)
-    , mTimer(timer)
-    , mCurrent(nullptr)
-    , mPlaybackTimer()
-    , mNext(next)
-{ }
-
 #endif

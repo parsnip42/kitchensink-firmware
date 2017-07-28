@@ -1,22 +1,23 @@
 #ifndef INCLUDED_KEYPROCESSOR_H
 #define INCLUDED_KEYPROCESSOR_H
 
-#include "keyeventsource.h"
 #include "keyeventstage.h"
+
+#include <cstdint>
 
 class KsKeyboard;
 class KeyLocation;
 class LayerStack;
 
-class KeyProcessor : public KeyEventSource
+class KeyProcessor
 {
 public:
     KeyProcessor(KsKeyboard& keyboard,
                  LayerStack& layerStack);
 
 public:
-    virtual void pollKeyEvent(uint32_t       timeMs,
-                              KeyEventStage& next) override;
+    void pollKeyEvent(uint32_t       timeMs,
+                      KeyEventStage& next);
 
     void untilKeyPress();
     

@@ -123,15 +123,13 @@ void KeyDataSource::getItem(UI::Menu::Item& menuItem,
 
         os.reset();
         os.appendStr(keyName);
-        os.appendStr(" (");
-        os.appendInt(index + 1, "0x%2.2x");
-        os.appendStr(")");
     }
 
     {
         StrOStream os(menuItem.shortcut);
         
         os.reset();
+        os.appendStr("0x");
         os.appendInt(index + 1, "%2.2x");
     }
     

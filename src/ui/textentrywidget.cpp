@@ -25,7 +25,9 @@ void TextEntryWidget::redrawContent(bool focused)
     mSurface.rectangle(region.x, region.y, region.width, Surface::kFontHeight + 3, focused ? 0xf : 0x4);
     paintText();
 
+    mCursorPosition = std::min(mCursorPosition, text.length());
     paintCursor(mFlash);
+
     mFlashTimer = focused ? mEventManager.timer.scheduleRepeating(1000, 500) : Timer::Handle();
 }
 
@@ -117,8 +119,7 @@ void TextEntryWidget::paintText()
 {
     uint8_t color(mFocused ? 0xf : 0x4);
     
-    mSurface.paintText(region.x + 4, region.y + 2, text, color, 0);
-    mSurface.paintText(region.x + 4 + (text.length() * Surface::kFontWidth), region.y + 2, " ", color, 0);
+    mSurface.paintTextL(region.x + 4, region.y + 2, region.width - 4, text, color, 0);
 }
 
 void TextEntryWidget::paintCursor(bool visible)
@@ -127,7 +128,10 @@ void TextEntryWidget::paintCursor(bool visible)
 
     auto fg(visible ? 0 : color);
     auto bg(visible ? color : 0);
-    
+
+    mSurface.clearRegion(region.x + 4 + (Surface::kFontWidth * mCursorPosition),
+                         region.y + 2, Surface::kFontWidth, Surface::kFontHeight + 4, visible ? 0xf : 0x0);
+
     if (mCursorPosition < text.length())
     {
         StrRef textRef(text);
@@ -135,10 +139,5 @@ void TextEntryWidget::paintCursor(bool visible)
         
         mSurface.paintText(region.x + 4 + (Surface::kFontWidth * mCursorPosition),
                            region.y + 2, cursorChar, fg, bg);
-    }
-    else
-    {        
-        mSurface.clearRegion(region.x + 4 + (text.length() * Surface::kFontWidth),
-                             region.y + 2, Surface::kFontWidth, Surface::kFontHeight + 4, visible ? 0xf : 0x0);
     }
 }

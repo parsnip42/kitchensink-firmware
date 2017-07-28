@@ -81,7 +81,7 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::redraw()
 {
-    TableLayout layout(72, Surface::kWidth, 20, 8);
+    TableLayout layout(72, Surface::kWidth, 18, 8);
                 
     Label(mSurface,
           layout.next(),

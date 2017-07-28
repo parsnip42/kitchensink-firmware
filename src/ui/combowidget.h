@@ -40,7 +40,7 @@ public:
     Rectangle region;
     
 private:
-    void paintSelection();
+    void paintSelection(uint8_t color);
     
 private:
     Surface&                 mSurface;

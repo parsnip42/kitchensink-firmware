@@ -22,7 +22,7 @@ void ComboWidget::redrawContent(bool focused)
 
     if (focused)
     {
-        mSurface.paintText(region.x, region.y, "<", color, 0);
+        mSurface.paintTextL(region.x, region.y, 6, "<", color, 0);
         mSurface.paintText(region.x + region.width - Surface::kFontWidth, region.y, ">", color, 0);
     }
     else
@@ -32,17 +32,11 @@ void ComboWidget::redrawContent(bool focused)
 
     }
     
-    DataSource::ItemText text;
-
-    mDataSource.item(text, selectedItem);
-    
-    mSurface.paintTextC(region.x + 20, region.y, region.width - 40, text, color, 0);
+    paintSelection(color);
 }
 
 void ComboWidget::processKeyEvent(const KeyEvent& event)
 {
-    paintSelection();
-
     if (!event.pressed)
     {
         auto keyId(event.keyId);
@@ -51,27 +45,27 @@ void ComboWidget::processKeyEvent(const KeyEvent& event)
         {
             selectedItem += mDataSource.size() - 1;
             selectedItem %= mDataSource.size();
-            paintSelection();
+            paintSelection(0xf);
         }
-        
+
         if (Keys::right(keyId))
         {
             ++selectedItem %= mDataSource.size();
-            paintSelection();
+            paintSelection(0xf);
         }
     }
 }
 
-void ComboWidget::paintSelection()
+void ComboWidget::paintSelection(uint8_t color)
 {
     DataSource::ItemText text;
 
     mDataSource.item(text, selectedItem);
     
-    mSurface.paintTextC(region.x + Surface::kFontWidth,
+    mSurface.paintTextC(region.x + 20,
                         region.y,
-                        region.width - (Surface::kFontWidth * 2),
+                        region.width - 40,
                         text,
-                        0xf,
+                        color,
                         0);
 }

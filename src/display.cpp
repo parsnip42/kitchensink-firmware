@@ -157,7 +157,7 @@ void Display::initRegion(int x, int y, int w, int h)
     
     writeInst(0x15);
     writeData(x >> 2);
-    writeData(((x + w - 1) >> 2));
+    writeData((x + w - 1) >> 2);
 
     writeInst(0x75);
     writeData(y);

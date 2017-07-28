@@ -39,40 +39,6 @@ void loop()
     display.init();
 
     Surface surface(display);
-
-    // Text initLog(surface);
-
-    // initLog.appendLine("Start");
-    // initLog.appendLine("Configure");
-
-    // Storage storage;
-    
-    // if (storage.state())
-    // {
-    //     StrBuf<48> sdErr;
-
-    //     StrOStream out(sdErr);
-        
-    //     out.appendStr("SD Failed : ")
-    //        .appendInt(storage.state());
-
-    //     initLog.appendLine(sdErr);
-    // }
-    // else
-    // {
-    //     StrBuf<48> sdInfo;
-    //     StrOStream out(sdInfo);
-        
-    //     out.appendStr("SD OK : ")
-    //        .appendInt(storage.capacityMb())
-    //        .appendStr("MB / FAT")
-    //        .appendInt(storage.fatType());
-        
-    //     initLog.appendLine(sdInfo);
-    // }
-    
-
-    // surface.clear();
     
     UsbKeyboard usbKeyboard;
     
@@ -81,13 +47,6 @@ void loop()
     keyboard.init();
 
     KeyboardState keyboardState;
-
-
-
-
-
-
-
 
     
     DefaultProfile::init(keyboardState);

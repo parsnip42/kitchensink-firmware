@@ -18,8 +18,8 @@ void Multi::release(KeyEventStage& next)
     {
         // Key has been pressed by the trigger, so this event is now
         // responsible for releasing the key.
-        next.processKeyEvent(KeyEvent(mActiveKey, false));
         mTaps = 0;
+        next.processKeyEvent(KeyEvent(mActiveKey, false));
     }
 }
 
@@ -28,17 +28,19 @@ bool Multi::trigger(KeyEventStage& next)
     if (!mTriggered)
     {
         mTriggered = true;
+        mTaps = 0;
 
-        next.processKeyEvent(KeyEvent(mActiveKey, true));
+        auto activeKey(mActiveKey);
+        auto released(mReleased);
+        
+        next.processKeyEvent(KeyEvent(activeKey, true));
         
         // If the key was marked as released before it was pressed by the
         // trigger, then we need to release it immediately too.
-        if (mReleased)
+        if (released)
         {
-            next.processKeyEvent(KeyEvent(mActiveKey, false));
+            next.processKeyEvent(KeyEvent(activeKey, false));
         }
-
-        mTaps = 0;
 
         return true;
     }

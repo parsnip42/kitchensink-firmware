@@ -22,13 +22,13 @@ void AutoRepeat::processKeyEvent(const KeyEvent& event)
     }
     else
     {
-        if (event.pressed && keyId.type() == KeyId::Type::kKey)
+        if (event.pressed && keyId.type() == KeyId::Type::kKey && keyId != KeyId())
         {
             mKeyId = keyId;
             mRepeatTimer = mTimer.scheduleRepeating(repeatDelay,
                                                     repeatRate);
         }
-        else if (keyId == mKeyId)
+        else if (!event.pressed && keyId == mKeyId)
         {
             mRepeatTimer.cancel();
             keyId = KeyId();

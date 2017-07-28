@@ -26,6 +26,7 @@ public:
     auto peek() const;
     auto pop();
 
+    std::size_t size() const;
     bool empty() const;
     auto insert(const value_type& value);
     void erase(iterator position);
@@ -38,6 +39,13 @@ private:
      Buffer mBuffer;
 };
 
+
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+std::size_t OrderedCircularBuffer<Key, Value, Capacity>::size() const
+{
+    return mBuffer.size();
+}
 
 template <typename Key, typename Value, std::size_t Capacity>
 inline

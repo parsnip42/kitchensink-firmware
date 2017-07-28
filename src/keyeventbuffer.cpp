@@ -1,6 +1,6 @@
 #include "keyeventbuffer.h"
 
-void KeyEventBuffer::pollKeyEvent(uint32_t timeMs, KeyEventStage& next)
+void KeyEventBuffer::pollKeyEvent(KeyEventStage& next)
 {
     if (!mBuffer.empty())
     {
