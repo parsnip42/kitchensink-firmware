@@ -55,7 +55,7 @@ private:
         Entry(Entry&&) = default;
 
     public:
-        void clear();
+        void reset();
         
     public:
         uint32_t currentMs;
@@ -72,7 +72,7 @@ private:
     typedef std::array<Entry, Config::kTimerCount>                         TimerMap;
     
 public:
-    Timer();
+    Timer() = default;
     
 public:
     void pollKeyEvent(KeyEventStage& next);
@@ -115,7 +115,7 @@ Timer::Handle::Handle(Handle&& rhs)
     mTimer  = rhs.mTimer;
     mTickId = rhs.mTickId;
     
-    // rhs destructor shouldn't cancel timer - set it to null state
+    // rhs destructor shouldn't release handle - set it to null state
     rhs.mTimer  = nullptr;
     rhs.mTickId = 0;
 }
@@ -185,7 +185,7 @@ Timer::Entry::Entry()
 { }
 
 inline
-void Timer::Entry::clear()
+void Timer::Entry::reset()
 {
     currentMs     = 0;
     repeatDelayMs = 0;

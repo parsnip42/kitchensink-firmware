@@ -26,29 +26,24 @@ void MacroProcessor::processKeyEvent(const KeyEvent& event)
 
         if (macroIndex < mMacroSet.size())
         {
-            if (!event.pressed && mMacroSet[macroIndex].type == MacroType::kInvert)
+            const auto& macro(mMacroSet[keyId.value()]);
+            const auto& content(macro.content);
+
+            if (!event.pressed && macro.type == MacroType::kInvert)
             {
-                auto content(mMacroSet[macroIndex].content);
-                
-                Range<Macro::Content::const_iterator> range(content.begin(), content.end());
-                
-                for (auto event : range.reverse())
-                {
-                    event.pressed = !event.pressed;
-                    mNext.processKeyEvent(event);
-                }
+                mCurrent = &macro;
+                mBegin   = content.end() - 1;
+                mEnd     = content.begin() - 1;
+                    
+                playback();
             }
             else
             {
                 if (event.pressed)
                 {
-                    mCurrent = &mMacroSet[keyId.value()];
-                    
-                    const auto& macro(mMacroSet[keyId.value()]);
-                    const auto& content(macro.content);
-                    
-                    mBegin = content.begin();
-                    mEnd = content.end();
+                    mCurrent = &macro;
+                    mBegin   = content.begin();
+                    mEnd     = content.end();
                     
                     playback();
                 }
@@ -67,19 +62,31 @@ void MacroProcessor::playback()
     {
         while (mBegin != mEnd)
         {
+            bool forward(mBegin < mEnd);
+            
             const auto& event(*mBegin);
+            
+            if (forward)
+            {
+                ++mBegin;
+            }
+            else
+            {
+                --mBegin;
+            }
             
             if (event.keyId.type() == KeyId::Type::kDelay)
             {
-                ++mBegin;
-                
                 mPlaybackTimer.schedule(event.keyId.delayMs());
                 return;
+            }
+            else if (!forward)
+            {
+                mNext.processKeyEvent(KeyEvent(event.keyId, false));
             }
             else
             {
                 mNext.processKeyEvent(event);
-                ++mBegin;
             }
         }
         

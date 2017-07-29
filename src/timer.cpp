@@ -5,9 +5,6 @@
 #include <algorithm>
 #include <elapsedMillis.h>
 
-Timer::Timer()
-{ }
-
 void Timer::pollKeyEvent(KeyEventStage& next)
 {
     auto timeMs(millis());
@@ -36,7 +33,7 @@ void Timer::pollKeyEvent(KeyEventStage& next)
             }
             else
             {
-                timerEntry.clear();
+                timerEntry.reset();
             }
             
             next.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
@@ -46,13 +43,13 @@ void Timer::pollKeyEvent(KeyEventStage& next)
 
 Timer::Handle Timer::createHandle()
 {
-    for (uint16_t tickId(1); tickId < mTimerMap.size(); ++tickId)
+    for (uint16_t tickId(0); tickId < mTimerMap.size(); ++tickId)
     {
         auto& timerEntry(mTimerMap[tickId]);
         
         if (!timerEntry.assigned)
         {
-            timerEntry.clear();
+            timerEntry.reset();
             timerEntry.assigned  = true;
             
             return Handle(this, tickId);
@@ -97,29 +94,32 @@ void Timer::cancel(const Timer::Handle& handle)
 {
     auto& timerEntry(mTimerMap[handle.mTickId]);
 
-    // The timestamp of the timer isn't *absolutely* guaranteed to be
-    // unique, but it usually will be - so we can binary search the matching
-    // range and then linear search for what is usually going to be a range
-    // length of 1.
-        
-    Range<TimerQueue::iterator> range(
-        std::equal_range(mTimerQueue.begin(),
-                         mTimerQueue.end(),
-                         timerEntry.currentMs));
-        
-    for (auto it(range.begin()); it != range.end(); ++it)
+    if (timerEntry.currentMs != 0)
     {
-        // Two identical tickIds shouldn't ever be in the queue, let alone in
-        // the same place, so we can break out early as soon as we find and
-        // erase the target timer.
-        if (it->value == handle.mTickId)
-        {
-            mTimerQueue.erase(it);
-            break;
-        }
-    }
+        // The timestamp of the timer isn't *absolutely* guaranteed to be
+        // unique, but it usually will be - so we can binary search the matching
+        // range and then linear search for what is usually going to be a range
+        // length of 1.
         
-    timerEntry.clear();
+        Range<TimerQueue::iterator> range(
+            std::equal_range(mTimerQueue.begin(),
+                             mTimerQueue.end(),
+                             timerEntry.currentMs));
+        
+        for (auto it(range.begin()); it != range.end(); ++it)
+        {
+            // Two identical tickIds shouldn't ever be in the queue, let alone in
+            // the same place, so we can break out early as soon as we find and
+            // erase the target timer.
+            if (it->value == handle.mTickId)
+            {
+                mTimerQueue.erase(it);
+                break;
+            }
+        }
+        
+        timerEntry.reset();
+    }
 }
 
 std::size_t Timer::activeTimers() const
