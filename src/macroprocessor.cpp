@@ -7,9 +7,8 @@ MacroProcessor::MacroProcessor(const MacroSet& macroSet,
                                Timer&          timer,
                                KeyEventStage&  next)
     : mMacroSet(macroSet)
-    , mTimer(timer)
     , mCurrent(nullptr)
-    , mPlaybackTimer()
+    , mPlaybackTimer(timer.createHandle())
     , mNext(next)
 { }
 
@@ -74,7 +73,7 @@ void MacroProcessor::playback()
             {
                 ++mBegin;
                 
-                mPlaybackTimer = mTimer.schedule(event.keyId.delayMs());
+                mPlaybackTimer.schedule(event.keyId.delayMs());
                 return;
             }
             else

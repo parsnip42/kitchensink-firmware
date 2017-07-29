@@ -13,4 +13,4 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) = 0;
 };
 
-#endif /* INCLUDED_KEYEVENTSTAGE_H */
+#endif

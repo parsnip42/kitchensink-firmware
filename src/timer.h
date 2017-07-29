@@ -16,27 +16,28 @@ public:
     {
     private:
         explicit Handle(Timer*   timer,
-                        uint16_t tick,
-                        uint32_t handleId);
+                        uint16_t tickId);
 
     public:
-        Handle();
         Handle(Handle&& lhs);
         ~Handle();
 
     public:
         bool matches(KeyEvent event) const;
+
+        void schedule(uint32_t delayMs);
+    
+        void scheduleRepeating(uint32_t delayMs,
+                               uint32_t repeatDelayMs);
+
         void cancel();
         
     public:
         Handle& operator=(Handle&& lhs);
 
-    private:
-
     public:
         Timer*   mTimer;
-        uint16_t mTick;
-        uint32_t mHandleId;
+        uint16_t mTickId;
         
     private:
         Handle(const Handle&) = delete;
@@ -59,7 +60,7 @@ private:
     public:
         uint32_t currentMs;
         uint32_t repeatDelayMs;
-        uint32_t handleId;
+        bool     assigned;
 
     private:
         Entry(const Entry&) = delete;
@@ -76,11 +77,17 @@ public:
 public:
     void pollKeyEvent(KeyEventStage& next);
 
-    Handle schedule(uint32_t delayMs);
-    Handle scheduleRepeating(uint32_t delayMs,
-                             uint32_t repeatDelayMs);
+    Handle createHandle();
+    
+    void releaseHandle(Handle& handle);
 
-    bool active(const Handle& handle) const;
+    void schedule(const Handle& handle,
+                  uint32_t      delayMs);
+    
+    void scheduleRepeating(const Handle& handle,
+                           uint32_t      delayMs,
+                           uint32_t      repeatDelayMs);
+
     void cancel(const Handle& handle);
 
     std::size_t activeTimers() const;
@@ -88,7 +95,6 @@ public:
 private:
     TimerMap   mTimerMap;
     TimerQueue mTimerQueue;
-    uint32_t   mHandleIdCounter;
     
 private:
     Timer(const Timer&) = delete;
@@ -98,45 +104,36 @@ private:
 
 inline
 Timer::Handle::Handle(Timer*   timer,
-                      uint16_t tick,
-                      uint32_t handleId)
+                      uint16_t tickId)
     : mTimer(timer)
-    , mTick(tick)
-    , mHandleId(handleId)
+    , mTickId(tickId)
 { }
 
 inline
 Timer::Handle::Handle(Handle&& rhs)
 {
-    mTimer    = rhs.mTimer;
-    mTick     = rhs.mTick;
-    mHandleId = rhs.mHandleId;
+    mTimer  = rhs.mTimer;
+    mTickId = rhs.mTickId;
     
     // rhs destructor shouldn't cancel timer - set it to null state
-    rhs.mTimer    = nullptr;
-    rhs.mTick     = 0;
-    rhs.mHandleId = 0;
+    rhs.mTimer  = nullptr;
+    rhs.mTickId = 0;
 }
-
-inline
-Timer::Handle::Handle()
-    : mTimer(nullptr)
-    , mTick(0)
-    , mHandleId(0)
-{ }
 
 inline
 Timer::Handle::~Handle()
 {
-    cancel();
+    if (mTimer)
+    {
+        mTimer->releaseHandle(*this);
+    }
 }
 
 inline
 Timer::Handle& Timer::Handle::operator=(Handle&& rhs)
 {
     std::swap(mTimer, rhs.mTimer);
-    std::swap(mTick, rhs.mTick);
-    std::swap(mHandleId, rhs.mHandleId);
+    std::swap(mTickId, rhs.mTickId);
 
     return *this;
 }
@@ -144,12 +141,31 @@ Timer::Handle& Timer::Handle::operator=(Handle&& rhs)
 inline
 bool Timer::Handle::matches(KeyEvent event) const
 {
-    if (mTimer && mTimer->active(*this))
+    if (mTimer)
     {
-        return event.keyId == KeyId::Tick(mTick);
+        return event.keyId == KeyId::Tick(mTickId);
     }
 
     return false;
+}
+
+inline
+void Timer::Handle::schedule(uint32_t delayMs)
+{
+    if (mTimer)
+    {
+        mTimer->schedule(*this, delayMs);
+    }
+}
+
+inline
+void Timer::Handle::scheduleRepeating(uint32_t delayMs,
+                                      uint32_t repeatDelayMs)
+{
+    if (mTimer)
+    {
+        mTimer->scheduleRepeating(*this, delayMs, repeatDelayMs);
+    }
 }
 
 inline
@@ -159,17 +175,13 @@ void Timer::Handle::cancel()
     {
         mTimer->cancel(*this);
     }
-    
-    mTimer    = nullptr;
-    mTick     = 0;
-    mHandleId = 0;
 }
 
 inline
 Timer::Entry::Entry()
     : currentMs(0)
     , repeatDelayMs(0)
-    , handleId(0)
+    , assigned(false)
 { }
 
 inline
@@ -177,7 +189,6 @@ void Timer::Entry::clear()
 {
     currentMs     = 0;
     repeatDelayMs = 0;
-    handleId      = 0;
 }
 
 #endif

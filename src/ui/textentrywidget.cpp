@@ -12,6 +12,7 @@ TextEntryWidget::TextEntryWidget(Surface&      surface,
                                  EventManager& eventManager)
     : mSurface(surface)
     , mEventManager(eventManager)
+    , mFlashTimer(mEventManager.timer.createHandle())
     , mCursorPosition(1000)
     , mFlash(false)
     , mFocused(false)
@@ -28,7 +29,14 @@ void TextEntryWidget::redrawContent(bool focused)
     mCursorPosition = std::min(mCursorPosition, text.length());
     paintCursor(mFlash);
 
-    mFlashTimer = focused ? mEventManager.timer.scheduleRepeating(1000, 500) : Timer::Handle();
+    if (focused)
+    {
+        mFlashTimer.scheduleRepeating(1000, 500);
+    }
+    else
+    {
+        mFlashTimer.cancel();
+    }
 }
 
 void TextEntryWidget::processKeyEvent(const KeyEvent& event)
@@ -52,7 +60,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     if (keyId.type() == KeyId::Type::kKey && keyId.value() && event.pressed)
     {
         mFlash = true;
-        mFlashTimer = mEventManager.timer.scheduleRepeating(1000, 500);
+        mFlashTimer.scheduleRepeating(1000, 500);
 
         paintCursor(false);
 

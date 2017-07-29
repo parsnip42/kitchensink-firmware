@@ -23,7 +23,6 @@ private:
     
 private:
     const MacroSet&                mMacroSet;
-    Timer&                         mTimer;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;

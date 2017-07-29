@@ -23,7 +23,6 @@ public:
     uint32_t repeatRate;
     
 private:
-    Timer&         mTimer;
     Timer::Handle  mRepeatTimer;
     KeyId          mKeyId;
     KeyEventStage& mNext;

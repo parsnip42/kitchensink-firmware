@@ -21,7 +21,6 @@ public:
 
 private:
     MultiSet&      mMultiSet;
-    Timer&         mTimer;
     Timer::Handle  mReleaseTimer;
     std::size_t    mLast;
     uint8_t        mTaps;
@@ -33,7 +32,7 @@ MultiProcessor::MultiProcessor(MultiSet&      multiSet,
                                Timer&         timer,
                                KeyEventStage& next)
     : mMultiSet(multiSet)
-    , mTimer(timer)
+    , mReleaseTimer(timer.createHandle())
     , mLast(0)
     , mTaps(0)
     , mNext(next)
