@@ -62,9 +62,9 @@ void MacroProcessor::playback()
     {
         while (mBegin != mEnd)
         {
-            bool forward(mBegin < mEnd);
-            
             const auto& event(*mBegin);
+            
+            bool forward(mBegin < mEnd);
             
             if (forward)
             {
@@ -80,13 +80,10 @@ void MacroProcessor::playback()
                 mPlaybackTimer.schedule(event.keyId.delayMs());
                 return;
             }
-            else if (!forward)
-            {
-                mNext.processKeyEvent(KeyEvent(event.keyId, false));
-            }
             else
             {
-                mNext.processKeyEvent(event);
+                mNext.processKeyEvent(KeyEvent(event.keyId,
+                                               !forward ^ event.pressed));
             }
         }
         
