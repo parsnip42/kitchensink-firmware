@@ -23,6 +23,8 @@ public:
                     EventManager&    eventManager,
                     WidgetContainer& parent);
 
+    TextEntryWidget(TextEntryWidget&&) = default;
+    
 public:
     virtual void setFocused(bool nFocused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;

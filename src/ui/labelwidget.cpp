@@ -5,18 +5,16 @@
 #include "ui/rectangle.h"
 #include "ui/font.h"
 
-LabelWidget::LabelWidget(const Rectangle& nRegion,
-                         const StrRef&    nText,
+LabelWidget::LabelWidget(const StrRef&    nText,
                          Justify          nJustify)
-    : region(nRegion)
-    , text(nText)
+    : text(nText)
     , justify(nJustify)
     , focused(true)
 { }
 
 void LabelWidget::setFocused(bool nFocused)
 {
-    nFocused = focused;
+    focused = nFocused;
 }
 
 void LabelWidget::render(Surface::RowData& rowData, int row) const
@@ -43,6 +41,8 @@ void LabelWidget::render(Surface::RowData& rowData, int row) const
     {
         yOffset = (region.height - Font::kHeight) / 2;
     }
-    
-    Surface::render(text, xOffset, row - yOffset, rowData);
+
+    uint8_t fg(focused ? 0xf : 0x7);
+
+    Surface::render(text, xOffset, row - yOffset, rowData, fg, 0x0);
 }

@@ -1,6 +1,7 @@
 #ifndef INCLUDED_LABELWIDGET_H
 #define INCLUDED_LABELWIDGET_H
 
+#include "ui/justify.h"
 #include "ui/rectangle.h"
 #include "ui/surface.h"
 #include "ui/widget.h"
@@ -14,16 +15,7 @@ class StrRef;
 class LabelWidget : public Widget
 {
 public:
-    enum Justify : uint8_t
-    {
-        kLeft   = 0,
-        kRight  = 1,
-        kCenter = 2
-    };
-    
-public:
-    LabelWidget(const Rectangle& nRegion,
-                const StrRef&    nText,
+    LabelWidget(const StrRef&    nText,
                 Justify          nJustify);
 
 public:

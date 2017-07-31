@@ -3,6 +3,7 @@
 
 #include "ui/textentrywidget.h"
 #include "ui/combowidget.h"
+#include "ui/labelledwidget.h"
 #include "ui/widgetcontainer.h"
 #include "keyeventstage.h"
 
@@ -24,12 +25,8 @@ public:
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-
     virtual void invalidateWidget(Widget&          widget,
-                                  const Rectangle& region) override
-    {
-        redraw();
-    }
+                                  const Rectangle& region) override;
 
     void poll();
 
@@ -37,15 +34,15 @@ private:
     void redraw();
     
 private:
-    Surface&        mSurface;
-    EventManager&   mEventManager;
-    MacroSet&       mMacroSet;
-    Macro&          mMacro;
-    TextEntryWidget mTitleEntry;
-    TextEntryWidget mShortcutEntry;
-    ComboWidget     mTypeCombo;
-    Widget*         mFocused;
-    bool            mQuit;
+    Surface&                        mSurface;
+    EventManager&                   mEventManager;
+    MacroSet&                       mMacroSet;
+    Macro&                          mMacro;
+    LabelledWidget<TextEntryWidget> mTitleEntry;
+    LabelledWidget<TextEntryWidget> mShortcutEntry;
+    LabelledWidget<ComboWidget>     mTypeCombo;
+    Widget*                         mFocused;
+    bool                            mQuit;
 };
 
 #endif

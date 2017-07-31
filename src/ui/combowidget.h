@@ -30,7 +30,9 @@ public:
                 EventManager&            eventManager,
                 WidgetContainer&         parent,
                 ComboWidget::DataSource& dataSource);
-
+    
+    ComboWidget(ComboWidget&&) = default;
+    
 public:
     virtual void setFocused(bool focused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;

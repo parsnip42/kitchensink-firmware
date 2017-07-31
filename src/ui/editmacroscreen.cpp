@@ -56,22 +56,25 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mEventManager(eventManager)
     , mMacroSet(macroSet)
     , mMacro(macro)
-    , mTitleEntry(surface,
-                  eventManager,
-                  *this)
-    , mShortcutEntry(surface,
-                     eventManager,
-                     *this)
-    , mTypeCombo(surface,
-                 eventManager,
-                 *this,
-                 mtds)
+    , mTitleEntry("Name", Justify::kRight,
+                  TextEntryWidget(surface,
+                                  eventManager,
+                                  *this))
+    , mShortcutEntry("Shortcut", Justify::kRight,
+                     TextEntryWidget(surface,
+                                     eventManager,
+                                     *this))
+    , mTypeCombo("Type", Justify::kRight,
+                 ComboWidget(surface,
+                             eventManager,
+                             *this,
+                             mtds))
     , mFocused(&mTitleEntry)
     , mQuit(false)
 {
-    mTitleEntry.text = mMacro.name;
-    mShortcutEntry.text = mMacro.shortcut;
-    mTypeCombo.selectedItem = 0;
+    mTitleEntry.widget.text = mMacro.name;
+    mShortcutEntry.widget.text = mMacro.shortcut;
+    mTypeCombo.widget.selectedItem = 0;
 
     mFocused->setFocused(true);
 }
@@ -92,41 +95,36 @@ void EditMacroScreen::redraw()
 {
     TableLayout layout(72, Surface::kWidth, 16, 8, 2);
                 
-    LabelWidget la(layout.next(),
-                   "Name",
-                   LabelWidget::Justify::kRight);
-
-    mTitleEntry.region = layout.next();
-                
-    LabelWidget lb(layout.next(),
-                   "Shortcut",
-                   LabelWidget::Justify::kRight);
+    mTitleEntry.label.region = layout.next();
+    mTitleEntry.widget.region = layout.next();
     
-    mShortcutEntry.region = layout.next();
-
-    MacroTypeDataSource ds;
-                
-    LabelWidget lc(layout.next(),
-                   "Type",
-                   LabelWidget::Justify::kRight);
-
-    mTypeCombo.region = layout.next();
+    mShortcutEntry.label.region = layout.next();
+    mShortcutEntry.widget.region = layout.next();
+    
+    mTypeCombo.label.region = layout.next();
+    mTypeCombo.widget.region = layout.next();
 
     for (int y(0); y < Surface::kHeight; ++y)
     {
         Surface::RowData row;
 
-        Surface::render(la, row, y);
-        Surface::render(lb, row, y);
-        Surface::render(lc, row, y);
+        Surface::render(mTitleEntry.label, row, y);
+        Surface::render(mShortcutEntry.label, row, y);
+        Surface::render(mTypeCombo.label, row, y);
 
-        Surface::render(mTitleEntry, row, y);
-        Surface::render(mShortcutEntry, row, y);
-        Surface::render(mTypeCombo, row, y);
+        Surface::render(mTitleEntry.widget, row, y);
+        Surface::render(mShortcutEntry.widget, row, y);
+        Surface::render(mTypeCombo.widget, row, y);
 
         mSurface.render(row, y);
     }
 }
+void EditMacroScreen::invalidateWidget(Widget&          widget,
+                                       const Rectangle& region)
+{
+    redraw();
+}
+
 
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
@@ -156,18 +154,18 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
             if (!FocusUtil::next(mFocused,
                                  { &mTitleEntry, &mShortcutEntry, &mTypeCombo }))
             {
-                MacroType macroType((mTypeCombo.selectedItem == 2) ?
+                MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
                                     MacroType::kInvert :
                                     MacroType::kSync);
 
                 mMacro.type = macroType;
-                mMacro.name = mTitleEntry.text;
-                mMacro.shortcut = mShortcutEntry.text;
+                mMacro.name = mTitleEntry.widget.text;
+                mMacro.shortcut = mShortcutEntry.widget.text;
 
                 RecordMacroScreen record(mSurface,
                                          mEventManager,
                                          mMacro,
-                                         (mTypeCombo.selectedItem == 1));
+                                         (mTypeCombo.widget.selectedItem == 1));
 
                 record.poll();
 
