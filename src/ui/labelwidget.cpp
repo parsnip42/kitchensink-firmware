@@ -10,8 +10,14 @@ LabelWidget::LabelWidget(const Rectangle& nRegion,
                          Justify          nJustify)
     : region(nRegion)
     , text(nText)
-    , justify(nJustify) 
+    , justify(nJustify)
+    , focused(true)
 { }
+
+void LabelWidget::setFocused(bool nFocused)
+{
+    nFocused = focused;
+}
 
 void LabelWidget::render(Surface::RowData& rowData, int row) const
 {

@@ -18,8 +18,8 @@ bool next(Widget*&                              focus,
             
             if (it != widgetList.end())
             {
-                last->redrawContent(false);
-                (*it)->redrawContent(true);
+                last->setFocused(false);
+                (*it)->setFocused(true);
 
                 focus = (*it);
                 return true;
@@ -43,8 +43,8 @@ bool prev(Widget*&                              focus,
     {
         if (focus == widget && last)
         {
-            widget->redrawContent(false);
-            last->redrawContent(true);
+            widget->setFocused(false);
+            last->setFocused(true);
             
             focus = last;
             return true;

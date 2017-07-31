@@ -64,6 +64,7 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
                      *this)
     , mTypeCombo(surface,
                  eventManager,
+                 *this,
                  mtds)
     , mFocused(&mTitleEntry)
     , mQuit(false)
@@ -71,6 +72,8 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     mTitleEntry.text = mMacro.name;
     mShortcutEntry.text = mMacro.shortcut;
     mTypeCombo.selectedItem = 0;
+
+    mFocused->setFocused(true);
 }
 
 void EditMacroScreen::poll()
@@ -118,15 +121,11 @@ void EditMacroScreen::redraw()
         Surface::render(lc, row, y);
 
         Surface::render(mTitleEntry, row, y);
-        Surface::render(mShortcutEntry,row, y);
-        // mTypeCombo.render(row, y);
+        Surface::render(mShortcutEntry, row, y);
+        Surface::render(mTypeCombo, row, y);
 
         mSurface.render(row, y);
     }
-
-    // mTitleEntry.redrawContent(true);
-    // mShortcutEntry.redrawContent(false);
-    // mTypeCombo.redrawContent(false);
 }
 
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)

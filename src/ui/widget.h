@@ -10,7 +10,8 @@ public:
     virtual ~Widget() = default;
     
 public:
-    virtual void redrawContent(bool focused) = 0;
+    virtual void processKeyEvent(const KeyEvent&) override;    
+    virtual void setFocused(bool focused) = 0;
 };
 
 #endif

@@ -4,35 +4,26 @@
 #include "ui/surface.h"
 #include "ui/keys.h"
 #include "ui/rectangle.h"
+#include "ui/widgetcontainer.h"
 #include "types/strref.h"
 #include "eventmanager.h"
 
 ComboWidget::ComboWidget(Surface&                 surface,
                          EventManager&            eventManager,
+                         WidgetContainer&         parent,
                          ComboWidget::DataSource& dataSource)
     : selectedItem(0)
+    , focused(false)
     , mSurface(surface)
     , mEventManager(eventManager)
+    , mParent(parent)
     , mDataSource(dataSource)
 { }
 
-void ComboWidget::redrawContent(bool focused)
+void ComboWidget::setFocused(bool nFocused)
 {
-    uint8_t color(focused ? 0xf : 0x4);
-
-    if (focused)
-    {
-        mSurface.paintTextL(region.x, region.y, 6, "<", color, 0);
-        mSurface.paintText(region.x + region.width - Surface::kFontWidth, region.y, ">", color, 0);
-    }
-    else
-    {
-        mSurface.clearRegion(region.x, region.y, Surface::kFontWidth, Surface::kFontHeight, 0x0);
-        mSurface.clearRegion(region.x + region.width - Surface::kFontWidth, region.y, Surface::kFontWidth, Surface::kFontHeight, 0x0);
-
-    }
-    
-    paintSelection(color);
+    focused = nFocused;
+    mParent.invalidateWidget(*this, region);
 }
 
 void ComboWidget::processKeyEvent(const KeyEvent& event)
@@ -45,27 +36,69 @@ void ComboWidget::processKeyEvent(const KeyEvent& event)
         {
             selectedItem += mDataSource.size() - 1;
             selectedItem %= mDataSource.size();
-            paintSelection(0xf);
+            mParent.invalidateWidget(*this, region);
         }
 
         if (Keys::right(keyId))
         {
             ++selectedItem %= mDataSource.size();
-            paintSelection(0xf);
+            mParent.invalidateWidget(*this, region);
         }
     }
 }
 
-void ComboWidget::paintSelection(uint8_t color)
+void ComboWidget::render(Surface::RowData& rowData, int row)
 {
+    uint8_t fg(focused ? 0xf : 0x7);
+
+    auto yOffset(0);
+    
+    if (Font::kHeight < region.height)
+    {
+        yOffset = (region.height - Font::kHeight) / 2;
+    }
+
     DataSource::ItemText text;
 
     mDataSource.item(text, selectedItem);
-    
-    mSurface.paintTextC(region.x + 20,
-                        region.y,
-                        region.width - 40,
-                        text,
-                        color,
-                        0);
+
+    auto xOffset((region.width - (Font::kWidth * text.length())) / 2);
+
+    Surface::render(text,
+                    region.x + xOffset,
+                    row - yOffset,
+                    rowData,
+                    fg,
+                    0x0);
+
+    if (row >= 3 && row <= region.height - 3)
+    {
+        int halfHeight(region.height / 2);
+        
+        for (int x(0); x < halfHeight; ++x)
+        {
+            auto xOffset(region.x + x);
+            int yDistance(abs(halfHeight - row));
+            
+            rowData[xOffset] = (x > yDistance && x < yDistance + 2) ? fg : 0x0;
+            rowData[xOffset + (region.width - halfHeight)] = ((halfHeight - x) > yDistance && (halfHeight - x) < yDistance + 2) ? fg : 0x0;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

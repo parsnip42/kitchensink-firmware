@@ -1,14 +1,14 @@
 #ifndef INCLUDED_COMBOWIDGET_H
 #define INCLUDED_COMBOWIDGET_H
 
+#include "keyeventstage.h"
 #include "types/strbuf.h"
 #include "ui/rectangle.h"
 #include "ui/widget.h"
+#include "ui/surface.h"
 
-class KeyProcessor;
-
-class Surface;
 class EventManager;
+class WidgetContainer;
 
 class ComboWidget : public Widget
 {
@@ -28,16 +28,19 @@ public:
 public:
     ComboWidget(Surface&                 surface,
                 EventManager&            eventManager,
+                WidgetContainer&         parent,
                 ComboWidget::DataSource& dataSource);
 
 public:
-    virtual void redrawContent(bool focused) override;
+    virtual void setFocused(bool focused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;
+
+    void render(Surface::RowData& rowData, int row);
 
 public:
     std::size_t selectedItem;
-    
-    Rectangle region;
+    bool        focused;
+    Rectangle   region;
     
 private:
     void paintSelection(uint8_t color);
@@ -45,6 +48,7 @@ private:
 private:
     Surface&                 mSurface;
     EventManager&            mEventManager;
+    WidgetContainer&         mParent;
     ComboWidget::DataSource& mDataSource;
 
 private:

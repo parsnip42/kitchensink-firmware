@@ -21,26 +21,26 @@ class TextEntryWidget : public Widget
 public:
     TextEntryWidget(Surface&         surface,
                     EventManager&    eventManager,
-                    WidgetContainer& widgetContainer);
+                    WidgetContainer& parent);
 
 public:
-    virtual void redrawContent(bool focused) override;
+    virtual void setFocused(bool nFocused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;
 
-    void render(Surface::RowData& rowData, int row) const;
+    void render(Surface::RowData& rowData, int row);
     
 public:
-    Rectangle  region;
-    StrBuf<30> text;
+    Rectangle   region;
+    StrBuf<30>  text;
+    std::size_t cursorPosition;
+    bool        focused;
     
 private:
     Surface&         mSurface;
     EventManager&    mEventManager;
-    WidgetContainer& mWidgetContainer;
+    WidgetContainer& mParent;
     Timer::Handle    mFlashTimer;
-    std::size_t      mCursorPosition;
     bool             mFlash;
-    bool             mFocused;
     
 private:
     TextEntryWidget(const TextEntryWidget&) = delete;

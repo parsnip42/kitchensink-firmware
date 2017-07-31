@@ -10,20 +10,20 @@
 
 TextEntryWidget::TextEntryWidget(Surface&         surface,
                                  EventManager&    eventManager,
-                                 WidgetContainer& widgetContainer)
-    : mSurface(surface)
+                                 WidgetContainer& parent)
+    : cursorPosition(1000)
+    , focused(false)
+    , mSurface(surface)
     , mEventManager(eventManager)
-    , mWidgetContainer(widgetContainer)
+    , mParent(parent)
     , mFlashTimer(mEventManager.timer.createHandle())
-    , mCursorPosition(1000)
     , mFlash(false)
-    , mFocused(false)
 { }
 
-void TextEntryWidget::redrawContent(bool focused)
+void TextEntryWidget::setFocused(bool nFocused)
 {
-    mFocused = focused;
-    mFlash = focused;
+    focused = nFocused;
+    mFlash = nFocused;
     
     if (focused)
     {
@@ -33,20 +33,26 @@ void TextEntryWidget::redrawContent(bool focused)
     {
         mFlashTimer.cancel();
     }
+
+    mParent.invalidateWidget(*this, region);
 }
 
-void TextEntryWidget::render(Surface::RowData& rowData, int row) const
+void TextEntryWidget::render(Surface::RowData& rowData, int row)
 {
+    uint8_t fg(focused ? 0xf : 0x7);
+    
+    cursorPosition = std::min(cursorPosition, text.length());
+    
     if (row == 0 || row == region.height - 1)
     {
         for (int i(region.x); i < region.x + region.width; ++i)
         {
-            rowData[i] = 0xf;
+            rowData[i] = fg;
         }
     }
 
-    rowData[region.x] = 0xf;
-    rowData[region.x + region.width - 1] = 0xf;
+    rowData[region.x] = fg;
+    rowData[region.x + region.width - 1] = fg;
 
     auto yOffset(0);
 
@@ -55,26 +61,36 @@ void TextEntryWidget::render(Surface::RowData& rowData, int row) const
         yOffset = (region.height - Font::kHeight) / 2;
     }
     
-    Surface::render(text, region.x + 2, row - yOffset, rowData, 0xf, 0x0);
+    Surface::render(text,
+                    region.x + 2,
+                    row - yOffset,
+                    rowData,
+                    fg,
+                    0x0);
     
     if (row >= 2 && row < region.height - 2)
     {
         StrRef textChar(" ");
 
-        if (mCursorPosition < text.length())
+        if (cursorPosition < text.length())
         {
-            textChar = StrRef(text).substr(mCursorPosition, 1);
+            textChar = StrRef(text).substr(cursorPosition, 1);
         }
 
-        uint8_t fg(0xf);
-        uint8_t bg(0);
+        uint8_t cursorFg(fg);
+        uint8_t cursorBg(0);
 
         if (mFlash)
         {
-            std::swap(fg, bg);
+            std::swap(cursorFg, cursorBg);
         }
         
-        Surface::render(textChar, region.x + 2 + (mCursorPosition * Font::kWidth), row - yOffset, rowData, fg, bg);
+        Surface::render(textChar,
+                        region.x + 2 + (cursorPosition * Font::kWidth),
+                        row - yOffset,
+                        rowData,
+                        cursorFg,
+                        cursorBg);
     }
 }
 
@@ -85,11 +101,11 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
-        mWidgetContainer.invalidateWidget(*this, region);
+        mParent.invalidateWidget(*this, region);
         return;
     }
 
-    mCursorPosition = std::min(mCursorPosition, text.length());
+    cursorPosition = std::min(cursorPosition, text.length());
     
     vKeyboard.processKeyEvent(event);
 
@@ -107,34 +123,34 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             break;
                 
         case KeyCodes::Left:
-            if (mCursorPosition > 0)
+            if (cursorPosition > 0)
             {
-                --mCursorPosition;
+                --cursorPosition;
             }
             break;
                 
         case KeyCodes::Right:
-            if (mCursorPosition < text.length())
+            if (cursorPosition < text.length())
             {
 
-                ++mCursorPosition;
+                ++cursorPosition;
             }
             break;
                 
         case KeyCodes::Home:
-            mCursorPosition = 0;
+            cursorPosition = 0;
             break;
                 
         case KeyCodes::End:
-            mCursorPosition = text.length();
+            cursorPosition = text.length();
             break;
 
         case KeyCodes::Backspace:
-            if (mCursorPosition > 0)
+            if (cursorPosition > 0)
             {
-                text.erase(text.begin() + mCursorPosition - 1);
+                text.erase(text.begin() + cursorPosition - 1);
                 
-                --mCursorPosition;
+                --cursorPosition;
             }
             break;
                 
@@ -145,14 +161,14 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
                     
                 if (newChar)
                 {
-                    text.insert(text.begin() + mCursorPosition, newChar);
+                    text.insert(text.begin() + cursorPosition, newChar);
                         
-                    ++mCursorPosition;
+                    ++cursorPosition;
                 }
             }
             break;
         }
     }
 
-    mWidgetContainer.invalidateWidget(*this, region);
+    mParent.invalidateWidget(*this, region);
 }
