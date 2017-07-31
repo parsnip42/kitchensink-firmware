@@ -3,12 +3,14 @@
 TableLayout::TableLayout(int titleWidth,
                          int width,
                          int height,
-                         int margin)
+                         int marginX,
+                         int marginY)
     : mCurrent(0)
     , mTitleWidth(titleWidth)
     , mWidth(width)
     , mHeight(height)
-    , mMargin(margin)
+    , mMarginX(marginX)
+    , mMarginY(marginY)
 
 { }
 
@@ -16,8 +18,8 @@ Rectangle TableLayout::next()
 {
     auto current(mCurrent++);
     
-    return Rectangle((current % 2) * (mTitleWidth + mMargin),
-                     (current / 2) * mHeight,
-                     (current % 2) ? (mWidth - (mTitleWidth + mMargin)) : mTitleWidth,
+    return Rectangle((current % 2) * (mTitleWidth + mMarginX),
+                     (current / 2) * (mHeight + mMarginY),
+                     (current % 2) ? (mWidth - (mTitleWidth + mMarginX)) : mTitleWidth,
                      mHeight);
 }

@@ -133,7 +133,7 @@ void KeyProcessor::pressLayer(int            index,
                 if (current != nextKey)
                 {    
                     next.processKeyEvent(KeyEvent(current, false));
-                    next.processKeyEvent(KeyEvent(nextKey, true));
+                    // next.processKeyEvent(KeyEvent(nextKey, true));
                 }
             }
         }
@@ -156,7 +156,7 @@ void KeyProcessor::releaseLayer(int          index,
                 if (current != nextKey)
                 {    
                     next.processKeyEvent(KeyEvent(current, false));
-                    next.processKeyEvent(KeyEvent(nextKey, true));
+                    // next.processKeyEvent(KeyEvent(nextKey, true));
                 }
             }            
         }

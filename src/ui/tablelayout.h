@@ -9,7 +9,8 @@ public:
     TableLayout(int titleWidth,
                 int width,
                 int height,
-                int margin);
+                int marginX,
+                int marginY);
 
 public:
     Rectangle next();
@@ -19,7 +20,8 @@ private:
     int mTitleWidth;
     int mWidth;
     int mHeight;
-    int mMargin;
+    int mMarginX;
+    int mMarginY;
 };
 
 #endif

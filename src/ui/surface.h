@@ -2,7 +2,9 @@
 #define INCLUDED_UI_SURFACE_H
 
 #include "ui/font.h"
+#include "types/ui4array.h"
 
+#include <array>
 #include <cstdint>
 
 class StrRef;
@@ -11,12 +13,15 @@ class Display;
 class Surface
 {
 public:
-    static constexpr int kHeight = 64;
-    static constexpr int kWidth = 240;
-    static constexpr int kFontWidth = Font::kWidth;
-    static constexpr int kFontHeight = Font::kHeight;
-    static constexpr uint8_t kScrollMax = 128;
+    static constexpr int     kHeight     = 64;
+    static constexpr int     kWidth      = 240;
+    static constexpr int     kFontWidth  = Font::kWidth;
+    static constexpr int     kFontHeight = Font::kHeight;
+    static constexpr uint8_t kScrollMax  = 128;
 
+public:
+    typedef UI4Array<kWidth> RowData;
+    
 public:
     class ColorMap
     {
@@ -31,6 +36,20 @@ public:
     explicit Surface(Display& display);
 
 public:
+    void render(const RowData& row, int y);
+
+    static void render(const StrRef& text, int x, int line, RowData& row, uint8_t fg = 0xf, uint8_t bg = 0x0);
+
+    template <typename Widget>
+    static void render(Widget& widget, RowData& row, int y)
+    {
+        if (y >= widget.region.y &&
+            y < widget.region.y + widget.region.height)
+        {
+            widget.render(row, y - widget.region.y);
+        }
+    }
+    
     void paintText(int           x,
                    int           y,
                    const StrRef& text,

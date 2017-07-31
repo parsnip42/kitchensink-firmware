@@ -1,7 +1,7 @@
 #include "ui/editmacroscreen.h"
 
 #include "ui/tablelayout.h"
-#include "ui/label.h"
+#include "ui/labelwidget.h"
 #include "ui/surface.h"
 #include "ui/combowidget.h"
 #include "ui/focusutil.h"
@@ -57,15 +57,21 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mMacroSet(macroSet)
     , mMacro(macro)
     , mTitleEntry(surface,
-                  eventManager)
+                  eventManager,
+                  *this)
     , mShortcutEntry(surface,
-                     eventManager)
+                     eventManager,
+                     *this)
     , mTypeCombo(surface,
                  eventManager,
                  mtds)
     , mFocused(&mTitleEntry)
     , mQuit(false)
-{ }
+{
+    mTitleEntry.text = mMacro.name;
+    mShortcutEntry.text = mMacro.shortcut;
+    mTypeCombo.selectedItem = 0;
+}
 
 void EditMacroScreen::poll()
 {
@@ -81,36 +87,46 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::redraw()
 {
-    TableLayout layout(72, Surface::kWidth, 18, 8);
+    TableLayout layout(72, Surface::kWidth, 16, 8, 2);
                 
-    Label(mSurface,
-          layout.next(),
-          "Name",
-          Label::Justify::Right);
+    LabelWidget la(layout.next(),
+                   "Name",
+                   LabelWidget::Justify::kRight);
 
     mTitleEntry.region = layout.next();
-    mTitleEntry.text = mMacro.name;
-    mTitleEntry.redrawContent(true);
                 
-    Label(mSurface,
-          layout.next(),
-          "Shortcut",
-          Label::Justify::Right);
+    LabelWidget lb(layout.next(),
+                   "Shortcut",
+                   LabelWidget::Justify::kRight);
     
     mShortcutEntry.region = layout.next();
-    mShortcutEntry.text = mMacro.shortcut;
-    mShortcutEntry.redrawContent(false);
 
     MacroTypeDataSource ds;
                 
-    Label(mSurface,
-          layout.next(),
-          "Type",
-          Label::Justify::Right);
+    LabelWidget lc(layout.next(),
+                   "Type",
+                   LabelWidget::Justify::kRight);
 
     mTypeCombo.region = layout.next();
-    mTypeCombo.selectedItem = 0;
-    mTypeCombo.redrawContent(false);
+
+    for (int y(0); y < Surface::kHeight; ++y)
+    {
+        Surface::RowData row;
+
+        Surface::render(la, row, y);
+        Surface::render(lb, row, y);
+        Surface::render(lc, row, y);
+
+        Surface::render(mTitleEntry, row, y);
+        Surface::render(mShortcutEntry,row, y);
+        // mTypeCombo.render(row, y);
+
+        mSurface.render(row, y);
+    }
+
+    // mTitleEntry.redrawContent(true);
+    // mShortcutEntry.redrawContent(false);
+    // mTypeCombo.redrawContent(false);
 }
 
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)

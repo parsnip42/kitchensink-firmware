@@ -7,39 +7,40 @@
 #include "ui/rectangle.h"
 #include "eventmanager.h"
 #include "ui/widget.h"
+#include "ui/surface.h"
+#include "ui/widgetcontainer.h"
 
 #include <cstdint>
 
 class KeyId;
 class KeyEvent;
 class EventManager;
-class Surface;
 
 class TextEntryWidget : public Widget
 {
 public:
-    TextEntryWidget(Surface&      surface,
-                    EventManager& eventManager);
+    TextEntryWidget(Surface&         surface,
+                    EventManager&    eventManager,
+                    WidgetContainer& widgetContainer);
 
 public:
     virtual void redrawContent(bool focused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;
 
-private:
-    void paintText();
-    void paintCursor(bool visible);
-
+    void render(Surface::RowData& rowData, int row) const;
+    
 public:
     Rectangle  region;
     StrBuf<30> text;
     
 private:
-    Surface&      mSurface;
-    EventManager& mEventManager;
-    Timer::Handle mFlashTimer;
-    std::size_t   mCursorPosition;
-    bool          mFlash;
-    bool          mFocused;
+    Surface&         mSurface;
+    EventManager&    mEventManager;
+    WidgetContainer& mWidgetContainer;
+    Timer::Handle    mFlashTimer;
+    std::size_t      mCursorPosition;
+    bool             mFlash;
+    bool             mFocused;
     
 private:
     TextEntryWidget(const TextEntryWidget&) = delete;

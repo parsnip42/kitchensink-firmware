@@ -8,10 +8,12 @@
 #include "ui/surface.h"
 #include "ui/rectangle.h"
 
-TextEntryWidget::TextEntryWidget(Surface&      surface,
-                                 EventManager& eventManager)
+TextEntryWidget::TextEntryWidget(Surface&         surface,
+                                 EventManager&    eventManager,
+                                 WidgetContainer& widgetContainer)
     : mSurface(surface)
     , mEventManager(eventManager)
+    , mWidgetContainer(widgetContainer)
     , mFlashTimer(mEventManager.timer.createHandle())
     , mCursorPosition(1000)
     , mFlash(false)
@@ -23,12 +25,6 @@ void TextEntryWidget::redrawContent(bool focused)
     mFocused = focused;
     mFlash = focused;
     
-    mSurface.rectangle(region.x, region.y, region.width, Surface::kFontHeight + 3, focused ? 0xf : 0x4);
-    paintText();
-
-    mCursorPosition = std::min(mCursorPosition, text.length());
-    paintCursor(mFlash);
-
     if (focused)
     {
         mFlashTimer.scheduleRepeating(1000, 500);
@@ -39,6 +35,49 @@ void TextEntryWidget::redrawContent(bool focused)
     }
 }
 
+void TextEntryWidget::render(Surface::RowData& rowData, int row) const
+{
+    if (row == 0 || row == region.height - 1)
+    {
+        for (int i(region.x); i < region.x + region.width; ++i)
+        {
+            rowData[i] = 0xf;
+        }
+    }
+
+    rowData[region.x] = 0xf;
+    rowData[region.x + region.width - 1] = 0xf;
+
+    auto yOffset(0);
+
+    if (Font::kHeight < region.height)
+    {
+        yOffset = (region.height - Font::kHeight) / 2;
+    }
+    
+    Surface::render(text, region.x + 2, row - yOffset, rowData, 0xf, 0x0);
+    
+    if (row >= 2 && row < region.height - 2)
+    {
+        StrRef textChar(" ");
+
+        if (mCursorPosition < text.length())
+        {
+            textChar = StrRef(text).substr(mCursorPosition, 1);
+        }
+
+        uint8_t fg(0xf);
+        uint8_t bg(0);
+
+        if (mFlash)
+        {
+            std::swap(fg, bg);
+        }
+        
+        Surface::render(textChar, region.x + 2 + (mCursorPosition * Font::kWidth), row - yOffset, rowData, fg, bg);
+    }
+}
+
 void TextEntryWidget::processKeyEvent(const KeyEvent& event)
 {
     VirtualKeyboard vKeyboard;
@@ -46,7 +85,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
-        paintCursor(mFlash);
+        mWidgetContainer.invalidateWidget(*this, region);
         return;
     }
 
@@ -61,8 +100,6 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     {
         mFlash = true;
         mFlashTimer.scheduleRepeating(1000, 500);
-
-        paintCursor(false);
 
         switch (keyId.value())
         {
@@ -96,14 +133,13 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             if (mCursorPosition > 0)
             {
                 text.erase(text.begin() + mCursorPosition - 1);
-                paintText();
                 
                 --mCursorPosition;
             }
             break;
                 
         default:
-            if (text.length() < static_cast<std::size_t>(region.width / Surface::kFontWidth) - 2)
+            if (text.length() < static_cast<std::size_t>(region.width / Surface::kFontWidth) - 1)
             {
                 char newChar(state.activeChar);
                     
@@ -111,41 +147,12 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
                 {
                     text.insert(text.begin() + mCursorPosition, newChar);
                         
-                    paintText();
-
                     ++mCursorPosition;
                 }
             }
             break;
         }
-
-        paintCursor(true);
     }
-}
 
-void TextEntryWidget::paintText()
-{
-    uint8_t color(mFocused ? 0xf : 0x4);
-    
-    mSurface.paintTextL(region.x + 4, region.y + 2, region.width - 4, text, color, 0);
-}
-
-void TextEntryWidget::paintCursor(bool visible)
-{
-    uint8_t color(mFocused ? 0xf : 0x4);
-
-    auto fg(visible ? 0 : color);
-    auto bg(visible ? color : 0);
-
-    mSurface.clearRegion(region.x + 4 + (Surface::kFontWidth * mCursorPosition),
-                         region.y + 2, Surface::kFontWidth, Surface::kFontHeight + 4, visible ? 0xf : 0x0);
-
-    if (mCursorPosition < text.length())
-    {
-        StrRef textRef(text);
-        auto cursorChar(textRef.substr(mCursorPosition, 1));
-        
-        mSurface.paintText(region.x + 4 + (Surface::kFontWidth * mCursorPosition),
-                           region.y + 2, cursorChar, fg, bg);
-    }
+    mWidgetContainer.invalidateWidget(*this, region);
 }

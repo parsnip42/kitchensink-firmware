@@ -3,6 +3,7 @@
 
 #include "ui/textentrywidget.h"
 #include "ui/combowidget.h"
+#include "ui/widgetcontainer.h"
 #include "keyeventstage.h"
 
 class EventManager;
@@ -13,6 +14,7 @@ class Surface;
 class Widget;
 
 class EditMacroScreen : public KeyEventStage
+                      , public WidgetContainer
 {
 public:
     EditMacroScreen(Surface&      surface,
@@ -22,7 +24,13 @@ public:
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    
+
+    virtual void invalidateWidget(Widget&          widget,
+                                  const Rectangle& region) override
+    {
+        redraw();
+    }
+
     void poll();
 
 private:
