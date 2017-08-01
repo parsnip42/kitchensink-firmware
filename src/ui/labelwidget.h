@@ -1,8 +1,8 @@
 #ifndef INCLUDED_LABELWIDGET_H
 #define INCLUDED_LABELWIDGET_H
 
+#include "ui/dimension.h"
 #include "ui/justify.h"
-#include "ui/rectangle.h"
 #include "ui/surface.h"
 #include "ui/widget.h"
 #include "ui/widgetcontainer.h"
@@ -20,13 +20,17 @@ public:
 
 public:
     virtual void setFocused(bool nFocused) override;
-    void render(Surface::RowData& rowData, int row) const;
-
+    virtual Dimension getSize() const override;
+    virtual void setSize(const Dimension& size) override;
+    virtual void render(Surface::RowData& rowData, int row) override;
+    
 public:
-    Rectangle  region;
     StrBuf<24> text;
     Justify    justify;
     bool       focused;
+
+private:
+    Dimension mSize;
 };
 
 #endif

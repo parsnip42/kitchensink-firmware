@@ -7,7 +7,7 @@ Surface::Surface(Display& display)
     : mDisplay(display)
 { }
 
-void Surface::render(const RowData& row, int y)
+void Surface::render(const RowBuf& row, int y)
 {
     initRegion(0, y, kWidth, 1);
 
@@ -34,9 +34,12 @@ void Surface::render(const StrRef& text, int x, int line, RowData& row, uint8_t 
                 data = 0;
             }
 
-            for (int w(0); w < Font::kWidth; ++w)
+            for (int w(0); x < (int)row.size() && w < Font::kWidth; ++w)
             {
-                row[x++] = ((data >> (7 - w)) & 1) ? fg : bg;
+                if (x >= 0)
+                {
+                    row[x++] = ((data >> (7 - w)) & 1) ? fg : bg;
+                }
             }
         }
     }

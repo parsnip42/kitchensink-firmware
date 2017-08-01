@@ -2,6 +2,7 @@
 #define INCLUDED_UI4ARRAY_H
 
 #include "types/range.h"
+#include "types/indexediterator.h"
 
 #include <algorithm>
 #include <array>
@@ -20,19 +21,24 @@ private:
     typedef std::array<uint8_t, kByteSize> Data;
 
 public:
+    typedef IndexedIterator<UI4Array> iterator;
+    
+public:
     typedef Range<typename Data::const_iterator> RawData;
     
 public:
+    typedef uint8_t value_type;
+    
     class reference
     {
     private:
         constexpr reference(Data&       data,
-                            std::size_t index);
+                           std::size_t index);
 
     public:
         // constexpr operator uint8_t() const;
         reference& operator=(uint8_t value);
-        
+
     private:
         Data&       mData;
         std::size_t mIndex;
@@ -48,7 +54,17 @@ public:
     constexpr std::size_t size() const;
     void clear();
     RawData rawData() const;
-    
+
+    iterator begin()
+    {
+        return iterator(*this, 0);
+    }
+
+    iterator end()
+    {
+        return iterator(*this, mData.size());
+    }
+
 public:
     // constexpr uint8_t operator[](std::size_t index) const;
     reference operator[](std::size_t index);

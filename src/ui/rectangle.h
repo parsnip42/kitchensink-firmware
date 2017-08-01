@@ -1,6 +1,8 @@
 #ifndef INCLUDED_RECTANGLE_H
 #define INCLUDED_RECTANGLE_H
 
+#include "ui/dimension.h"
+
 class Rectangle
 {
 public:
@@ -10,6 +12,8 @@ public:
               int nY,
               int nWidth,
               int nHeight);
+
+    explicit Rectangle(const Dimension& dimension);
     
 public:
     int x;
@@ -38,4 +42,12 @@ Rectangle::Rectangle(int nX,
     , height(nHeight)
 { }
 
-#endif /* INCLUDED_RECTANGLE_H */
+inline
+Rectangle::Rectangle(const Dimension& dimension)
+    : x(0)
+    , y(0)
+    , width(dimension.width)
+    , height(dimension.height)
+{ }
+
+#endif

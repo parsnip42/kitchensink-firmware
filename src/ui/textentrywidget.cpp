@@ -34,7 +34,7 @@ void TextEntryWidget::setFocused(bool nFocused)
         mFlashTimer.cancel();
     }
 
-    mParent.invalidateWidget(*this, region);
+    mParent.invalidateWidget(*this, Rectangle(mSize));
 }
 
 void TextEntryWidget::render(Surface::RowData& rowData, int row)
@@ -43,32 +43,32 @@ void TextEntryWidget::render(Surface::RowData& rowData, int row)
     
     cursorPosition = std::min(cursorPosition, text.length());
     
-    if (row == 0 || row == region.height - 1)
+    if (row == 0 || row == mSize.height - 1)
     {
-        for (int i(region.x); i < region.x + region.width; ++i)
+        for (int i(0); i < mSize.width; ++i)
         {
             rowData[i] = fg;
         }
     }
 
-    rowData[region.x] = fg;
-    rowData[region.x + region.width - 1] = fg;
+    rowData[0] = fg;
+    rowData[mSize.width - 1] = fg;
 
     auto yOffset(0);
 
-    if (Font::kHeight < region.height)
+    if (Font::kHeight < mSize.height)
     {
-        yOffset = (region.height - Font::kHeight) / 2;
+        yOffset = (mSize.height - Font::kHeight) / 2;
     }
     
     Surface::render(text,
-                    region.x + 2,
+                    2,
                     row - yOffset,
                     rowData,
                     fg,
                     0x0);
     
-    if (row >= 2 && row < region.height - 2)
+    if (row >= 2 && row < mSize.height - 2)
     {
         StrRef textChar(" ");
 
@@ -86,7 +86,7 @@ void TextEntryWidget::render(Surface::RowData& rowData, int row)
         }
         
         Surface::render(textChar,
-                        region.x + 2 + (cursorPosition * Font::kWidth),
+                        2 + (cursorPosition * Font::kWidth),
                         row - yOffset,
                         rowData,
                         cursorFg,
@@ -101,7 +101,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
-        mParent.invalidateWidget(*this, region);
+        mParent.invalidateWidget(*this, Rectangle(mSize));
         return;
     }
 
@@ -155,7 +155,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             break;
                 
         default:
-            if (text.length() < static_cast<std::size_t>(region.width / Surface::kFontWidth) - 1)
+            if (text.length() < static_cast<std::size_t>(mSize.width / Surface::kFontWidth) - 1)
             {
                 char newChar(state.activeChar);
                     
@@ -170,5 +170,5 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
         }
     }
 
-    mParent.invalidateWidget(*this, region);
+    mParent.invalidateWidget(*this, Rectangle(mSize));
 }

@@ -1,6 +1,5 @@
 #include "ui/editmacroscreen.h"
 
-#include "ui/tablelayout.h"
 #include "ui/labelwidget.h"
 #include "ui/surface.h"
 #include "ui/combowidget.h"
@@ -46,6 +45,7 @@ public:
 
 MacroTypeDataSource mtds;
 
+
 }
 
 EditMacroScreen::EditMacroScreen(Surface&      surface,
@@ -59,24 +59,26 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mTitleEntry("Name", Justify::kRight,
                   TextEntryWidget(surface,
                                   eventManager,
-                                  *this))
+                                  *this),
+                  30, 4)
     , mShortcutEntry("Shortcut", Justify::kRight,
                      TextEntryWidget(surface,
                                      eventManager,
-                                     *this))
+                                     *this),
+                     30, 4)
     , mTypeCombo("Type", Justify::kRight,
                  ComboWidget(surface,
                              eventManager,
                              *this,
-                             mtds))
-    , mFocused(&mTitleEntry)
+                             mtds),
+                 30, 4)
+    , mWidgetLayout(Surface::kWidth, Surface::kHeight, 16, 2,
+                    { &mTitleEntry, &mShortcutEntry, &mTypeCombo } )
     , mQuit(false)
 {
     mTitleEntry.widget.text = mMacro.name;
-    mShortcutEntry.widget.text = mMacro.shortcut;
+    mShortcutEntry.widget.text = mMacro.shortcut;    
     mTypeCombo.widget.selectedItem = 0;
-
-    mFocused->setFocused(true);
 }
 
 void EditMacroScreen::poll()
@@ -93,29 +95,13 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::redraw()
 {
-    TableLayout layout(72, Surface::kWidth, 16, 8, 2);
-                
-    mTitleEntry.label.region = layout.next();
-    mTitleEntry.widget.region = layout.next();
-    
-    mShortcutEntry.label.region = layout.next();
-    mShortcutEntry.widget.region = layout.next();
-    
-    mTypeCombo.label.region = layout.next();
-    mTypeCombo.widget.region = layout.next();
-
     for (int y(0); y < Surface::kHeight; ++y)
     {
-        Surface::RowData row;
+        Surface::RowBuf row;
 
-        Surface::render(mTitleEntry.label, row, y);
-        Surface::render(mShortcutEntry.label, row, y);
-        Surface::render(mTypeCombo.label, row, y);
-
-        Surface::render(mTitleEntry.widget, row, y);
-        Surface::render(mShortcutEntry.widget, row, y);
-        Surface::render(mTypeCombo.widget, row, y);
-
+        Surface::RowData rowData(row);
+        
+        mWidgetLayout.render(rowData, y);
         mSurface.render(row, y);
     }
 }
@@ -125,61 +111,50 @@ void EditMacroScreen::invalidateWidget(Widget&          widget,
     redraw();
 }
 
-
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
-    mFocused->processKeyEvent(event);
+    mWidgetLayout.processKeyEvent(event);
 
     if (event.pressed)
     {
         auto keyId(event.keyId);
 
-        if (Keys::down(keyId))
+        if (Keys::ok(keyId))
         {
-            FocusUtil::next(mFocused,
-                            { &mTitleEntry, &mShortcutEntry, &mTypeCombo });
-        }
-        else if (Keys::up(keyId))
-        {
-            FocusUtil::prev(mFocused,
-                            { &mTitleEntry, &mShortcutEntry, &mTypeCombo });
+            // if (!FocusUtil::next(mFocused,
+            //                      { &mTitleEntry, &mShortcutEntry, &mTypeCombo }))
+            // {
+            //     MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
+            //                         MacroType::kInvert :
+            //                         MacroType::kSync);
+
+            //     mMacro.type = macroType;
+            //     mMacro.name = mTitleEntry.widget.text;
+            //     mMacro.shortcut = mShortcutEntry.widget.text;
+
+            //     RecordMacroScreen record(mSurface,
+            //                              mEventManager,
+            //                              mMacro,
+            //                              (mTypeCombo.widget.selectedItem == 1));
+
+            //     record.poll();
+
+            //     Storage storage;
+            //     Serializer<MacroSet> s;
+                
+            //     auto os(storage.write(Storage::Region::Macro));
+                
+            //     s.serialize(mMacroSet, os);
+
+            //     mSurface.clear();
+
+            //     mQuit = true;
+            // }
         }
         else if (Keys::cancel(keyId))
         {
-            mSurface.clear();
-            mQuit = true;
-        }
-        else if (Keys::ok(keyId))
-        {
-            if (!FocusUtil::next(mFocused,
-                                 { &mTitleEntry, &mShortcutEntry, &mTypeCombo }))
-            {
-                MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-                                    MacroType::kInvert :
-                                    MacroType::kSync);
-
-                mMacro.type = macroType;
-                mMacro.name = mTitleEntry.widget.text;
-                mMacro.shortcut = mShortcutEntry.widget.text;
-
-                RecordMacroScreen record(mSurface,
-                                         mEventManager,
-                                         mMacro,
-                                         (mTypeCombo.widget.selectedItem == 1));
-
-                record.poll();
-
-                Storage storage;
-                Serializer<MacroSet> s;
-                
-                auto os(storage.write(Storage::Region::Macro));
-                
-                s.serialize(mMacroSet, os);
-
                 mSurface.clear();
-
                 mQuit = true;
-            }
         }
     }
 }

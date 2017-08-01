@@ -5,8 +5,8 @@
 #include "ui/rectangle.h"
 #include "ui/font.h"
 
-LabelWidget::LabelWidget(const StrRef&    nText,
-                         Justify          nJustify)
+LabelWidget::LabelWidget(const StrRef& nText,
+                         Justify       nJustify)
     : text(nText)
     , justify(nJustify)
     , focused(true)
@@ -17,18 +17,28 @@ void LabelWidget::setFocused(bool nFocused)
     focused = nFocused;
 }
 
-void LabelWidget::render(Surface::RowData& rowData, int row) const
+Dimension LabelWidget::getSize() const
 {
-    auto xOffset(region.x);
+    return mSize;
+}
+
+void LabelWidget::setSize(const Dimension& size)
+{
+    mSize = size;
+}
+
+void LabelWidget::render(Surface::RowData& rowData, int row)
+{
+    auto xOffset(0);
     
     switch (justify)
     {
     case Justify::kRight:
-        xOffset = (region.x + region.width) - (Font::kWidth * text.length());
+        xOffset = mSize.width - (Font::kWidth * text.length());
         break;
         
     case Justify::kCenter:
-        xOffset = ((region.x + region.width) - (Font::kWidth * text.length())) / 2;
+        xOffset = (mSize.width - (Font::kWidth * text.length())) / 2;
         break;
         
     default:
@@ -37,9 +47,9 @@ void LabelWidget::render(Surface::RowData& rowData, int row) const
 
     auto yOffset(0);
 
-    if (Font::kHeight < region.height)
+    if (Font::kHeight < mSize.height)
     {
-        yOffset = (region.height - Font::kHeight) / 2;
+        yOffset = (mSize.height - Font::kHeight) / 2;
     }
 
     uint8_t fg(focused ? 0xf : 0x7);

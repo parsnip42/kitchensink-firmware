@@ -37,12 +37,22 @@ public:
     virtual void setFocused(bool focused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;
 
+    
+    virtual Dimension getSize() const override
+    {
+        return mSize;
+    }
+
+    virtual void setSize(const Dimension& size) override
+    {
+        mSize = size;
+    }
+
     void render(Surface::RowData& rowData, int row);
 
 public:
     std::size_t selectedItem;
     bool        focused;
-    Rectangle   region;
     
 private:
     void paintSelection(uint8_t color);
@@ -52,6 +62,7 @@ private:
     EventManager&            mEventManager;
     WidgetContainer&         mParent;
     ComboWidget::DataSource& mDataSource;
+    Dimension                mSize;
 
 private:
     ComboWidget(const ComboWidget&) = delete;

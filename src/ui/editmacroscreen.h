@@ -4,8 +4,11 @@
 #include "ui/textentrywidget.h"
 #include "ui/combowidget.h"
 #include "ui/labelledwidget.h"
+#include "ui/listlayout.h"
 #include "ui/widgetcontainer.h"
 #include "keyeventstage.h"
+
+#include <tuple>
 
 class EventManager;
 class KeyEvent;
@@ -41,7 +44,7 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    Widget*                         mFocused;
+    ListLayout<3>                   mWidgetLayout;
     bool                            mQuit;
 };
 
