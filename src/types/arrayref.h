@@ -5,74 +5,81 @@
 
 #include <cstdint>
 
-template <typename Iterator>
+template <typename Array>
 class ArrayRef
 {
 public:
-    typedef Iterator iterator;
+    typedef typename Array::reference reference;
     
 public:
-    template <typename Array>
     explicit ArrayRef(Array& array);
 
-    ArrayRef(iterator begin,
-             iterator end);
-
+private:
+    ArrayRef(Array&      array,
+             std::size_t begin,
+             std::size_t end);
+    
 public:
-    typename Iterator::reference operator[](std::size_t index);
+    reference operator[](std::size_t index);
     std::size_t size() const;
     ArrayRef subset(std::size_t start) const;
     ArrayRef subset(std::size_t start, std::size_t len) const;
 
 private:
-    Range<Iterator> mRange;
+    Array&      mArray;
+    std::size_t mBegin;
+    std::size_t mEnd;
 };
 
 
-template <typename Iterator>
 template <typename Array>
 inline
-ArrayRef<Iterator>::ArrayRef(Array& array)
-    : mRange(array.begin(), array.end())
+ArrayRef<Array>::ArrayRef(Array& array)
+    : mArray(array)
+    , mBegin(0)
+    , mEnd(array.size())
 { }
 
-template <typename Iterator>
+template <typename Array>
 inline
-ArrayRef<Iterator>::ArrayRef(iterator begin,
-                             iterator end)
-    : mRange(begin, end)
+ArrayRef<Array>::ArrayRef(Array&      array,
+                          std::size_t begin,
+                          std::size_t end)
+    : mArray(array)
+    , mBegin(begin)
+    , mEnd(end)
 { }
 
-template <typename Iterator>
+template <typename Array>
 inline
-typename Iterator::reference ArrayRef<Iterator>::operator[](std::size_t index)
+typename ArrayRef<Array>::reference ArrayRef<Array>::operator[](std::size_t index)
 {
-    return *(mRange.begin() + index);
+    return mArray[mBegin + index];
 }
 
-template <typename Iterator>
+template <typename Array>
 inline
-std::size_t ArrayRef<Iterator>::size() const
+std::size_t ArrayRef<Array>::size() const
 {
-    return std::distance(mRange.begin(), mRange.end());
+    return mEnd - mBegin;
 }
 
-template <typename Iterator>
+template <typename Array>
 inline
-ArrayRef<Iterator> ArrayRef<Iterator>::subset(std::size_t start) const
+ArrayRef<Array> ArrayRef<Array>::subset(std::size_t start) const
 {
-    return ArrayRef<Iterator>(
-        (start < size()) ? (mRange.begin() + start) : mRange.end(),
-        mRange.end());
+    return ArrayRef<Array>(mArray,
+                           (start < size()) ? start : mEnd,
+                           mEnd);
 }
 
-template <typename Iterator>
+template <typename Array>
 inline
-ArrayRef<Iterator> ArrayRef<Iterator>::subset(std::size_t start, std::size_t len) const
+ArrayRef<Array> ArrayRef<Array>::subset(std::size_t start, std::size_t len) const
 {
-    return ArrayRef<Iterator>(
-        (start < size()) ? (mRange.begin() + start) : mRange.end(),
-        (start + len) < size() ? (mRange.begin() + start + len) : mRange.end());
+    return ArrayRef<Array>(mArray,
+                           (start < size()) ? start : mEnd,
+                           (start + len) < size() ? (start + len) : mEnd);
 }
 
 #endif

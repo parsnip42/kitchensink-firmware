@@ -21,8 +21,8 @@ public:
     static constexpr uint8_t kScrollMax  = 128;
 
 public:
-    typedef UI4Array<kWidth>           RowBuf;
-    typedef ArrayRef<RowBuf::iterator> RowData;
+    typedef UI4Array<kWidth> RowBuf;
+    typedef ArrayRef<RowBuf> RowData;
     
 public:
     class ColorMap
