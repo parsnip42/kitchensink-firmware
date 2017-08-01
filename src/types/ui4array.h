@@ -62,7 +62,7 @@ public:
 
     iterator end()
     {
-        return iterator(*this, mData.size());
+        return iterator(*this, size());
     }
 
 public:

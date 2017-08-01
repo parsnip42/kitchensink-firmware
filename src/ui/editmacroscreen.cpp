@@ -153,8 +153,8 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
         }
         else if (Keys::cancel(keyId))
         {
-                mSurface.clear();
-                mQuit = true;
+            mSurface.clear();
+            mQuit = true;
         }
     }
 }
