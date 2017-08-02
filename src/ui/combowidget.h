@@ -3,6 +3,7 @@
 
 #include "keyeventstage.h"
 #include "types/strbuf.h"
+#include "types/objectsource.h"
 #include "ui/rectangle.h"
 #include "ui/widget.h"
 #include "ui/surface.h"
@@ -10,17 +11,8 @@
 class ComboWidget : public Widget
 {
 public:
-    class DataSource
-    {
-    public:
-        typedef StrBuf<20> ItemText;
-        
-    public:
-        virtual void item(ItemText&   text,
-                          std::size_t index) const = 0;
-        
-        virtual std::size_t size() const = 0;
-    };
+    typedef StrBuf<20>         Item;
+    typedef ObjectSource<Item> DataSource;
 
 public:
     explicit ComboWidget(ComboWidget::DataSource& dataSource);

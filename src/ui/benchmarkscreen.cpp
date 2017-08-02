@@ -79,28 +79,7 @@ void BenchmarkScreen::poll()
 
         mTextScreen.appendLine(line);
     }
-    
-    {
-        auto start(millis());
-
-        for (int i(0); i < 1000; ++i)
-        {
-            mSurface.clearRegion(Surface::kWidth - 32, Surface::kHeight - 32, 32, 32, (i & 1) ? 0xf : 0);
-        }
-    
-        auto end(millis());
-        {
-            StrBuf<32> line;
-            StrOStream ostream(line);
-
-            ostream.appendStr("  1000 rects: ")
-            .appendInt(static_cast<int>(end-start))
-            .appendStr("ms");
-
-            mTextScreen.appendLine(line);
-        }
-    }
-    
+        
     while (!mQuit)
     {
         mEventManager.poll(*this);

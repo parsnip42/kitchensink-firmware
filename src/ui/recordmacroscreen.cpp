@@ -22,9 +22,9 @@ void RecordMacroScreen::poll()
 
 void RecordMacroScreen::redraw()
 {
-    mSurface.clear();
+    // mSurface.clear();
 
-    mSurface.paintText(0, 0, "Macro", 0xf, 0);
+    // mSurface.paintText(0, 0, "Macro", 0xf, 0);
 
     if (!mRecorder.full())
     {
@@ -34,11 +34,11 @@ void RecordMacroScreen::redraw()
         ostream.appendInt(mRecorder.size())
                          .appendStr(" events");
             
-        mSurface.paintText(0, 20, text, 0x7, 0);
+        // mSurface.paintText(0, 20, text, 0x7, 0);
     }
     else
     {
-        mSurface.paintText(0, 40, "Macro Full", 0xf, 0);
+        // mSurface.paintText(0, 40, "Macro Full", 0xf, 0);
     }
 }
 
@@ -55,11 +55,11 @@ void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
         ostream.appendInt(mRecorder.size())
                .appendStr(" events");
             
-        mSurface.paintText(0, 20, text, 0x7, 0);
+        // mSurface.paintText(0, 20, text, 0x7, 0);
     }
     else
     {
-        mSurface.paintText(0, 40, "Macro Full", 0xf, 0);
+        // mSurface.paintText(0, 40, "Macro Full", 0xf, 0);
     }
 
     if (mRecorder.complete())

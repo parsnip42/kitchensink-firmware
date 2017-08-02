@@ -5,7 +5,6 @@
 #include "ui/combowidget.h"
 #include "ui/labelledwidget.h"
 #include "ui/listlayout.h"
-#include "ui/widgetcontainer.h"
 #include "keyeventstage.h"
 
 #include <tuple>
@@ -18,7 +17,6 @@ class Surface;
 class Widget;
 
 class EditMacroScreen : public KeyEventStage
-                      , public WidgetContainer
 {
 public:
     EditMacroScreen(Surface&      surface,
@@ -28,12 +26,8 @@ public:
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    virtual void regionInvalidated(const Rectangle& region) override;
 
     void poll();
-
-private:
-    void redraw();
     
 private:
     Surface&                        mSurface;

@@ -7,7 +7,6 @@
 #include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/menulayout.h"
-#include "ui/widgetcontainer.h"
 #include "ui/hsplitwidget.h"
 #include "ui/labelwidget.h"
 #include "ui/textentrywidget.h"
@@ -16,7 +15,6 @@ class EventManager;
 class Surface;
 
 class MenuScreen : public KeyEventStage
-                 , public WidgetContainer
 {
 public:
     class Item
@@ -52,12 +50,8 @@ public:
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    virtual void regionInvalidated(const Rectangle& region) override;
     
     void poll();
-
-private:
-    void redraw();
 
 private:
     StrRef            mTitle;

@@ -38,11 +38,7 @@ MenuScreen::MenuScreen(const StrRef&     title,
     , mHSplit(mSearchWidget, mMenuLayout, 16)
     , mQuit(false)
 {
-    mHSplit.setParent(this,
-                      Rectangle(0,
-                                0,
-                                Surface::kWidth,
-                                Surface::kHeight));
+    mSurface.setRootWidget(&mHSplit);
 }
 
 void MenuScreen::processKeyEvent(const KeyEvent& event)
@@ -79,7 +75,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
 
 void MenuScreen::poll()
 {
-    redraw();
+    mSurface.redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
@@ -87,24 +83,4 @@ void MenuScreen::poll()
     {
         mEventManager.poll(autoRepeat);
     }
-}
-
-void MenuScreen::regionInvalidated(const Rectangle& region)
-{
-    for (auto y(region.y); y < (region.y + region.height); ++y)
-    {
-        Surface::RowBuf row;
-        RasterLine rasterLine(row);
-
-        mHSplit.render(rasterLine, y);
-        mSurface.render(row, y);
-    }
-}
-
-void MenuScreen::redraw()
-{
-    regionInvalidated(Rectangle(0,
-                                0,
-                                Surface::kWidth,
-                                Surface::kHeight));
 }

@@ -7,7 +7,7 @@
 #include "ui/keys.h"
 #include "ui/recordmacroscreen.h"
 #include "autorepeat.h"
-
+#include "types/arrayobjectsource.h"
 #include "storage/storage.h"
 #include "serialize/serializer.h"
 #include "macro.h"
@@ -15,36 +15,13 @@
 namespace
 {
 
-class MacroTypeDataSource : public ComboWidget::DataSource
-{
-public:
-    virtual void item(ItemText&   text,
-                      std::size_t index) const
-    {
-        switch (index)
-        {
-        case 0:
-            text = "Normal";
-            break;
-            
-        case 1:
-            text = "Realtime";
-            break;
-            
-        case 2:
-            text = "Key Combination";
-            break;
-        }
-    }
-    
-    virtual std::size_t size() const
-    {
-        return 3;
-    }
-};
+const std::array<ComboWidget::Item, 3> typeCombo = {{
+        StrRef("Normal"),
+        StrRef("Realtime"),
+        StrRef("Key Combination")
+    }};
 
-MacroTypeDataSource mtds;
-
+ArrayObjectSource<ComboWidget::Item> mtds(typeCombo.begin(), typeCombo.end());
 
 }
 
@@ -73,42 +50,18 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     mShortcutEntry.widget.text = mMacro.shortcut;    
     mTypeCombo.widget.selectedItem = 0;
 
-    mWidgetLayout.setParent(this,
-                            Rectangle(0,
-                                      0,
-                                      Surface::kWidth,
-                                      Surface::kHeight));
+    mSurface.setRootWidget(&mWidgetLayout);
 }
 
 void EditMacroScreen::poll()
 {
-    redraw();
+    mSurface.redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
     while (!mQuit)
     {
         mEventManager.poll(autoRepeat);
-    }
-}
-
-void EditMacroScreen::redraw()
-{
-    regionInvalidated(Rectangle(0,
-                                     0,
-                                     Surface::kWidth,
-                                     Surface::kHeight));
-}
-
-void EditMacroScreen::regionInvalidated(const Rectangle& region)
-{
-    for (auto y(region.y); y < (region.y + region.height); ++y)
-    {
-        Surface::RowBuf row;
-        RasterLine rasterLine(row);
-    
-        mWidgetLayout.render(rasterLine, y);
-        mSurface.render(row, y);
     }
 }
 
@@ -122,31 +75,31 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 
         if (Keys::ok(keyId))
         {
-            //     MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-            //                         MacroType::kInvert :
-            //                         MacroType::kSync);
+            MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
+                                MacroType::kInvert :
+                                MacroType::kSync);
 
-            //     mMacro.type = macroType;
-            //     mMacro.name = mTitleEntry.widget.text;
-            //     mMacro.shortcut = mShortcutEntry.widget.text;
+            mMacro.type = macroType;
+            mMacro.name = mTitleEntry.widget.text;
+            mMacro.shortcut = mShortcutEntry.widget.text;
 
-            //     RecordMacroScreen record(mSurface,
-            //                              mEventManager,
-            //                              mMacro,
-            //                              (mTypeCombo.widget.selectedItem == 1));
+            RecordMacroScreen record(mSurface,
+                                     mEventManager,
+                                     mMacro,
+                                     (mTypeCombo.widget.selectedItem == 1));
 
-            //     record.poll();
+            record.poll();
 
-            //     Storage storage;
-            //     Serializer<MacroSet> s;
+            Storage storage;
+            Serializer<MacroSet> s;
                 
-            //     auto os(storage.write(Storage::Region::Macro));
+            auto os(storage.write(Storage::Region::Macro));
                 
-            //     s.serialize(mMacroSet, os);
+            s.serialize(mMacroSet, os);
 
-            //     mSurface.clear();
+            mSurface.clear();
 
-            //     mQuit = true;
+            mQuit = true;
         }
         else if (Keys::cancel(keyId))
         {

@@ -53,10 +53,7 @@ void ComboWidget::render(const RasterLine& rasterLine, int row)
         yOffset = (size.height - Font::kHeight) / 2;
     }
 
-    DataSource::ItemText text;
-
-    mDataSource.item(text, selectedItem);
-
+    auto text(mDataSource[selectedItem]);
     auto xOffset((size.width - (Font::kWidth * text.length())) / 2);
 
     RenderUtil::render(text,
