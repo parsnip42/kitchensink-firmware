@@ -16,7 +16,7 @@ public:
     
 public:
     virtual void processKeyEvent(const KeyEvent&) override;
-    virtual void setFocused(bool focused) = 0;
+    virtual void setFocused(bool focused);
     virtual void render(const RasterLine& rasterLine, int row) = 0;
     virtual void parented();
     
@@ -27,12 +27,25 @@ public:
 protected:
     Dimension getSize() const;
     void invalidateWidget();
-    void invalidateParentRegion(const Rectangle& region);
+    void invalidateRegion(const Rectangle& region);
 
 private:
     WidgetContainer* mParent;
     Rectangle        mParentRegion;
 };
+
+
+inline
+void Widget::processKeyEvent(const KeyEvent&)
+{ }
+
+inline
+void Widget::setFocused(bool)
+{ }
+
+inline
+void Widget::parented()
+{ }
 
 inline
 Dimension Widget::getSize() const
@@ -40,9 +53,5 @@ Dimension Widget::getSize() const
     return Dimension(mParentRegion.width,
                      mParentRegion.height);
 }
-
-inline
-void Widget::parented()
-{ }
 
 #endif

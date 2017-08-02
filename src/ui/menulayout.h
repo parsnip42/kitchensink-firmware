@@ -2,13 +2,41 @@
 #define INCLUDED_MENULAYOUT_H
 
 #include "ui/dimension.h"
+#include "ui/menuitemwidget.h"
 #include "ui/surface.h"
 #include "ui/widget.h"
+#include "ui/widgetcontainer.h"
+#include "types/objectsource.h"
 
-class MenuLayout
+#include <cstdint>
+
+class MenuItemWidget;
+
+class MenuLayout : public Widget
+                 , public WidgetContainer
 {
 public:
-    MenuLayout();
+    typedef ObjectSource<MenuItemWidget> DataSource;
+
+public:
+    explicit MenuLayout(const DataSource& dataSource);
+
+public:
+    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void setFocused(bool focused) override;
+    virtual void render(const RasterLine& rasterLine, int row) override;
+    virtual void invalidateParentRegion(const Rectangle& region) override;
+
+private:
+    void moveSelection(int direction);
+    void populateMenuItem(std::size_t index);
+    
+private:
+    const DataSource& mDataSource;
+    int               mSelectedIndex;
+    bool              mFocused;
+    MenuItemWidget    mWidget;
+    std::size_t       mWidgetIndex;
 };
 
 #endif

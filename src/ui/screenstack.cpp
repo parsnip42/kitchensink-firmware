@@ -3,9 +3,25 @@
 #include "keyboardstate.h"
 #include "menudefinitions.h"
 #include "ui/menu.h"
+#include "ui/menuscreen.h"
 #include "ui/editmacroscreen.h"
 #include "ui/storagescreen.h"
 #include "ui/benchmarkscreen.h"
+
+#include "types/arrayobjectsource.h"
+
+namespace
+{
+std::array<MenuScreen::Item, 6> mainMenu = { {
+        { StrRef("Macros"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 1) },
+        { StrRef("Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 4) },
+        { StrRef("Edit Macros"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 2) },
+        { StrRef("Multi Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 6) },
+        { StrRef("Smart Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 3) },
+        { StrRef("System"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 5) },
+    } };
+
+}
 
 void ScreenStack::processKeyEvent(const KeyEvent& event)
 {
@@ -19,10 +35,12 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
 
             auto action(event.keyId.value());
             
-            UI::Menu menu(menuDefinitions.getTitle(action),
-                          menuDefinitions.getDataSource(action),
-                          mSurface,
-                          mEventManager);
+            ArrayObjectSource<std::array<MenuScreen::Item, 6>> ds(mainMenu);
+                
+            MenuScreen menu(menuDefinitions.getTitle(action),
+                            ds,
+                            mSurface,
+                            mEventManager);
 
             menu.poll();
             mSurface.clear();

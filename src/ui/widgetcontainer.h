@@ -11,7 +11,7 @@ public:
     virtual ~WidgetContainer() = default;
     
 public:
-    virtual void invalidateRegion(const Rectangle& region) = 0;
+    virtual void invalidateParentRegion(const Rectangle& region) = 0;
 };
 
 #endif

@@ -68,8 +68,10 @@ template <typename Array>
 inline
 ArrayRef<Array> ArrayRef<Array>::subset(std::size_t start) const
 {
+    start += mBegin;
+    
     return ArrayRef<Array>(mArray,
-                           (start < size()) ? start : mEnd,
+                           (start < mEnd) ? start : mEnd,
                            mEnd);
 }
 
@@ -77,9 +79,11 @@ template <typename Array>
 inline
 ArrayRef<Array> ArrayRef<Array>::subset(std::size_t start, std::size_t len) const
 {
+    start += mBegin;
+
     return ArrayRef<Array>(mArray,
-                           (start < size()) ? start : mEnd,
-                           (start + len) < size() ? (start + len) : mEnd);
+                           (start < mEnd) ? start : mEnd,
+                           (start + len) < mEnd ? (start + len) : mEnd);
 }
 
 #endif

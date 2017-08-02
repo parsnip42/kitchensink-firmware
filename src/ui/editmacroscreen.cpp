@@ -94,13 +94,13 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::redraw()
 {
-    invalidateRegion(Rectangle(0,
-                               0,
-                               Surface::kWidth,
-                               Surface::kHeight));
+    invalidateParentRegion(Rectangle(0,
+                                     0,
+                                     Surface::kWidth,
+                                     Surface::kHeight));
 }
 
-void EditMacroScreen::invalidateRegion(const Rectangle& region)
+void EditMacroScreen::invalidateParentRegion(const Rectangle& region)
 {
     for (auto y(region.y); y < (region.y + region.height); ++y)
     {

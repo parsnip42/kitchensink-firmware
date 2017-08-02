@@ -8,7 +8,8 @@ class StrRef;
 namespace RenderUtil
 {
 
-void render(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg = 0xf, uint8_t bg = 0x0);
+void fill(const RasterLine& row, uint8_t color);
+int render(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg = 0xf, uint8_t bg = 0x0);
 
 };
 

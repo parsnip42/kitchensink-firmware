@@ -118,7 +118,7 @@ template <std::size_t Size>
 inline
 constexpr std::size_t UI4Array<Size>::size() const
 {
-    return Size * 2;
+    return Size;
 }
 
 template <std::size_t Size>

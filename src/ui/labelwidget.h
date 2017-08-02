@@ -15,8 +15,8 @@ class StrRef;
 class LabelWidget : public Widget
 {
 public:
-    LabelWidget(const StrRef& nText,
-                Justify       nJustify);
+    explicit LabelWidget(const StrRef& nText,
+                         Justify       nJustify = Justify::kLeft);
 
 public:
     virtual void setFocused(bool focused) override;
