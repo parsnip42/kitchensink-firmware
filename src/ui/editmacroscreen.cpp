@@ -49,12 +49,11 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     mTitleEntry.widget.text = mMacro.name;
     mShortcutEntry.widget.text = mMacro.shortcut;    
     mTypeCombo.widget.selectedItem = 0;
-
-    mSurface.setRootWidget(&mWidgetLayout);
 }
 
 void EditMacroScreen::poll()
 {
+    mSurface.setRootWidget(&mWidgetLayout);
     mSurface.redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,

@@ -11,11 +11,11 @@
 
 class LayerStack
 {
-private:
-    static constexpr std::size_t MaxLayers = Config::kLayerCount;
+public:
+    typedef Bitmask<Config::kLayerCount> Mask;
     
-    typedef std::array<Layer, MaxLayers> Layers;
-    typedef Bitmask<MaxLayers>           LayerMask;
+private:
+    typedef std::array<Layer, Config::kLayerCount> Layers;
 
 public:
     typedef Layers::const_iterator const_iterator;
@@ -24,13 +24,17 @@ public:
     LayerStack() = default;
 
 public:
-    KeyId at(int row, int column) const;
-    int activeLayer(int row, int column) const;
-    KeyId atIndex(int index, int row, int column) const;
+    KeyId at(const Mask& layerMask,
+             int         row,
+             int         column) const;
     
-public:
-    void setLayer(int index, bool enabled);
-    bool enabled(int index) const;
+    int activeLayer(const Mask& layerMask,
+                    int         row,
+                    int         column) const;
+    
+    KeyId atIndex(int index,
+                  int row,
+                  int column) const;
     
 public:
     const Layer& operator[](std::size_t n) const;
@@ -43,7 +47,6 @@ public:
     
 private:
     Layers    mLayers;
-    LayerMask mLayerMask;
 
 private:
     LayerStack(const LayerStack&) = delete;

@@ -37,9 +37,7 @@ MenuScreen::MenuScreen(const StrRef&     title,
     , mSearchWidget(eventManager)
     , mHSplit(mSearchWidget, mMenuLayout, 16)
     , mQuit(false)
-{
-    mSurface.setRootWidget(&mHSplit);
-}
+{ }
 
 void MenuScreen::processKeyEvent(const KeyEvent& event)
 {
@@ -63,7 +61,10 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
             mQuit = true;
         }
     }
-    else if (Keys::up(keyId) || Keys::down(keyId))
+    else if (Keys::up(keyId) ||
+             Keys::down(keyId) ||
+             Keys::pageUp(keyId) ||
+             Keys::pageDown(keyId))
     {
         mMenuLayout.processKeyEvent(event);
     }
@@ -75,6 +76,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
 
 void MenuScreen::poll()
 {
+    mSurface.setRootWidget(&mHSplit);
     mSurface.redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,

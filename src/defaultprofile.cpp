@@ -169,8 +169,6 @@ void init(KeyboardState& keyboardState)
 
     auto& layerStack(keyboardState.layerStack);
     
-    layerStack.setLayer(0, true);
-
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
             { { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },

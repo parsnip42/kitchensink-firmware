@@ -1,11 +1,13 @@
 #include "layerstack.h"
 #include "layer.h"
 
-KeyId LayerStack::at(int row, int column) const
+KeyId LayerStack::at(const Mask& layerMask,
+                     int         row,
+                     int         column) const
 {
     KeyId keyId;
     
-    auto layerIterator(mLayerMask.bitIterator());
+    auto layerIterator(layerMask.bitIterator());
     
     while (layerIterator.more())
     {
@@ -21,11 +23,13 @@ KeyId LayerStack::at(int row, int column) const
     return keyId;
 }
 
-int LayerStack::activeLayer(int row, int column) const
+int LayerStack::activeLayer(const Mask& layerMask,
+                            int         row,
+                            int         column) const
 {
     int activeIndex(0);
 
-    auto layerIterator(mLayerMask.bitIterator());
+    auto layerIterator(layerMask.bitIterator());
 
     while (layerIterator.more())
     {
@@ -44,14 +48,4 @@ int LayerStack::activeLayer(int row, int column) const
 KeyId LayerStack::atIndex(int index, int row, int column) const
 {
     return mLayers[index].at(row, column);
-}
-
-void LayerStack::setLayer(int index, bool enabled)
-{
-    mLayerMask[index] = enabled;
-}
-
-bool LayerStack::enabled(int index) const
-{
-    return mLayerMask[index];
 }
