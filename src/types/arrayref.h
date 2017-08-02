@@ -20,7 +20,7 @@ private:
              std::size_t end);
     
 public:
-    reference operator[](std::size_t index);
+    reference operator[](std::size_t index) const;
     std::size_t size() const;
     ArrayRef subset(std::size_t start) const;
     ArrayRef subset(std::size_t start, std::size_t len) const;
@@ -52,7 +52,7 @@ ArrayRef<Array>::ArrayRef(Array&      array,
 
 template <typename Array>
 inline
-typename ArrayRef<Array>::reference ArrayRef<Array>::operator[](std::size_t index)
+typename ArrayRef<Array>::reference ArrayRef<Array>::operator[](std::size_t index) const
 {
     return mArray[mBegin + index];
 }

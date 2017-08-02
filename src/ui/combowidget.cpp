@@ -1,30 +1,17 @@
 #include "ui/combowidget.h"
 
 #include "autorepeat.h"
-#include "ui/surface.h"
 #include "ui/keys.h"
 #include "ui/rectangle.h"
+#include "ui/renderutil.h"
 #include "ui/widgetcontainer.h"
 #include "types/strref.h"
-#include "eventmanager.h"
 
-ComboWidget::ComboWidget(Surface&                 surface,
-                         EventManager&            eventManager,
-                         WidgetContainer&         parent,
-                         ComboWidget::DataSource& dataSource)
+ComboWidget::ComboWidget(ComboWidget::DataSource& dataSource)
     : selectedItem(0)
     , focused(false)
-    , mSurface(surface)
-    , mEventManager(eventManager)
-    , mParent(parent)
     , mDataSource(dataSource)
 { }
-
-void ComboWidget::setFocused(bool nFocused)
-{
-    focused = nFocused;
-    mParent.invalidateWidget(*this, Rectangle(mSize));
-}
 
 void ComboWidget::processKeyEvent(const KeyEvent& event)
 {
@@ -36,52 +23,60 @@ void ComboWidget::processKeyEvent(const KeyEvent& event)
         {
             selectedItem += mDataSource.size() - 1;
             selectedItem %= mDataSource.size();
-            mParent.invalidateWidget(*this, Rectangle(mSize));
+            invalidateWidget();
         }
 
         if (Keys::right(keyId))
         {
             ++selectedItem %= mDataSource.size();
-            mParent.invalidateWidget(*this, Rectangle(mSize));
+            invalidateWidget();
         }
     }
 }
 
-void ComboWidget::render(Surface::RowData& rowData, int row)
+void ComboWidget::setFocused(bool nFocused)
 {
+    focused = nFocused;
+    invalidateWidget();
+}
+
+void ComboWidget::render(const RasterLine& rasterLine, int row)
+{
+    auto size(getSize());
+    
     uint8_t fg(focused ? 0xf : 0x7);
 
     auto yOffset(0);
     
-    if (Font::kHeight < mSize.height)
+    if (Font::kHeight < size.height)
     {
-        yOffset = (mSize.height - Font::kHeight) / 2;
+        yOffset = (size.height - Font::kHeight) / 2;
     }
 
     DataSource::ItemText text;
 
     mDataSource.item(text, selectedItem);
 
-    auto xOffset((mSize.width - (Font::kWidth * text.length())) / 2);
+    auto xOffset((size.width - (Font::kWidth * text.length())) / 2);
 
-    Surface::render(text,
-                    xOffset,
-                    row - yOffset,
-                    rowData,
-                    fg,
-                    0x0);
+    RenderUtil::render(text,
+                       xOffset,
+                       row - yOffset,
+                       rasterLine,
+                       fg,
+                       0x0);
 
-    if (row >= 3 && row <= mSize.height - 3)
+    if (row >= 3 && row <= size.height - 3)
     {
-        int halfHeight(mSize.height / 2);
+        int halfHeight(size.height / 2);
         
         for (int x(0); x < halfHeight; ++x)
         {
             auto xOffset(x);
             int yDistance(abs(halfHeight - row));
             
-            rowData[xOffset] = (x > yDistance && x < yDistance + 2) ? fg : 0x0;
-            rowData[xOffset + (mSize.width - halfHeight)] = ((halfHeight - x) > yDistance && (halfHeight - x) < yDistance + 2) ? fg : 0x0;
+            rasterLine[xOffset] = (x > yDistance && x < yDistance + 2) ? fg : 0x0;
+            rasterLine[xOffset + (size.width - halfHeight)] = ((halfHeight - x) > yDistance && (halfHeight - x) < yDistance + 2) ? fg : 0x0;
         }
     }
 }

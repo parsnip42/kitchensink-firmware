@@ -4,9 +4,9 @@
 class Dimension
 {
 public:
-    Dimension();
+    constexpr Dimension();
 
-    Dimension(int nWidth,
+    constexpr Dimension(int nWidth,
               int nHeight);
     
 public:
@@ -16,14 +16,14 @@ public:
 
 
 inline
-Dimension::Dimension()
+constexpr Dimension::Dimension()
     : width(0)
     , height(0)
 { }
 
 inline
-Dimension::Dimension(int nWidth,
-                     int nHeight)
+constexpr Dimension::Dimension(int nWidth,
+                               int nHeight)
     : width(nWidth)
     , height(nHeight)
 { }

@@ -6,17 +6,14 @@
 #include "data/keymap.h"
 #include "ui/keys.h"
 #include "ui/surface.h"
+#include "ui/rasterline.h"
 #include "ui/rectangle.h"
+#include "ui/renderutil.h"
 
-TextEntryWidget::TextEntryWidget(Surface&         surface,
-                                 EventManager&    eventManager,
-                                 WidgetContainer& parent)
+TextEntryWidget::TextEntryWidget(EventManager& eventManager)
     : cursorPosition(1000)
     , focused(false)
-    , mSurface(surface)
-    , mEventManager(eventManager)
-    , mParent(parent)
-    , mFlashTimer(mEventManager.timer.createHandle())
+    , mFlashTimer(eventManager.timer.createHandle())
     , mFlash(false)
 { }
 
@@ -34,41 +31,42 @@ void TextEntryWidget::setFocused(bool nFocused)
         mFlashTimer.cancel();
     }
 
-    mParent.invalidateWidget(*this, Rectangle(mSize));
+    invalidateWidget();
 }
 
-void TextEntryWidget::render(Surface::RowData& rowData, int row)
+void TextEntryWidget::render(const RasterLine& rasterLine, int row)
 {
+    auto size(getSize());
     uint8_t fg(focused ? 0xf : 0x7);
     
     cursorPosition = std::min(cursorPosition, text.length());
     
-    if (row == 0 || row == mSize.height - 1)
+    if (row == 0 || row == size.height - 1)
     {
-        for (int i(0); i < mSize.width; ++i)
+        for (int i(0); i < size.width; ++i)
         {
-            rowData[i] = fg;
+            rasterLine[i] = fg;
         }
     }
 
-    rowData[0] = fg;
-    rowData[mSize.width - 1] = fg;
+    rasterLine[0] = fg;
+    rasterLine[size.width - 1] = fg;
 
     auto yOffset(0);
 
-    if (Font::kHeight < mSize.height)
+    if (Font::kHeight < size.height)
     {
-        yOffset = (mSize.height - Font::kHeight) / 2;
+        yOffset = (size.height - Font::kHeight) / 2;
     }
     
-    Surface::render(text,
-                    2,
-                    row - yOffset,
-                    rowData,
-                    fg,
-                    0x0);
+    RenderUtil::render(text,
+                       2,
+                       row - yOffset,
+                       rasterLine,
+                       fg,
+                       0x0);
     
-    if (row >= 2 && row < mSize.height - 2)
+    if (row >= 2 && row < size.height - 2)
     {
         StrRef textChar(" ");
 
@@ -85,12 +83,12 @@ void TextEntryWidget::render(Surface::RowData& rowData, int row)
             std::swap(cursorFg, cursorBg);
         }
         
-        Surface::render(textChar,
-                        2 + (cursorPosition * Font::kWidth),
-                        row - yOffset,
-                        rowData,
-                        cursorFg,
-                        cursorBg);
+        RenderUtil::render(textChar,
+                           2 + (cursorPosition * Font::kWidth),
+                           row - yOffset,
+                           rasterLine,
+                           cursorFg,
+                           cursorBg);
     }
 }
 
@@ -101,7 +99,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
-        mParent.invalidateWidget(*this, Rectangle(mSize));
+        invalidateWidget();
         return;
     }
 
@@ -155,7 +153,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             break;
                 
         default:
-            if (text.length() < static_cast<std::size_t>(mSize.width / Surface::kFontWidth) - 1)
+            if (text.length() < static_cast<std::size_t>(getSize().width / Surface::kFontWidth) - 1)
             {
                 char newChar(state.activeChar);
                     
@@ -170,5 +168,5 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
         }
     }
 
-    mParent.invalidateWidget(*this, Rectangle(mSize));
+    invalidateWidget();
 }

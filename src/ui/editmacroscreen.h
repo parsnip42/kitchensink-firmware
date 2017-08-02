@@ -28,8 +28,7 @@ public:
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    virtual void invalidateWidget(Widget&          widget,
-                                  const Rectangle& region) override;
+    virtual void invalidateRegion(const Rectangle& region) override;
 
     void poll();
 

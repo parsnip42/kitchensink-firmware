@@ -15,22 +15,19 @@ class StrRef;
 class LabelWidget : public Widget
 {
 public:
-    LabelWidget(const StrRef&    nText,
-                Justify          nJustify);
+    LabelWidget(const StrRef& nText,
+                Justify       nJustify);
 
 public:
-    virtual void setFocused(bool nFocused) override;
-    virtual Dimension getSize() const override;
-    virtual void setSize(const Dimension& size) override;
-    virtual void render(Surface::RowData& rowData, int row) override;
+    virtual void setFocused(bool focused) override;
+    virtual void render(const RasterLine& rasterLine, int row) override;
     
 public:
     StrBuf<24> text;
     Justify    justify;
-    bool       focused;
 
 private:
-    Dimension mSize;
+    bool mFocused;
 };
 
 #endif

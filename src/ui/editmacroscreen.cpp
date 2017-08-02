@@ -57,28 +57,27 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mMacroSet(macroSet)
     , mMacro(macro)
     , mTitleEntry("Name", Justify::kRight,
-                  TextEntryWidget(surface,
-                                  eventManager,
-                                  *this),
+                  TextEntryWidget(eventManager),
                   30, 4)
     , mShortcutEntry("Shortcut", Justify::kRight,
-                     TextEntryWidget(surface,
-                                     eventManager,
-                                     *this),
+                     TextEntryWidget(eventManager),
                      30, 4)
     , mTypeCombo("Type", Justify::kRight,
-                 ComboWidget(surface,
-                             eventManager,
-                             *this,
-                             mtds),
+                 ComboWidget(mtds),
                  30, 4)
-    , mWidgetLayout(Surface::kWidth, Surface::kHeight, 16, 2,
+    , mWidgetLayout(16, 2,
                     { &mTitleEntry, &mShortcutEntry, &mTypeCombo } )
     , mQuit(false)
 {
     mTitleEntry.widget.text = mMacro.name;
     mShortcutEntry.widget.text = mMacro.shortcut;    
     mTypeCombo.widget.selectedItem = 0;
+
+    mWidgetLayout.setParent(this,
+                            Rectangle(0,
+                                      0,
+                                      Surface::kWidth,
+                                      Surface::kHeight));
 }
 
 void EditMacroScreen::poll()
@@ -95,20 +94,22 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::redraw()
 {
-    for (int y(0); y < Surface::kHeight; ++y)
+    invalidateRegion(Rectangle(0,
+                               0,
+                               Surface::kWidth,
+                               Surface::kHeight));
+}
+
+void EditMacroScreen::invalidateRegion(const Rectangle& region)
+{
+    for (auto y(region.y); y < (region.y + region.height); ++y)
     {
         Surface::RowBuf row;
-
-        Surface::RowData rowData(row);
-        
-        mWidgetLayout.render(rowData, y);
+        RasterLine rasterLine(row);
+    
+        mWidgetLayout.render(rasterLine, y);
         mSurface.render(row, y);
     }
-}
-void EditMacroScreen::invalidateWidget(Widget&          widget,
-                                       const Rectangle& region)
-{
-    redraw();
 }
 
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)
@@ -121,9 +122,6 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 
         if (Keys::ok(keyId))
         {
-            // if (!FocusUtil::next(mFocused,
-            //                      { &mTitleEntry, &mShortcutEntry, &mTypeCombo }))
-            // {
             //     MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
             //                         MacroType::kInvert :
             //                         MacroType::kSync);
@@ -149,7 +147,6 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
             //     mSurface.clear();
 
             //     mQuit = true;
-            // }
         }
         else if (Keys::cancel(keyId))
         {

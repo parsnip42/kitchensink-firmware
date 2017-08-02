@@ -19,27 +19,14 @@ class EventManager;
 class TextEntryWidget : public Widget
 {
 public:
-    TextEntryWidget(Surface&         surface,
-                    EventManager&    eventManager,
-                    WidgetContainer& parent);
+    explicit TextEntryWidget(EventManager& eventManager);
 
     TextEntryWidget(TextEntryWidget&&) = default;
     
 public:
-    virtual void setFocused(bool nFocused) override;
     virtual void processKeyEvent(const KeyEvent& event) override;
-
-    virtual Dimension getSize() const override
-    {
-        return mSize;
-    }
-
-    virtual void setSize(const Dimension& size) override
-    {
-        mSize = size;
-    }
-
-    void render(Surface::RowData& rowData, int row);
+    virtual void setFocused(bool nFocused) override;
+    virtual void render(const RasterLine& rasterLine, int row) override;
     
 public:
     StrBuf<30>  text;
@@ -47,12 +34,8 @@ public:
     bool        focused;
     
 private:
-    Surface&         mSurface;
-    EventManager&    mEventManager;
-    WidgetContainer& mParent;
-    Timer::Handle    mFlashTimer;
-    bool             mFlash;
-    Dimension        mSize;
+    Timer::Handle mFlashTimer;
+    bool          mFlash;
     
 private:
     TextEntryWidget(const TextEntryWidget&) = delete;

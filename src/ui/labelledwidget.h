@@ -3,11 +3,13 @@
 
 #include "ui/justify.h"
 #include "ui/labelwidget.h"
+#include "ui/rasterline.h"
 
 class StrRef;
 
 template <typename TWidget>
 class LabelledWidget : public Widget
+                     , public WidgetContainer
 {
 public:
     LabelledWidget(const StrRef& text,
@@ -19,10 +21,10 @@ public:
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
     virtual void setFocused(bool nFocused) override;
-    virtual Dimension getSize() const override;
-    virtual void setSize(const Dimension& size) override;
-    virtual void render(Surface::RowData& rowData, int row);
-
+    virtual void render(const RasterLine& rasterLine, int row) override;
+    virtual void parented() override;
+    virtual void invalidateRegion(const Rectangle& region) override;
+    
 public:
     LabelWidget label;
     TWidget     widget;
@@ -63,33 +65,40 @@ void LabelledWidget<TWidget>::setFocused(bool nFocused)
 
 template <typename TWidget>
 inline
-Dimension LabelledWidget<TWidget>::getSize() const
+void LabelledWidget<TWidget>::parented()
 {
-    return Dimension();
-}
-
-template <typename TWidget>
-inline
-void LabelledWidget<TWidget>::setSize(const Dimension& size)
-{
+    auto size(getSize());
+    
     labelWidth = ((size.width * separationPct) / 100);
     
-    label.setSize(Dimension(labelWidth,
-                            size.height));
+    label.setParent(this,
+                    Rectangle(0,
+                              0,
+                              labelWidth,
+                              size.height));
     
-    widget.setSize(Dimension(size.width - (labelWidth + margin),
-                             size.height));
+    widget.setParent(this,
+                     Rectangle(0,
+                               0,
+                               size.width - (labelWidth + margin),
+                               size.height));
 }
 
 template <typename TWidget>
 inline
-void LabelledWidget<TWidget>::render(Surface::RowData& rowData, int row)
+void LabelledWidget<TWidget>::render(const RasterLine& rasterLine, int row)
 {
-    auto labelData(rowData.subset(0, labelWidth));
-    auto widgetData(rowData.subset(labelWidth + margin));
-    
-    label.render(labelData, row);
-    widget.render(widgetData, row);
+    label.render(rasterLine.subset(0, labelWidth), row);
+    widget.render(rasterLine.subset(labelWidth + margin), row);
+}
+
+template <typename TWidget>
+inline
+void LabelledWidget<TWidget>::invalidateRegion(const Rectangle& region)
+{
+    invalidateParentRegion(region);
 }
 
 #endif
+
+

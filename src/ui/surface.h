@@ -1,10 +1,12 @@
 #ifndef INCLUDED_UI_SURFACE_H
 #define INCLUDED_UI_SURFACE_H
 
+#include "ui/dimension.h"
 #include "ui/font.h"
 #include "types/ui4array.h"
 #include "types/range.h"
 #include "types/arrayref.h"
+
 #include <array>
 #include <cstdint>
 
@@ -19,10 +21,9 @@ public:
     static constexpr int     kFontWidth  = Font::kWidth;
     static constexpr int     kFontHeight = Font::kHeight;
     static constexpr uint8_t kScrollMax  = 128;
-
+    
 public:
     typedef UI4Array<kWidth> RowBuf;
-    typedef ArrayRef<RowBuf> RowData;
     
 public:
     class ColorMap
@@ -40,20 +41,7 @@ public:
 public:
     void render(const RowBuf& row, int y);
 
-    static void render(const StrRef& text, int x, int line, RowData& row, uint8_t fg = 0xf, uint8_t bg = 0x0);
 
-    template <typename Widget>
-    static void render(Widget& widget, RowData& row, int y)
-    {
-        auto region(widget.getRegion());
-        
-        if (y >= region.y &&
-            y < region.y + region.height)
-        {
-            widget.render(row, y - region.y);
-        }
-    }
-    
     void paintText(int           x,
                    int           y,
                    const StrRef& text,
