@@ -34,7 +34,7 @@ public:
     virtual void setFocused(bool focused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;
-    virtual void invalidateParentRegion(const Rectangle& region) override;
+    virtual void regionInvalidated(const Rectangle& region) override;
     
 private:
     Dimension   mSize;
@@ -140,7 +140,7 @@ void ListLayout<Size>::render(const RasterLine& rasterLine, int row)
 
 template <std::size_t Size>
 inline
-void ListLayout<Size>::invalidateParentRegion(const Rectangle& region)
+void ListLayout<Size>::regionInvalidated(const Rectangle& region)
 {
     Rectangle r(region.x,
                 region.y,

@@ -28,7 +28,7 @@ public:
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    virtual void invalidateParentRegion(const Rectangle& region) override;
+    virtual void regionInvalidated(const Rectangle& region) override;
 
     void poll();
 

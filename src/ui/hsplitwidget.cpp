@@ -20,7 +20,7 @@ void HSplitWidget::render(const RasterLine& rasterLine, int row)
     }   
 }
 
-void HSplitWidget::invalidateParentRegion(const Rectangle& region)
+void HSplitWidget::regionInvalidated(const Rectangle& region)
 {
     invalidateRegion(region);
 }

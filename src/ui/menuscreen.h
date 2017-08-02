@@ -10,6 +10,7 @@
 #include "ui/widgetcontainer.h"
 #include "ui/hsplitwidget.h"
 #include "ui/labelwidget.h"
+#include "ui/textentrywidget.h"
 
 class EventManager;
 class Surface;
@@ -36,7 +37,7 @@ private:
         explicit MenuDataSource(const DataSource& dataSource);
         
     public:
-        virtual void item(MenuItemWidget& widget, std::size_t index) const override;
+        virtual MenuItemWidget operator[](std::size_t index) const override;
         virtual std::size_t size() const override;
 
     private:
@@ -51,7 +52,7 @@ public:
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
-    virtual void invalidateParentRegion(const Rectangle& region) override;
+    virtual void regionInvalidated(const Rectangle& region) override;
     
     void poll();
 
@@ -59,14 +60,15 @@ private:
     void redraw();
 
 private:
-    StrRef         mTitle;
-    Surface&       mSurface;
-    EventManager&  mEventManager;
-    MenuDataSource mMenuDataSource;
-    MenuLayout     mMenuLayout;
-    LabelWidget    mTitleWidget;
-    HSplitWidget   mHSplit;
-    bool           mQuit;
+    StrRef            mTitle;
+    Surface&          mSurface;
+    EventManager&     mEventManager;
+    const DataSource& mDataSource;
+    MenuDataSource    mMenuDataSource;
+    MenuLayout        mMenuLayout;
+    TextEntryWidget   mSearchWidget;
+    HSplitWidget      mHSplit;
+    bool              mQuit;
 };
 
 #endif

@@ -13,14 +13,14 @@ void Widget::setParent(WidgetContainer* parent,
 
 void Widget::invalidateWidget()
 {
-    mParent->invalidateParentRegion(Rectangle(mParentRegion));
+    mParent->regionInvalidated(Rectangle(mParentRegion));
 }
 
 void Widget::invalidateRegion(const Rectangle& region)
 {
     // TODO: clip
     
-    mParent->invalidateParentRegion(Rectangle(mParentRegion.x + region.x,
+    mParent->regionInvalidated(Rectangle(mParentRegion.x + region.x,
                                               mParentRegion.y + region.y,
                                               region.width,
                                               region.height));

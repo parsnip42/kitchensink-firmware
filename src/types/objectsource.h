@@ -7,7 +7,10 @@ template <typename T>
 class ObjectSource
 {
 public:
-    virtual void item(T& item, std::size_t index) const = 0;
+    typedef T value_type;
+    
+public:
+    virtual value_type operator[](std::size_t index) const = 0;
     virtual std::size_t size() const = 0;
 };
 

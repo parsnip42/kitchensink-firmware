@@ -3,28 +3,33 @@
 
 #include "types/objectsource.h"
 
-template <typename Array>
-class ArrayObjectSource : public ObjectSource<typename Array::value_type>
+template <typename Type>
+class ArrayObjectSource : public ObjectSource<Type>
 {
 public:
-    explicit ArrayObjectSource(Array& array)
-        : mArray(array)
+    typedef const Type* const_iterator;
+    
+public:
+    explicit ArrayObjectSource(const_iterator begin,
+                               const_iterator end)
+        : mBegin(begin)
+        , mEnd(end)
     { }
 
 public:
-    virtual void item(typename Array::value_type& item,
-                      std::size_t                 index) const
+    virtual Type operator[](std::size_t index) const override
     {
-        item = mArray[index];
+        return *(mBegin + index);
     }
     
-    virtual std::size_t size() const
+    virtual std::size_t size() const override
     {
-        return mArray.size();
+        return mEnd - mBegin;
     }
     
 private:
-    const Array& mArray;
+    const_iterator mBegin;
+    const_iterator mEnd;
 };
 
 #endif

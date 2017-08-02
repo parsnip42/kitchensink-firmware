@@ -9,14 +9,13 @@ MenuScreen::MenuDataSource::MenuDataSource(const MenuScreen::DataSource& dataSou
     : mDataSource(dataSource)
 { }
 
-void MenuScreen::MenuDataSource::item(MenuItemWidget& widget,
-                                      std::size_t     index) const
+MenuItemWidget MenuScreen::MenuDataSource::operator[](std::size_t index) const
 {
-    Item item;
-
-    mDataSource.item(item, index);
+    MenuItemWidget widget;
     
-    widget.text = item.title;
+    widget.text = mDataSource[index].title;
+
+    return widget;
 }
 
 std::size_t MenuScreen::MenuDataSource::size() const
@@ -32,10 +31,11 @@ MenuScreen::MenuScreen(const StrRef&     title,
     : mTitle(title)
     , mSurface(surface)
     , mEventManager(eventManager)
+    , mDataSource(dataSource)
     , mMenuDataSource(dataSource)
     , mMenuLayout(mMenuDataSource)
-    , mTitleWidget(title)
-    , mHSplit(mTitleWidget, mMenuLayout, 12)
+    , mSearchWidget(eventManager)
+    , mHSplit(mSearchWidget, mMenuLayout, 16)
     , mQuit(false)
 {
     mHSplit.setParent(this,
@@ -51,15 +51,29 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     
     if (Keys::ok(keyId))
     {
-        mQuit = true;
+        if (event.pressed)
+        {
+            auto keyId(mDataSource[mMenuLayout.selectedIndex()].keyId);
+            
+            mEventManager.processKeyEvent(KeyEvent(keyId, true));
+            
+            mQuit = true;
+        }
     }
     else if (Keys::cancel(keyId))
     {
-        mQuit = true;
+        if (event.pressed)
+        {
+            mQuit = true;
+        }
+    }
+    else if (Keys::up(keyId) || Keys::down(keyId))
+    {
+        mMenuLayout.processKeyEvent(event);
     }
     else
     {
-        mMenuLayout.processKeyEvent(event);
+        mSearchWidget.processKeyEvent(event);
     }
 }
 
@@ -75,7 +89,7 @@ void MenuScreen::poll()
     }
 }
 
-void MenuScreen::invalidateParentRegion(const Rectangle& region)
+void MenuScreen::regionInvalidated(const Rectangle& region)
 {
     for (auto y(region.y); y < (region.y + region.height); ++y)
     {
@@ -89,8 +103,8 @@ void MenuScreen::invalidateParentRegion(const Rectangle& region)
 
 void MenuScreen::redraw()
 {
-    invalidateParentRegion(Rectangle(0,
-                                     0,
-                                     Surface::kWidth,
-                                     Surface::kHeight));
+    regionInvalidated(Rectangle(0,
+                                0,
+                                Surface::kWidth,
+                                Surface::kHeight));
 }

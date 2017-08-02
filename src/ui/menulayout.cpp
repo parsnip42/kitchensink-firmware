@@ -76,7 +76,7 @@ void MenuLayout::render(const RasterLine& rasterLine, int row)
     }
 }
 
-void MenuLayout::invalidateParentRegion(const Rectangle& region)
+void MenuLayout::regionInvalidated(const Rectangle& region)
 {
 }
 
@@ -95,10 +95,15 @@ void MenuLayout::populateMenuItem(std::size_t index)
 {
     if (index != mWidgetIndex)
     {
-        mDataSource.item(mWidget, index);
+        mWidget = mDataSource[index];
         mWidget.setParent(this, Rectangle(0, 0, getSize().width, MenuItemWidget::kHeight));
         mWidget.setFocused(mFocused && static_cast<int>(index) == mSelectedIndex);
     }
 
     mWidgetIndex = index;
+}
+
+int MenuLayout::selectedIndex() const
+{
+    return mSelectedIndex;
 }

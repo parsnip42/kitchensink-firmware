@@ -23,7 +23,7 @@ public:
     virtual void setFocused(bool nFocused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;
-    virtual void invalidateParentRegion(const Rectangle& region) override;
+    virtual void regionInvalidated(const Rectangle& region) override;
     
 public:
     LabelWidget label;
@@ -94,7 +94,7 @@ void LabelledWidget<TWidget>::render(const RasterLine& rasterLine, int row)
 
 template <typename TWidget>
 inline
-void LabelledWidget<TWidget>::invalidateParentRegion(const Rectangle& region)
+void LabelledWidget<TWidget>::regionInvalidated(const Rectangle& region)
 {
     invalidateRegion(region);
 }

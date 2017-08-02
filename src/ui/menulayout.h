@@ -25,7 +25,10 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
     virtual void setFocused(bool focused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
-    virtual void invalidateParentRegion(const Rectangle& region) override;
+    virtual void regionInvalidated(const Rectangle& region) override;
+
+public:
+    int selectedIndex() const;
 
 private:
     void moveSelection(int direction);

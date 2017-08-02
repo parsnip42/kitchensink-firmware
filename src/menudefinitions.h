@@ -1,8 +1,8 @@
 #ifndef INCLUDED_MENUDEFINITIONS_H
 #define INCLUDED_MENUDEFINITIONS_H
 
-#include "ui/arraydatasource.h"
-#include "ui/menu.h"
+#include "ui/menuscreen.h"
+#include "types/arrayobjectsource.h"
 
 class StrOStream;
 class KeyboardState;
@@ -10,16 +10,14 @@ class KeyboardState;
 namespace Impl
 {
 
-class MacroDataSource : public UI::Menu::DataSource
+class MacroDataSource : public MenuScreen::DataSource
 {
 public:
     explicit MacroDataSource(const KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(UI::Menu::Item& menuItem,
-                         std::size_t     index) const;
-
-    virtual std::size_t getItemCount() const;
+    virtual MenuScreen::Item operator[](std::size_t index) const;
+    virtual std::size_t size() const;
 
 public:
     const KeyboardState& mKeyboardState;
@@ -30,16 +28,14 @@ private:
 };
 
 
-class EditMacroDataSource : public UI::Menu::DataSource
+class EditMacroDataSource : public MenuScreen::DataSource
 {
 public:
     explicit EditMacroDataSource(const KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(UI::Menu::Item& menuItem,
-                         std::size_t     index) const;
-
-    virtual std::size_t getItemCount() const;
+    virtual MenuScreen::Item operator[](std::size_t index) const;
+    virtual std::size_t size() const;
 
 public:
     const KeyboardState& mKeyboardState;
@@ -49,16 +45,14 @@ private:
     EditMacroDataSource& operator=(const EditMacroDataSource&) = delete;
 };
 
-class MultiKeyDataSource : public UI::Menu::DataSource
+class MultiKeyDataSource : public MenuScreen::DataSource
 {
 public:
     explicit MultiKeyDataSource(const KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(UI::Menu::Item& menuItem,
-                         std::size_t     index) const;
-
-    virtual std::size_t getItemCount() const;
+    virtual MenuScreen::Item operator[](std::size_t index) const;
+    virtual std::size_t size() const;
 
 public:
     const KeyboardState& mKeyboardState;
@@ -69,16 +63,14 @@ private:
 };
 
 
-class SmartKeyDataSource : public UI::Menu::DataSource
+class SmartKeyDataSource : public MenuScreen::DataSource
 {
 public:
     explicit SmartKeyDataSource(const KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(UI::Menu::Item& menuItem,
-                         std::size_t     index) const;
-
-    virtual std::size_t getItemCount() const;
+    virtual MenuScreen::Item operator[](std::size_t index) const;
+    virtual std::size_t size() const;
 
 public:
     const KeyboardState& mKeyboardState;
@@ -88,16 +80,14 @@ private:
     SmartKeyDataSource& operator=(const SmartKeyDataSource&) = delete;
 };
 
-class KeyDataSource : public UI::Menu::DataSource
+class KeyDataSource : public MenuScreen::DataSource
 {
 public:
     explicit KeyDataSource(const KeyboardState& keyboardState);
 
 public:
-    virtual void getItem(UI::Menu::Item& menuItem,
-                         std::size_t     index) const;
-
-    virtual std::size_t getItemCount() const;
+    virtual MenuScreen::Item operator[](std::size_t index) const;
+    virtual std::size_t size() const;
 
 public:
     const KeyboardState& mKeyboardState;
@@ -116,12 +106,12 @@ public:
 
 public:
     StrRef getTitle(int id) const;
-    const UI::Menu::DataSource& getDataSource(int id) const;
+    const MenuScreen::DataSource& getDataSource(int id) const;
 
 private:
-    const UI::ArrayDataSource mMainMenuSource;
-    const UI::ArrayDataSource mSystemMenuSource;
-    const UI::ArrayDataSource mEmptyMenuSource;
+    const ArrayObjectSource<MenuScreen::Item> mMainMenuSource;
+    const ArrayObjectSource<MenuScreen::Item> mSystemMenuSource;
+    const ArrayObjectSource<MenuScreen::Item> mEmptyMenuSource;
 
     const Impl::MacroDataSource     mMacroDataSource;
     const Impl::EditMacroDataSource mEditMacroDataSource;

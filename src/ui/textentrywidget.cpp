@@ -1,7 +1,6 @@
 #include "ui/textentrywidget.h"
 
 #include "data/keycodes.h"
-#include "keyprocessor.h"
 #include "virtualkeyboard.h"
 #include "data/keymap.h"
 #include "ui/keys.h"
@@ -12,7 +11,7 @@
 
 TextEntryWidget::TextEntryWidget(EventManager& eventManager)
     : cursorPosition(1000)
-    , focused(false)
+    , focused(true)
     , mFlashTimer(eventManager.timer.createHandle())
     , mFlash(false)
 { }

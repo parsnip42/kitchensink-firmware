@@ -14,7 +14,7 @@ public:
 
 public:
     virtual void render(const RasterLine& rasterLine, int row) override;
-    virtual void invalidateParentRegion(const Rectangle& region) override;
+    virtual void regionInvalidated(const Rectangle& region) override;
     virtual void parented() override;
 
 private:

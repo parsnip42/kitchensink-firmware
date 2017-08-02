@@ -7,27 +7,20 @@
 namespace
 {
 
-const UI::ArrayDataSource::Item mainMenuItems[] =
-{
-    UI::ArrayDataSource::Item("Macros", KeyId::Action(KeyId::ActionType::kMenu, 1)),
-    UI::ArrayDataSource::Item("Keys", KeyId::Action(KeyId::ActionType::kMenu, 4)),
-    UI::ArrayDataSource::Item("Edit Macros", KeyId::Action(KeyId::ActionType::kMenu, 2)),
-    UI::ArrayDataSource::Item("Multi Keys", KeyId::Action(KeyId::ActionType::kMenu, 6)),
-    UI::ArrayDataSource::Item("Smart Keys", KeyId::Action(KeyId::ActionType::kMenu, 3)),
-    UI::ArrayDataSource::Item("System", KeyId::Action(KeyId::ActionType::kMenu, 5)),
-};
+const std::array<MenuScreen::Item, 6> mainMenu = { {
+        { StrRef("Macros"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 1) },
+        { StrRef("Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 4) },
+        { StrRef("Edit Macros"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 2) },
+        { StrRef("Multi Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 6) },
+        { StrRef("Smart Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 3) },
+        { StrRef("System"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 5) },
+    } };
 
-const UI::ArrayDataSource::Item systemMenuItems[] =
-{
-    UI::ArrayDataSource::Item("Storage", KeyId::Action(KeyId::ActionType::kScreen, 0)),
-    UI::ArrayDataSource::Item("Benchmark", KeyId::Action(KeyId::ActionType::kScreen, 1)),
-    UI::ArrayDataSource::Item("Bootloader", KeyId::Action(KeyId::ActionType::kBuiltIn, 0))
-};
-
-const UI::ArrayDataSource::Item emptyMenuItems[] =
-{
-    UI::ArrayDataSource::Item("--", KeyId()),
-};
+const std::array<MenuScreen::Item, 3> systemMenu = { {
+        { StrRef("Storage"), StrRef(), KeyId::Action(KeyId::ActionType::kScreen, 0) },
+        { StrRef("Benchmark"), StrRef(), KeyId::Action(KeyId::ActionType::kScreen, 1) },
+        { StrRef("Bootloader"), StrRef(), KeyId::Action(KeyId::ActionType::kBuiltIn, 0) } 
+    } };
 
 }
 
@@ -38,16 +31,18 @@ MacroDataSource::MacroDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void MacroDataSource::getItem(UI::Menu::Item& menuItem,
-                              std::size_t     index) const
-
+MenuScreen::Item MacroDataSource::operator[](std::size_t index) const
 {
-    menuItem.title = mKeyboardState.macroSet[index].name;
-    menuItem.shortcut = mKeyboardState.macroSet[index].shortcut;
-    menuItem.keyId = KeyId::Macro(index);
+    MenuScreen::Item item;
+    
+    item.title = mKeyboardState.macroSet[index].name;
+    item.shortcut = mKeyboardState.macroSet[index].shortcut;
+    item.keyId = KeyId::Macro(index);
+
+    return item;
 }
 
-std::size_t MacroDataSource::getItemCount() const
+std::size_t MacroDataSource::size() const
 {
     return mKeyboardState.macroSet.size();
 }
@@ -57,15 +52,17 @@ EditMacroDataSource::EditMacroDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void EditMacroDataSource::getItem(UI::Menu::Item& menuItem,
-                                  std::size_t     index) const
+MenuScreen::Item EditMacroDataSource::operator[](std::size_t index) const
 {
-    
-    menuItem.title = mKeyboardState.macroSet[index].name;
-    menuItem.keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
+    MenuScreen::Item item;    
+
+    item.title = mKeyboardState.macroSet[index].name;
+    item.keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
+
+    return item;
 }
 
-std::size_t EditMacroDataSource::getItemCount() const
+std::size_t EditMacroDataSource::size() const
 {
     return mKeyboardState.macroSet.size();
 }
@@ -74,15 +71,17 @@ MultiKeyDataSource::MultiKeyDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void MultiKeyDataSource::getItem(UI::Menu::Item& menuItem,
-                                 std::size_t     index) const
+MenuScreen::Item MultiKeyDataSource::operator[](std::size_t index) const
 {
-    
-    menuItem.title = mKeyboardState.multiSet[index].name;
-    menuItem.keyId = KeyId::Multi(index);
+    MenuScreen::Item item;
+   
+    item.title = mKeyboardState.multiSet[index].name;
+    item.keyId = KeyId::Multi(index);
+
+    return item;
 }
 
-std::size_t MultiKeyDataSource::getItemCount() const
+std::size_t MultiKeyDataSource::size() const
 {
     return mKeyboardState.multiSet.size();
 }
@@ -91,15 +90,17 @@ SmartKeyDataSource::SmartKeyDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void SmartKeyDataSource::getItem(UI::Menu::Item& menuItem,
-                                 std::size_t     index) const
+MenuScreen::Item SmartKeyDataSource::operator[](std::size_t index) const
 {
-    
-    menuItem.title = mKeyboardState.smartKeySet[index].name;
-    menuItem.keyId = KeyId::Smart(index);
+    MenuScreen::Item item;
+
+    item.title = mKeyboardState.smartKeySet[index].name;
+    item.keyId = KeyId::Smart(index);
+
+    return item;
 }
 
-std::size_t SmartKeyDataSource::getItemCount() const
+std::size_t SmartKeyDataSource::size() const
 {
     return mKeyboardState.smartKeySet.size();
 }
@@ -108,9 +109,10 @@ KeyDataSource::KeyDataSource(const KeyboardState& keyboardState)
     : mKeyboardState(keyboardState)
 { }
 
-void KeyDataSource::getItem(UI::Menu::Item& menuItem,
-                            std::size_t     index) const
+MenuScreen::Item KeyDataSource::operator[](std::size_t index) const
 {
+    MenuScreen::Item item;
+    
     auto keyName(KeyCodes::keyName(index + 1));
 
     if (keyName == "")
@@ -119,24 +121,26 @@ void KeyDataSource::getItem(UI::Menu::Item& menuItem,
     }
 
     {
-        StrOStream os(menuItem.title);
+        StrOStream os(item.title);
 
         os.reset();
         os.appendStr(keyName);
     }
 
     {
-        StrOStream os(menuItem.shortcut);
+        StrOStream os(item.shortcut);
         
         os.reset();
         os.appendStr("0x");
         os.appendInt(index + 1, "%2.2x");
     }
     
-    menuItem.keyId = KeyId(index + 1);
+    item.keyId = KeyId(index + 1);
+
+    return item;
 }
 
-std::size_t KeyDataSource::getItemCount() const
+std::size_t KeyDataSource::size() const
 {
     return 255;
 }
@@ -144,9 +148,9 @@ std::size_t KeyDataSource::getItemCount() const
 }
 
 MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
-    : mMainMenuSource(mainMenuItems)
-    , mSystemMenuSource(systemMenuItems)
-    , mEmptyMenuSource(emptyMenuItems)
+    : mMainMenuSource(mainMenu.begin(), mainMenu.end())
+    , mSystemMenuSource(systemMenu.begin(), systemMenu.end())
+    , mEmptyMenuSource(mainMenu.end(), mainMenu.end())
     , mMacroDataSource(keyboardState)
     , mEditMacroDataSource(keyboardState)
     , mMultiKeyDataSource(keyboardState)
@@ -154,7 +158,7 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mKeyDataSource(keyboardState)
 { }
 
-const UI::Menu::DataSource& MenuDefinitions::getDataSource(int id) const
+const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const
 {
     switch (id)
     {
