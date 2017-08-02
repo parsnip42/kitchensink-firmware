@@ -4,8 +4,8 @@
 #include "keyboardstate.h"
 #include "keylocation.h"
 
-KeyProcessor::KeyProcessor(KsKeyboard&    keyboard,
-                           LayerStack&    layerStack)
+KeyProcessor::KeyProcessor(KsKeyboard& keyboard,
+                           LayerStack& layerStack)
     : mKeyboard(keyboard)
     , mLayerStack(layerStack)
     , mLayerMask()
@@ -20,8 +20,6 @@ void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
     // take a copy of the mask.
     auto currentLayerMask(mLayerMask);
 
-    bool layerMaskDirty(false);
-    
     mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& event)
     {
         auto keyId(mLayerStack.at(currentLayerMask,
@@ -33,7 +31,6 @@ void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
         if (keyId.type() == KeyId::Type::kLayer)
         {
             mLayerMask[keyId.value()] = event.pressed;
-            layerMaskDirty = true;
         }
         else
         {
@@ -41,7 +38,7 @@ void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
         }
     });
 
-    if (layerMaskDirty)
+    if (currentLayerMask != mLayerMask)
     {
         processLayerChange(currentLayerMask,
                            mLayerMask,

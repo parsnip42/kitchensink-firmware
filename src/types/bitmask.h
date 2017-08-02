@@ -58,6 +58,10 @@ public:
 
 private:
     Data mData;
+
+private:
+    template <std::size_t Size_>
+    friend bool operator==(const Bitmask<Size_>& lhs, const Bitmask<Size_>& rhs);
 };
 
 
@@ -65,7 +69,7 @@ template <std::size_t Size>
 inline
 bool operator==(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
 {
-    return (lhs.data() == rhs.data());
+    return (lhs.mData == rhs.mData);
 }
 
 template <std::size_t Size>
