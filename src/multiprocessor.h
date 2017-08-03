@@ -38,4 +38,4 @@ MultiProcessor::MultiProcessor(MultiSet&      multiSet,
     , mNext(next)
 { }
 
-#endif /* INCLUDED_MULTIPROCESSOR_H */
+#endif
