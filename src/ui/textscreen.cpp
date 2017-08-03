@@ -10,32 +10,32 @@ TextScreen::TextScreen(Surface& surface)
 
 void TextScreen::init()
 {
-    mSurface.clear();
+    // mSurface.clear();
 }
 
 void TextScreen::appendLine(const StrRef& text)
 {
-    // const Surface::ColorMap colors(0xf, 0);
+    // // const Surface::ColorMap colors(0xf, 0);
 
-    for (int y(0); y < Surface::kFontHeight; ++y)
-    {
-        // mSurface.clearRegion(0, y + (mLines * Surface::kFontHeight), Surface::kWidth, 1, 0x0);
-        // mSurface.initRegion(0, y + (mLines * Surface::kFontHeight), Surface::kFontWidth * text.length(), 1);
-        // mSurface.paintTextLine(text, y, colors);
-    }
+    // for (int y(0); y < Surface::kFontHeight; ++y)
+    // {
+    //     // mSurface.clearRegion(0, y + (mLines * Surface::kFontHeight), Surface::kWidth, 1, 0x0);
+    //     // mSurface.initRegion(0, y + (mLines * Surface::kFontHeight), Surface::kFontWidth * text.length(), 1);
+    //     // mSurface.paintTextLine(text, y, colors);
+    // }
 
-    int scrollStart((mLines * Surface::kFontHeight) - Surface::kHeight);
+    // int scrollStart((mLines * Surface::kFontHeight) - Surface::kHeight);
 
-    ++mLines;
+    // ++mLines;
 
-    if (scrollStart > 0)
-    {
-        int scrollEnd((mLines * Surface::kFontHeight) - Surface::kHeight);
+    // if (scrollStart > 0)
+    // {
+    //     int scrollEnd((mLines * Surface::kFontHeight) - Surface::kHeight);
         
-        for (int i(scrollStart); i <= scrollEnd; ++i)
-        {
-            // mSurface.scroll(i);
-        }
-    }
+    //     for (int i(scrollStart); i <= scrollEnd; ++i)
+    //     {
+    //         // mSurface.scroll(i);
+    //     }
+    // }
 }
 

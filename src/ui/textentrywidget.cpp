@@ -1,13 +1,13 @@
 #include "ui/textentrywidget.h"
 
 #include "data/keycodes.h"
-#include "virtualkeyboard.h"
 #include "data/keymap.h"
+#include "ui/font.h"
 #include "ui/keys.h"
-#include "ui/surface.h"
-#include "ui/rasterline.h"
 #include "ui/rectangle.h"
 #include "ui/renderutil.h"
+#include "ui/surface.h"
+#include "ui/virtualkeyboard.h"
 
 TextEntryWidget::TextEntryWidget(EventManager& eventManager)
     : cursorPosition(1000)
@@ -152,7 +152,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             break;
                 
         default:
-            if (text.length() < static_cast<std::size_t>(getSize().width / Surface::kFontWidth) - 1)
+            if (text.length() < static_cast<std::size_t>(getSize().width / Font::kWidth) - 1)
             {
                 char newChar(state.activeChar);
                     

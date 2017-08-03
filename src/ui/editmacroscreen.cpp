@@ -53,9 +53,8 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
 
 void EditMacroScreen::poll()
 {
-    mSurface.setRootWidget(&mListWidget);
-    mSurface.redraw();
-    
+    Surface::WidgetGuard guard(mSurface, mListWidget);
+
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
     while (!mQuit)

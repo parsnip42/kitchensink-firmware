@@ -6,6 +6,7 @@
 
 Surface::Surface(Display& display)
     : mDisplay(display)
+    , mRootWidget(0)
 { }
 
 void Surface::regionInvalidated(const Rectangle& region)
@@ -25,7 +26,19 @@ void Surface::regionInvalidated(const Rectangle& region)
 
 void Surface::redraw()
 {
-    regionInvalidated(Rectangle(0, 0, kWidth, kHeight));
+    if (mRootWidget)
+    {
+        regionInvalidated(Rectangle(0, 0, kWidth, kHeight));
+    }
+    else
+    {
+        clear();
+    }
+}
+
+Widget* Surface::rootWidget()
+{
+    return mRootWidget;
 }
 
 void Surface::setRootWidget(Widget* rootWidget)

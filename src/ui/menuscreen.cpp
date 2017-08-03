@@ -76,8 +76,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
 
 void MenuScreen::poll()
 {
-    mSurface.setRootWidget(&mHSplit);
-    mSurface.redraw();
+    Surface::WidgetGuard guard(mSurface, mHSplit);
     
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);

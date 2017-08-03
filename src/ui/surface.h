@@ -16,15 +16,30 @@ class Widget;
 
 class Surface : public WidgetContainer
 {
-public:
-    static constexpr int     kHeight     = 64;
-    static constexpr int     kWidth      = 240;
-    static constexpr int     kFontWidth  = Font::kWidth;
-    static constexpr int     kFontHeight = Font::kHeight;
-    static constexpr uint8_t kScrollMax  = 128;
+private:
+    static constexpr int kWidth  = 240;
+    static constexpr int kHeight = 64;
     
 public:
     typedef UI4Array<kWidth> RowBuf;
+
+public:
+    class WidgetGuard
+    {
+    public:
+        WidgetGuard(Surface& surface,
+                    Widget&  widget);
+
+        ~WidgetGuard();
+
+    private:
+        Surface& mSurface;
+        Widget*  mWidget;
+
+    private:
+        WidgetGuard(const WidgetGuard&) = delete;
+        WidgetGuard& operator=(const WidgetGuard&) = delete;
+    };
     
 public:
     explicit Surface(Display& display);
@@ -33,8 +48,9 @@ public:
     virtual void regionInvalidated(const Rectangle& region) override;
 
     void redraw();
+    Widget* rootWidget();
     void setRootWidget(Widget* rootWidget);
-    
+
 public:
     void initRegion(int x, int y, int w, int h);
     void render(const RowBuf& row, int y);
@@ -48,5 +64,23 @@ private:
     Surface(const Surface&) = delete;
     Surface& operator=(const Surface&) = delete;
 };
+
+
+inline
+Surface::WidgetGuard::WidgetGuard(Surface& surface,
+                                  Widget&  widget)
+    : mSurface(surface)
+    , mWidget(surface.rootWidget())
+{
+    mSurface.setRootWidget(&widget);
+    mSurface.redraw();
+}
+
+inline
+Surface::WidgetGuard::~WidgetGuard()
+{
+    mSurface.setRootWidget(mWidget);
+    mSurface.redraw();
+}
 
 #endif

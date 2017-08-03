@@ -27,7 +27,6 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
                             mEventManager);
 
             menu.poll();
-            mSurface.clear();
         }
 
     }
@@ -43,7 +42,6 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
                                       mEventManager);
 
                 storage.poll();
-                mSurface.clear();
                 break;
             }
 
@@ -53,7 +51,6 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
                                           mEventManager);
 
                 benchmark.poll();
-                mSurface.clear();
                 break;
             }
 
@@ -75,7 +72,6 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
                                    macro);
 
             screen.poll();
-            mSurface.clear();
         }
     }
     else

@@ -1,7 +1,8 @@
 #include "ui/menuwidget.h"
 
+#include "ui/font.h"
 #include "ui/keys.h"
-#include "menuitemwidget.h"
+#include "ui/menuitemwidget.h"
 #include "keyevent.h"
 
 MenuWidget::MenuWidget(const DataSource& dataSource)
@@ -58,7 +59,7 @@ void MenuWidget::render(const RasterLine& rasterLine, int row)
     // Subtracting the font height from the rendered height of the menu gives us
     // the maximum possible offset - this is where the selected menu item will
     // appear at the very bottom of the rendered area.
-    int offsetMax(menuHeight - Surface::kFontHeight);
+    int offsetMax(menuHeight - Font::kHeight);
 
     // And now we subtract by a range of 0 to offsetMax inclusive based on the
     // currently-selected menu item.

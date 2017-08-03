@@ -1,4 +1,4 @@
-#include "virtualkeyboard.h"
+#include "ui/virtualkeyboard.h"
 
 #include "keyevent.h"
 #include "data/keymap.h"
