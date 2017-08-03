@@ -6,9 +6,9 @@
 #include "types/objectsource.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
-#include "ui/menulayout.h"
+#include "ui/menuwidget.h"
 #include "ui/hsplitwidget.h"
-#include "ui/labelwidget.h"
+#include "ui/menutitlewidget.h"
 #include "ui/textentrywidget.h"
 
 class EventManager;
@@ -29,7 +29,7 @@ public:
     typedef ObjectSource<Item> DataSource;
 
 private:
-    class MenuDataSource : public MenuLayout::DataSource
+    class MenuDataSource : public MenuWidget::DataSource
     {
     public:
         explicit MenuDataSource(const DataSource& dataSource);
@@ -59,8 +59,8 @@ private:
     EventManager&     mEventManager;
     const DataSource& mDataSource;
     MenuDataSource    mMenuDataSource;
-    MenuLayout        mMenuLayout;
-    TextEntryWidget   mSearchWidget;
+    MenuWidget        mMenuWidget;
+    MenuTitleWidget   mTitleWidget;
     HSplitWidget      mHSplit;
     bool              mQuit;
 };

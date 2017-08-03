@@ -1,5 +1,5 @@
-#ifndef INCLUDED_LISTLAYOUT_H
-#define INCLUDED_LISTLAYOUT_H
+#ifndef INCLUDED_LISTWIDGET_H
+#define INCLUDED_LISTWIDGET_H
 
 #include "ui/dimension.h"
 #include "ui/surface.h"
@@ -18,14 +18,14 @@ class KeyEvent;
 class Widget;
 
 template <std::size_t Size>
-class ListLayout : public Widget
+class ListWidget : public Widget
                  , public WidgetContainer
 {
 public:
     typedef std::array<Widget*, Size> Items;
     
 public:
-    ListLayout(int     itemHeight,
+    ListWidget(int     itemHeight,
                int     marginY,
                Items&& items);
 
@@ -47,7 +47,7 @@ private:
 
 template <std::size_t Size>
 inline
-ListLayout<Size>::ListLayout(int     itemHeight,
+ListWidget<Size>::ListWidget(int     itemHeight,
                              int     marginY,
                              Items&& items)
     : mItemHeight(itemHeight)
@@ -58,7 +58,7 @@ ListLayout<Size>::ListLayout(int     itemHeight,
 
 template <std::size_t Size>
 inline
-void ListLayout<Size>::processKeyEvent(const KeyEvent& event)
+void ListWidget<Size>::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
     
@@ -94,14 +94,14 @@ void ListLayout<Size>::processKeyEvent(const KeyEvent& event)
 
 template <std::size_t Size>
 inline
-void ListLayout<Size>::setFocused(bool focused)
+void ListWidget<Size>::setFocused(bool focused)
 {
     mItems[mFocus]->setFocused(true);
 }
 
 template <std::size_t Size>
 inline
-void ListLayout<Size>::parented()
+void ListWidget<Size>::parented()
 {
     auto size(getSize());
     auto totalItemHeight(mItemHeight + mMarginY);
@@ -122,7 +122,7 @@ void ListLayout<Size>::parented()
 
 template <std::size_t Size>
 inline
-void ListLayout<Size>::render(const RasterLine& rasterLine, int row)
+void ListWidget<Size>::render(const RasterLine& rasterLine, int row)
 {
     auto totalItemHeight(mItemHeight + mMarginY);
     std::size_t index(row / totalItemHeight);
@@ -140,7 +140,7 @@ void ListLayout<Size>::render(const RasterLine& rasterLine, int row)
 
 template <std::size_t Size>
 inline
-void ListLayout<Size>::regionInvalidated(const Rectangle& region)
+void ListWidget<Size>::regionInvalidated(const Rectangle& region)
 {
     Rectangle r(region.x,
                 region.y,

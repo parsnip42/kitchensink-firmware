@@ -33,9 +33,9 @@ MenuScreen::MenuScreen(const StrRef&     title,
     , mEventManager(eventManager)
     , mDataSource(dataSource)
     , mMenuDataSource(dataSource)
-    , mMenuLayout(mMenuDataSource)
-    , mSearchWidget(eventManager)
-    , mHSplit(mSearchWidget, mMenuLayout, 16)
+    , mMenuWidget(mMenuDataSource)
+    , mTitleWidget(title, eventManager)
+    , mHSplit(mTitleWidget, mMenuWidget, 16)
     , mQuit(false)
 { }
 
@@ -47,7 +47,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     {
         if (event.pressed)
         {
-            auto keyId(mDataSource[mMenuLayout.selectedIndex()].keyId);
+            auto keyId(mDataSource[mMenuWidget.selectedIndex()].keyId);
             
             mEventManager.processKeyEvent(KeyEvent(keyId, true));
             
@@ -66,11 +66,11 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
              Keys::pageUp(keyId) ||
              Keys::pageDown(keyId))
     {
-        mMenuLayout.processKeyEvent(event);
+        mMenuWidget.processKeyEvent(event);
     }
     else
     {
-        mSearchWidget.processKeyEvent(event);
+        mTitleWidget.processKeyEvent(event);
     }
 }
 

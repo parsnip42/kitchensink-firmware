@@ -1,4 +1,4 @@
-#include "labelwidget.h"
+#include "ui/labelwidget.h"
 
 #include "types/strref.h"
 #include "ui/surface.h"

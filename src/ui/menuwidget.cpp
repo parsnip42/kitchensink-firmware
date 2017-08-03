@@ -1,17 +1,17 @@
-#include "ui/menulayout.h"
+#include "ui/menuwidget.h"
 
 #include "ui/keys.h"
 #include "menuitemwidget.h"
 #include "keyevent.h"
 
-MenuLayout::MenuLayout(const DataSource& dataSource)
+MenuWidget::MenuWidget(const DataSource& dataSource)
     : mDataSource(dataSource)
     , mSelectedIndex(0)
     , mFocused(true)
     , mWidgetIndex(0xffff)
 { }
 
-void MenuLayout::processKeyEvent(const KeyEvent& event)
+void MenuWidget::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
 
@@ -36,13 +36,13 @@ void MenuLayout::processKeyEvent(const KeyEvent& event)
     }
 }
 
-void MenuLayout::setFocused(bool focused)
+void MenuWidget::setFocused(bool focused)
 {
     mFocused = focused;
     invalidateWidget();
 }
 
-void MenuLayout::render(const RasterLine& rasterLine, int row)
+void MenuWidget::render(const RasterLine& rasterLine, int row)
 {
     auto size(getSize());
     auto itemCount(int(mDataSource.size()));
@@ -76,11 +76,11 @@ void MenuLayout::render(const RasterLine& rasterLine, int row)
     }
 }
 
-void MenuLayout::regionInvalidated(const Rectangle& region)
+void MenuWidget::regionInvalidated(const Rectangle& region)
 {
 }
 
-void MenuLayout::moveSelection(int direction)
+void MenuWidget::moveSelection(int direction)
 {
     mSelectedIndex += direction;
 
@@ -91,7 +91,7 @@ void MenuLayout::moveSelection(int direction)
     invalidateWidget();
 }
 
-void MenuLayout::populateMenuItem(std::size_t index)
+void MenuWidget::populateMenuItem(std::size_t index)
 {
     if (index != mWidgetIndex)
     {
@@ -103,7 +103,7 @@ void MenuLayout::populateMenuItem(std::size_t index)
     mWidgetIndex = index;
 }
 
-int MenuLayout::selectedIndex() const
+int MenuWidget::selectedIndex() const
 {
     return mSelectedIndex;
 }

@@ -4,7 +4,7 @@
 #include "ui/textentrywidget.h"
 #include "ui/combowidget.h"
 #include "ui/labelledwidget.h"
-#include "ui/listlayout.h"
+#include "ui/listwidget.h"
 #include "keyeventstage.h"
 
 #include <tuple>
@@ -37,7 +37,7 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    ListLayout<3>                   mWidgetLayout;
+    ListWidget<3>                   mListWidget;
     bool                            mQuit;
 };
 

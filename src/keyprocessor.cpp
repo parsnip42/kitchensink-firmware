@@ -80,8 +80,13 @@ void KeyProcessor::processLayerChange(const LayerStack::Mask& currentMask,
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
-        auto currentKey(mLayerStack.at(currentMask, event.row, event.column));
-        auto nextKey(mLayerStack.at(nextMask, event.row, event.column));
+        auto currentKey(mLayerStack.at(currentMask,
+                                       event.row,
+                                       event.column));
+        
+        auto nextKey(mLayerStack.at(nextMask,
+                                    event.row,
+                                    event.column));
 
         if (currentKey != nextKey)
         {

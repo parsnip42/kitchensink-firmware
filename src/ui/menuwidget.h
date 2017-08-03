@@ -1,5 +1,5 @@
-#ifndef INCLUDED_MENULAYOUT_H
-#define INCLUDED_MENULAYOUT_H
+#ifndef INCLUDED_MENUWIDGET_H
+#define INCLUDED_MENUWIDGET_H
 
 #include "ui/dimension.h"
 #include "ui/menuitemwidget.h"
@@ -12,14 +12,14 @@
 
 class MenuItemWidget;
 
-class MenuLayout : public Widget
+class MenuWidget : public Widget
                  , public WidgetContainer
 {
 public:
     typedef ObjectSource<MenuItemWidget> DataSource;
 
 public:
-    explicit MenuLayout(const DataSource& dataSource);
+    explicit MenuWidget(const DataSource& dataSource);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;

@@ -42,7 +42,7 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mTypeCombo("Type", Justify::kRight,
                  ComboWidget(mtds),
                  30, 4)
-    , mWidgetLayout(16, 2,
+    , mListWidget(16, 2,
                     { &mTitleEntry, &mShortcutEntry, &mTypeCombo } )
     , mQuit(false)
 {
@@ -53,7 +53,7 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
 
 void EditMacroScreen::poll()
 {
-    mSurface.setRootWidget(&mWidgetLayout);
+    mSurface.setRootWidget(&mListWidget);
     mSurface.redraw();
     
     AutoRepeat autoRepeat(mEventManager.timer,
@@ -66,7 +66,7 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
-    mWidgetLayout.processKeyEvent(event);
+    mListWidget.processKeyEvent(event);
 
     if (event.pressed)
     {
