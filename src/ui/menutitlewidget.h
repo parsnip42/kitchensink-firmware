@@ -22,7 +22,10 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void regionInvalidated(const Rectangle& region) override;
     virtual void parented() override;
-
+    
+public:
+    StrRef filter() const;
+    
 public:
     LabelWidget     mTitle;
     TextEntryWidget mSearch;

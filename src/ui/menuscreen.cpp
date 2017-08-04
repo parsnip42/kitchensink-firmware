@@ -71,6 +71,15 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     else
     {
         mTitleWidget.processKeyEvent(event);
+        mMenuWidget.filterIndex.filter(mDataSource.size(),
+                                       [&](std::size_t index)
+                                       {
+                                           auto item = mDataSource[index];
+
+                                           return StrRef(item.title).beginsWithCase(mTitleWidget.filter());
+                                       });
+
+        mMenuWidget.update();
     }
 }
 
@@ -85,3 +94,8 @@ void MenuScreen::poll()
         mEventManager.poll(autoRepeat);
     }
 }
+
+
+
+
+

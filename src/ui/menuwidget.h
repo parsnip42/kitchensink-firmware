@@ -6,7 +6,9 @@
 #include "ui/surface.h"
 #include "ui/widget.h"
 #include "ui/widgetcontainer.h"
+#include "types/filterindex.h"
 #include "types/objectsource.h"
+#include "types/strbuf.h"
 
 #include <cstdint>
 
@@ -29,10 +31,14 @@ public:
 
 public:
     int selectedIndex() const;
-
+    void update();
+    
 private:
     void moveSelection(int direction);
     void populateMenuItem(int index);
+
+public:
+    FilterIndex<300> filterIndex;
     
 private:
     const DataSource& mDataSource;

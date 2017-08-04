@@ -6,11 +6,13 @@
 #include "keyevent.h"
 
 MenuWidget::MenuWidget(const DataSource& dataSource)
-    : mDataSource(dataSource)
+    : filterIndex(dataSource.size())
+    , mDataSource(dataSource)
     , mSelectedIndex(0)
     , mFocused(true)
     , mWidgetIndex(0xffff)
-{ }
+{
+}
 
 void MenuWidget::processKeyEvent(const KeyEvent& event)
 {
@@ -47,7 +49,7 @@ void MenuWidget::render(const RasterLine& rasterLine, int row)
 {
     auto size(getSize());
     
-    int itemCount(mDataSource.size());
+    int itemCount(filterIndex.filteredSize());
     
     // Selected item * font height is the y position of the selected item
     // relative to the top of the menu. By itself, this keeps the selected item
@@ -88,7 +90,7 @@ void MenuWidget::moveSelection(int direction)
 
     // Clamp to data source size.
     mSelectedIndex = std::max(0, mSelectedIndex);
-    mSelectedIndex = std::min<int>(mDataSource.size() - 1, mSelectedIndex);
+    mSelectedIndex = std::min<int>(filterIndex.filteredSize() - 1, mSelectedIndex);
 
     invalidateWidget();
 }
@@ -97,7 +99,7 @@ void MenuWidget::populateMenuItem(int index)
 {
     if (index != mWidgetIndex)
     {
-        mWidget = mDataSource[index];
+        mWidget = mDataSource[filterIndex[index]];
         mWidget.setParent(this, Rectangle(0, 0, getSize().width, MenuItemWidget::kHeight));
         mWidget.setFocused(mFocused && index == mSelectedIndex);
     }
@@ -108,4 +110,9 @@ void MenuWidget::populateMenuItem(int index)
 int MenuWidget::selectedIndex() const
 {
     return mSelectedIndex;
+}
+
+void MenuWidget::update()
+{
+    moveSelection(0);
 }

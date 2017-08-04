@@ -28,7 +28,7 @@ public:
     
 public:
     typedef ObjectSource<Item> DataSource;
-
+    
 private:
     typedef MappedObjectSource<MenuItemWidget, DataSource> MenuDataSource;
         

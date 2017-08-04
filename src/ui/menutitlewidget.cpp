@@ -43,5 +43,7 @@ void MenuTitleWidget::parented()
     mSearch.setParent(this, Rectangle(size));
 }
 
-
-
+StrRef MenuTitleWidget::filter() const
+{
+    return mSearch.text;
+}
