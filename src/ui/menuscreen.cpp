@@ -47,7 +47,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     {
         if (event.pressed)
         {
-            auto keyId(mDataSource[mMenuWidget.selectedIndex()].keyId);
+            auto keyId(mMenuWidget.filterIndex[mMenuWidget.selectedIndex()].keyId);
             
             mEventManager.processKeyEvent(KeyEvent(keyId, true));
             
