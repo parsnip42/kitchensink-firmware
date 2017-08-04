@@ -10,7 +10,7 @@ class MappedObjectSource : public ObjectSource<Type>
 {
 public:
     typedef Type value_type;
-    typedef value_type (*Func)(decltype(std::declval<const Data>()[0]), std::size_t);
+    typedef value_type (*Func)(decltype(std::declval<const Data>()[0]) const&, std::size_t);
 
 public:
     MappedObjectSource(const Data& data,

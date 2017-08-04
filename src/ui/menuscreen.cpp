@@ -5,24 +5,19 @@
 #include "ui/keys.h"
 #include "ui/menuitemwidget.h"
 
-MenuScreen::MenuDataSource::MenuDataSource(const MenuScreen::DataSource& dataSource)
-    : mDataSource(dataSource)
-{ }
+namespace
+{
 
-MenuItemWidget MenuScreen::MenuDataSource::operator[](std::size_t index) const
+MenuItemWidget createMenuItem(const MenuScreen::Item& item, std::size_t)
 {
     MenuItemWidget widget;
     
-    widget.text = mDataSource[index].title;
+    widget.text = item.title;
 
     return widget;
 }
 
-std::size_t MenuScreen::MenuDataSource::size() const
-{
-    return mDataSource.size();
 }
-
 
 MenuScreen::MenuScreen(const StrRef&     title,
                        const DataSource& dataSource,
@@ -32,7 +27,7 @@ MenuScreen::MenuScreen(const StrRef&     title,
     , mSurface(surface)
     , mEventManager(eventManager)
     , mDataSource(dataSource)
-    , mMenuDataSource(dataSource)
+    , mMenuDataSource(dataSource, &createMenuItem)
     , mMenuWidget(mMenuDataSource)
     , mTitleWidget(title, eventManager)
     , mHSplit(mTitleWidget, mMenuWidget, 16)
@@ -42,8 +37,13 @@ MenuScreen::MenuScreen(const StrRef&     title,
 void MenuScreen::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
-    
-    if (Keys::ok(keyId))
+
+    if (keyId.type() == KeyId::Type::kTick)
+    {
+        mMenuWidget.processKeyEvent(event);
+        mTitleWidget.processKeyEvent(event);
+    }
+    else if (Keys::ok(keyId))
     {
         if (event.pressed)
         {

@@ -3,6 +3,7 @@
 
 #include "keyeventstage.h"
 #include "keyid.h"
+#include "types/mappedobjectsource.h"
 #include "types/objectsource.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
@@ -29,19 +30,8 @@ public:
     typedef ObjectSource<Item> DataSource;
 
 private:
-    class MenuDataSource : public MenuWidget::DataSource
-    {
-    public:
-        explicit MenuDataSource(const DataSource& dataSource);
+    typedef MappedObjectSource<MenuItemWidget, DataSource> MenuDataSource;
         
-    public:
-        virtual MenuItemWidget operator[](std::size_t index) const override;
-        virtual std::size_t size() const override;
-
-    private:
-        const DataSource& mDataSource;
-    };
-    
 public:
     MenuScreen(const StrRef&     title,
                const DataSource& dataSource,
