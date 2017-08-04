@@ -22,94 +22,50 @@ const std::array<MenuScreen::Item, 3> systemMenu = { {
         { StrRef("Bootloader"), StrRef(), KeyId::Action(KeyId::ActionType::kBuiltIn, 0) } 
     } };
 
-}
 
-namespace Impl
-{
-
-MacroDataSource::MacroDataSource(const KeyboardState& keyboardState)
-    : mKeyboardState(keyboardState)
-{ }
-
-MenuScreen::Item MacroDataSource::operator[](std::size_t index) const
+MenuScreen::Item createMacroMenuItem(const Macro& macro, std::size_t index)
 {
     MenuScreen::Item item;
-    
-    item.title = mKeyboardState.macroSet[index].name;
-    item.shortcut = mKeyboardState.macroSet[index].shortcut;
-    item.keyId = KeyId::Macro(index);
-
+        
+    item.title    = macro.name;
+    item.shortcut = macro.shortcut;
+    item.keyId    = KeyId::Macro(index);
+        
     return item;
 }
 
-std::size_t MacroDataSource::size() const
+MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
 {
-    return mKeyboardState.macroSet.size();
-}
-
-
-EditMacroDataSource::EditMacroDataSource(const KeyboardState& keyboardState)
-    : mKeyboardState(keyboardState)
-{ }
-
-MenuScreen::Item EditMacroDataSource::operator[](std::size_t index) const
-{
-    MenuScreen::Item item;    
-
-    item.title = mKeyboardState.macroSet[index].name;
-    item.keyId = KeyId::Action(KeyId::ActionType::kEditMacro, index);
-
+    MenuScreen::Item item;
+        
+    item.title    = macro.name;
+    item.shortcut = macro.shortcut;
+    item.keyId    = KeyId::Action(KeyId::ActionType::kEditMacro, index);
+        
     return item;
 }
 
-std::size_t EditMacroDataSource::size() const
-{
-    return mKeyboardState.macroSet.size();
-}
-
-MultiKeyDataSource::MultiKeyDataSource(const KeyboardState& keyboardState)
-    : mKeyboardState(keyboardState)
-{ }
-
-MenuScreen::Item MultiKeyDataSource::operator[](std::size_t index) const
+MenuScreen::Item createMultiKeyMenuItem(const Multi& multi, std::size_t index)
 {
     MenuScreen::Item item;
-   
-    item.title = mKeyboardState.multiSet[index].name;
+        
+    item.title = multi.name;
     item.keyId = KeyId::Multi(index);
-
+        
     return item;
 }
 
-std::size_t MultiKeyDataSource::size() const
-{
-    return mKeyboardState.multiSet.size();
-}
-
-SmartKeyDataSource::SmartKeyDataSource(const KeyboardState& keyboardState)
-    : mKeyboardState(keyboardState)
-{ }
-
-MenuScreen::Item SmartKeyDataSource::operator[](std::size_t index) const
+MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index)
 {
     MenuScreen::Item item;
-
-    item.title = mKeyboardState.smartKeySet[index].name;
+        
+    item.title = smart.name;
     item.keyId = KeyId::Smart(index);
-
+        
     return item;
 }
 
-std::size_t SmartKeyDataSource::size() const
-{
-    return mKeyboardState.smartKeySet.size();
-}
-
-KeyDataSource::KeyDataSource(const KeyboardState& keyboardState)
-    : mKeyboardState(keyboardState)
-{ }
-
-MenuScreen::Item KeyDataSource::operator[](std::size_t index) const
+MenuScreen::Item createKeyMenuItem(std::size_t index)
 {
     MenuScreen::Item item;
     
@@ -140,22 +96,17 @@ MenuScreen::Item KeyDataSource::operator[](std::size_t index) const
     return item;
 }
 
-std::size_t KeyDataSource::size() const
-{
-    return 255;
-}
-
 }
 
 MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     : mMainMenuSource(mainMenu.begin(), mainMenu.end())
     , mSystemMenuSource(systemMenu.begin(), systemMenu.end())
     , mEmptyMenuSource(mainMenu.end(), mainMenu.end())
-    , mMacroDataSource(keyboardState)
-    , mEditMacroDataSource(keyboardState)
-    , mMultiKeyDataSource(keyboardState)
-    , mSmartKeyDataSource(keyboardState)
-    , mKeyDataSource(keyboardState)
+    , mMacroDataSource(keyboardState.macroSet, &createMacroMenuItem)
+    , mEditMacroDataSource(keyboardState.macroSet, &createEditMacroMenuItem)
+    , mMultiKeyDataSource(keyboardState.multiSet, &createMultiKeyMenuItem)
+    , mSmartKeyDataSource(keyboardState.smartKeySet, &createSmartKeyMenuItem)
+    , mKeyDataSource(254, &createKeyMenuItem)
 { }
 
 const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const

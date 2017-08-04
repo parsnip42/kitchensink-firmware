@@ -3,12 +3,12 @@
 
 #include <cstdint>
 
-template <typename T>
+template <typename Type>
 class ObjectSource
 {
 public:
-    typedef T value_type;
-    
+    typedef Type value_type;
+
 public:
     virtual value_type operator[](std::size_t index) const = 0;
     virtual std::size_t size() const = 0;

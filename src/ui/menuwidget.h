@@ -32,14 +32,14 @@ public:
 
 private:
     void moveSelection(int direction);
-    void populateMenuItem(std::size_t index);
+    void populateMenuItem(int index);
     
 private:
     const DataSource& mDataSource;
     int               mSelectedIndex;
     bool              mFocused;
     MenuItemWidget    mWidget;
-    std::size_t       mWidgetIndex;
+    int               mWidgetIndex;
 };
 
 #endif

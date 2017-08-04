@@ -7,12 +7,12 @@ template <typename Type>
 class ArrayObjectSource : public ObjectSource<Type>
 {
 public:
-    typedef Type        value_type;
     typedef const Type* const_iterator;
-    
+    typedef Type        value_type;
+
 public:
-    explicit ArrayObjectSource(const_iterator begin,
-                               const_iterator end);
+    ArrayObjectSource(const_iterator begin,
+                      const_iterator end);
 
 public:
     virtual value_type operator[](std::size_t index) const override;

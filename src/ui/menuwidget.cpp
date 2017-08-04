@@ -46,7 +46,8 @@ void MenuWidget::setFocused(bool focused)
 void MenuWidget::render(const RasterLine& rasterLine, int row)
 {
     auto size(getSize());
-    auto itemCount(int(mDataSource.size()));
+    
+    int itemCount(mDataSource.size());
     
     // Selected item * font height is the y position of the selected item
     // relative to the top of the menu. By itself, this keeps the selected item
@@ -54,7 +55,7 @@ void MenuWidget::render(const RasterLine& rasterLine, int row)
     int offset(mSelectedIndex * MenuItemWidget::kHeight);
 
     // This is the height of the rendered portion of the menu.
-    int menuHeight(std::min<int>(size.height, itemCount * MenuItemWidget::kHeight));
+    int menuHeight(std::min(size.height, itemCount * MenuItemWidget::kHeight));
 
     // Subtracting the font height from the rendered height of the menu gives us
     // the maximum possible offset - this is where the selected menu item will
@@ -92,13 +93,13 @@ void MenuWidget::moveSelection(int direction)
     invalidateWidget();
 }
 
-void MenuWidget::populateMenuItem(std::size_t index)
+void MenuWidget::populateMenuItem(int index)
 {
     if (index != mWidgetIndex)
     {
         mWidget = mDataSource[index];
         mWidget.setParent(this, Rectangle(0, 0, getSize().width, MenuItemWidget::kHeight));
-        mWidget.setFocused(mFocused && static_cast<int>(index) == mSelectedIndex);
+        mWidget.setFocused(mFocused && index == mSelectedIndex);
     }
 
     mWidgetIndex = index;
