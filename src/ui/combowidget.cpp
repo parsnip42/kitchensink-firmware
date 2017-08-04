@@ -42,7 +42,7 @@ void ComboWidget::setFocused(bool nFocused)
 
 void ComboWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto size(getSize());
+    auto size(widgetSize());
     
     uint8_t fg(focused ? 0xf : 0x7);
 

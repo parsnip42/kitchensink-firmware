@@ -30,7 +30,7 @@ void MenuItemWidget::render(const RasterLine& rasterLine, int row)
         bg = 0x0;
     }
 
-    auto size(getSize());
+    auto size(widgetSize());
 
     if (shortcut.empty())
     {

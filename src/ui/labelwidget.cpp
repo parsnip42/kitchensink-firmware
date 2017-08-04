@@ -20,7 +20,7 @@ void LabelWidget::setFocused(bool focused)
 
 void LabelWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto size(getSize());
+    auto size(widgetSize());
     
     auto xOffset(0);
     

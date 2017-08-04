@@ -25,7 +25,7 @@ void MenuTitleWidget::render(const RasterLine& rasterLine, int row)
     {
         mTitle.render(rasterLine, row);
 
-        auto size(getSize());
+        auto size(widgetSize());
         
         if (row == size.height - 2)
         {
@@ -44,7 +44,7 @@ void MenuTitleWidget::regionInvalidated(const Rectangle& region)
 
 void MenuTitleWidget::parented()
 {
-    auto size(getSize());
+    auto size(widgetSize());
     
     mTitle.setParent(this, Rectangle(0, 0, size.width, size.height - 2));
     mSearch.setParent(this, Rectangle(size));

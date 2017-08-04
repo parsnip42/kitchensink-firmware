@@ -47,7 +47,7 @@ void MenuWidget::setFocused(bool focused)
 
 void MenuWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto size(getSize());
+    auto size(widgetSize());
     
     int itemCount(filterIndex.filteredSize());
     
@@ -100,7 +100,7 @@ void MenuWidget::populateMenuItem(int index)
     if (index != mWidgetIndex)
     {
         mWidget = mDataSource[filterIndex[index]];
-        mWidget.setParent(this, Rectangle(0, 0, getSize().width, MenuItemWidget::kHeight));
+        mWidget.setParent(this, Rectangle(0, 0, widgetSize().width, MenuItemWidget::kHeight));
         mWidget.setFocused(mFocused && index == mSelectedIndex);
     }
 

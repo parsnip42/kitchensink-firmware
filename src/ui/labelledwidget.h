@@ -67,7 +67,7 @@ template <typename TWidget>
 inline
 void LabelledWidget<TWidget>::parented()
 {
-    auto size(getSize());
+    auto size(widgetSize());
     
     labelWidth = ((size.width * separationPct) / 100);
     

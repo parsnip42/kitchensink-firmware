@@ -27,7 +27,7 @@ void HSplitWidget::regionInvalidated(const Rectangle& region)
 
 void HSplitWidget::parented()
 {
-    auto size(getSize());
+    auto size(widgetSize());
     
     mTop.setParent(this,
                    Rectangle(0,

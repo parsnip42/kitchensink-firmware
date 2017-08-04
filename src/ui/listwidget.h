@@ -103,7 +103,7 @@ template <std::size_t Size>
 inline
 void ListWidget<Size>::parented()
 {
-    auto size(getSize());
+    auto size(widgetSize());
     auto totalItemHeight(mItemHeight + mMarginY);
 
     int index(0);

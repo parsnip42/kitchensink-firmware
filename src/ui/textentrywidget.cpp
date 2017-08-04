@@ -35,7 +35,7 @@ void TextEntryWidget::setFocused(bool nFocused)
 
 void TextEntryWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto size(getSize());
+    auto size(widgetSize());
     uint8_t fg(focused ? 0xf : 0x7);
     
     cursorPosition = std::min(cursorPosition, text.length());
@@ -152,7 +152,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
             break;
                 
         default:
-            if (text.length() < static_cast<std::size_t>(getSize().width / Font::kWidth) - 1)
+            if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)
             {
                 char newChar(state.activeChar);
                     

@@ -25,7 +25,7 @@ public:
                    const Rectangle& parentRegion);
 
 protected:
-    Dimension getSize() const;
+    Dimension widgetSize() const;
     void invalidateWidget();
     void invalidateRegion(const Rectangle& region);
 
@@ -48,7 +48,7 @@ void Widget::parented()
 { }
 
 inline
-Dimension Widget::getSize() const
+Dimension Widget::widgetSize() const
 {
     return Dimension(mParentRegion.width,
                      mParentRegion.height);
