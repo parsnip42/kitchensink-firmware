@@ -5,16 +5,20 @@
 namespace RenderUtil
 {
 
-void fill(const RasterLine& row, uint8_t color)
+int fill(const RasterLine& row, uint8_t color)
 {
     for (std::size_t i(0); i < row.size(); ++i)
     {
         row[i] = color;
     }
+
+    return row.size();
 }
 
 int render(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg, uint8_t bg)
 {
+    auto xStart(x);
+    
     if (line >= 0 && line < Font::kHeight)
     {
         for (const auto chr : text)
@@ -40,7 +44,7 @@ int render(const StrRef& text, int x, int line, const RasterLine& row, uint8_t f
         }
     }
 
-    return x;
+    return x - xStart;
 }
 
 }

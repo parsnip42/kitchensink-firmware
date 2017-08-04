@@ -10,11 +10,7 @@ namespace
 
 MenuItemWidget createMenuItem(const MenuScreen::Item& item, std::size_t)
 {
-    MenuItemWidget widget;
-    
-    widget.text = item.title;
-
-    return widget;
+    return MenuItemWidget(item.title, item.shortcut);
 }
 
 }

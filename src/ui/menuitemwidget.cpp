@@ -2,8 +2,10 @@
 
 #include "ui/renderutil.h"
 
-MenuItemWidget::MenuItemWidget(const StrRef& nText)
+MenuItemWidget::MenuItemWidget(const StrRef& nText,
+                               const StrRef& nShortcut)
     : text(nText)
+    , shortcut(nShortcut)
     , mFocused(true)
 { }
 
@@ -14,18 +16,70 @@ void MenuItemWidget::setFocused(bool focused)
 
 void MenuItemWidget::render(const RasterLine& rasterLine, int row)
 {
-    uint8_t fg(0xf);
-    uint8_t bg(0x0);
+    uint8_t fg;
+    uint8_t bg;
 
     if (mFocused)
     {
-        std::swap(fg, bg);
+        fg = 0x0;
+        bg = 0xf;
+    }
+    else
+    {
+        fg = 0xa;
+        bg = 0x0;
     }
 
     auto size(getSize());
-    auto xOffset((size.width - (Font::kWidth * text.length())) / 2);
 
-    RenderUtil::fill(rasterLine.subset(0, xOffset), bg);
-    auto xEnd(RenderUtil::render(text, xOffset, row, rasterLine, fg, bg));
-    RenderUtil::fill(rasterLine.subset(xEnd), bg);
+    if (shortcut.empty())
+    {
+        auto xOffset((size.width - (Font::kWidth * text.length())) / 2);
+   
+        if (mFocused)
+        {
+            RenderUtil::fill(rasterLine.subset(0, xOffset), bg);
+        }
+
+        xOffset += RenderUtil::render(text, xOffset, row, rasterLine, fg, bg);
+
+        if (mFocused)
+        {
+            RenderUtil::fill(rasterLine.subset(xOffset), bg);
+        }
+    }
+    else
+    {
+        auto nameOffset((size.width / 4) - (Font::kWidth * text.length() / 2));
+        auto scOffset((3 * size.width / 4) - (Font::kWidth * shortcut.length() / 2));
+
+        if (mFocused)
+        {
+            RenderUtil::fill(rasterLine.subset(0, nameOffset), bg);
+        }
+
+        nameOffset += RenderUtil::render(text, nameOffset, row, rasterLine, fg, bg);
+        
+        if (mFocused)
+        {
+            RenderUtil::fill(rasterLine.subset(nameOffset, scOffset - nameOffset), bg);
+        }
+
+        scOffset += RenderUtil::render(shortcut, scOffset, row, rasterLine, fg, bg);
+
+        if (mFocused)
+        {
+            RenderUtil::fill(rasterLine.subset(scOffset), bg);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+

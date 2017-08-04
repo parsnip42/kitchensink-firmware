@@ -11,7 +11,8 @@ public:
     
 public:
     MenuItemWidget() = default;
-    explicit MenuItemWidget(const StrRef& nText);
+    MenuItemWidget(const StrRef& nText,
+                   const StrRef& nShortcut);
 
 public:
     virtual void setFocused(bool focused) override;
@@ -19,7 +20,8 @@ public:
 
 public:
     StrBuf<24> text;
-
+    StrBuf<24> shortcut;
+    
 private:
     bool mFocused;
 };
