@@ -41,7 +41,7 @@ void MenuItemWidget::render(const RasterLine& rasterLine, int row)
             RenderUtil::fill(rasterLine.subset(0, xOffset), bg);
         }
 
-        xOffset += RenderUtil::render(text, xOffset, row, rasterLine, fg, bg);
+        xOffset += RenderUtil::text(text, xOffset, row, rasterLine, fg, bg);
 
         if (mFocused)
         {
@@ -58,14 +58,14 @@ void MenuItemWidget::render(const RasterLine& rasterLine, int row)
             RenderUtil::fill(rasterLine.subset(0, nameOffset), bg);
         }
 
-        nameOffset += RenderUtil::render(text, nameOffset, row, rasterLine, fg, bg);
+        nameOffset += RenderUtil::text(text, nameOffset, row, rasterLine, fg, bg);
         
         if (mFocused)
         {
             RenderUtil::fill(rasterLine.subset(nameOffset, scOffset - nameOffset), bg);
         }
 
-        scOffset += RenderUtil::render(shortcut, scOffset, row, rasterLine, fg, bg);
+        scOffset += RenderUtil::text(shortcut, scOffset, row, rasterLine, fg, bg);
 
         if (mFocused)
         {

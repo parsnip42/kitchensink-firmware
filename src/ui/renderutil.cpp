@@ -15,7 +15,7 @@ int fill(const RasterLine& row, uint8_t color)
     return row.size();
 }
 
-int render(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg, uint8_t bg)
+int text(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg, uint8_t bg)
 {
     auto xStart(x);
     

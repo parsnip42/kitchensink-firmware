@@ -47,5 +47,5 @@ void LabelWidget::render(const RasterLine& rasterLine, int row)
 
     uint8_t fg(mFocused ? 0xf : 0x7);
 
-    RenderUtil::render(text, xOffset, row - yOffset, rasterLine, fg, 0x0);
+    RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, 0x0);
 }

@@ -58,7 +58,7 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
         yOffset = (size.height - Font::kHeight) / 2;
     }
     
-    RenderUtil::render(text,
+    RenderUtil::text(text,
                        2,
                        row - yOffset,
                        rasterLine,
@@ -82,7 +82,7 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
             std::swap(cursorFg, cursorBg);
         }
         
-        RenderUtil::render(textChar,
+        RenderUtil::text(textChar,
                            2 + (cursorPosition * Font::kWidth),
                            row - yOffset,
                            rasterLine,
