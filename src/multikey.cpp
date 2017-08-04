@@ -1,16 +1,16 @@
-#include "multi.h"
+#include "multikey.h"
 
 #include "keyevent.h"
 #include "keyeventstage.h"
 
-void Multi::press()
+void MultiKey::press()
 {
     mReleased = false;
     mTriggered = false;
     mActiveKey = key(++mTaps);
 }
 
-void Multi::release(KeyEventStage& next)
+void MultiKey::release(KeyEventStage& next)
 {
     mReleased = true;
                 
@@ -23,7 +23,7 @@ void Multi::release(KeyEventStage& next)
     }
 }
 
-bool Multi::trigger(KeyEventStage& next)
+bool MultiKey::trigger(KeyEventStage& next)
 {
     if (!mTriggered)
     {

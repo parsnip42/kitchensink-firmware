@@ -1,5 +1,5 @@
-#ifndef INCLUDED_MULTI_H
-#define INCLUDED_MULTI_H
+#ifndef INCLUDED_MULTIKEY_H
+#define INCLUDED_MULTIKEY_H
 
 #include "keyid.h"
 #include "types/strbuf.h"
@@ -10,13 +10,13 @@
 class KeyEvent;
 class KeyEventStage;
 
-class Multi
+class MultiKey
 {
 public:
     typedef std::array<KeyId, Config::kMultiKeyKeyCount> Keys;
     
 public:
-    Multi();
+    MultiKey();
     
 public:
     KeyId key(int taps);
@@ -38,14 +38,14 @@ private:
 
 
 inline
-Multi::Multi()
+MultiKey::MultiKey()
     : mTaps(0)
     , mReleased(false)
     , mTriggered(false)
 { }
 
 inline
-KeyId Multi::key(int taps)
+KeyId MultiKey::key(int taps)
 {
     std::size_t index(taps - 1);
     

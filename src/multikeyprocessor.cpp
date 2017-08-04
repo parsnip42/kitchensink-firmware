@@ -1,12 +1,12 @@
-#include "multiprocessor.h"
+#include "multikeyprocessor.h"
 
 #include "keyevent.h"
 
-void MultiProcessor::processKeyEvent(const KeyEvent& event)
+void MultiKeyProcessor::processKeyEvent(const KeyEvent& event)
 {
     if (mReleaseTimer.matches(event))
     {
-        mMultiSet[mLast].trigger(mNext);
+        mMultiKeySet[mLast].trigger(mNext);
         return;
     }
     
@@ -16,21 +16,21 @@ void MultiProcessor::processKeyEvent(const KeyEvent& event)
     {
         auto multiId(keyId.value());
         
-        if (multiId < mMultiSet.size())
+        if (multiId < mMultiKeySet.size())
         {
             if (event.pressed)
             {
                 mReleaseTimer.schedule(300);
-                mMultiSet[multiId].press();
+                mMultiKeySet[multiId].press();
             }
             else
             {
-                mMultiSet[multiId].release(mNext);
+                mMultiKeySet[multiId].release(mNext);
             }
             
             if (multiId != mLast)
             {
-                mMultiSet[mLast].trigger(mNext);
+                mMultiKeySet[mLast].trigger(mNext);
             }
             
             mLast = multiId;
@@ -38,7 +38,7 @@ void MultiProcessor::processKeyEvent(const KeyEvent& event)
     }
     else
     {
-        mMultiSet[mLast].trigger(mNext);
+        mMultiKeySet[mLast].trigger(mNext);
         mNext.processKeyEvent(event);   
     }
 }

@@ -3,7 +3,7 @@
 
 #include "layerstack.h"
 #include "macroset.h"
-#include "multiset.h"
+#include "multikeyset.h"
 #include "smartkeyset.h"
 
 class KeyboardState
@@ -14,7 +14,7 @@ public:
 public:
     LayerStack  layerStack;
     MacroSet    macroSet;
-    MultiSet    multiSet;
+    MultiKeySet multiSet;
     SmartKeySet smartKeySet;
     
 private:

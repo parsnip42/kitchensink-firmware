@@ -7,6 +7,7 @@ namespace RenderUtil
 
 int fill(const RasterLine& row, uint8_t color)
 {
+    // TODO: Optimise to std::memset()
     for (std::size_t i(0); i < row.size(); ++i)
     {
         row[i] = color;

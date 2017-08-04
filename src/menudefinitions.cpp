@@ -45,7 +45,7 @@ MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
     return item;
 }
 
-MenuScreen::Item createMultiKeyMenuItem(const Multi& multi, std::size_t index)
+MenuScreen::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index)
 {
     MenuScreen::Item item;
         

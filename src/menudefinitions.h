@@ -6,7 +6,7 @@
 #include "types/mappedobjectsource.h"
 #include "types/generatedobjectsource.h"
 #include "macroset.h"
-#include "multiset.h"
+#include "multikeyset.h"
 #include "smartkeyset.h"
 #include "data/keycodes.h"
 
@@ -29,7 +29,7 @@ private:
 
     const MappedObjectSource<MenuScreen::Item, MacroSet>    mMacroDataSource;
     const MappedObjectSource<MenuScreen::Item, MacroSet>    mEditMacroDataSource;
-    const MappedObjectSource<MenuScreen::Item, MultiSet>    mMultiKeyDataSource;
+    const MappedObjectSource<MenuScreen::Item, MultiKeySet> mMultiKeyDataSource;
     const MappedObjectSource<MenuScreen::Item, SmartKeySet> mSmartKeyDataSource;
     const GeneratedObjectSource<MenuScreen::Item>           mKeyDataSource;
 
