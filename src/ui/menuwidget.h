@@ -39,7 +39,8 @@ private:
 
 public:
     FilterIndex<300> filterIndex;
-    
+    StrBuf<24> filterStr;
+
 private:
     const DataSource& mDataSource;
     int               mSelectedIndex;

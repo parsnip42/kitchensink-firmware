@@ -16,13 +16,13 @@ int fill(const RasterLine& row, uint8_t color)
     return row.size();
 }
 
-int text(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg, uint8_t bg)
+int text(const StrRef& str, int x, int line, const RasterLine& row, uint8_t fg, uint8_t bg)
 {
     auto xStart(x);
     
     if (line >= 0 && line < Font::kHeight)
     {
-        for (const auto chr : text)
+        for (const auto chr : str)
         {
             uint8_t data(0xff);
             
@@ -46,6 +46,20 @@ int text(const StrRef& text, int x, int line, const RasterLine& row, uint8_t fg,
     }
 
     return x - xStart;
+}
+
+int textPrefix(const StrRef& prefix, const StrRef& str, int x, int line, const RasterLine& row, uint8_t prefixFg, uint8_t fg, uint8_t bg)
+{
+    if (!str.beginsWithCase(prefix))
+    {
+        return text(str, x, line, row, fg, bg);
+    }
+    else
+    {
+        auto prefixLen(text(str.substr(0, prefix.length()), x, line, row, prefixFg, bg));
+        
+        return prefixLen + text(str.substr(prefix.length()), x + prefixLen, line, row, fg, bg);
+    }
 }
 
 }

@@ -72,9 +72,10 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
                                        {
                                            auto item = mDataSource[index];
 
-                                           return StrRef(item.title).beginsWithCase(mTitleWidget.filter());
+                                           return StrRef(item.title).beginsWithCase(mTitleWidget.filter()) ||
+                                               StrRef(item.shortcut).beginsWithCase(mTitleWidget.filter());
                                        });
-
+        mMenuWidget.filterStr = mTitleWidget.filter();
         mMenuWidget.update();
     }
 }

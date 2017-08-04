@@ -21,6 +21,7 @@ public:
 public:
     StrBuf<24> text;
     StrBuf<24> shortcut;
+    StrBuf<24> filter;
     
 private:
     bool mFocused;

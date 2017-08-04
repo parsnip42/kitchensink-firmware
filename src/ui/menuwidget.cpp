@@ -100,6 +100,7 @@ void MenuWidget::populateMenuItem(int index)
     if (index != mWidgetIndex)
     {
         mWidget = mDataSource[filterIndex[index]];
+        mWidget.filter = filterStr;
         mWidget.setParent(this, Rectangle(0, 0, widgetSize().width, MenuItemWidget::kHeight));
         mWidget.setFocused(mFocused && index == mSelectedIndex);
     }
@@ -114,5 +115,6 @@ int MenuWidget::selectedIndex() const
 
 void MenuWidget::update()
 {
+    mWidgetIndex = 0xffff;
     moveSelection(0);
 }
