@@ -7,8 +7,11 @@
 namespace Font
 {
 
+// constexpr int kWidth     = 8;
+// constexpr int kHeight    = 14;
 constexpr int kWidth     = 6;
 constexpr int kHeight    = 12;
+
 constexpr int kBpp       = 1;
 constexpr int kCharCount = 95;
 

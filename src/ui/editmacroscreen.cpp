@@ -66,9 +66,10 @@ void EditMacroScreen::poll()
 
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
+    
     while (!mQuit)
     {
-        mEventManager.poll(autoRepeat);
+        mEventManager.poll(*this);
     }
 }
 
@@ -76,9 +77,9 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
 
-    if (Keys::ok(keyId))
+    if (Keys::ok(keyId) && mListWidget.lastWidgetFocused())
     {
-        if (event.pressed && mListWidget.lastWidgetFocused())
+        if (event.pressed)
         {
             MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
                                 MacroType::kInvert :

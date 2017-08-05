@@ -48,13 +48,14 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
             auto keyId(mDataSource[mMenuWidget.filterIndex[mMenuWidget.selectedIndex()]].keyId);
             
             mEventManager.processKeyEvent(KeyEvent(keyId, true));
+            mEventManager.processKeyEvent(KeyEvent(keyId, false));
             
             mQuit = true;
         }
     }
     else if (Keys::cancel(keyId))
     {
-        if (event.pressed)
+        if (!event.pressed)
         {
             mQuit = true;
         }
@@ -69,14 +70,16 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     else
     {
         mTitleWidget.processKeyEvent(event);
-        mMenuWidget.filterIndex.filter(mDataSource.size(),
-                                       [&](std::size_t index)
-                                       {
-                                           auto item = mDataSource[index];
-
-                                           return StrRef(item.title).beginsWithCase(mTitleWidget.filter()) ||
-                                               StrRef(item.shortcut).beginsWithCase(mTitleWidget.filter());
-                                       });
+        mMenuWidget.filterIndex.filter(
+            mDataSource.size(),
+            [&](std::size_t index)
+            {
+                auto item = mDataSource[index];
+                
+                return (StrRef(item.title).beginsWithCase(mTitleWidget.filter()) ||
+                        StrRef(item.shortcut).beginsWithCase(mTitleWidget.filter()));
+            });
+        
         mMenuWidget.filterStr = mTitleWidget.filter();
         mMenuWidget.update();
     }
@@ -93,8 +96,3 @@ void MenuScreen::poll()
         mEventManager.poll(autoRepeat);
     }
 }
-
-
-
-
-

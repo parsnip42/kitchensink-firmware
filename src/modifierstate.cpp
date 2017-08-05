@@ -12,9 +12,12 @@ bool ModifierState::processEvent(const KeyEvent& event)
 
         if (keyCode >= KeyCodes::ModifierOffset)
         {
-            auto modifier(keyCode - KeyCodes::ModifierOffset);
-            
-            keyState[modifier] = event.pressed;
+            std::size_t modifier(keyCode - KeyCodes::ModifierOffset);
+
+            if (modifier < keyState.size())
+            {
+                keyState[modifier] = event.pressed;
+            }
             
             return true;
         }

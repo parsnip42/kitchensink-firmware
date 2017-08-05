@@ -129,7 +129,6 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
         case KeyCodes::Right:
             if (cursorPosition < text.length())
             {
-
                 ++cursorPosition;
             }
             break;

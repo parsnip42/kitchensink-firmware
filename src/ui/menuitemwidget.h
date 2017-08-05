@@ -1,13 +1,14 @@
 #ifndef INCLUDED_MENUITEMWIDGET_H
 #define INCLUDED_MENUITEMWIDGET_H
 
+#include "ui/font.h"
 #include "ui/widget.h"
 #include "types/strbuf.h"
 
 class MenuItemWidget : public Widget
 {
 public:
-    static constexpr int kHeight = 12;
+    static constexpr int kPreferredHeight = Font::kHeight;
     
 public:
     MenuItemWidget() = default;

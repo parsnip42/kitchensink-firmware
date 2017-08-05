@@ -65,22 +65,4 @@ private:
     Surface& operator=(const Surface&) = delete;
 };
 
-
-inline
-Surface::WidgetGuard::WidgetGuard(Surface& surface,
-                                  Widget&  widget)
-    : mSurface(surface)
-    , mWidget(surface.rootWidget())
-{
-    mSurface.setRootWidget(&widget);
-    mSurface.redraw();
-}
-
-inline
-Surface::WidgetGuard::~WidgetGuard()
-{
-    mSurface.setRootWidget(mWidget);
-    mSurface.redraw();
-}
-
 #endif

@@ -40,4 +40,4 @@ ScreenStack::ScreenStack(KeyboardState& keyboardState,
     , mNext(next)
 { }
 
-#endif /* INCLUDED_SCREENSTACK_H */
+#endif

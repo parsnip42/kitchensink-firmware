@@ -4,6 +4,20 @@
 
 #include "types/strref.h"
 
+Surface::WidgetGuard::WidgetGuard(Surface& surface,
+                                  Widget&  widget)
+    : mSurface(surface)
+    , mWidget(surface.rootWidget())
+{
+    mSurface.setRootWidget(&widget);
+}
+
+Surface::WidgetGuard::~WidgetGuard()
+{
+    mSurface.setRootWidget(mWidget);
+}
+
+
 Surface::Surface(Display& display)
     : mDisplay(display)
     , mRootWidget(0)
@@ -49,7 +63,10 @@ void Surface::setRootWidget(Widget* rootWidget)
     {
         mRootWidget->setParent(this,
                                Rectangle(0, 0, kWidth, kHeight));
+
     }
+    
+    redraw();
 }
 
 void Surface::initRegion(int x, int y, int w, int h)
