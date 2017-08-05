@@ -17,7 +17,7 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
     {
         if (keyId.actionType() == KeyId::ActionType::kMenu)
         {
-            if (!event.pressed)
+            if (event.pressed)
             {
                 MenuDefinitions menuDefinitions(mKeyboardState);
 
@@ -34,7 +34,7 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
         }
         else if (keyId.actionType() == KeyId::ActionType::kScreen)
         {
-            if (!event.pressed)
+            if (event.pressed)
             {
                 switch (keyId.value())
                 {
@@ -63,7 +63,7 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
         }
         else if (keyId.actionType() == KeyId::ActionType::kEditMacro)
         {
-            if (!event.pressed)
+            if (event.pressed)
             {
                 auto macroIndex(keyId.value());
                 auto& macro(mKeyboardState.macroSet[macroIndex]);

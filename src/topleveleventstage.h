@@ -20,7 +20,6 @@ public:
         ToplevelEventStage& mTopLevel;
         KeyEventStage*      mNext;
 
-
     private:
         OutputGuard(const OutputGuard&) = delete;
         OutputGuard& operator=(const OutputGuard&) = delete;

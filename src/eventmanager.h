@@ -17,8 +17,8 @@ public:
     class RefocusGuard
     {
     public:
-        explicit RefocusGuard(EventManager&  eventManager,
-                              KeyEventStage& next);
+        explicit RefocusGuard(EventManager& eventManager);
+        
         ~RefocusGuard();
         
     private:
@@ -40,7 +40,8 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
     void poll(KeyEventStage& output);
-
+    void untilKeysReleased();
+    
 public:
     Timer&         timer;
     KeyEventStage& defaultOutput;
@@ -61,22 +62,6 @@ private:
 private:
     friend class RefocusGuard;
 };
-
-
-inline
-EventManager::RefocusGuard::RefocusGuard(EventManager&  eventManager,
-                                         KeyEventStage& next)
-    : mEventManager(eventManager)
-{
-    mEventManager.mSource.releaseAll(mEventManager.mInput);
-    mEventManager.mSource.pressAll(next);
-}
-
-inline
-EventManager::RefocusGuard::~RefocusGuard()
-{
-    mEventManager.mSource.pressAll(mEventManager.mInput);
-}
 
 #endif
 

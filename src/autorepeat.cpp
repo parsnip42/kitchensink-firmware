@@ -1,5 +1,7 @@
 #include "autorepeat.h"
 
+#include "data/keycodes.h"
+
 AutoRepeat::AutoRepeat(Timer&         timer,
                        KeyEventStage& next)
     : repeatDelay(660)
@@ -22,7 +24,10 @@ void AutoRepeat::processKeyEvent(const KeyEvent& event)
     }
     else
     {
-        if (event.pressed && keyId.type() == KeyId::Type::kKey && keyId != KeyId())
+        if (event.pressed &&
+            keyId.type() == KeyId::Type::kKey &&
+            keyId.value() > 0 &&
+            keyId.value() < KeyCodes::ModifierOffset)
         {
             mKeyId = keyId;
             mRepeatTimer.scheduleRepeating(repeatDelay,

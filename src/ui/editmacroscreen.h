@@ -7,6 +7,7 @@
 #include "ui/listwidget.h"
 #include "ui/titlewidget.h"
 #include "ui/hsplitwidget.h"
+#include "ui/widgetset.h"
 #include "keyeventstage.h"
 
 #include <tuple>
@@ -40,7 +41,8 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    ListWidget<3>                   mListWidget;
+    WidgetSet<3>                    mWidgetSet;
+    ListWidget                      mListWidget;
     HSplitWidget                    mHSplit;
     bool                            mQuit;
 };

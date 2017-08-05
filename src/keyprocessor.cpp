@@ -46,32 +46,16 @@ void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
     }
 }
 
-void KeyProcessor::pressAll(KeyEventStage& next)
+bool KeyProcessor::anyPressed()
 {
-    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    bool pressed(false);
+    
+    mKeyboard.pressed([&](const KsKeyboard::Event&)
     {
-        auto keyId(mLayerStack.at(mLayerMask,
-                                  event.row,
-                                  event.column));
-        
-        auto keyEvent(KeyEvent(keyId, true));
-        
-        next.processKeyEvent(keyEvent);
+        pressed = true;
     });
-}
 
-void KeyProcessor::releaseAll(KeyEventStage& next)
-{
-    mKeyboard.pressed([&](const KsKeyboard::Event& event)
-    {
-        auto keyId(mLayerStack.at(mLayerMask,
-                                  event.row,
-                                  event.column));
-        
-        auto keyEvent(KeyEvent(keyId, false));
-
-        next.processKeyEvent(keyEvent);
-    });
+    return pressed;
 }
 
 void KeyProcessor::processLayerChange(const LayerStack::Mask& currentMask,

@@ -19,8 +19,7 @@ public:
     void pollKeyEvent(uint32_t       timeMs,
                       KeyEventStage& next);
 
-    void pressAll(KeyEventStage& next);
-    void releaseAll(KeyEventStage& next);
+    bool anyPressed();
 
 private:
     void processLayerChange(const LayerStack::Mask& currentMask,

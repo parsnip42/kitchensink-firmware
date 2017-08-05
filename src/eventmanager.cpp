@@ -2,6 +2,18 @@
 
 #include <elapsedMillis.h>
 
+EventManager::RefocusGuard::RefocusGuard(EventManager& eventManager)
+    : mEventManager(eventManager)
+{
+    mEventManager.untilKeysReleased();
+}
+
+EventManager::RefocusGuard::~RefocusGuard()
+{
+    mEventManager.untilKeysReleased();
+}
+
+
 EventManager::EventManager(Timer&              nTimer,
                            KeyProcessor&       source,
                            KeyEventStage&      input,
@@ -21,13 +33,21 @@ void EventManager::processKeyEvent(const KeyEvent& event)
 
 void EventManager::poll(KeyEventStage& output)
 {
-    auto now(nowMs());
-
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
         
     mBuffer.pollKeyEvent(mInput);
     timer.pollKeyEvent(mInput);
-    mSource.pollKeyEvent(now, mInput);
+    mSource.pollKeyEvent(nowMs(), mInput);
+}
+
+void EventManager::untilKeysReleased()
+{
+    while (mSource.anyPressed())
+    {
+        mBuffer.pollKeyEvent(mInput);
+        timer.pollKeyEvent(mInput);
+        mSource.pollKeyEvent(nowMs(), mInput);
+    }
 }
 
 uint32_t EventManager::nowMs() const

@@ -44,8 +44,8 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mTypeCombo("Type", Justify::kLeft,
                  ComboWidget(mtds),
                  kLabelWidth)
-    , mListWidget(TextEntryWidget::kPreferredHeight, 1,
-                  { &mTitleEntry, &mShortcutEntry, &mTypeCombo } )
+    , mWidgetSet({ &mTitleEntry, &mShortcutEntry, &mTypeCombo })
+    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), TextEntryWidget::kPreferredHeight)
     , mHSplit(mTitleWidget,
               mListWidget,
               TitleWidget::kPreferredHeight + 1)
@@ -62,6 +62,8 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
 
 void EditMacroScreen::poll()
 {
+    EventManager::RefocusGuard guardB(mEventManager);
+    
     Surface::WidgetGuard guard(mSurface, mHSplit);
 
     AutoRepeat autoRepeat(mEventManager.timer,
@@ -69,7 +71,7 @@ void EditMacroScreen::poll()
     
     while (!mQuit)
     {
-        mEventManager.poll(*this);
+        mEventManager.poll(autoRepeat);
     }
 }
 

@@ -55,7 +55,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     }
     else if (Keys::cancel(keyId))
     {
-        if (!event.pressed)
+        if (event.pressed)
         {
             mQuit = true;
         }
@@ -87,10 +87,13 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
 
 void MenuScreen::poll()
 {
-    Surface::WidgetGuard guard(mSurface, mHSplit);
-    
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
+
+    EventManager::RefocusGuard guardB(mEventManager);
+    
+    Surface::WidgetGuard guard(mSurface, mHSplit);
+    
     while (!mQuit)
     {
         mEventManager.poll(autoRepeat);
