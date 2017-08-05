@@ -24,9 +24,11 @@ public:
     void setParent(WidgetContainer* parent,
                    const Rectangle& parentRegion);
 
+public:
+    void invalidateWidget();
+    
 protected:
     Dimension widgetSize() const;
-    void invalidateWidget();
     void invalidateRegion(const Rectangle& region);
 
 private:

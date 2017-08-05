@@ -4,6 +4,7 @@
 #include "keyevent.h"
 #include "keyeventrecorder.h"
 #include "keyeventstage.h"
+#include "timer.h"
 #include "ui/titlewidget.h"
 #include "ui/labelwidget.h"
 #include "ui/hsplitwidget.h"
@@ -33,7 +34,9 @@ private:
     TitleWidget      mTitleWidget;
     LabelWidget      mLabelWidget;
     HSplitWidget     mHSplit;
-
+    Timer::Handle    mFlashTimer;
+    bool             mFlash;
+    
 private:
     RecordMacroScreen(const RecordMacroScreen&) = delete;
     RecordMacroScreen& operator=(const RecordMacroScreen&) = delete;
