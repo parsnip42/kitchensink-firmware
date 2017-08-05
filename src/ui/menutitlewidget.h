@@ -2,15 +2,19 @@
 #define INCLUDED_MENUTITLEWIDGET_H
 
 #include "ui/widget.h"
-#include "ui/labelwidget.h"
 #include "ui/textentrywidget.h"
 #include "types/strbuf.h"
+#include "ui/titlewidget.h"
 
 class EventManager;
 
 class MenuTitleWidget : public Widget
                       , public WidgetContainer
 {
+public:
+    static constexpr int kPreferredHeight = std::max(TitleWidget::kPreferredHeight,
+                                                     TextEntryWidget::kPreferredHeight);
+
 public:
     MenuTitleWidget() = default;
     MenuTitleWidget(const StrRef& title,
@@ -27,7 +31,7 @@ public:
     StrRef filter() const;
     
 public:
-    LabelWidget     mTitle;
+    TitleWidget     mTitle;
     TextEntryWidget mSearch;
 };
 

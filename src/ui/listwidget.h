@@ -35,6 +35,9 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;
     virtual void regionInvalidated(const Rectangle& region) override;
+
+public:
+    bool lastWidgetFocused() const;
     
 private:
     Dimension   mSize;
@@ -148,6 +151,13 @@ void ListWidget<Size>::regionInvalidated(const Rectangle& region)
                 region.height);
     
     invalidateRegion(r);
+}
+
+template <std::size_t Size>
+inline
+bool ListWidget<Size>::lastWidgetFocused() const
+{
+    return mFocus == Size - 1;
 }
 
 #endif

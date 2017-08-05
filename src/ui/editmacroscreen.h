@@ -5,6 +5,8 @@
 #include "ui/combowidget.h"
 #include "ui/labelledwidget.h"
 #include "ui/listwidget.h"
+#include "ui/titlewidget.h"
+#include "ui/hsplitwidget.h"
 #include "keyeventstage.h"
 
 #include <tuple>
@@ -34,10 +36,12 @@ private:
     EventManager&                   mEventManager;
     MacroSet&                       mMacroSet;
     Macro&                          mMacro;
+    TitleWidget                     mTitleWidget;
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
     ListWidget<3>                   mListWidget;
+    HSplitWidget                    mHSplit;
     bool                            mQuit;
 };
 

@@ -26,7 +26,9 @@ MenuScreen::MenuScreen(const StrRef&     title,
     , mMenuDataSource(dataSource, &createMenuItem)
     , mMenuWidget(mMenuDataSource)
     , mTitleWidget(title, eventManager)
-    , mHSplit(mTitleWidget, mMenuWidget, 16)
+    , mHSplit(mTitleWidget,
+              mMenuWidget,
+              MenuTitleWidget::kPreferredHeight)
     , mQuit(false)
 { }
 

@@ -24,13 +24,6 @@ void MenuTitleWidget::render(const RasterLine& rasterLine, int row)
     if (mSearch.text.empty())
     {
         mTitle.render(rasterLine, row);
-
-        auto size(widgetSize());
-        
-        if (row == size.height - 2)
-        {
-            RenderUtil::fill(rasterLine, 0xf);
-        }
     }
     else
     {
@@ -46,7 +39,7 @@ void MenuTitleWidget::parented()
 {
     auto size(widgetSize());
     
-    mTitle.setParent(this, Rectangle(0, 0, size.width, size.height - 2));
+    mTitle.setParent(this, Rectangle(size));
     mSearch.setParent(this, Rectangle(size));
 }
 

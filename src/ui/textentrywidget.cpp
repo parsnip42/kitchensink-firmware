@@ -40,17 +40,6 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
     
     cursorPosition = std::min(cursorPosition, text.length());
     
-    if (row == 0 || row == size.height - 1)
-    {
-        for (int i(0); i < size.width; ++i)
-        {
-            rasterLine[i] = fg;
-        }
-    }
-
-    rasterLine[0] = fg;
-    rasterLine[size.width - 1] = fg;
-
     auto yOffset(0);
 
     if (Font::kHeight < size.height)
@@ -89,6 +78,17 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
                            cursorFg,
                            cursorBg);
     }
+
+    if (row == 0 || row == size.height - 1)
+    {
+        for (int i(0); i < size.width; ++i)
+        {
+            rasterLine[i] = fg;
+        }
+    }
+
+    rasterLine[0] = fg;
+    rasterLine[size.width - 1] = fg;
 }
 
 void TextEntryWidget::processKeyEvent(const KeyEvent& event)

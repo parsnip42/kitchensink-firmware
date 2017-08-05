@@ -15,8 +15,7 @@ public:
     LabelledWidget(const StrRef& text,
                    Justify       justify,
                    TWidget&&     nWidget,
-                   int           nSeparationPct = 50,
-                   int           nMargin = 0);
+                   int           nSeparation);
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
@@ -28,9 +27,8 @@ public:
 public:
     LabelWidget label;
     TWidget     widget;
-    int         separationPct;
+    int         separation;
     int         margin;
-    int         labelWidth;
 };
 
 
@@ -39,13 +37,11 @@ inline
 LabelledWidget<TWidget>::LabelledWidget(const StrRef& text,
                                         Justify       justify,
                                         TWidget&&     nWidget,
-                                        int           nSeparationPct,
-                                        int           nMargin)
+                                        int           nSeparation)
     : label(text, justify)
     , widget(std::move(nWidget))
-    , separationPct(nSeparationPct)
-    , margin(nMargin)
-    , labelWidth(0)
+    , separation(nSeparation)
+    , margin(justify == Justify::kRight ? 1 : 0)
 { }
 
 template <typename TWidget>
@@ -69,18 +65,16 @@ void LabelledWidget<TWidget>::parented()
 {
     auto size(widgetSize());
     
-    labelWidth = ((size.width * separationPct) / 100);
-    
     label.setParent(this,
                     Rectangle(0,
                               0,
-                              labelWidth,
+                              separation,
                               size.height));
     
     widget.setParent(this,
                      Rectangle(0,
                                0,
-                               size.width - (labelWidth + margin),
+                               size.width - (separation + margin),
                                size.height));
 }
 
@@ -88,8 +82,8 @@ template <typename TWidget>
 inline
 void LabelledWidget<TWidget>::render(const RasterLine& rasterLine, int row)
 {
-    label.render(rasterLine.subset(0, labelWidth), row);
-    widget.render(rasterLine.subset(labelWidth + margin), row);
+    label.render(rasterLine.subset(0, separation), row);
+    widget.render(rasterLine.subset(separation + margin), row);
 }
 
 template <typename TWidget>

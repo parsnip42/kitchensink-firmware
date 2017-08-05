@@ -23,6 +23,8 @@ const std::array<ComboWidget::Item, 3> typeCombo = {{
 
 ArrayObjectSource<ComboWidget::Item> mtds(typeCombo.begin(), typeCombo.end());
 
+constexpr int kLabelWidth = Font::width("Shortcut ");
+
 }
 
 EditMacroScreen::EditMacroScreen(Surface&      surface,
@@ -33,19 +35,26 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mEventManager(eventManager)
     , mMacroSet(macroSet)
     , mMacro(macro)
-    , mTitleEntry("Name", Justify::kRight,
+    , mTitleEntry("Name", Justify::kLeft,
                   TextEntryWidget(eventManager),
-                  30, 4)
-    , mShortcutEntry("Shortcut", Justify::kRight,
+                  kLabelWidth)
+    , mShortcutEntry("Shortcut", Justify::kLeft,
                      TextEntryWidget(eventManager),
-                     30, 4)
-    , mTypeCombo("Type", Justify::kRight,
+                     kLabelWidth)
+    , mTypeCombo("Type", Justify::kLeft,
                  ComboWidget(mtds),
-                 30, 4)
-    , mListWidget(16, 2,
-                    { &mTitleEntry, &mShortcutEntry, &mTypeCombo } )
+                 kLabelWidth)
+    , mListWidget(TextEntryWidget::kPreferredHeight, 1,
+                  { &mTitleEntry, &mShortcutEntry, &mTypeCombo } )
+    , mHSplit(mTitleWidget,
+              mListWidget,
+              TitleWidget::kPreferredHeight + 1)
     , mQuit(false)
 {
+    StrOStream os(mTitleWidget.text);
+
+    os.appendStr("Configuring Macro");
+    
     mTitleEntry.widget.text = mMacro.name;
     mShortcutEntry.widget.text = mMacro.shortcut;    
     mTypeCombo.widget.selectedItem = 0;
@@ -53,7 +62,7 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
 
 void EditMacroScreen::poll()
 {
-    Surface::WidgetGuard guard(mSurface, mListWidget);
+    Surface::WidgetGuard guard(mSurface, mHSplit);
 
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
@@ -65,20 +74,18 @@ void EditMacroScreen::poll()
 
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
-    mListWidget.processKeyEvent(event);
+    auto keyId(event.keyId);
 
-    if (event.pressed)
+    if (Keys::ok(keyId))
     {
-        auto keyId(event.keyId);
-
-        if (Keys::ok(keyId))
+        if (event.pressed && mListWidget.lastWidgetFocused())
         {
             MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
                                 MacroType::kInvert :
                                 MacroType::kSync);
 
-            mMacro.type = macroType;
-            mMacro.name = mTitleEntry.widget.text;
+            mMacro.type     = macroType;
+            mMacro.name     = mTitleEntry.widget.text;
             mMacro.shortcut = mShortcutEntry.widget.text;
 
             RecordMacroScreen record(mSurface,
@@ -94,15 +101,18 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
             auto os(storage.write(Storage::Region::Macro));
                 
             s.serialize(mMacroSet, os);
-
-            mSurface.clear();
-
             mQuit = true;
         }
-        else if (Keys::cancel(keyId))
+    }
+    else if (Keys::cancel(keyId))
+    {
+        if (event.pressed)
         {
-            mSurface.clear();
             mQuit = true;
         }
+    }
+    else
+    {
+        mListWidget.processKeyEvent(event);
     }
 }

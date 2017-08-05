@@ -19,6 +19,9 @@ class EventManager;
 class TextEntryWidget : public Widget
 {
 public:
+    static constexpr int kPreferredHeight = Font::kHeight + 4;
+
+public:
     explicit TextEntryWidget(EventManager& eventManager);
 
     TextEntryWidget(TextEntryWidget&&) = default;

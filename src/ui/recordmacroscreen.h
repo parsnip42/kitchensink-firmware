@@ -4,6 +4,9 @@
 #include "keyevent.h"
 #include "keyeventrecorder.h"
 #include "keyeventstage.h"
+#include "ui/titlewidget.h"
+#include "ui/labelwidget.h"
+#include "ui/hsplitwidget.h"
 
 class Macro;
 class EventManager;
@@ -23,29 +26,17 @@ public:
     void poll();
     
 private:
-    void redraw();
-    
-private:
     Surface&         mSurface;
     EventManager&    mEventManager;
     Macro&           mMacro;
     KeyEventRecorder mRecorder;
-    
+    TitleWidget      mTitleWidget;
+    LabelWidget      mLabelWidget;
+    HSplitWidget     mHSplit;
+
 private:
     RecordMacroScreen(const RecordMacroScreen&) = delete;
     RecordMacroScreen& operator=(const RecordMacroScreen&) = delete;
 };
-
-
-inline
-RecordMacroScreen::RecordMacroScreen(Surface&       surface,
-                                     EventManager&  eventManager,
-                                     Macro&         macro,
-                                     bool           realtime)
-    : mSurface(surface)
-    , mEventManager(eventManager)
-    , mMacro(macro)
-    , mRecorder(realtime)
-{ }
 
 #endif
