@@ -52,10 +52,6 @@ private:
     {
     public:
         Entry();
-        Entry(Entry&&) = default;
-
-    public:
-        void reset();
         
     public:
         uint32_t currentMs;
@@ -183,12 +179,5 @@ Timer::Entry::Entry()
     , repeatDelayMs(0)
     , assigned(false)
 { }
-
-inline
-void Timer::Entry::reset()
-{
-    currentMs     = 0;
-    repeatDelayMs = 0;
-}
 
 #endif

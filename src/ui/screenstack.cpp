@@ -15,70 +15,69 @@ void ScreenStack::processKeyEvent(const KeyEvent& event)
 
     if (keyId.type() == KeyId::Type::kAction)
     {
-        if (keyId.actionType() == KeyId::ActionType::kMenu)
+        if (event.pressed)
         {
-            if (event.pressed)
-            {
-                MenuDefinitions menuDefinitions(mKeyboardState);
-
-                auto action(event.keyId.value());
-            
-                MenuScreen menu(menuDefinitions.getTitle(action),
-                                menuDefinitions.getDataSource(action),
-                                mSurface,
-                                mEventManager);
-
-                menu.poll();
-            }
-
-        }
-        else if (keyId.actionType() == KeyId::ActionType::kScreen)
-        {
-            if (event.pressed)
-            {
-                switch (keyId.value())
-                {
-                case 0:
-                {
-                    StorageScreen storage(mSurface,
-                                          mEventManager);
-
-                    storage.poll();
-                    break;
-                }
-
-                case 1:
-                {
-                    BenchmarkScreen benchmark(mSurface,
-                                              mEventManager);
-
-                    benchmark.poll();
-                    break;
-                }
-
-                default:
-                    break;
-                }
-            }
-        }
-        else if (keyId.actionType() == KeyId::ActionType::kEditMacro)
-        {
-            if (event.pressed)
-            {
-                auto macroIndex(keyId.value());
-                auto& macro(mKeyboardState.macroSet[macroIndex]);
-
-                EditMacroScreen screen(mSurface,
-                                       mEventManager,
-                                       mKeyboardState.macroSet,
-                                       macro);
-
-                screen.poll();
-            }
+            processKeyId(keyId);
         }
     }
     else
     {
         mNext.processKeyEvent(event);
+    }
+}
+
+void ScreenStack::processKeyId(const KeyId& keyId)
+{
+    if (keyId.actionType() == KeyId::ActionType::kMenu)
+    {
+        MenuDefinitions menuDefinitions(mKeyboardState);
+
+        auto action(keyId.value());
+            
+        MenuScreen menu(menuDefinitions.getTitle(action),
+                        menuDefinitions.getDataSource(action),
+                        mSurface,
+                        mEventManager);
+
+        menu.poll();
+
+    }
+    else if (keyId.actionType() == KeyId::ActionType::kScreen)
+    {
+        switch (keyId.value())
+        {
+        case 0:
+        {
+            StorageScreen storage(mSurface,
+                                  mEventManager);
+
+            storage.poll();
+            break;
+        }
+
+        case 1:
+        {
+            BenchmarkScreen benchmark(mSurface,
+                                      mEventManager);
+
+            benchmark.poll();
+            break;
+        }
+
+        default:
+            break;
+        }
+    }
+    else if (keyId.actionType() == KeyId::ActionType::kEditMacro)
+    {
+        auto macroIndex(keyId.value());
+        auto& macro(mKeyboardState.macroSet[macroIndex]);
+
+        EditMacroScreen screen(mSurface,
+                               mEventManager,
+                               mKeyboardState.macroSet,
+                               macro);
+
+        screen.poll();
     }
 }

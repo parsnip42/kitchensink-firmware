@@ -17,7 +17,10 @@ public:
                 KeyEventStage& next);
 
 public:
-    void processKeyEvent(const KeyEvent& event) override;
+    virtual void processKeyEvent(const KeyEvent& event) override;
+
+private:
+    void processKeyId(const KeyId& keyId);
     
 private:
     int            mStackSize;

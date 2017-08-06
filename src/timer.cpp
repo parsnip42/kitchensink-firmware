@@ -17,7 +17,7 @@ void Timer::pollKeyEvent(KeyEventStage& next)
         {
             auto tickId(mTimerQueue.pop().value);
             auto& timerEntry(mTimerMap[tickId]);
-            
+
             auto repeatDelayMs(timerEntry.repeatDelayMs);
 
             // If it's set to repeat, reschedule it and re-insert it into
@@ -33,7 +33,8 @@ void Timer::pollKeyEvent(KeyEventStage& next)
             }
             else
             {
-                timerEntry.reset();
+                timerEntry.currentMs     = 0;
+                timerEntry.repeatDelayMs = 0;
             }
             
             next.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
@@ -49,8 +50,9 @@ Timer::Handle Timer::createHandle()
         
         if (!timerEntry.assigned)
         {
-            timerEntry.reset();
-            timerEntry.assigned  = true;
+            timerEntry.currentMs     = 0;
+            timerEntry.repeatDelayMs = 0;
+            timerEntry.assigned      = true;
             
             return Handle(this, tickId);
         }
@@ -62,7 +64,11 @@ Timer::Handle Timer::createHandle()
 void Timer::releaseHandle(Timer::Handle& handle)
 {
     cancel(handle);
-    handle.mTimer = nullptr;
+
+    // Release entry.
+    mTimerMap[handle.mTickId].assigned = false;
+
+    handle.mTimer  = nullptr;
     handle.mTickId = 0;
 }
 
@@ -118,23 +124,13 @@ void Timer::cancel(const Timer::Handle& handle)
             }
         }
         
-        timerEntry.reset();
     }
+
+    timerEntry.currentMs     = 0;
+    timerEntry.repeatDelayMs = 0;
 }
 
 std::size_t Timer::activeTimers() const
 {
     return mTimerQueue.size();
 }
-
-
-
-
-
-
-
-
-
-
-
-

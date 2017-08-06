@@ -2,6 +2,11 @@
 #define INCLUDED_STORAGESCREEN_H
 
 #include "ui/textscreen.h"
+#include "ui/listwidget.h"
+#include "ui/titlewidget.h"
+#include "ui/labelwidget.h"
+#include "ui/hsplitwidget.h"
+#include "ui/widgetset.h"
 #include "keyeventstage.h"
 
 class Surface;
@@ -19,9 +24,26 @@ public:
     void poll();
     
 private:
-    EventManager& mEventManager;
-    TextScreen    mTextScreen;
-    bool          mQuit;
+    Surface&                   mSurface;
+    EventManager&              mEventManager;
+    TitleWidget                mTitleWidget;
+
+    LabelWidget                mStatusLabel;
+    
+    WidgetSet<1>               mWidgetSet;
+    ListWidget                 mListWidget;
+    HSplitWidget               mHSplit;
+    bool                       mQuit;
 };
 
 #endif
+
+
+
+
+
+
+
+
+
+

@@ -3,9 +3,6 @@
 #include <Wire.h>
 #include <core_pins.h>
 
-#include <stdio.h>
-#include <inttypes.h>
-
 namespace
 {
 

@@ -21,8 +21,6 @@ public:
 
     void writeInst(uint8_t data);
     void writeData(uint8_t data);
-
-private:
     
 private:
     Display(const Display&) = delete;

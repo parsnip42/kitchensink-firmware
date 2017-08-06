@@ -26,6 +26,10 @@ private:
     Timer::Handle  mRepeatTimer;
     KeyId          mKeyId;
     KeyEventStage& mNext;
+
+private:
+    AutoRepeat(const AutoRepeat&) = delete;
+    AutoRepeat& operator=(const AutoRepeat&) = delete;
 };
 
 #endif

@@ -87,11 +87,11 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
 
 void MenuScreen::poll()
 {
+    EventManager::RefocusGuard guardB(mEventManager);
+    
     AutoRepeat autoRepeat(mEventManager.timer,
                           *this);
 
-    EventManager::RefocusGuard guardB(mEventManager);
-    
     Surface::WidgetGuard guard(mSurface, mHSplit);
     
     while (!mQuit)

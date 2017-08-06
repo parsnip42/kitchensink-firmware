@@ -15,6 +15,9 @@ class StrRef;
 class LabelWidget : public Widget
 {
 public:
+    static constexpr int kPreferredHeight = Font::kHeight;
+
+public:
     explicit LabelWidget(const StrRef& nText,
                          Justify       nJustify = Justify::kLeft);
 
@@ -23,7 +26,7 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     
 public:
-    StrBuf<24> text;
+    StrBuf<48> text;
     Justify    justify;
 
 private:
