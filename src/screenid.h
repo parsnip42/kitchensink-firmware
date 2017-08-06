@@ -6,6 +6,7 @@ class ScreenId
 public:
     enum class Type
     {
+        kHome      = 0,
         kMenu      = 1,
         kScreen    = 2,
         kEditMacro = 3

@@ -14,6 +14,7 @@
 
 class Timer;
 class ScreenStack;
+class Widget;
 
 class MenuScreen : public KeyEventStage
 {
@@ -42,11 +43,7 @@ public:
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
     
-    void poll();
-    Widget& rootWidget()
-    {
-        return mHSplit;
-    }
+    Widget& rootWidget();
     
 private:
     StrRef            mTitle;

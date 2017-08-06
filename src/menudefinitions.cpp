@@ -3,22 +3,23 @@
 #include "keyboardstate.h"
 #include "keyid.h"
 #include "data/keycodes.h"
+#include "screenid.h"
 
 namespace
 {
 
 const std::array<MenuScreen::Item, 6> mainMenu = { {
-        { StrRef("Macros"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 1) },
-        { StrRef("Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 4) },
-        { StrRef("Edit Macros"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 2) },
-        { StrRef("Multi Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 6) },
-        { StrRef("Smart Keys"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 3) },
-        { StrRef("System"), StrRef(), KeyId::Action(KeyId::ActionType::kMenu, 5) },
+        { StrRef("Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 1) },
+        { StrRef("Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 4) },
+        { StrRef("Edit Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 2) },
+        { StrRef("Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 6) },
+        { StrRef("Smart Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 3) },
+        { StrRef("System"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 5) },
     } };
 
 const std::array<MenuScreen::Item, 3> systemMenu = { {
-        { StrRef("Storage"), StrRef(), KeyId::Action(KeyId::ActionType::kScreen, 0) },
-        { StrRef("Benchmark"), StrRef(), KeyId::Action(KeyId::ActionType::kScreen, 1) },
+        { StrRef("Storage"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 0) },
+        { StrRef("Benchmark"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 1) },
         { StrRef("Bootloader"), StrRef(), KeyId::Action(KeyId::ActionType::kBuiltIn, 0) } 
     } };
 
@@ -40,7 +41,7 @@ MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    item.keyId    = KeyId::Action(KeyId::ActionType::kEditMacro, index);
+    item.keyId    = KeyId::Screen(ScreenId::Type::kEditMacro, index);
         
     return item;
 }

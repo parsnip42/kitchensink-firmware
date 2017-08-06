@@ -12,7 +12,7 @@ KeyEventRecorder::KeyEventRecorder(bool realtime)
 
 void KeyEventRecorder::processKeyEvent(const KeyEvent& event)
 {
-    if (event.keyId != KeyId::Action(KeyId::ActionType::kMenu, 0))
+    if (event.keyId != KeyId::Screen(ScreenId::Type::kHome, 0))
     {
         if (event.keyId.type() != KeyId::Type::kTick)
         {

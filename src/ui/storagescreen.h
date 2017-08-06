@@ -1,7 +1,6 @@
 #ifndef INCLUDED_STORAGESCREEN_H
 #define INCLUDED_STORAGESCREEN_H
 
-#include "ui/textscreen.h"
 #include "ui/listwidget.h"
 #include "ui/titlewidget.h"
 #include "ui/labelwidget.h"
@@ -9,31 +8,26 @@
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
 
-class Surface;
-class EventManager;
+class Widget;
 
 class StorageScreen : public KeyEventStage
 {
 public:
-    StorageScreen(Surface&      surface,
-                  EventManager& eventManager);
+    StorageScreen();
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
     
-    void poll();
+    Widget& rootWidget();
     
 private:
-    Surface&                   mSurface;
-    EventManager&              mEventManager;
-    TitleWidget                mTitleWidget;
+    TitleWidget mTitleWidget;
 
-    LabelWidget                mStatusLabel;
+    LabelWidget mStatusLabel;
     
-    WidgetSet<1>               mWidgetSet;
-    ListWidget                 mListWidget;
-    HSplitWidget               mHSplit;
-    bool                       mQuit;
+    WidgetSet<1> mWidgetSet;
+    ListWidget   mListWidget;
+    HSplitWidget mHSplit;
 };
 
 #endif

@@ -54,7 +54,7 @@ inline
 constexpr bool cancel(const KeyId& keyId)
 {
     return (keyId == KeyId(KeyCodes::Esc) ||
-            keyId == KeyId::Action(KeyId::ActionType::kMenu, 0));
+            keyId == KeyId::Screen(ScreenId::Type::kHome, 0));
 }
 
 }

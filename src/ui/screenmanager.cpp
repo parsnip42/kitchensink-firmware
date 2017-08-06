@@ -1,5 +1,6 @@
 #include "screenmanager.h"
 
+#include "autorepeat.h"
 #include "keyboardstate.h"
 #include "menudefinitions.h"
 #include "ui/menuscreen.h"
@@ -25,9 +26,9 @@ public:
     {
         auto keyId(event.keyId);
 
-        if (keyId.type() == KeyId::Type::kAction && event.pressed)
+        if (keyId.type() == KeyId::Type::kScreen && event.pressed)
         {
-            mScreenManager.pushScreen(ScreenId(ScreenId::Type(keyId.actionType()),
+            mScreenManager.pushScreen(ScreenId(ScreenId::Type(keyId.screenType()),
                                                keyId.value()));
         }
         else if (Keys::cancel(keyId) && event.pressed)
@@ -54,11 +55,16 @@ ScreenManager::ScreenManager(Surface&       surface,
     , mMenuDefinitions(keyboardState)
 { }
 
-void ScreenManager::pushScreen(const ScreenId& screen)
+void ScreenManager::pushScreen(const ScreenId& screenId)
 {
-    if (mScreenStack.empty() || mScreenStack.top() != screen)
+    if (screenId.type == ScreenId::Type::kHome
+        && !mScreenStack.empty())
     {
-        mScreenStack.push(screen);
+        mScreenStack.pop();
+    }
+    else if (mScreenStack.empty() || mScreenStack.top() != screenId)
+    {
+        mScreenStack.push(screenId);
     }
 }
 
@@ -96,76 +102,106 @@ void ScreenManager::launch(const ScreenId& screen)
 {
     switch (screen.type)
     {
-            
-    case ScreenId::Type::kMenu:
-    {
-        MenuScreen menu(mMenuDefinitions.getTitle(screen.index),
-                        mMenuDefinitions.getDataSource(screen.index),
-                        mScreenStack,
-                        mEventManager.timer,
-                        mEventManager);
-            
-        OutputSink output(*this, menu);
-            
-        Surface::WidgetGuard guard(mSurface, menu.rootWidget());
 
-        while (!mScreenStack.dirty())
-        {
-            mEventManager.poll(output);
-        }
-            
+    case ScreenId::Type::kHome:
+        launchMenu(0);
         break;
-    }
+        
+    case ScreenId::Type::kMenu:
+        launchMenu(screen.index);
+        break;
 
     case ScreenId::Type::kScreen:
-    {
-        switch (screen.index)
-        {
-        case 0:
-        {
-            StorageScreen storage(mSurface,
-                                  mEventManager);
-                
-            storage.poll();
-            break;
-        }
-            
-        case 1:
-        {
-            BenchmarkScreen benchmark(mSurface,
-                                      mEventManager);
-                
-            benchmark.poll();
-            break;
-        }
-            
-        default:
-            break;
-        }
-
+        launchScreen(screen.index);
         break;
-    }
 
     case ScreenId::Type::kEditMacro:
+        launchEditMacro(screen.index);
+        break;
+        
+    }
+}
+
+void ScreenManager::launchMenu(int menuId)
+{
+    MenuScreen menu(mMenuDefinitions.getTitle(menuId),
+                    mMenuDefinitions.getDataSource(menuId),
+                    mScreenStack,
+                    mEventManager.timer,
+                    mEventManager);
+            
+    AutoRepeat autoRepeat(mEventManager.timer,
+                          menu);
+    
+    OutputSink output(*this, autoRepeat);
+    
+    Surface::WidgetGuard guard(mSurface, menu.rootWidget());
+
+    while (!mScreenStack.dirty())
     {
-        auto& macro(mKeyboardState.macroSet[screen.index]);
+        mEventManager.poll(output);
+    }
+}
 
-        EditMacroScreen screen(mSurface,
-                               mEventManager,
-                               mKeyboardState.macroSet,
-                               macro);
-            
-        OutputSink output(*this, screen);
-            
-        Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+void ScreenManager::launchScreen(int screenId)
+{
+    switch (screenId)
+    {
+    case 0:
+    {
+        StorageScreen storage;
 
+        OutputSink output(*this, storage);
+            
+        Surface::WidgetGuard guard(mSurface, storage.rootWidget());
+        
         while (!mScreenStack.dirty())
         {
             mEventManager.poll(output);
         }
-            
+        
         break;
     }
+            
+    case 1:
+    {
+        BenchmarkScreen benchmark(mEventManager);
+
+        OutputSink output(*this, benchmark);
+            
+        Surface::WidgetGuard guard(mSurface, benchmark.rootWidget());
+
+        benchmark.run();
         
+        while (!mScreenStack.dirty())
+        {
+            mEventManager.poll(output);
+        }
+
+        break;
     }
+            
+    default:
+        break;
+    }
+}
+
+void ScreenManager::launchEditMacro(int macroId)
+{
+    auto& macro(mKeyboardState.macroSet[macroId]);
+
+    EditMacroScreen screen(mEventManager.timer,
+                           mKeyboardState.macroSet,
+                           macro);
+            
+    OutputSink output(*this, screen);
+            
+    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+
+    while (!mScreenStack.dirty())
+    {
+        mEventManager.poll(output);
+    }
+
+    // mEventManager.untilKeysReleased(output);
 }

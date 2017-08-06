@@ -1,12 +1,6 @@
 #include "ui/benchmarkscreen.h"
 
-#include "keyevent.h"
 #include "eventmanager.h"
-#include "ui/surface.h"
-
-#include "types/strbuf.h"
-#include "types/strostream.h"
-#include "ctrlutil.h"
 
 #include <elapsedMillis.h>
 
@@ -17,45 +11,29 @@ class NullKeyStage : public KeyEventStage
 {
 public:
     virtual void processKeyEvent(const KeyEvent& event) override
-    {
-        
-    }
+    { }
 };
 
 }
 
-BenchmarkScreen::BenchmarkScreen(Surface&      surface,
-                                 EventManager& eventManager)
+BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
     : mEventManager(eventManager)
-    , mSurface(surface)
-    , mTextScreen(surface)
-    , mQuit(false)
+    , mTitleWidget("Benchmarking")
+    , mStatusLabel()
+    , mWidgetSet({ &mStatusLabel })
+    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), LabelWidget::kPreferredHeight)
+    , mHSplit(mTitleWidget,
+              mListWidget,
+              TitleWidget::kPreferredHeight + 1)
 { }
 
 void BenchmarkScreen::processKeyEvent(const KeyEvent& event)
 {
-    if (event.pressed)
-    {
-        mQuit = true;
-    }
+    
 }
 
-void BenchmarkScreen::poll()
+void BenchmarkScreen::run()
 {
-    mTextScreen.init();
-    
-    {
-        StrBuf<32> line;
-        StrOStream ostream(line);
-                
-        ostream.appendStr("Free Memory: ")
-               .appendInt(static_cast<int>(CtrlUtil::freeMemory()));
-            
-        mTextScreen.appendLine(line);
-    }
-
-    mTextScreen.appendLine("Running Benchmark..");
-
     auto start(millis());
 
     NullKeyStage nullNext;
@@ -67,21 +45,17 @@ void BenchmarkScreen::poll()
     
     auto end(millis());
 
-    {
-        StrBuf<64> line;
-        StrOStream ostream(line);
+    StrOStream os(mStatusLabel.text);
+    
+    os.appendInt(static_cast<int>(end-start));
+    os.appendStr("ms (");
+    os.appendInt(static_cast<int>(1000000 / (end-start)));
+    os.appendStr(" polls/s)");
 
-        ostream.appendStr("  1000 polls: ")
-               .appendInt(static_cast<int>(end-start))
-               .appendStr("ms (")
-               .appendInt(static_cast<int>(1000000 / (end-start)))
-               .appendStr(" polls/s)");
+    mStatusLabel.invalidateWidget();
+}
 
-        mTextScreen.appendLine(line);
-    }
-        
-    while (!mQuit)
-    {
-        mEventManager.poll(*this);
-    }
+Widget& BenchmarkScreen::rootWidget()
+{
+    return mHSplit;
 }

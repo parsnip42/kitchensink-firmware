@@ -3,6 +3,7 @@
 #include "keyid.h"
 #include "keyboardstate.h"
 #include "data/keycodes.h"
+#include "screenid.h"
 
 namespace DefaultProfile
 {
@@ -12,11 +13,6 @@ namespace
 constexpr KeyId Macro(int macroId)
 {
     return KeyId::Macro(macroId);
-}
-
-constexpr KeyId EditMacro(int macroId)
-{
-    return KeyId::Action(KeyId::ActionType::kEditMacro, macroId);
 }
 
 constexpr KeyId Layer(int layerId)
@@ -39,19 +35,24 @@ constexpr KeyId Bootloader()
     return KeyId::Action(KeyId::ActionType::kBuiltIn, 0);
 }
 
+constexpr KeyId Multi(int index)
+{
+    return KeyId::Multi(index);
+}
+
 constexpr KeyId MainMenu()
 {
-    return KeyId::Action(KeyId::ActionType::kMenu, 0);
+    return KeyId::Screen(ScreenId::Type::kHome, 0);
 }
 
 constexpr KeyId Menu(int index)
 {
-    return KeyId::Action(KeyId::ActionType::kMenu, index);
+    return KeyId::Screen(ScreenId::Type::kMenu, index);
 }
 
-constexpr KeyId Multi(int index)
+constexpr KeyId EditMacro(int macroId)
 {
-    return KeyId::Multi(index);
+    return KeyId::Screen(ScreenId::Type::kEditMacro, macroId);
 }
 
 }

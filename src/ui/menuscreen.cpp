@@ -1,6 +1,5 @@
 #include "ui/menuscreen.h"
 
-#include "autorepeat.h"
 #include "ui/keys.h"
 #include "ui/menuitemwidget.h"
 #include "ui/screenstack.h"
@@ -71,4 +70,9 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
         mMenuWidget.filterStr = mTitleWidget.filter();
         mMenuWidget.update();
     }
+}
+
+Widget& MenuScreen::rootWidget()
+{
+    return mHSplit;
 }

@@ -22,24 +22,16 @@ class Widget;
 class EditMacroScreen : public KeyEventStage
 {
 public:
-    EditMacroScreen(Surface&      surface,
-                    EventManager& eventManager,
-                    MacroSet&     macroSet,
-                    Macro&        macro);
+    EditMacroScreen(Timer&    timer,
+                    MacroSet& macroSet,
+                    Macro&    macro);
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
-    void poll();
-
-    Widget& rootWidget()
-    {
-        return mHSplit;
-    }
+    Widget& rootWidget();
 
 private:
-    Surface&                        mSurface;
-    EventManager&                   mEventManager;
     MacroSet&                       mMacroSet;
     Macro&                          mMacro;
     TitleWidget                     mTitleWidget;
@@ -49,7 +41,6 @@ private:
     WidgetSet<3>                    mWidgetSet;
     ListWidget                      mListWidget;
     HSplitWidget                    mHSplit;
-    bool                            mQuit;
 };
 
 #endif

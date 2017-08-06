@@ -14,22 +14,6 @@
 class EventManager : public KeyEventStage
 {
 public:
-    class RefocusGuard
-    {
-    public:
-        explicit RefocusGuard(EventManager& eventManager);
-        
-        ~RefocusGuard();
-        
-    private:
-        EventManager& mEventManager;
-
-    private:
-        RefocusGuard(const RefocusGuard&);
-        RefocusGuard& operator=(const RefocusGuard&);
-    };
-    
-public:
     EventManager(Timer&              nTimer,
                  KeyProcessor&       source,
                  KeyEventStage&      input,
@@ -40,7 +24,7 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
     void poll(KeyEventStage& output);
-    void untilKeysReleased();
+    void untilKeysReleased(KeyEventStage& output);
     
 public:
     Timer&         timer;

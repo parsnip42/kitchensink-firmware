@@ -1,6 +1,8 @@
 #ifndef INCLUDED_KEYID_H
 #define INCLUDED_KEYID_H
 
+#include "screenid.h"
+
 #include <cstdint>
 
 class KeyId
@@ -17,7 +19,8 @@ public:
         kDelay  = 6,
         kMulti  = 7,
         kTick   = 8,
-        kSmart  = 9
+        kSmart  = 9,
+        kScreen = 10
     };
 
     enum class LockType : uint8_t
@@ -33,10 +36,7 @@ public:
 
     enum class ActionType : uint8_t
     {
-        kBuiltIn   = 0,
-        kMenu      = 1,
-        kScreen    = 2,
-        kEditMacro = 3
+        kBuiltIn = 0
     };
 
 public:
@@ -51,6 +51,7 @@ public:
     static constexpr KeyId Delay(uint32_t delayMs);
     static constexpr KeyId Tick(uint32_t tickId);
     static constexpr KeyId Smart(int keyId);
+    static constexpr KeyId Screen(ScreenId::Type type, int index);
 
 public:
     constexpr KeyId(int keyCode = 0);
@@ -68,6 +69,7 @@ public:
     constexpr LockType lockType() const;
     constexpr uint32_t delayMs() const;
     constexpr uint32_t tickId() const;
+    constexpr ScreenId::Type screenType() const;
 
 private:
     uint8_t mType;
@@ -158,6 +160,14 @@ constexpr KeyId KeyId::Smart(int keyId)
 }
 
 inline
+constexpr KeyId KeyId::Screen(ScreenId::Type type, int index)
+{
+    return KeyId(Type::kScreen,
+                 static_cast<uint8_t>(type),
+                 index);
+}
+
+inline
 constexpr KeyId::KeyId(int keyCode)
     : mType(0)
     , mValue(keyCode & 0xff)
@@ -216,6 +226,12 @@ inline
 constexpr uint32_t KeyId::tickId() const
 {
     return (subType() << 8) | value();
+}
+
+inline
+constexpr ScreenId::Type KeyId::screenType() const
+{
+    return static_cast<ScreenId::Type>(subType());
 }
 
 #endif

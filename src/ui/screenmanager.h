@@ -9,7 +9,7 @@ class EventManager;
 class KeyboardState;
 
 class ScreenManager
-{
+{    
 public:
     ScreenManager(Surface&       surface,
                   EventManager&  eventManager,
@@ -22,7 +22,10 @@ public:
 
 private:
     void launch(const ScreenId& screen);
-    
+    void launchMenu(int menuId);
+    void launchScreen(int screenId);
+    void launchEditMacro(int macroId);
+
 private:
     Surface&        mSurface;
     EventManager&   mEventManager;

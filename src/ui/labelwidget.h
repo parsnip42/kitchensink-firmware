@@ -7,10 +7,9 @@
 #include "ui/widget.h"
 #include "ui/widgetcontainer.h"
 #include "types/strbuf.h"
+#include "types/strref.h"
 
 #include <cstdint>
-
-class StrRef;
 
 class LabelWidget : public Widget
 {
@@ -18,7 +17,7 @@ public:
     static constexpr int kPreferredHeight = Font::kHeight;
 
 public:
-    explicit LabelWidget(const StrRef& nText,
+    explicit LabelWidget(const StrRef& nText    = StrRef(),
                          Justify       nJustify = Justify::kLeft);
 
 public:

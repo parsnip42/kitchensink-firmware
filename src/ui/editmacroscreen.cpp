@@ -27,19 +27,16 @@ constexpr int kLabelWidth = Font::width("Shortcut ");
 
 }
 
-EditMacroScreen::EditMacroScreen(Surface&      surface,
-                                 EventManager& eventManager,
-                                 MacroSet&     macroSet,
-                                 Macro&        macro)
-    : mSurface(surface)
-    , mEventManager(eventManager)
-    , mMacroSet(macroSet)
+EditMacroScreen::EditMacroScreen(Timer&    timer,
+                                 MacroSet& macroSet,
+                                 Macro&    macro)
+    : mMacroSet(macroSet)
     , mMacro(macro)
     , mTitleEntry("Name", Justify::kLeft,
-                  TextEntryWidget(eventManager.timer),
+                  TextEntryWidget(timer),
                   kLabelWidth)
     , mShortcutEntry("Shortcut", Justify::kLeft,
-                     TextEntryWidget(eventManager.timer),
+                     TextEntryWidget(timer),
                      kLabelWidth)
     , mTypeCombo("Type", Justify::kLeft,
                  ComboWidget(mtds),
@@ -49,7 +46,6 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mHSplit(mTitleWidget,
               mListWidget,
               TitleWidget::kPreferredHeight + 1)
-    , mQuit(false)
 {
     StrOStream os(mTitleWidget.text);
 
@@ -60,21 +56,6 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     mTypeCombo.widget.selectedItem = 0;
 }
 
-void EditMacroScreen::poll()
-{
-    EventManager::RefocusGuard guardB(mEventManager);
-    
-    Surface::WidgetGuard guard(mSurface, mHSplit);
-
-    AutoRepeat autoRepeat(mEventManager.timer,
-                          *this);
-    
-    while (!mQuit)
-    {
-        mEventManager.poll(autoRepeat);
-    }
-}
-
 void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
@@ -83,39 +64,37 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
     {
         if (event.pressed)
         {
-            MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-                                MacroType::kInvert :
-                                MacroType::kSync);
+            // MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
+            //                     MacroType::kInvert :
+            //                     MacroType::kSync);
 
-            mMacro.type     = macroType;
-            mMacro.name     = mTitleEntry.widget.text;
-            mMacro.shortcut = mShortcutEntry.widget.text;
+            // mMacro.type     = macroType;
+            // mMacro.name     = mTitleEntry.widget.text;
+            // mMacro.shortcut = mShortcutEntry.widget.text;
 
-            RecordMacroScreen record(mSurface,
-                                     mEventManager,
-                                     mMacro,
-                                     (mTypeCombo.widget.selectedItem == 1));
+            // RecordMacroScreen record(mSurface,
+            //                          mEventManager,
+            //                          mMacro,
+            //                          (mTypeCombo.widget.selectedItem == 1));
 
-            record.poll();
+            // record.poll();
 
-            Storage storage;
-            Serializer<MacroSet> s;
+            // Storage storage;
+            // Serializer<MacroSet> s;
                 
-            auto os(storage.write(Storage::Region::Macro));
+            // auto os(storage.write(Storage::Region::Macro));
                 
-            s.serialize(mMacroSet, os);
-            mQuit = true;
-        }
-    }
-    else if (Keys::cancel(keyId))
-    {
-        if (event.pressed)
-        {
-            mQuit = true;
+            // s.serialize(mMacroSet, os);
+            // mQuit = true;
         }
     }
     else
     {
         mListWidget.processKeyEvent(event);
     }
+}
+
+Widget& EditMacroScreen::rootWidget()
+{
+    return mHSplit;
 }
