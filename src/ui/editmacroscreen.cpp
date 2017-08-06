@@ -36,10 +36,10 @@ EditMacroScreen::EditMacroScreen(Surface&      surface,
     , mMacroSet(macroSet)
     , mMacro(macro)
     , mTitleEntry("Name", Justify::kLeft,
-                  TextEntryWidget(eventManager),
+                  TextEntryWidget(eventManager.timer),
                   kLabelWidth)
     , mShortcutEntry("Shortcut", Justify::kLeft,
-                     TextEntryWidget(eventManager),
+                     TextEntryWidget(eventManager.timer),
                      kLabelWidth)
     , mTypeCombo("Type", Justify::kLeft,
                  ComboWidget(mtds),

@@ -31,7 +31,12 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
     void poll();
-    
+
+    Widget& rootWidget()
+    {
+        return mHSplit;
+    }
+
 private:
     Surface&                        mSurface;
     EventManager&                   mEventManager;

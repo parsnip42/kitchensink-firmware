@@ -4,9 +4,9 @@
 #include "ui/renderutil.h"
 
 MenuTitleWidget::MenuTitleWidget(const StrRef& title,
-                                 EventManager& eventManager)
+                                 Timer&        timer)
     : mTitle(title)
-    , mSearch(eventManager)
+    , mSearch(timer)
 { }
 
 void MenuTitleWidget::processKeyEvent(const KeyEvent& event)

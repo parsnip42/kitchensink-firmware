@@ -14,7 +14,7 @@
 
 class KeyId;
 class KeyEvent;
-class EventManager;
+class Timer;
 
 class TextEntryWidget : public Widget
 {
@@ -22,7 +22,7 @@ public:
     static constexpr int kPreferredHeight = Font::kHeight + 4;
 
 public:
-    explicit TextEntryWidget(EventManager& eventManager);
+    explicit TextEntryWidget(Timer& timer);
 
     TextEntryWidget(TextEntryWidget&&) = default;
     

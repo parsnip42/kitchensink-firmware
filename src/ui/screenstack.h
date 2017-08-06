@@ -1,46 +1,75 @@
 #ifndef INCLUDED_SCREENSTACK_H
 #define INCLUDED_SCREENSTACK_H
 
-#include "keyevent.h"
-#include "keyeventstage.h"
+#include "ui/screenid.h"
 
-class EventManager;
-class KeyboardState;
-class Surface;
+#include <array>
 
-class ScreenStack : public KeyEventStage
+class ScreenStack
 {
 public:
-    ScreenStack(KeyboardState& keyboardState,
-                EventManager&  eventManager,
-                Surface&       surface,
-                KeyEventStage& next);
+    ScreenStack();
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    const ScreenId& top() const;
+    bool empty() const;
+    
+    void push(const ScreenId& screenId);
+    void pop();
 
-private:
-    void processKeyId(const KeyId& keyId);
+    bool dirty();
     
 private:
-    int            mStackSize;
-    KeyboardState& mKeyboardState;
-    EventManager&  mEventManager;
-    Surface&       mSurface;
-    KeyEventStage& mNext;
+    std::array<ScreenId, 10> mData;
+    std::size_t              mSize;
+    bool                     mDirty;
 };
 
 
 inline
-ScreenStack::ScreenStack(KeyboardState& keyboardState,
-                         EventManager&  eventManager,
-                         Surface&       surface,
-                         KeyEventStage& next)
-    : mStackSize(0)
-    , mKeyboardState(keyboardState)
-    , mEventManager(eventManager)
-    , mSurface(surface)
-    , mNext(next)
+ScreenStack::ScreenStack()
+    : mSize(0)
 { }
+
+inline
+const ScreenId& ScreenStack::top() const
+{
+    return mData[mSize - 1];
+}
+
+inline
+bool ScreenStack::empty() const
+{
+    return mSize == 0;
+}
+
+inline
+void ScreenStack::push(const ScreenId& screenId)
+{
+    mData[mSize++] = screenId;
+    mDirty = true;
+}
+
+inline
+void ScreenStack::pop()
+{
+    if (mSize > 0)
+    {
+        --mSize;
+        mDirty = true;
+    }
+}
+
+inline
+bool ScreenStack::dirty()
+{
+    if (mDirty)
+    {
+        mDirty = false;
+        return true;
+    }
+
+    return false;
+}
 
 #endif

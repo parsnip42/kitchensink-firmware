@@ -9,10 +9,10 @@
 #include "ui/surface.h"
 #include "ui/virtualkeyboard.h"
 
-TextEntryWidget::TextEntryWidget(EventManager& eventManager)
+TextEntryWidget::TextEntryWidget(Timer& timer)
     : cursorPosition(1000)
     , focused(true)
-    , mFlashTimer(eventManager.timer.createHandle())
+    , mFlashTimer(timer.createHandle())
     , mFlash(false)
 { }
 

@@ -6,7 +6,7 @@
 #include "types/strbuf.h"
 #include "ui/titlewidget.h"
 
-class EventManager;
+class Timer;
 
 class MenuTitleWidget : public Widget
                       , public WidgetContainer
@@ -18,7 +18,7 @@ public:
 public:
     MenuTitleWidget() = default;
     MenuTitleWidget(const StrRef& title,
-                    EventManager& eventManager);
+                    Timer&        timer);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;

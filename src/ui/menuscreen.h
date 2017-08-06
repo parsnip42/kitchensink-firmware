@@ -12,8 +12,8 @@
 #include "ui/menutitlewidget.h"
 #include "ui/textentrywidget.h"
 
-class EventManager;
-class Surface;
+class Timer;
+class ScreenStack;
 
 class MenuScreen : public KeyEventStage
 {
@@ -35,24 +35,28 @@ private:
 public:
     MenuScreen(const StrRef&     title,
                const DataSource& dataSource,
-               Surface&          surface,
-               EventManager&     eventManager);
+               ScreenStack&      screenStack,
+               Timer&            timer,
+               KeyEventStage&    next);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
     
     void poll();
-
+    Widget& rootWidget()
+    {
+        return mHSplit;
+    }
+    
 private:
     StrRef            mTitle;
-    Surface&          mSurface;
-    EventManager&     mEventManager;
     const DataSource& mDataSource;
     MenuDataSource    mMenuDataSource;
     MenuWidget        mMenuWidget;
     MenuTitleWidget   mTitleWidget;
     HSplitWidget      mHSplit;
-    bool              mQuit;
+    ScreenStack&      mScreenStack;
+    KeyEventStage&    mNext;
 };
 
 #endif

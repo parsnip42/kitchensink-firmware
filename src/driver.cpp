@@ -18,6 +18,7 @@
 #include "ui/surface.h"
 #include "ui/home.h"
 #include "ui/screenstack.h"
+#include "ui/screenmanager.h"
 
 #include "keyeventbuffer.h"
 #include "eventmanager.h"
@@ -151,13 +152,9 @@ void loop()
                               toplevel,
                               usbKeyboard);
     
-    ScreenStack screenStack(keyboardState,
-                            eventManager,
-                            surface,
-                            usbKeyboard);
+    ScreenManager screenManager(surface,
+                                eventManager,
+                                keyboardState);
 
-    while (1)
-    {
-        eventManager.poll(screenStack);
-    }
+    screenManager.poll(usbKeyboard);
 }

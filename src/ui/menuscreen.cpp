@@ -1,9 +1,9 @@
 #include "ui/menuscreen.h"
 
 #include "autorepeat.h"
-#include "eventmanager.h"
 #include "ui/keys.h"
 #include "ui/menuitemwidget.h"
+#include "ui/screenstack.h"
 
 namespace
 {
@@ -17,47 +17,34 @@ MenuItemWidget createMenuItem(const MenuScreen::Item& item, std::size_t)
 
 MenuScreen::MenuScreen(const StrRef&     title,
                        const DataSource& dataSource,
-                       Surface&          surface,
-                       EventManager&     eventManager)
+                       ScreenStack&      screenStack,
+                       Timer&            timer,
+                       KeyEventStage&    next)
     : mTitle(title)
-    , mSurface(surface)
-    , mEventManager(eventManager)
     , mDataSource(dataSource)
     , mMenuDataSource(dataSource, &createMenuItem)
     , mMenuWidget(mMenuDataSource)
-    , mTitleWidget(title, eventManager)
+    , mTitleWidget(title, timer)
     , mHSplit(mTitleWidget,
               mMenuWidget,
               MenuTitleWidget::kPreferredHeight)
-    , mQuit(false)
+    , mScreenStack(screenStack)
+    , mNext(next)
 { }
 
 void MenuScreen::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
 
-    if (keyId.type() == KeyId::Type::kTick)
-    {
-        mMenuWidget.processKeyEvent(event);
-        mTitleWidget.processKeyEvent(event);
-    }
-    else if (Keys::ok(keyId))
+    if (Keys::ok(keyId))
     {
         if (event.pressed)
         {
             auto keyId(mDataSource[mMenuWidget.filterIndex[mMenuWidget.selectedIndex()]].keyId);
             
-            mEventManager.processKeyEvent(KeyEvent(keyId, true));
-            mEventManager.processKeyEvent(KeyEvent(keyId, false));
-            
-            mQuit = true;
-        }
-    }
-    else if (Keys::cancel(keyId))
-    {
-        if (event.pressed)
-        {
-            mQuit = true;
+            mScreenStack.pop();
+            mNext.processKeyEvent(KeyEvent(keyId, true));
+            mNext.processKeyEvent(KeyEvent(keyId, false));
         }
     }
     else if (Keys::up(keyId) ||
@@ -69,6 +56,7 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
     }
     else
     {
+        mMenuWidget.processKeyEvent(event);
         mTitleWidget.processKeyEvent(event);
         mMenuWidget.filterIndex.filter(
             mDataSource.size(),
@@ -82,20 +70,5 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
         
         mMenuWidget.filterStr = mTitleWidget.filter();
         mMenuWidget.update();
-    }
-}
-
-void MenuScreen::poll()
-{
-    EventManager::RefocusGuard guardB(mEventManager);
-    
-    AutoRepeat autoRepeat(mEventManager.timer,
-                          *this);
-
-    Surface::WidgetGuard guard(mSurface, mHSplit);
-    
-    while (!mQuit)
-    {
-        mEventManager.poll(autoRepeat);
     }
 }

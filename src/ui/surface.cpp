@@ -10,6 +10,7 @@ Surface::WidgetGuard::WidgetGuard(Surface& surface,
     , mWidget(surface.rootWidget())
 {
     mSurface.setRootWidget(&widget);
+    mSurface.redraw();
 }
 
 Surface::WidgetGuard::~WidgetGuard()
@@ -65,8 +66,6 @@ void Surface::setRootWidget(Widget* rootWidget)
                                Rectangle(0, 0, kWidth, kHeight));
 
     }
-    
-    redraw();
 }
 
 void Surface::initRegion(int x, int y, int w, int h)
