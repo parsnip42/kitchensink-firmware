@@ -34,13 +34,6 @@ void KeyIdSerializer::serialize(KeyId keyId, const StrOStream& os)
         os.appendInt(keyId.value());
         break;
         
-    case KeyId::Type::kLock:
-        os.appendChar('O');
-        os.appendInt(static_cast<int>(keyId.lockType()));
-        os.appendChar(':');
-        os.appendInt(keyId.value());
-        break;
-
     case KeyId::Type::kMacro:
         os.appendChar('M');
         os.appendInt(keyId.value());
@@ -48,8 +41,6 @@ void KeyIdSerializer::serialize(KeyId keyId, const StrOStream& os)
 
     case KeyId::Type::kAction:
         os.appendChar('A');
-        os.appendInt(static_cast<int>(keyId.actionType()));
-        os.appendChar(':');
         os.appendInt(keyId.value());
         break;
         
@@ -111,28 +102,6 @@ void KeyIdSerializer::deserialize(const StrRef& keyIdStr, KeyId& keyId)
         break;
     }
 
-    case 'O':
-    {
-        auto contentStr(keyIdStr.substr(1));
-        auto token(StrUtil::nextToken(contentStr, ":"));
-
-        int type(0);
-        
-        if (StrUtil::parseUInt(token, type))
-        {
-            token = StrUtil::nextToken(contentStr, ":", token);
-
-            int index(0);
-            
-            if (StrUtil::parseUInt(token, index))
-            {
-                keyId = KeyId::Lock(static_cast<KeyId::LockType>(type),
-                                    index);
-            }
-        }
-        break;
-    }
-    
     case 'M':
     {
         int index(0);
@@ -147,23 +116,13 @@ void KeyIdSerializer::deserialize(const StrRef& keyIdStr, KeyId& keyId)
     
     case 'A':
     {
-        auto contentStr(keyIdStr.substr(1));
-        auto token(StrUtil::nextToken(contentStr, ":"));
+        int index(0);
 
-        int type(0);
-        
-        if (StrUtil::parseUInt(token, type))
+        if (StrUtil::parseUInt(keyIdStr.substr(1), index))
         {
-            token = StrUtil::nextToken(contentStr, ":", token);
-
-            int index(0);
-            
-            if (StrUtil::parseUInt(token, index))
-            {
-                keyId = KeyId::Action(static_cast<KeyId::ActionType>(type),
-                                      index);
-            }
+            keyId = KeyId::Action(index);
         }
+
         break;
     }
     

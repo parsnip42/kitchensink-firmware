@@ -20,19 +20,9 @@ constexpr KeyId Layer(int layerId)
     return KeyId::Layer(layerId);
 }
 
-constexpr KeyId Hold(int lockId)
-{
-    return KeyId::Lock(lockId);
-}
-
-constexpr KeyId Toggle(int lockId)
-{
-    return KeyId::Lock(KeyId::LockType::kToggle, lockId);
-}
-
 constexpr KeyId Bootloader()
 {
-    return KeyId::Action(KeyId::ActionType::kBuiltIn, 0);
+    return KeyId::Action(0);
 }
 
 constexpr KeyId Multi(int index)

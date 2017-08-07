@@ -98,9 +98,9 @@ void ScreenManager::poll(KeyEventStage& next)
     }
 }
 
-void ScreenManager::launch(const ScreenId& screen)
+void ScreenManager::launch(const ScreenId& screenId)
 {
-    switch (screen.type)
+    switch (screenId.type)
     {
 
     case ScreenId::Type::kHome:
@@ -108,15 +108,15 @@ void ScreenManager::launch(const ScreenId& screen)
         break;
         
     case ScreenId::Type::kMenu:
-        launchMenu(screen.index);
+        launchMenu(screenId.index);
         break;
 
     case ScreenId::Type::kScreen:
-        launchScreen(screen.index);
+        launchScreen(screenId.index);
         break;
 
     case ScreenId::Type::kEditMacro:
-        launchEditMacro(screen.index);
+        launchEditMacro(screenId.index);
         break;
         
     }

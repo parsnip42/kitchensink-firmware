@@ -20,7 +20,7 @@ const std::array<MenuScreen::Item, 6> mainMenu = { {
 const std::array<MenuScreen::Item, 3> systemMenu = { {
         { StrRef("Storage"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 0) },
         { StrRef("Benchmark"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 1) },
-        { StrRef("Bootloader"), StrRef(), KeyId::Action(KeyId::ActionType::kBuiltIn, 0) } 
+        { StrRef("Bootloader"), StrRef(), KeyId::Action(0) } 
     } };
 
 

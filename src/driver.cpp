@@ -129,8 +129,7 @@ void loop()
     
     ToplevelEventStage toplevel(usbKeyboard);
     
-    ActionProcessor actionProcessor(keyboardState,
-                                    toplevel);
+    ActionProcessor actionProcessor(toplevel);
     
     MacroProcessor macroProcessor(keyboardState.macroSet,
                                   timer,

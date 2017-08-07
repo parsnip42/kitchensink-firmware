@@ -12,39 +12,19 @@ public:
     {
         kKey    = 0,
         kLayer  = 1,
-        kLock   = 2,
+        kTick   = 2,
         kMacro  = 3,
         kSMacro = 4,
         kAction = 5,
         kDelay  = 6,
         kMulti  = 7,
-        kTick   = 8,
-        kSmart  = 9,
-        kScreen = 10
-    };
-
-    enum class LockType : uint8_t
-    {
-        kHold              = 0, // Standard hold/release
-        kToggle            = 1, // Toggle on/off
-        kDoubleLock        = 2, // Hold and double tap to lock
-        kTripleLock        = 3, // Hold and triple tap to lock
-        kSingle            = 4, // Single tap to hold, auto release
-        kSingleHold        = 5, // Single tap for one key, hold/release
-        kSingleHoldRelease = 6, // Single tap for one key, hold/release for one key
-    };
-
-    enum class ActionType : uint8_t
-    {
-        kBuiltIn = 0
+        kSmart  = 8,
+        kScreen = 9
     };
 
 public:
-    static constexpr KeyId Action(ActionType actionType,
-                                  int        actionId);
+    static constexpr KeyId Action(int actionId);
     static constexpr KeyId Layer(int layerId);
-    static constexpr KeyId Lock(LockType lockType,
-                                int      lockId);
     static constexpr KeyId Lock(int lockId);
     static constexpr KeyId Macro(int macroId);
     static constexpr KeyId Multi(int multiId);
@@ -65,8 +45,6 @@ public:
     constexpr uint8_t subType() const;
     constexpr uint8_t value() const;
 
-    constexpr ActionType actionType() const;
-    constexpr LockType lockType() const;
     constexpr uint32_t delayMs() const;
     constexpr uint32_t tickId() const;
     constexpr ScreenId::Type screenType() const;
@@ -94,35 +72,15 @@ constexpr bool operator!=(const KeyId& lhs, const KeyId& rhs)
 
 
 inline
-constexpr KeyId KeyId::Action(ActionType actionType,
-                              int actionId)
+constexpr KeyId KeyId::Action(int actionId)
 {
-    return KeyId(Type::kAction,
-                 static_cast<uint8_t>(actionType),
-                 actionId);
+    return KeyId(Type::kAction, actionId);
 }
 
 inline
 constexpr KeyId KeyId::Layer(int layerId)
 {
     return KeyId(Type::kLayer, layerId);
-}
-
-inline
-constexpr KeyId KeyId::Lock(int lockId)
-{
-    return KeyId(Type::kLock,
-                 static_cast<uint8_t>(LockType::kHold),
-                 lockId);
-}
-
-inline
-constexpr KeyId KeyId::Lock(LockType lockType,
-                            int      lockId)
-{
-    return KeyId(Type::kLock,
-                 static_cast<uint8_t>(lockType),
-                 lockId);
 }
 
 inline
@@ -202,18 +160,6 @@ inline
 constexpr uint8_t KeyId::value() const
 {
     return mValue;
-}
-
-inline
-constexpr KeyId::ActionType KeyId::actionType() const
-{
-    return static_cast<KeyId::ActionType>(subType());
-}
-
-inline
-constexpr KeyId::LockType KeyId::lockType() const
-{
-    return static_cast<KeyId::LockType>(subType());
 }
 
 inline
