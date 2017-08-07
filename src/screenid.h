@@ -6,10 +6,12 @@ class ScreenId
 public:
     enum class Type
     {
-        kHome      = 0,
-        kMenu      = 1,
-        kScreen    = 2,
-        kEditMacro = 3
+        kHome          = 0,
+        kMenu          = 1,
+        kScreen        = 2,
+        kEditMacro     = 3,
+        kRecordMacro   = 4,
+        kRecordMacroRT = 5
     };
 
 public:

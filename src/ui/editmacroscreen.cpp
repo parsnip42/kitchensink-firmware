@@ -5,8 +5,7 @@
 #include "ui/combowidget.h"
 #include "ui/focusutil.h"
 #include "ui/keys.h"
-#include "ui/recordmacroscreen.h"
-#include "autorepeat.h"
+#include "screenstack.h"
 #include "types/arrayobjectsource.h"
 #include "storage/storage.h"
 #include "serialize/serializer.h"
@@ -27,11 +26,13 @@ constexpr int kLabelWidth = Font::width("Shortcut ");
 
 }
 
-EditMacroScreen::EditMacroScreen(Timer&    timer,
-                                 MacroSet& macroSet,
-                                 Macro&    macro)
-    : mMacroSet(macroSet)
-    , mMacro(macro)
+EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
+                                 Timer&       timer,
+                                 MacroSet&    macroSet,
+                                 int          macroId)
+    : mScreenStack(screenStack)
+    , mMacroSet(macroSet)
+    , mMacroId(macroId)
     , mTitleEntry("Name", Justify::kLeft,
                   TextEntryWidget(timer),
                   kLabelWidth)
@@ -50,9 +51,11 @@ EditMacroScreen::EditMacroScreen(Timer&    timer,
     StrOStream os(mTitleWidget.text);
 
     os.appendStr("Configuring Macro");
-    
-    mTitleEntry.widget.text = mMacro.name;
-    mShortcutEntry.widget.text = mMacro.shortcut;    
+
+    auto& macro(mMacroSet[mMacroId]);
+
+    mTitleEntry.widget.text        = macro.name;
+    mShortcutEntry.widget.text     = macro.shortcut;
     mTypeCombo.widget.selectedItem = 0;
 }
 
@@ -64,28 +67,22 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
     {
         if (event.pressed)
         {
-            // MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-            //                     MacroType::kInvert :
-            //                     MacroType::kSync);
+            auto& macro(mMacroSet[mMacroId]);
+            
+            MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
+                                MacroType::kInvert :
+                                MacroType::kSync);
 
-            // mMacro.type     = macroType;
-            // mMacro.name     = mTitleEntry.widget.text;
-            // mMacro.shortcut = mShortcutEntry.widget.text;
+            macro.type     = macroType;
+            macro.name     = mTitleEntry.widget.text;
+            macro.shortcut = mShortcutEntry.widget.text;
 
-            // RecordMacroScreen record(mSurface,
-            //                          mEventManager,
-            //                          mMacro,
-            //                          (mTypeCombo.widget.selectedItem == 1));
+            mScreenStack.pop();
 
-            // record.poll();
-
-            // Storage storage;
-            // Serializer<MacroSet> s;
-                
-            // auto os(storage.write(Storage::Region::Macro));
-                
-            // s.serialize(mMacroSet, os);
-            // mQuit = true;
+            auto realtime(mTypeCombo.widget.selectedItem == 1);
+            auto screenType(realtime ? ScreenId::Type::kRecordMacroRT : ScreenId::Type::kRecordMacro);
+            
+            mScreenStack.push(ScreenId(screenType, mMacroId));
         }
     }
     else
@@ -98,3 +95,9 @@ Widget& EditMacroScreen::rootWidget()
 {
     return mHSplit;
 }
+
+
+
+
+
+

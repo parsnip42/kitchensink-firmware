@@ -6,37 +6,42 @@
 #include "types/strostream.h"
 #include "keyeventrecorder.h"
 #include "eventmanager.h"
+#include "storage/storage.h"
+#include "serialize/serializer.h"
+#include "screenstack.h"
 
 #include <cstdint>
 
-RecordMacroScreen::RecordMacroScreen(Surface&       surface,
-                                     EventManager&  eventManager,
-                                     Macro&         macro,
-                                     bool           realtime)
-    : mSurface(surface)
-    , mEventManager(eventManager)
-    , mMacro(macro)
+RecordMacroScreen::RecordMacroScreen(ScreenStack&   screenStack,
+                                     Timer&         timer,
+                                     MacroSet&      macroSet,
+                                     int            macroId,
+                                     bool           realtime,
+                                     KeyEventStage& next)
+    : mScreenStack(screenStack)
+    , mMacroSet(macroSet)
+    , mMacroId(macroId)
     , mRecorder(realtime)
-    , mTitleWidget("Recording Macro")
+    , mTitleWidget()
     , mLabelWidget("Recording",
                    Justify::kCenter)
     , mHSplit(mTitleWidget,
               mLabelWidget,
               TitleWidget::kPreferredHeight)
-    , mFlashTimer(eventManager.timer.createHandle())
+    , mFlashTimer(timer.createHandle())
     , mFlash(true)
-{ }
-
-void RecordMacroScreen::poll()
+    , mNext(next)
 {
-    Surface::WidgetGuard guard(mSurface, mHSplit);
-
-    mFlashTimer.scheduleRepeating(500, 500);
-
-    while (!mRecorder.complete())
+    if (realtime)
     {
-        mEventManager.poll(*this);
+        mTitleWidget.text = "Recording Macro (Realtime)";
     }
+    else
+    {
+        mTitleWidget.text = "Recording Macro";
+    }
+    
+    mFlashTimer.scheduleRepeating(500, 500);
 }
 
 void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
@@ -59,12 +64,28 @@ void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
         return;
     }
 
-    mEventManager.defaultOutput.processKeyEvent(event);
+    mNext.processKeyEvent(event);
     mRecorder.processKeyEvent(event);
 
     if (mRecorder.complete())
     {
-        mMacro.content.assign(mRecorder.begin(),
-                              mRecorder.end());
+        auto& macro(mMacroSet[mMacroId]);
+        
+        macro.content.assign(mRecorder.begin(),
+                             mRecorder.end());
+
+        Storage storage;
+        Serializer<MacroSet> s;
+                
+        auto os(storage.write(Storage::Region::Macro));
+                
+        s.serialize(mMacroSet, os);
+
+        mScreenStack.pop();
     }
+}
+
+Widget& RecordMacroScreen::rootWidget()
+{
+    return mHSplit;
 }

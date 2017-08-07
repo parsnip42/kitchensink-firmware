@@ -10,21 +10,20 @@
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
 
-#include <tuple>
-
-class EventManager;
+class ScreenStack;
+class Timer;
 class KeyEvent;
 class Macro;
 class MacroSet;
-class Surface;
 class Widget;
 
 class EditMacroScreen : public KeyEventStage
 {
 public:
-    EditMacroScreen(Timer&    timer,
-                    MacroSet& macroSet,
-                    Macro&    macro);
+    EditMacroScreen(ScreenStack& screenStack,
+                    Timer&       timer,
+                    MacroSet&    macroSet,
+                    int          macroid);
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
@@ -32,8 +31,9 @@ public:
     Widget& rootWidget();
 
 private:
+    ScreenStack&                    mScreenStack;
     MacroSet&                       mMacroSet;
-    Macro&                          mMacro;
+    int                             mMacroId;
     TitleWidget                     mTitleWidget;
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;

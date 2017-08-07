@@ -5,6 +5,7 @@
 #include "menudefinitions.h"
 #include "ui/menuscreen.h"
 #include "ui/editmacroscreen.h"
+#include "ui/recordmacroscreen.h"
 #include "ui/storagescreen.h"
 #include "ui/benchmarkscreen.h"
 #include "ui/keys.h"
@@ -118,7 +119,12 @@ void ScreenManager::launch(const ScreenId& screenId)
     case ScreenId::Type::kEditMacro:
         launchEditMacro(screenId.index);
         break;
-        
+
+    case ScreenId::Type::kRecordMacro:
+    case ScreenId::Type::kRecordMacroRT:
+        launchRecordMacro(screenId.index,
+                          screenId.type == ScreenId::Type::kRecordMacroRT);
+        break;
     }
 }
 
@@ -188,11 +194,10 @@ void ScreenManager::launchScreen(int screenId)
 
 void ScreenManager::launchEditMacro(int macroId)
 {
-    auto& macro(mKeyboardState.macroSet[macroId]);
-
-    EditMacroScreen screen(mEventManager.timer,
+    EditMacroScreen screen(mScreenStack,
+                           mEventManager.timer,
                            mKeyboardState.macroSet,
-                           macro);
+                           macroId);
             
     OutputSink output(*this, screen);
             
@@ -204,4 +209,23 @@ void ScreenManager::launchEditMacro(int macroId)
     }
 
     // mEventManager.untilKeysReleased(output);
+}
+
+void ScreenManager::launchRecordMacro(int macroId, bool realtime)
+{
+    RecordMacroScreen screen(mScreenStack,
+                             mEventManager.timer,
+                             mKeyboardState.macroSet,
+                             macroId,
+                             realtime,
+                             mEventManager.defaultOutput);
+
+    OutputSink output(*this, screen);
+            
+    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+
+    while (!mScreenStack.dirty())
+    {
+        mEventManager.poll(output);
+    }
 }

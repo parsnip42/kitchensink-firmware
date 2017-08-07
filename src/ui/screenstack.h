@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SCREENSTACK_H
 #define INCLUDED_SCREENSTACK_H
 
-#include "ui/screenid.h"
+#include "screenid.h"
 
 #include <array>
 

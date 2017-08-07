@@ -25,6 +25,7 @@ private:
     void launchMenu(int menuId);
     void launchScreen(int screenId);
     void launchEditMacro(int macroId);
+    void launchRecordMacro(int macroId, bool realtime);
 
 private:
     Surface&        mSurface;

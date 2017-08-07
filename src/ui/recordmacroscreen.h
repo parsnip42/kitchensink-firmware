@@ -9,33 +9,36 @@
 #include "ui/labelwidget.h"
 #include "ui/hsplitwidget.h"
 
-class Macro;
-class EventManager;
-class Surface;
+class ScreenStack;
+class Timer;
+class MacroSet;
 
 class RecordMacroScreen : public KeyEventStage
 {    
 public:
-    RecordMacroScreen(Surface&       surface,
-                      EventManager&  eventManager,
-                      Macro&         macro,
-                      bool           realtime);
+    RecordMacroScreen(ScreenStack&   screenStack,
+                      Timer&         timer,
+                      MacroSet&      macroSet,
+                      int            macroId,
+                      bool           realtime,
+                      KeyEventStage& next);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event);
 
-    void poll();
+    Widget& rootWidget();
     
 private:
-    Surface&         mSurface;
-    EventManager&    mEventManager;
-    Macro&           mMacro;
+    ScreenStack&     mScreenStack;
+    MacroSet&        mMacroSet;
+    int              mMacroId;
     KeyEventRecorder mRecorder;
     TitleWidget      mTitleWidget;
     LabelWidget      mLabelWidget;
     HSplitWidget     mHSplit;
     Timer::Handle    mFlashTimer;
     bool             mFlash;
+    KeyEventStage&   mNext;
     
 private:
     RecordMacroScreen(const RecordMacroScreen&) = delete;
