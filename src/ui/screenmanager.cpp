@@ -133,7 +133,6 @@ void ScreenManager::launchMenu(int menuId)
     MenuScreen menu(mMenuDefinitions.getTitle(menuId),
                     mMenuDefinitions.getDataSource(menuId),
                     mScreenStack,
-                    mEventManager.timer,
                     mEventManager);
             
     AutoRepeat autoRepeat(mEventManager.timer,

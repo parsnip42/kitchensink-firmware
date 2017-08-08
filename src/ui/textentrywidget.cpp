@@ -7,7 +7,6 @@
 #include "ui/rectangle.h"
 #include "ui/renderutil.h"
 #include "ui/surface.h"
-#include "ui/virtualkeyboard.h"
 
 TextEntryWidget::TextEntryWidget(Timer& timer)
     : cursorPosition(1000)
@@ -93,8 +92,6 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
 
 void TextEntryWidget::processKeyEvent(const KeyEvent& event)
 {
-    VirtualKeyboard vKeyboard;
-
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
@@ -103,13 +100,12 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     }
 
     cursorPosition = std::min(cursorPosition, text.length());
-    
-    vKeyboard.processKeyEvent(event);
 
-    const auto& state(vKeyboard.state);
-    auto keyId(state.activeKey);
+    mVKeyboard.processKeyEvent(event);
 
-    if (keyId.type() == KeyId::Type::kKey && keyId.value() && event.pressed)
+    auto keyId(event.keyId);
+
+    if (keyId.type() == KeyId::Type::kKey && event.pressed)
     {
         mFlash = true;
         mFlashTimer.scheduleRepeating(1000, 500);
@@ -153,7 +149,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
         default:
             if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)
             {
-                char newChar(state.activeChar);
+                char newChar(mVKeyboard.consumeChar());
                     
                 if (newChar)
                 {
@@ -168,3 +164,9 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
 
     invalidateWidget();
 }
+
+
+
+
+
+

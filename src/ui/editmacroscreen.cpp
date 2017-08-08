@@ -87,6 +87,7 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
     }
     else
     {
+        mListWidget.processKeyEvent(KeyEvent(0xe1, true));
         mListWidget.processKeyEvent(event);
     }
 }

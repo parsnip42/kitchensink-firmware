@@ -48,7 +48,7 @@ int text(const StrRef& str, int x, int line, const RasterLine& row, uint8_t fg, 
     return x - xStart;
 }
 
-int textPrefix(const StrRef& prefix, const StrRef& str, int x, int line, const RasterLine& row, uint8_t prefixFg, uint8_t fg, uint8_t bg)
+int textPrefix(const StrRef& prefix, const StrRef& str, int x, int line, const RasterLine& row, uint8_t prefixFg, uint8_t prefixBg, uint8_t fg, uint8_t bg)
 {
     if (!str.beginsWithCase(prefix))
     {
@@ -56,7 +56,7 @@ int textPrefix(const StrRef& prefix, const StrRef& str, int x, int line, const R
     }
     else
     {
-        auto prefixLen(text(str.substr(0, prefix.length()), x, line, row, prefixFg, bg));
+        auto prefixLen(text(str.substr(0, prefix.length()), x, line, row, prefixFg, prefixBg));
         
         return prefixLen + text(str.substr(prefix.length()), x + prefixLen, line, row, fg, bg);
     }

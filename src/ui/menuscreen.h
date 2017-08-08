@@ -9,7 +9,7 @@
 #include "types/strref.h"
 #include "ui/menuwidget.h"
 #include "ui/hsplitwidget.h"
-#include "ui/menutitlewidget.h"
+#include "ui/titlewidget.h"
 #include "ui/textentrywidget.h"
 
 class Timer;
@@ -37,7 +37,6 @@ public:
     MenuScreen(const StrRef&     title,
                const DataSource& dataSource,
                ScreenStack&      screenStack,
-               Timer&            timer,
                KeyEventStage&    next);
 
 public:
@@ -50,7 +49,7 @@ private:
     const DataSource& mDataSource;
     MenuDataSource    mMenuDataSource;
     MenuWidget        mMenuWidget;
-    MenuTitleWidget   mTitleWidget;
+    TitleWidget       mTitleWidget;
     HSplitWidget      mHSplit;
     ScreenStack&      mScreenStack;
     KeyEventStage&    mNext;

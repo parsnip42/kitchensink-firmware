@@ -8,6 +8,7 @@
 #include "eventmanager.h"
 #include "ui/widget.h"
 #include "ui/surface.h"
+#include "ui/virtualkeyboard.h"
 #include "ui/widgetcontainer.h"
 
 #include <cstdint>
@@ -37,8 +38,9 @@ public:
     bool        focused;
     
 private:
-    Timer::Handle mFlashTimer;
-    bool          mFlash;
+    Timer::Handle   mFlashTimer;
+    bool            mFlash;
+    VirtualKeyboard mVKeyboard;
     
 private:
     TextEntryWidget(const TextEntryWidget&) = delete;

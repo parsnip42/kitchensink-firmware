@@ -36,6 +36,41 @@ void MenuWidget::processKeyEvent(const KeyEvent& event)
         {
             moveSelection(1);
         }
+        else if (Keys::backspace(keyId))
+        {
+            if (!filterStr.empty())
+            {
+                filterStr.erase(filterStr.end() - 1);
+                applyFilter();
+                update();
+            }
+        }
+    }
+
+    mVKeyboard.processKeyEvent(event);
+
+    if (filterStr.length() < filterStr.capacity())
+    {
+        auto newChar(mVKeyboard.consumeChar());
+                    
+        if (newChar)
+        {
+            filterStr.insert(filterStr.end(), newChar);
+
+            // Optimistic check for results - apply the filter first and then
+            // revert the change only if no results are found.
+            applyFilter();
+            
+            if (filterIndex.filteredSize() == 0)
+            {
+                filterStr.erase(filterStr.end() - 1);
+                applyFilter();
+            }
+            else
+            {
+                update();
+            }
+        }
     }
 }
 
@@ -112,6 +147,19 @@ void MenuWidget::populateMenuItem(int index)
 int MenuWidget::selectedIndex() const
 {
     return mSelectedIndex;
+}
+
+void MenuWidget::applyFilter()
+{
+    filterIndex.filter(
+        mDataSource.size(),
+        [&](std::size_t index)
+        {
+            auto item = mDataSource[index];
+            
+            return (StrRef(item.text).beginsWithCase(filterStr) ||
+                    StrRef(item.shortcut).beginsWithCase(filterStr));
+        });
 }
 
 void MenuWidget::update()

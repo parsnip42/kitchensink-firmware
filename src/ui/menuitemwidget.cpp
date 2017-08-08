@@ -39,12 +39,12 @@ void MenuItemWidget::render(const RasterLine& rasterLine, int row)
         if (mFocused)
         {
             RenderUtil::fill(rasterLine.subset(0, xOffset), bg);
-            xOffset += RenderUtil::text(text, xOffset, row, rasterLine, fg, bg);
+            xOffset += RenderUtil::textPrefix(filter, text, xOffset, row, rasterLine, bg, fg, fg, bg);
             RenderUtil::fill(rasterLine.subset(xOffset), bg);
         }
         else
         {
-            RenderUtil::textPrefix(filter, text, xOffset, row, rasterLine, 0xf, fg, bg);
+            RenderUtil::textPrefix(filter, text, xOffset, row, rasterLine, bg, fg, fg, bg);
         }
     }
     else
@@ -55,15 +55,15 @@ void MenuItemWidget::render(const RasterLine& rasterLine, int row)
         if (mFocused)
         {
             RenderUtil::fill(rasterLine.subset(0, nameOffset), bg);
-            nameOffset += RenderUtil::text(text, nameOffset, row, rasterLine, fg, bg);
+            nameOffset += RenderUtil::textPrefix(filter, text, nameOffset, row, rasterLine, bg, fg, fg, bg);
             RenderUtil::fill(rasterLine.subset(nameOffset, scOffset - nameOffset), bg);
-            scOffset += RenderUtil::text(shortcut, scOffset, row, rasterLine, fg, bg);
+            scOffset += RenderUtil::textPrefix(filter, shortcut, scOffset, row, rasterLine, bg, fg, fg, bg);
             RenderUtil::fill(rasterLine.subset(scOffset), bg);
         }
         else
         {
-            RenderUtil::textPrefix(filter, text, nameOffset, row, rasterLine, 0xf, fg, bg);
-            RenderUtil::textPrefix(filter, shortcut, scOffset, row, rasterLine, 0xf, fg, bg);
+            RenderUtil::textPrefix(filter, text, nameOffset, row, rasterLine, bg, fg, fg, bg);
+            RenderUtil::textPrefix(filter, shortcut, scOffset, row, rasterLine, bg, fg, fg, bg);
         }
     }
 }

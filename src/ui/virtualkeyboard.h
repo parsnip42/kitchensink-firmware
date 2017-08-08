@@ -8,28 +8,18 @@
 class VirtualKeyboard : public KeyEventStage
 {
 public:
-    class State
-    {
-    public:
-        KeyId activeKey;
-        char  activeChar;
-    };
-        
-public:
     VirtualKeyboard();
 
 public:
     virtual void processKeyEvent(const KeyEvent& keyEvent) override;
-
-public:
-    State state;
+    char consumeChar();
     
 private:
     ModifierState mModifierState;
-
+    char          mActiveChar;
 };
 
-#endif /* INCLUDED_VIRTUALKEYBOARD_H */
+#endif
 
 
 

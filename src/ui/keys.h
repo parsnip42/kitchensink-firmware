@@ -47,7 +47,6 @@ inline
 constexpr bool ok(const KeyId& keyId)
 {
     return keyId == KeyId(KeyCodes::Enter);
-
 }
 
 inline
@@ -55,6 +54,12 @@ constexpr bool cancel(const KeyId& keyId)
 {
     return (keyId == KeyId(KeyCodes::Esc) ||
             keyId == KeyId::Screen(ScreenId::Type::kHome, 0));
+}
+
+inline
+constexpr bool backspace(const KeyId& keyId)
+{
+    return keyId == KeyId(KeyCodes::Backspace);
 }
 
 }

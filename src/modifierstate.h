@@ -50,7 +50,7 @@ constexpr bool ModifierState::shift() const
 inline
 constexpr bool ModifierState::alt() const
 {
-    return keyState[kLAlt] || keyState[kRAlt];
+    return keyState[kLAlt];
 }
 
 inline
