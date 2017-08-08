@@ -8,9 +8,6 @@
 #include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/menuwidget.h"
-#include "ui/hsplitwidget.h"
-#include "ui/titlewidget.h"
-#include "ui/textentrywidget.h"
 
 class Timer;
 class ScreenStack;
@@ -34,8 +31,7 @@ private:
     typedef MappedObjectSource<MenuItemWidget, DataSource> MenuDataSource;
         
 public:
-    MenuScreen(const StrRef&     title,
-               const DataSource& dataSource,
+    MenuScreen(const DataSource& dataSource,
                ScreenStack&      screenStack,
                KeyEventStage&    next);
 
@@ -45,12 +41,9 @@ public:
     Widget& rootWidget();
     
 private:
-    StrRef            mTitle;
     const DataSource& mDataSource;
     MenuDataSource    mMenuDataSource;
     MenuWidget        mMenuWidget;
-    TitleWidget       mTitleWidget;
-    HSplitWidget      mHSplit;
     ScreenStack&      mScreenStack;
     KeyEventStage&    mNext;
 };

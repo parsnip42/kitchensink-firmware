@@ -5,8 +5,6 @@
 #include "ui/combowidget.h"
 #include "ui/labelledwidget.h"
 #include "ui/listwidget.h"
-#include "ui/titlewidget.h"
-#include "ui/hsplitwidget.h"
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
 
@@ -34,13 +32,11 @@ private:
     ScreenStack&                    mScreenStack;
     MacroSet&                       mMacroSet;
     int                             mMacroId;
-    TitleWidget                     mTitleWidget;
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
     WidgetSet<3>                    mWidgetSet;
     ListWidget                      mListWidget;
-    HSplitWidget                    mHSplit;
 };
 
 #endif

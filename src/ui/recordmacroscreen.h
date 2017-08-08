@@ -5,9 +5,7 @@
 #include "keyeventrecorder.h"
 #include "keyeventstage.h"
 #include "timer.h"
-#include "ui/titlewidget.h"
 #include "ui/labelwidget.h"
-#include "ui/hsplitwidget.h"
 
 class ScreenStack;
 class Timer;
@@ -33,9 +31,7 @@ private:
     MacroSet&        mMacroSet;
     int              mMacroId;
     KeyEventRecorder mRecorder;
-    TitleWidget      mTitleWidget;
     LabelWidget      mLabelWidget;
-    HSplitWidget     mHSplit;
     Timer::Handle    mFlashTimer;
     bool             mFlash;
     KeyEventStage&   mNext;

@@ -44,14 +44,7 @@ EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
                  kLabelWidth)
     , mWidgetSet({ &mTitleEntry, &mShortcutEntry, &mTypeCombo })
     , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), TextEntryWidget::kPreferredHeight)
-    , mHSplit(mTitleWidget,
-              mListWidget,
-              TitleWidget::kPreferredHeight + 1)
 {
-    StrOStream os(mTitleWidget.text);
-
-    os.appendStr("Configuring Macro");
-
     auto& macro(mMacroSet[mMacroId]);
 
     mTitleEntry.widget.text        = macro.name;
@@ -87,14 +80,13 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
     }
     else
     {
-        mListWidget.processKeyEvent(KeyEvent(0xe1, true));
         mListWidget.processKeyEvent(event);
     }
 }
 
 Widget& EditMacroScreen::rootWidget()
 {
-    return mHSplit;
+    return mListWidget;
 }
 
 

@@ -5,7 +5,7 @@ HSplitWidget::HSplitWidget(Widget& top,
                            int     splitOffset)
     : mTop(top)
     , mBottom(bottom)    
-    , mSplitOffset(splitOffset)
+    , mSplitOffset(splitOffset + 1) // 1 pixel margin
 { }
 
 void HSplitWidget::render(const RasterLine& rasterLine, int row)

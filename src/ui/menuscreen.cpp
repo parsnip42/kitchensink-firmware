@@ -1,5 +1,6 @@
 #include "ui/menuscreen.h"
 
+#include "keyevent.h"
 #include "ui/keys.h"
 #include "ui/menuitemwidget.h"
 #include "ui/screenstack.h"
@@ -14,18 +15,12 @@ MenuItemWidget createMenuItem(const MenuScreen::Item& item, std::size_t)
 
 }
 
-MenuScreen::MenuScreen(const StrRef&     title,
-                       const DataSource& dataSource,
+MenuScreen::MenuScreen(const DataSource& dataSource,
                        ScreenStack&      screenStack,
                        KeyEventStage&    next)
-    : mTitle(title)
-    , mDataSource(dataSource)
+    : mDataSource(dataSource)
     , mMenuDataSource(dataSource, &createMenuItem)
     , mMenuWidget(mMenuDataSource)
-    , mTitleWidget(title)
-    , mHSplit(mTitleWidget,
-              mMenuWidget,
-              TitleWidget::kPreferredHeight)
     , mScreenStack(screenStack)
     , mNext(next)
 { }
@@ -53,5 +48,5 @@ void MenuScreen::processKeyEvent(const KeyEvent& event)
 
 Widget& MenuScreen::rootWidget()
 {
-    return mHSplit;
+    return mMenuWidget;
 }

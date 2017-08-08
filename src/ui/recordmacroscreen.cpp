@@ -22,25 +22,12 @@ RecordMacroScreen::RecordMacroScreen(ScreenStack&   screenStack,
     , mMacroSet(macroSet)
     , mMacroId(macroId)
     , mRecorder(realtime)
-    , mTitleWidget()
     , mLabelWidget("Recording",
                    Justify::kCenter)
-    , mHSplit(mTitleWidget,
-              mLabelWidget,
-              TitleWidget::kPreferredHeight)
     , mFlashTimer(timer.createHandle())
     , mFlash(true)
     , mNext(next)
 {
-    if (realtime)
-    {
-        mTitleWidget.text = "Recording Macro (Realtime)";
-    }
-    else
-    {
-        mTitleWidget.text = "Recording Macro";
-    }
-    
     mFlashTimer.scheduleRepeating(500, 500);
 }
 
@@ -87,5 +74,5 @@ void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
 
 Widget& RecordMacroScreen::rootWidget()
 {
-    return mHSplit;
+    return mLabelWidget;
 }

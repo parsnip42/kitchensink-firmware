@@ -3,6 +3,8 @@
 #include "autorepeat.h"
 #include "keyboardstate.h"
 #include "menudefinitions.h"
+#include "ui/hsplitwidget.h"
+#include "ui/titlewidget.h"
 #include "ui/menuscreen.h"
 #include "ui/editmacroscreen.h"
 #include "ui/recordmacroscreen.h"
@@ -130,8 +132,7 @@ void ScreenManager::launch(const ScreenId& screenId)
 
 void ScreenManager::launchMenu(int menuId)
 {
-    MenuScreen menu(mMenuDefinitions.getTitle(menuId),
-                    mMenuDefinitions.getDataSource(menuId),
+    MenuScreen menu(mMenuDefinitions.getDataSource(menuId),
                     mScreenStack,
                     mEventManager);
             
@@ -139,8 +140,13 @@ void ScreenManager::launchMenu(int menuId)
                           menu);
     
     OutputSink output(*this, autoRepeat);
+
+    TitleWidget titleWidget(mMenuDefinitions.getTitle(menuId));
+    HSplitWidget hSplit(titleWidget,       
+                        menu.rootWidget(),
+                        TitleWidget::kPreferredHeight);
     
-    Surface::WidgetGuard guard(mSurface, menu.rootWidget());
+    Surface::WidgetGuard guard(mSurface, hSplit);
 
     while (!mScreenStack.dirty())
     {
@@ -199,8 +205,13 @@ void ScreenManager::launchEditMacro(int macroId)
                            macroId);
             
     OutputSink output(*this, screen);
-            
-    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+
+    TitleWidget titleWidget("Edit Macro");
+    HSplitWidget hSplit(titleWidget,       
+                        screen.rootWidget(),
+                        TitleWidget::kPreferredHeight);
+
+    Surface::WidgetGuard guard(mSurface, hSplit);
 
     while (!mScreenStack.dirty())
     {
@@ -220,8 +231,13 @@ void ScreenManager::launchRecordMacro(int macroId, bool realtime)
                              mEventManager.defaultOutput);
 
     OutputSink output(*this, screen);
-            
-    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+
+    TitleWidget titleWidget("Recording Macro");
+    HSplitWidget hSplit(titleWidget,       
+                        screen.rootWidget(),
+                        TitleWidget::kPreferredHeight);
+
+    Surface::WidgetGuard guard(mSurface, hSplit);
 
     while (!mScreenStack.dirty())
     {
