@@ -12,7 +12,7 @@ template <std::size_t Capacity>
 class StrBuf
 {
 private:
-    typedef std::array<char, Capacity + 1> Data;
+    typedef std::array<char, Capacity> Data;
     
 public:
     typedef typename Data::const_iterator const_iterator;
@@ -144,7 +144,7 @@ template <std::size_t Capacity>
 inline
 constexpr std::size_t StrBuf<Capacity>::capacity() const
 {
-    return mData.size();
+    return mData.size() - 1;
 }
 
 template <std::size_t Capacity>

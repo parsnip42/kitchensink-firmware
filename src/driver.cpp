@@ -49,70 +49,9 @@ void loop()
     keyboard.init();
 
     KeyboardState keyboardState;
-
     
     DefaultProfile::init(keyboardState);
 
-    // {
-    //     auto os(storage.write(Storage::Region::Config));
-
-    //     for (const auto& layer : keyboardState.layerStack)
-    //     {
-    //         Serializer<Layer> s;
-
-    //         os.write("[Layer]\n");
-    //         s.serialize(layer, os);
-    //         os.write("\n");
-    //     }
-    // }
-    
-    // {
-    //     StrBuf<200> line;
-    //     StrOStream ostream(line);
-        
-    //     auto is(storage.read(Storage::Region::Config));
-
-    //     auto& layerStack(keyboardState.layerStack);
-    //     std::size_t layerCount(0);
-        
-    //     while(is.readLine(ostream))
-    //     {
-    //         if (line == "[Layer]" && layerCount < layerStack.size())
-    //         {
-    //             Serializer<Layer> s;
-                
-    //             s.deserialize(is, layerStack[layerCount++]);
-    //         }
-
-    //         line.clear();
-    //     }
-    // }
-
-    // {
-    //     auto os(storage.write(Storage::Region::Config));
-    //     const auto& macroSet(keyboardState.macroSet);
-        
-    //     for (std::size_t i(0); i < macroSet.size(); ++i)
-    //     {
-    //         Serializer<MacroSet::Macro> s;
-            
-    //         os.write("[Macro]\n");
-    //         s.serialize(macroSet[i], os);
-    //         os.write("\n");
-    //     }
-    // }
-
-
-    // {
-    //     auto is(storage.read(Storage::Region::Config));
-    //     StrBuf<200> line;6
-
-    //     while (is.readLine(line))
-    //     {
-    //         initLog.appendLine(line);
-    //     }
-    // }
-    
     {
         Storage storage;
         
@@ -121,9 +60,6 @@ void loop()
         
         s.deserialize(is, keyboardState.macroSet);
     }
-
-    
-     // DefaultProfile::init(keyboardState);
 
 
     Timer timer;

@@ -11,6 +11,7 @@
 #include "ui/storagescreen.h"
 #include "ui/benchmarkscreen.h"
 #include "ui/keys.h"
+#include "types/strostream.h"
 
 namespace
 {
@@ -60,12 +61,12 @@ ScreenManager::ScreenManager(Surface&       surface,
 
 void ScreenManager::pushScreen(const ScreenId& screenId)
 {
-    if (screenId.type == ScreenId::Type::kHome
-        && !mScreenStack.empty())
+    if (!mScreenStack.empty() &&
+        (screenId.type == ScreenId::Type::kHome || mScreenStack.top() == screenId))
     {
         mScreenStack.pop();
     }
-    else if (mScreenStack.empty() || mScreenStack.top() != screenId)
+    else if (!mScreenStack.full())
     {
         mScreenStack.push(screenId);
     }
@@ -83,6 +84,8 @@ void ScreenManager::poll(KeyEventStage& next)
 {
     while (true)
     {
+        flush();
+        
         if (mScreenStack.empty())
         {
             OutputSink output(*this, next);
@@ -105,7 +108,6 @@ void ScreenManager::launch(const ScreenId& screenId)
 {
     switch (screenId.type)
     {
-
     case ScreenId::Type::kHome:
         launchMenu(0);
         break;
@@ -141,7 +143,12 @@ void ScreenManager::launchMenu(int menuId)
     
     OutputSink output(*this, autoRepeat);
 
-    TitleWidget titleWidget(mMenuDefinitions.getTitle(menuId));
+    mEventManager.flush(output);
+
+    TitleWidget titleWidget;
+
+    createTitlePath(titleWidget.text);
+    
     HSplitWidget hSplit(titleWidget,       
                         menu.rootWidget(),
                         TitleWidget::kPreferredHeight);
@@ -152,6 +159,7 @@ void ScreenManager::launchMenu(int menuId)
     {
         mEventManager.poll(output);
     }
+
 }
 
 void ScreenManager::launchScreen(int screenId)
@@ -206,7 +214,10 @@ void ScreenManager::launchEditMacro(int macroId)
             
     OutputSink output(*this, screen);
 
-    TitleWidget titleWidget("Edit Macro");
+    TitleWidget titleWidget;
+
+    createTitlePath(titleWidget.text);
+
     HSplitWidget hSplit(titleWidget,       
                         screen.rootWidget(),
                         TitleWidget::kPreferredHeight);
@@ -217,8 +228,6 @@ void ScreenManager::launchEditMacro(int macroId)
     {
         mEventManager.poll(output);
     }
-
-    // mEventManager.untilKeysReleased(output);
 }
 
 void ScreenManager::launchRecordMacro(int macroId, bool realtime)
@@ -232,7 +241,10 @@ void ScreenManager::launchRecordMacro(int macroId, bool realtime)
 
     OutputSink output(*this, screen);
 
-    TitleWidget titleWidget("Recording Macro");
+    TitleWidget titleWidget;
+
+    createTitlePath(titleWidget.text);
+
     HSplitWidget hSplit(titleWidget,       
                         screen.rootWidget(),
                         TitleWidget::kPreferredHeight);
@@ -243,4 +255,48 @@ void ScreenManager::launchRecordMacro(int macroId, bool realtime)
     {
         mEventManager.poll(output);
     }
+}
+
+void ScreenManager::createTitlePath(const StrOStream& os)
+{
+    for (auto it(mScreenStack.begin()); it != mScreenStack.end(); ++it)
+    {
+        if (it != mScreenStack.begin())
+        {
+            os.appendStr(" : ");
+        }
+        
+        createTitle(*it, os);
+    }
+}
+
+void ScreenManager::createTitle(const ScreenId&   screenId,
+                                const StrOStream& os)
+{
+    switch (screenId.type)
+    {
+    case ScreenId::Type::kHome:
+    case ScreenId::Type::kMenu:
+        os.appendStr(mMenuDefinitions.getTitle(screenId.index));
+        break;
+        
+    case ScreenId::Type::kEditMacro:
+        os.appendStr("Edit Macro");
+        break;
+
+    case ScreenId::Type::kRecordMacro:
+    case ScreenId::Type::kRecordMacroRT:
+        os.appendStr("Record Macro");
+        break;
+
+    default:
+        break;
+    }
+}
+
+void ScreenManager::flush()
+{
+    OutputSink output(*this, mEventManager.defaultOutput);
+    
+    mEventManager.flush(output);
 }

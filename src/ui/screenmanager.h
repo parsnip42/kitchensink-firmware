@@ -7,6 +7,7 @@
 class Surface;
 class EventManager;
 class KeyboardState;
+class StrOStream;
 
 class ScreenManager
 {    
@@ -27,6 +28,12 @@ private:
     void launchEditMacro(int macroId);
     void launchRecordMacro(int macroId, bool realtime);
 
+    void createTitlePath(const StrOStream& os);
+    void createTitle(const ScreenId&   screenId,
+                     const StrOStream& os);
+    
+    void flush();
+    
 private:
     Surface&        mSurface;
     EventManager&   mEventManager;

@@ -24,7 +24,7 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
 
     void poll(KeyEventStage& output);
-    void untilKeysReleased(KeyEventStage& output);
+    void flush(KeyEventStage& output);
     
 public:
     Timer&         timer;

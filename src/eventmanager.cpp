@@ -28,17 +28,16 @@ void EventManager::poll(KeyEventStage& output)
     mSource.pollKeyEvent(nowMs(), mInput);
 }
 
-void EventManager::untilKeysReleased(KeyEventStage& output)
+void EventManager::flush(KeyEventStage& output)
 {
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
-
-    do
+    
+    while (mSource.anyPressed() || !mBuffer.empty())
     {
         mBuffer.pollKeyEvent(mInput);
         timer.pollKeyEvent(mInput);
         mSource.pollKeyEvent(nowMs(), mInput);
     }
-    while (mSource.anyPressed());
 }
 
 uint32_t EventManager::nowMs() const

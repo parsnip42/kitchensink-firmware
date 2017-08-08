@@ -8,6 +8,7 @@
 #include "macroset.h"
 #include "multikeyset.h"
 #include "smartkeyset.h"
+#include "layerstack.h"
 #include "data/keycodes.h"
 
 class StrOStream;
@@ -31,6 +32,7 @@ private:
     const MappedObjectSource<MenuScreen::Item, MacroSet>    mEditMacroDataSource;
     const MappedObjectSource<MenuScreen::Item, MultiKeySet> mMultiKeyDataSource;
     const MappedObjectSource<MenuScreen::Item, SmartKeySet> mSmartKeyDataSource;
+    const MappedObjectSource<MenuScreen::Item, LayerStack>  mLayerDataSource;
     const GeneratedObjectSource<MenuScreen::Item>           mKeyDataSource;
 
 private:

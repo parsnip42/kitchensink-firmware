@@ -18,7 +18,7 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     
 public:
-    StrBuf<48> text;
+    StrBuf<64> text;
 };
 
 #endif

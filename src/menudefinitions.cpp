@@ -8,12 +8,13 @@
 namespace
 {
 
-const std::array<MenuScreen::Item, 6> mainMenu = { {
+const std::array<MenuScreen::Item, 7> mainMenu = { {
         { StrRef("Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 1) },
         { StrRef("Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 4) },
+        { StrRef("Layers"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 7) },
         { StrRef("Edit Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 2) },
-        { StrRef("Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 6) },
-        { StrRef("Smart Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 3) },
+        { StrRef("Edit Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 6) },
+        { StrRef("Edit Smart Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 3) },
         { StrRef("System"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 5) },
     } };
 
@@ -66,6 +67,16 @@ MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index
     return item;
 }
 
+MenuScreen::Item createLayerMenuItem(const Layer& layer, std::size_t index)
+{
+    MenuScreen::Item item;
+        
+    item.title = layer.name;
+    item.keyId = KeyId();
+        
+    return item;
+}
+
 MenuScreen::Item createKeyMenuItem(std::size_t index)
 {
     MenuScreen::Item item;
@@ -107,6 +118,7 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mEditMacroDataSource(keyboardState.macroSet, &createEditMacroMenuItem)
     , mMultiKeyDataSource(keyboardState.multiSet, &createMultiKeyMenuItem)
     , mSmartKeyDataSource(keyboardState.smartKeySet, &createSmartKeyMenuItem)
+    , mLayerDataSource(keyboardState.layerStack, &createLayerMenuItem)
     , mKeyDataSource(254, &createKeyMenuItem)
 { }
 
@@ -116,18 +128,28 @@ const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const
     {
     case 0:
         return mMainMenuSource;
+        
     case 1:
         return mMacroDataSource;
+        
     case 2:
         return mEditMacroDataSource;
+        
     case 3:
         return mSmartKeyDataSource;
+        
     case 4:
         return mKeyDataSource;
+        
     case 5:
         return mSystemMenuSource;
+        
     case 6:
         return mMultiKeyDataSource;
+        
+    case 7:
+        return mLayerDataSource;
+        
     default:
         return mEmptyMenuSource;
     }
@@ -139,18 +161,28 @@ StrRef MenuDefinitions::getTitle(int id) const
     {
     case 0:
         return "Main Menu";
+        
     case 1:
         return "Macros";
+        
     case 2:
         return "Edit Macros";
+        
     case 3:
         return "Smart Keys";
+        
     case 4:
         return "Keys";
+        
     case 5:
         return "System";
+        
     case 6:
         return "Multi Keys";
+
+    case 7:
+        return "Layers";
+        
     default:
         return "";
     }
