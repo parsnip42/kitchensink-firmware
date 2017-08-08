@@ -1,6 +1,5 @@
 #include "ui/recordmacroscreen.h"
 
-#include "keyprocessor.h"
 #include "macro.h"
 #include "ui/surface.h"
 #include "types/strostream.h"

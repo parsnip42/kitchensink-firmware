@@ -1,5 +1,5 @@
-#ifndef INCLUDED_KEYPROCESSOR_H
-#define INCLUDED_KEYPROCESSOR_H
+#ifndef INCLUDED_KEYSOURCE_H
+#define INCLUDED_KEYSOURCE_H
 
 #include "keyeventstage.h"
 #include "layerstack.h"
@@ -9,13 +9,15 @@
 class KsKeyboard;
 class KeyLocation;
 
-class KeyProcessor
+class KeySource
 {
 public:
-    KeyProcessor(KsKeyboard& keyboard,
-                 LayerStack& layerStack);
+    KeySource(KsKeyboard& keyboard,
+              LayerStack& layerStack);
 
 public:
+    void setLayer(int layer, bool enabled);
+    
     void pollKeyEvent(uint32_t       timeMs,
                       KeyEventStage& next);
 
@@ -32,8 +34,8 @@ private:
     LayerStack::Mask mLayerMask;
     
 private:
-    KeyProcessor(const KeyProcessor&) = delete;
-    KeyProcessor& operator=(const KeyProcessor&) = delete;
+    KeySource(const KeySource&) = delete;
+    KeySource& operator=(const KeySource&) = delete;
 };
 
 #endif

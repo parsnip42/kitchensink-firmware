@@ -1,11 +1,11 @@
-#include "keyprocessor.h"
+#include "keysource.h"
 
 #include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keylocation.h"
 
-KeyProcessor::KeyProcessor(KsKeyboard& keyboard,
-                           LayerStack& layerStack)
+KeySource::KeySource(KsKeyboard& keyboard,
+                     LayerStack& layerStack)
     : mKeyboard(keyboard)
     , mLayerStack(layerStack)
     , mLayerMask()
@@ -13,8 +13,16 @@ KeyProcessor::KeyProcessor(KsKeyboard& keyboard,
     mLayerMask[0] = true;
 }
 
-void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
-                                KeyEventStage& next)
+void KeySource::setLayer(int layer, bool enabled)
+{
+    if (layer > 0 && layer < int(mLayerMask.size()))
+    {
+        mLayerMask[layer] = enabled;
+    }
+}
+
+void KeySource::pollKeyEvent(uint32_t       timeMs,
+                             KeyEventStage& next)
 {
     // Layer changes shouldn't take effect until the next set of key events -
     // take a copy of the mask.
@@ -28,14 +36,7 @@ void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
 
         auto keyEvent(KeyEvent(keyId, event.pressed));
 
-        if (keyId.type() == KeyId::Type::kLayer)
-        {
-            mLayerMask[keyId.value()] = event.pressed;
-        }
-        else
-        {
-            next.processKeyEvent(keyEvent);
-        }
+        next.processKeyEvent(keyEvent);
     });
 
     if (currentLayerMask != mLayerMask)
@@ -46,7 +47,7 @@ void KeyProcessor::pollKeyEvent(uint32_t       timeMs,
     }
 }
 
-bool KeyProcessor::anyPressed()
+bool KeySource::anyPressed()
 {
     bool pressed(false);
     
@@ -58,9 +59,9 @@ bool KeyProcessor::anyPressed()
     return pressed;
 }
 
-void KeyProcessor::processLayerChange(const LayerStack::Mask& currentMask,
-                                      const LayerStack::Mask& nextMask,
-                                      KeyEventStage&          next)
+void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
+                                   const LayerStack::Mask& nextMask,
+                                   KeyEventStage&          next)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {

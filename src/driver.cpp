@@ -3,13 +3,14 @@
 #include "display.h"
 #include "kskeyboard.h"
 #include "keyboardstate.h"
-#include "keyprocessor.h"
+#include "keysource.h"
 #include "usbkeyboard.h"
 #include "serialize/serializer.h"
 #include "serialize/iniformat.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
+#include "layerprocessor.h"
 
 #include "storage/storage.h"
 
@@ -130,10 +131,12 @@ void loop()
     ToplevelEventStage toplevel(usbKeyboard);
     
     ActionProcessor actionProcessor(toplevel);
+
+    LayerProcessor layerProcessor(actionProcessor);
     
     MacroProcessor macroProcessor(keyboardState.macroSet,
                                   timer,
-                                  actionProcessor);
+                                  layerProcessor);
 
     SmartKeyProcessor smartKeyProcessor(keyboardState.smartKeySet,
                                         macroProcessor);
@@ -142,11 +145,13 @@ void loop()
                                         timer,
                                         smartKeyProcessor);
 
-    KeyProcessor keyProcessor(keyboard,
-                              keyboardState.layerStack);
+    KeySource keySource(keyboard,
+                        keyboardState.layerStack);
+
+    layerProcessor.keySource = &keySource;
     
     EventManager eventManager(timer,
-                              keyProcessor,
+                              keySource,
                               multiKeyProcessor,
                               toplevel,
                               usbKeyboard);

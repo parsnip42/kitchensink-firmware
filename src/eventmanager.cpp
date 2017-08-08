@@ -3,7 +3,7 @@
 #include <elapsedMillis.h>
 
 EventManager::EventManager(Timer&              nTimer,
-                           KeyProcessor&       source,
+                           KeySource&          source,
                            KeyEventStage&      input,
                            ToplevelEventStage& toplevel,
                            KeyEventStage&      nDefaultOutput)

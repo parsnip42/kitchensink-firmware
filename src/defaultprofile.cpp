@@ -153,10 +153,16 @@ void init(KeyboardState& keyboardState)
 
     keyboardState.smartKeySet[1].name = "RShift Toggle";
     keyboardState.smartKeySet[1].type = SmartKey::Type::kToggle;
-    keyboardState.smartKeySet[1].keyId = RShift;        
+    keyboardState.smartKeySet[1].keyId = RShift;
 
-    // keyboardState.multiSet[2].keys[0] = MainMenu();
-    // keyboardState.multiSet[2].keys[1] = Bootloader();
+    
+    keyboardState.multiSet[2].keys[0] = Layer(2);
+    keyboardState.multiSet[2].keys[2] = KeyId::Smart(2);
+    
+    keyboardState.smartKeySet[2].name = "Num Toggle";
+    keyboardState.smartKeySet[2].type = SmartKey::Type::kToggle;
+    keyboardState.smartKeySet[2].keyId = Layer(2);
+
 
     auto& layerStack(keyboardState.layerStack);
     
@@ -164,7 +170,7 @@ void init(KeyboardState& keyboardState)
     layerStack[0].mapping = { {
             { { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },
             { { Esc, Macro(7), Q, W, E, R, T, Tab, Macro(12), Macro(13),                    /**/ Macro(23),  Macro(24), Backspace, Y, U, I, O, P, LBrace, RBrace } },
-            { { 0, Layer(2), A, S, D, F, G, 0, Macro(14), Macro(15),                        /**/ Macro(25),  0, 0, H, J, K, L, Semicolon, Enter } },
+            { { 0, Multi(2), A, S, D, F, G, 0, Macro(14), Macro(15),                        /**/ Macro(25),  0, 0, H, J, K, L, Semicolon, Enter } },
             { { 0, Multi(0), Z, X, C, V, B, Delete, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(1), Quote, N, M, Comma, Dot, Slash, Multi(1) } },
             { { 0, Y, U, I, O, P,
                 LCtrl, Layer(1), LAlt, 0,                                     /**/ 0,LAlt, Space, RCtrl, End, Left, Up, Down, Right } }
