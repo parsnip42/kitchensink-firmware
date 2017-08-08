@@ -25,6 +25,7 @@ public:
 
 private:
     const ArrayObjectSource<MenuScreen::Item> mMainMenuSource;
+    const ArrayObjectSource<MenuScreen::Item> mConfigMenuSource;
     const ArrayObjectSource<MenuScreen::Item> mSystemMenuSource;
     const ArrayObjectSource<MenuScreen::Item> mEmptyMenuSource;
 

@@ -3,10 +3,12 @@
 #include "keyevent.h"
 #include "macro.h"
 
-MacroProcessor::MacroProcessor(const MacroSet& macroSet,
+MacroProcessor::MacroProcessor(KeyId::Type     macroKeyType,
+                               const MacroSet& macroSet,
                                Timer&          timer,
                                KeyEventStage&  next)
-    : mMacroSet(macroSet)
+    : mMacroKeyType(macroKeyType)
+    , mMacroSet(macroSet)
     , mCurrent(nullptr)
     , mPlaybackTimer(timer.createHandle())
     , mNext(next)
@@ -20,7 +22,7 @@ void MacroProcessor::processKeyEvent(const KeyEvent& event)
     {
         playback();
     }
-    else if (keyId.type() == KeyId::Type::kMacro)
+    else if (keyId.type() == mMacroKeyType)
     {
         auto macroIndex(keyId.value());
 

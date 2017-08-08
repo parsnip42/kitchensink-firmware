@@ -14,6 +14,7 @@ public:
 public:
     LayerStack  layerStack;
     MacroSet    macroSet;
+    MacroSet    secureMacroSet;
     MultiKeySet multiSet;
     SmartKeySet smartKeySet;
     

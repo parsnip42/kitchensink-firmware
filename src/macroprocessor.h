@@ -11,7 +11,8 @@ class MacroSet;
 class MacroProcessor : public KeyEventStage
 {
 public:
-    MacroProcessor(const MacroSet& macroSet,
+    MacroProcessor(KeyId::Type     macroKeyType,
+                   const MacroSet& macroSet,
                    Timer&          timer,
                    KeyEventStage&  next);
 
@@ -22,6 +23,7 @@ private:
     void playback();
     
 private:
+    KeyId::Type                    mMacroKeyType;
     const MacroSet&                mMacroSet;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;

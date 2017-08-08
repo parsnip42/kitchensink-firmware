@@ -28,7 +28,6 @@
 #include "types/strbuf.h"
 #include "types/strostream.h"
 
-
 void setup()
 {
     KeyMatrix::setup();
@@ -61,7 +60,6 @@ void loop()
         s.deserialize(is, keyboardState.macroSet);
     }
 
-
     Timer timer;
     
     ToplevelEventStage toplevel(usbKeyboard);
@@ -69,10 +67,16 @@ void loop()
     ActionProcessor actionProcessor(toplevel);
 
     LayerProcessor layerProcessor(actionProcessor);
-    
-    MacroProcessor macroProcessor(keyboardState.macroSet,
+
+    MacroProcessor secureMacroProcessor(KeyId::Type::kSMacro,
+                                        keyboardState.secureMacroSet,
+                                        timer,
+                                        layerProcessor);
+
+    MacroProcessor macroProcessor(KeyId::Type::kMacro,
+                                  keyboardState.macroSet,
                                   timer,
-                                  layerProcessor);
+                                  secureMacroProcessor);
 
     SmartKeyProcessor smartKeyProcessor(keyboardState.smartKeySet,
                                         macroProcessor);
