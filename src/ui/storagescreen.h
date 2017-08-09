@@ -2,9 +2,7 @@
 #define INCLUDED_STORAGESCREEN_H
 
 #include "ui/listwidget.h"
-#include "ui/titlewidget.h"
 #include "ui/labelwidget.h"
-#include "ui/hsplitwidget.h"
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
 
@@ -21,13 +19,9 @@ public:
     Widget& rootWidget();
     
 private:
-    TitleWidget mTitleWidget;
-
-    LabelWidget mStatusLabel;
-    
+    LabelWidget  mStatusLabel;
     WidgetSet<1> mWidgetSet;
     ListWidget   mListWidget;
-    HSplitWidget mHSplit;
 };
 
 #endif

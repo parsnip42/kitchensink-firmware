@@ -28,6 +28,9 @@ private:
     void launchEditMacro(MacroSet& macroSet, int macroId);
     void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
 
+    void displayScreen(KeyEventStage& stage,
+                       Widget&        content);
+
     void createTitlePath(const StrOStream& os);
     void createTitle(const ScreenId&   screenId,
                      const StrOStream& os);

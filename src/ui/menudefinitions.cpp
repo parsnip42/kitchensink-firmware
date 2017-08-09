@@ -17,11 +17,12 @@ const std::array<MenuScreen::Item, 6> mainMenu = { {
         { StrRef("System"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 6) },
     } };
 
-const std::array<MenuScreen::Item, 4> configMenu = { {
-        { StrRef("Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 10) },
-        { StrRef("Secure Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 11) },
-        { StrRef("Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 12) },
-        { StrRef("Smart Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 13) },
+const std::array<MenuScreen::Item, 5> configMenu = { {
+        { StrRef("Layout Configuration"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 2) },
+        { StrRef("Edit Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 10) },
+        { StrRef("Edit Secure Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 11) },
+        { StrRef("Edit Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 12) },
+        { StrRef("Edit Smart Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 13) },
     } };
 
 const std::array<MenuScreen::Item, 3> systemMenu = { {

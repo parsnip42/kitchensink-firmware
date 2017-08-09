@@ -2,9 +2,7 @@
 #define INCLUDED_BENCHMARKSCREEN_H
 
 #include "ui/listwidget.h"
-#include "ui/titlewidget.h"
 #include "ui/labelwidget.h"
-#include "ui/hsplitwidget.h"
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
 
@@ -23,14 +21,9 @@ public:
 
 private:
     EventManager& mEventManager;
-    TitleWidget   mTitleWidget;
-
-    LabelWidget mStatusLabel;
-    
-    WidgetSet<1> mWidgetSet;
-    ListWidget   mListWidget;
-    HSplitWidget mHSplit;
-
+    LabelWidget   mStatusLabel;
+    WidgetSet<1>  mWidgetSet;
+    ListWidget    mListWidget;
 };
 
 #endif

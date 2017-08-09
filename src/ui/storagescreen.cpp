@@ -6,13 +6,9 @@
 #include "types/strostream.h"
 
 StorageScreen::StorageScreen()
-    : mTitleWidget("Storage")
-    , mStatusLabel(">")
+    : mStatusLabel(">")
     , mWidgetSet({ &mStatusLabel })
     , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), LabelWidget::kPreferredHeight)
-    , mHSplit(mTitleWidget,
-              mListWidget,
-              TitleWidget::kPreferredHeight + 1)
 { }
 
 void StorageScreen::processKeyEvent(const KeyEvent& event)
@@ -33,5 +29,5 @@ void StorageScreen::processKeyEvent(const KeyEvent& event)
 
 Widget& StorageScreen::rootWidget()
 {
-    return mHSplit;
+    return mListWidget;;
 }

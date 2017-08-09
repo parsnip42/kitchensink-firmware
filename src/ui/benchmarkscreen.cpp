@@ -18,13 +18,9 @@ public:
 
 BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
     : mEventManager(eventManager)
-    , mTitleWidget("Benchmarking")
     , mStatusLabel()
     , mWidgetSet({ &mStatusLabel })
     , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), LabelWidget::kPreferredHeight)
-    , mHSplit(mTitleWidget,
-              mListWidget,
-              TitleWidget::kPreferredHeight + 1)
 { }
 
 void BenchmarkScreen::processKeyEvent(const KeyEvent& event)
@@ -57,5 +53,5 @@ void BenchmarkScreen::run()
 
 Widget& BenchmarkScreen::rootWidget()
 {
-    return mHSplit;
+    return mListWidget;
 }

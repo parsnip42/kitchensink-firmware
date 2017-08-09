@@ -10,6 +10,7 @@
 #include "ui/recordmacroscreen.h"
 #include "ui/storagescreen.h"
 #include "ui/benchmarkscreen.h"
+#include "ui/keyconfigscreen.h"
 #include "ui/keys.h"
 #include "types/strostream.h"
 
@@ -130,7 +131,8 @@ void ScreenManager::launch(const ScreenId& screenId)
         launchRecordMacro(mKeyboardState.macroSet,
                           screenId.index,
                           screenId.type == ScreenId::Type::kRecordMacroRT);
-
+        break;
+        
     case ScreenId::Type::kEditSMacro:
         launchEditMacro(mKeyboardState.secureMacroSet,
                         screenId.index);
@@ -148,32 +150,14 @@ void ScreenManager::launch(const ScreenId& screenId)
 
 void ScreenManager::launchMenu(int menuId)
 {
-    MenuScreen menu(mMenuDefinitions.getDataSource(menuId),
-                    mScreenStack,
-                    mEventManager);
+    MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
+                      mScreenStack,
+                      mEventManager);
             
     AutoRepeat autoRepeat(mEventManager.timer,
-                          menu);
+                          screen);
     
-    OutputSink output(*this, autoRepeat);
-
-    mEventManager.flush(output);
-
-    TitleWidget titleWidget;
-
-    createTitlePath(titleWidget.text);
-    
-    HSplitWidget hSplit(titleWidget,       
-                        menu.rootWidget(),
-                        TitleWidget::kPreferredHeight);
-    
-    Surface::WidgetGuard guard(mSurface, hSplit);
-
-    while (!mScreenStack.dirty())
-    {
-        mEventManager.poll(output);
-    }
-
+    displayScreen(autoRepeat, screen.rootWidget());
 }
 
 void ScreenManager::launchScreen(int screenId)
@@ -182,38 +166,31 @@ void ScreenManager::launchScreen(int screenId)
     {
     case 0:
     {
-        StorageScreen storage;
+        StorageScreen screen;
 
-        OutputSink output(*this, storage);
-            
-        Surface::WidgetGuard guard(mSurface, storage.rootWidget());
-        
-        while (!mScreenStack.dirty())
-        {
-            mEventManager.poll(output);
-        }
-        
+        displayScreen(screen,
+                      screen.rootWidget());
         break;
     }
             
     case 1:
     {
-        BenchmarkScreen benchmark(mEventManager);
+        BenchmarkScreen screen(mEventManager);
 
-        OutputSink output(*this, benchmark);
-            
-        Surface::WidgetGuard guard(mSurface, benchmark.rootWidget());
-
-        benchmark.run();
-        
-        while (!mScreenStack.dirty())
-        {
-            mEventManager.poll(output);
-        }
-
+        displayScreen(screen,
+                      screen.rootWidget());
         break;
     }
-            
+
+    case 2:
+    {
+        KeyConfigScreen screen;
+
+        displayScreen(screen,
+                      screen.rootWidget());
+        break;
+    }
+
     default:
         break;
     }
@@ -226,23 +203,8 @@ void ScreenManager::launchEditMacro(MacroSet& macroSet,
                            mEventManager.timer,
                            macroSet,
                            macroId);
-            
-    OutputSink output(*this, screen);
 
-    TitleWidget titleWidget;
-
-    createTitlePath(titleWidget.text);
-
-    HSplitWidget hSplit(titleWidget,       
-                        screen.rootWidget(),
-                        TitleWidget::kPreferredHeight);
-
-    Surface::WidgetGuard guard(mSurface, hSplit);
-
-    while (!mScreenStack.dirty())
-    {
-        mEventManager.poll(output);
-    }
+    displayScreen(screen, screen.rootWidget());
 }
 
 void ScreenManager::launchRecordMacro(MacroSet& macroSet,
@@ -255,15 +217,21 @@ void ScreenManager::launchRecordMacro(MacroSet& macroSet,
                              macroId,
                              realtime,
                              mEventManager.defaultOutput);
+    
+    displayScreen(screen, screen.rootWidget());
+}
 
-    OutputSink output(*this, screen);
+void ScreenManager::displayScreen(KeyEventStage& stage,
+                                  Widget&        content)
+{
+    OutputSink output(*this, stage);
 
     TitleWidget titleWidget;
 
     createTitlePath(titleWidget.text);
 
     HSplitWidget hSplit(titleWidget,       
-                        screen.rootWidget(),
+                        content,
                         TitleWidget::kPreferredHeight);
 
     Surface::WidgetGuard guard(mSurface, hSplit);
@@ -296,7 +264,24 @@ void ScreenManager::createTitle(const ScreenId&   screenId,
     case ScreenId::Type::kMenu:
         os.appendStr(mMenuDefinitions.getTitle(screenId.index));
         break;
-        
+
+    case ScreenId::Type::kScreen:
+        switch (screenId.index)
+        {
+        case 0:
+            os.appendStr("Storage");
+            break;
+            
+        case 1:
+            os.appendStr("Benchmark");
+            break;
+
+        case 2:
+            os.appendStr("Layout Configuration");
+            break;
+        }
+        break;
+
     case ScreenId::Type::kEditMacro:
         os.appendStr("Edit Macro");
         break;
