@@ -1,6 +1,6 @@
 #include "actionprocessor.h"
 #include "defaultprofile.h"
-#include "display.h"
+#include "hardware/display.h"
 #include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keysource.h"
@@ -44,8 +44,6 @@ void loop()
     UsbKeyboard usbKeyboard;
     
     KsKeyboard keyboard;
-
-    keyboard.init();
 
     KeyboardState keyboardState;
     

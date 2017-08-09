@@ -2,7 +2,8 @@
 #define INCLUDED_KEYMASK_H
 
 #include "types/bitmask2d.h"
+#include "config.h"
 
-typedef Bitmask2d<16, 5> KeyMask;
+typedef Bitmask2d<Config::kLayerColumns, Config::kLayerRows> KeyMask;
 
 #endif

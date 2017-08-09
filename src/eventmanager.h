@@ -3,7 +3,6 @@
 
 #include "keyeventbuffer.h"
 #include "keyeventstage.h"
-#include "keyeventsource.h"
 #include "keyevent.h"
 #include "keysource.h"
 #include "timer.h"

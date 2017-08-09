@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYMATRIXDISPATCHER_H
 #define INCLUDED_KEYMATRIXDISPATCHER_H
 
-#include "keymask.h"
+#include "hardware/keymask.h"
 #include "keymatrixevent.h"
 
 #include <array>

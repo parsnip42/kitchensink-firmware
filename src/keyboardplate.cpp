@@ -12,8 +12,3 @@ KeyboardPlate::KeyboardPlate(const int                                     matri
     , mDispatcher(rowMapping,
                   columnMapping)
 { }
-
-void KeyboardPlate::init()
-{
-    mMatrix.init();
-}

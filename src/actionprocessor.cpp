@@ -1,6 +1,6 @@
 #include "actionprocessor.h"
 
-#include "ctrlutil.h"
+#include "hardware/ctrlutil.h"
 #include "keyevent.h"
 
 ActionProcessor::ActionProcessor(KeyEventStage& next)

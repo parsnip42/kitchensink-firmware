@@ -1,6 +1,6 @@
 #include "ui/surface.h"
 #include "ui/widget.h"
-#include "display.h"
+#include "hardware/display.h"
 
 #include "types/strref.h"
 

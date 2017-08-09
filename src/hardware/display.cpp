@@ -1,4 +1,4 @@
-#include "display.h"
+#include "hardware/display.h"
 
 #include <Wire.h>
 #include <core_pins.h>

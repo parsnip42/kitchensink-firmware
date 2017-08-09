@@ -21,6 +21,9 @@ constexpr std::size_t kMultiKeyKeyCount = 5;
 
 constexpr std::size_t kSmartKeyNameLen  = 12;
 constexpr std::size_t kSmartKeyCount    = 10;
+
+constexpr std::size_t kLayerColumns     = 16;
+constexpr std::size_t kLayerRows        = 5;
 constexpr std::size_t kLayerCount       = 10;
 
 };

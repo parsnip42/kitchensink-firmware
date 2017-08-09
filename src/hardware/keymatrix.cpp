@@ -24,6 +24,16 @@ void KeyMatrix::setup()
     Wire.setClock(1000000L);
 }
 
+KeyMatrix::KeyMatrix(const int      addr,
+                     const uint16_t rowMask,
+                     const uint16_t colMask)
+    : mAddr(addr)
+    , mRowMask(rowMask)
+    , mColMask(colMask)
+{
+    init();
+}
+
 void KeyMatrix::init()
 {
     Wire.beginTransmission(mAddr);
@@ -78,7 +88,7 @@ void KeyMatrix::scan()
         Wire.endTransmission();
         Wire.requestFrom(mAddr, 1);
 
-        auto& row(mState[index]);
+        auto& row(state[index]);
         
         row = ((~Wire.read()) & 0xff);
 

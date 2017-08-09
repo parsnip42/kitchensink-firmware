@@ -1,9 +1,9 @@
 #ifndef INCLUDED_KEYBOARDPLATE_H
 #define INCLUDED_KEYBOARDPLATE_H
 
-#include "keymask.h"
-#include "keymatrix.h"
-#include "debounce.h"
+#include "hardware/keymask.h"
+#include "hardware/keymatrix.h"
+#include "hardware/debounce.h"
 #include "keymatrixdispatcher.h"
 
 #include <cstdint>
@@ -16,9 +16,6 @@ public:
                   const uint16_t                                matrixColMask,
                   const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
                   const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
-
-public:
-    void init();
 
 public:
     template <typename Callback>
@@ -48,7 +45,7 @@ void KeyboardPlate::poll(uint32_t        timeMs,
 {
     mMatrix.scan();
 
-    if (mDebounce.process(timeMs, mMatrix.state()))
+    if (mDebounce.process(timeMs, mMatrix.state))
     {
         mDispatcher.dispatch(mDebounce.state(),
                              mDebounce.delta(),
