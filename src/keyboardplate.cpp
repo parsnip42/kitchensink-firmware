@@ -4,10 +4,12 @@ KeyboardPlate::KeyboardPlate(const int                                     matri
                              const uint16_t                                matrixRowMask,
                              const uint16_t                                matrixColMask,
                              const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                             const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
+                             const std::array<uint8_t, KeyMask::kColumns>& columnMapping,
+                             EntropyPool&                                  entropyPool)
     : mMatrix(matrixAddr,
               matrixRowMask,
-              matrixColMask)
+              matrixColMask,
+              entropyPool)
     , mDebounce()
     , mDispatcher(rowMapping,
                   columnMapping)

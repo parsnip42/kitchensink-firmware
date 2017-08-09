@@ -7,6 +7,8 @@
 #include <cstddef>
 #include <cstdint>
 
+class EntropyPool;
+
 class KeyMatrix
 {
 public:
@@ -15,7 +17,8 @@ public:
 public:
     KeyMatrix(const int      addr,
               const uint16_t rowMask,
-              const uint16_t colMask);
+              const uint16_t colMask,
+              EntropyPool&   entropyPool);
 
 public:
     void scan();
@@ -27,6 +30,9 @@ private:
     const int      mAddr;
     const uint16_t mRowMask;
     const uint16_t mColMask;
+
+    EntropyPool& mEntropyPool;
+    uint8_t      mCounter;
     
 public:
     KeyMask state;
@@ -39,3 +45,12 @@ private:
 
 
 #endif
+
+
+
+
+
+
+
+
+

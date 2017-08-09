@@ -4,6 +4,7 @@
 #include "keymatrixevent.h"
 #include "keyboardplate.h"
 #include "layerstack.h"
+#include "hardware/entropypool.h"
 
 #include <cstdint>
 
@@ -28,7 +29,8 @@ public:
 private:
     KeyboardPlate mLeft;
     KeyboardPlate mRight;
-
+    EntropyPool   mEntropyPool;
+    
 private:
     KsKeyboard(const KsKeyboard&) = delete;
     KsKeyboard& operator=(const KsKeyboard&) = delete;

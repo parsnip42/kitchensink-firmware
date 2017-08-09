@@ -27,6 +27,7 @@ public:
     static constexpr KeyId Layer(int layerId);
     static constexpr KeyId Lock(int lockId);
     static constexpr KeyId Macro(int macroId);
+    static constexpr KeyId SMacro(int macroId);
     static constexpr KeyId Multi(int multiId);
     static constexpr KeyId Delay(uint32_t delayMs);
     static constexpr KeyId Tick(uint32_t tickId);
@@ -93,6 +94,12 @@ inline
 constexpr KeyId KeyId::Macro(int macroId)
 {
     return KeyId(Type::kMacro, macroId);
+}
+
+inline
+constexpr KeyId KeyId::SMacro(int macroId)
+{
+    return KeyId(Type::kSMacro, macroId);
 }
 
 inline

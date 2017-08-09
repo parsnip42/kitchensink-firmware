@@ -8,6 +8,8 @@
 
 #include <cstdint>
 
+class EntropyPool;
+
 class KeyboardPlate
 {
 public:
@@ -15,7 +17,8 @@ public:
                   const uint16_t                                matrixRowMask,
                   const uint16_t                                matrixColMask,
                   const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                  const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
+                  const std::array<uint8_t, KeyMask::kColumns>& columnMapping,
+                  EntropyPool&                                  entropyPool);
 
 public:
     template <typename Callback>

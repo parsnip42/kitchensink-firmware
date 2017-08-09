@@ -53,6 +53,28 @@ MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
     return item;
 }
 
+MenuScreen::Item createSMacroMenuItem(const Macro& macro, std::size_t index)
+{
+    MenuScreen::Item item;
+        
+    item.title    = macro.name;
+    item.shortcut = macro.shortcut;
+    item.keyId    = KeyId::SMacro(index);
+        
+    return item;
+}
+
+MenuScreen::Item createEditSMacroMenuItem(const Macro& macro, std::size_t index)
+{
+    MenuScreen::Item item;
+        
+    item.title    = macro.name;
+    item.shortcut = macro.shortcut;
+    item.keyId    = KeyId::Screen(ScreenId::Type::kEditSMacro, index);
+        
+    return item;
+}
+
 MenuScreen::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index)
 {
     MenuScreen::Item item;
@@ -123,6 +145,8 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mEmptyMenuSource(mainMenu.end(), mainMenu.end())
     , mMacroDataSource(keyboardState.macroSet, &createMacroMenuItem)
     , mEditMacroDataSource(keyboardState.macroSet, &createEditMacroMenuItem)
+    , mSMacroDataSource(keyboardState.secureMacroSet, &createSMacroMenuItem)
+    , mEditSMacroDataSource(keyboardState.secureMacroSet, &createEditSMacroMenuItem)
     , mMultiKeyDataSource(keyboardState.multiSet, &createMultiKeyMenuItem)
     , mSmartKeyDataSource(keyboardState.smartKeySet, &createSmartKeyMenuItem)
     , mLayerDataSource(keyboardState.layerStack, &createLayerMenuItem)
@@ -140,7 +164,7 @@ const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const
         return mMacroDataSource;
 
     case 2:
-        return mEmptyMenuSource;
+        return mSMacroDataSource;
         
     case 3:
         return mKeyDataSource;
@@ -158,7 +182,7 @@ const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const
         return mEditMacroDataSource;
 
     case 11:
-        return mEmptyMenuSource;
+        return mEditSMacroDataSource;
 
     case 12:
         return mSmartKeyDataSource;

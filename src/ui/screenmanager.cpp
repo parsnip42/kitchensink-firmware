@@ -2,7 +2,7 @@
 
 #include "autorepeat.h"
 #include "keyboardstate.h"
-#include "menudefinitions.h"
+#include "ui/menudefinitions.h"
 #include "ui/hsplitwidget.h"
 #include "ui/titlewidget.h"
 #include "ui/menuscreen.h"
@@ -121,13 +121,27 @@ void ScreenManager::launch(const ScreenId& screenId)
         break;
 
     case ScreenId::Type::kEditMacro:
-        launchEditMacro(screenId.index);
+        launchEditMacro(mKeyboardState.macroSet,
+                        screenId.index);
         break;
 
     case ScreenId::Type::kRecordMacro:
     case ScreenId::Type::kRecordMacroRT:
-        launchRecordMacro(screenId.index,
+        launchRecordMacro(mKeyboardState.macroSet,
+                          screenId.index,
                           screenId.type == ScreenId::Type::kRecordMacroRT);
+
+    case ScreenId::Type::kEditSMacro:
+        launchEditMacro(mKeyboardState.secureMacroSet,
+                        screenId.index);
+        break;
+
+    case ScreenId::Type::kRecordSMacro:
+    case ScreenId::Type::kRecordSMacroRT:
+        launchRecordMacro(mKeyboardState.secureMacroSet,
+                          screenId.index,
+                          screenId.type == ScreenId::Type::kRecordSMacroRT);
+
         break;
     }
 }
@@ -205,11 +219,12 @@ void ScreenManager::launchScreen(int screenId)
     }
 }
 
-void ScreenManager::launchEditMacro(int macroId)
+void ScreenManager::launchEditMacro(MacroSet& macroSet,
+                                    int       macroId)
 {
     EditMacroScreen screen(mScreenStack,
                            mEventManager.timer,
-                           mKeyboardState.macroSet,
+                           macroSet,
                            macroId);
             
     OutputSink output(*this, screen);
@@ -230,11 +245,13 @@ void ScreenManager::launchEditMacro(int macroId)
     }
 }
 
-void ScreenManager::launchRecordMacro(int macroId, bool realtime)
+void ScreenManager::launchRecordMacro(MacroSet& macroSet,
+                                      int       macroId,
+                                      bool      realtime)
 {
     RecordMacroScreen screen(mScreenStack,
                              mEventManager.timer,
-                             mKeyboardState.macroSet,
+                             macroSet,
                              macroId,
                              realtime,
                              mEventManager.defaultOutput);
@@ -287,6 +304,15 @@ void ScreenManager::createTitle(const ScreenId&   screenId,
     case ScreenId::Type::kRecordMacro:
     case ScreenId::Type::kRecordMacroRT:
         os.appendStr("Record Macro");
+        break;
+        
+    case ScreenId::Type::kEditSMacro:
+        os.appendStr("Edit Secure Macro");
+        break;
+
+    case ScreenId::Type::kRecordSMacro:
+    case ScreenId::Type::kRecordSMacroRT:
+        os.appendStr("Record Secure Macro");
         break;
 
     default:

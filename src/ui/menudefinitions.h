@@ -31,6 +31,8 @@ private:
 
     const MappedObjectSource<MenuScreen::Item, MacroSet>    mMacroDataSource;
     const MappedObjectSource<MenuScreen::Item, MacroSet>    mEditMacroDataSource;
+    const MappedObjectSource<MenuScreen::Item, MacroSet>    mSMacroDataSource;
+    const MappedObjectSource<MenuScreen::Item, MacroSet>    mEditSMacroDataSource;
     const MappedObjectSource<MenuScreen::Item, MultiKeySet> mMultiKeyDataSource;
     const MappedObjectSource<MenuScreen::Item, SmartKeySet> mSmartKeyDataSource;
     const MappedObjectSource<MenuScreen::Item, LayerStack>  mLayerDataSource;

@@ -25,8 +25,8 @@ private:
     void launch(const ScreenId& screen);
     void launchMenu(int menuId);
     void launchScreen(int screenId);
-    void launchEditMacro(int macroId);
-    void launchRecordMacro(int macroId, bool realtime);
+    void launchEditMacro(MacroSet& macroSet, int macroId);
+    void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
 
     void createTitlePath(const StrOStream& os);
     void createTitle(const ScreenId&   screenId,
