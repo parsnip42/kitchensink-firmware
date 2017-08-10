@@ -156,7 +156,7 @@ void MenuWidget::applyFilter()
         [&](std::size_t index)
         {
             auto item = mDataSource[index];
-            
+
             return (StrRef(item.text).beginsWithCase(filterStr) ||
                     StrRef(item.shortcut).beginsWithCase(filterStr));
         });

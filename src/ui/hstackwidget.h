@@ -70,6 +70,8 @@ HStackWidget::HStackWidget(Items<Size>& items,
     : mItems(items.begin(), items.end())
     , mLinear(linear)
     , mFocused(items.begin())
-{ }
+{
+    setFocused(true);
+}
 
 #endif

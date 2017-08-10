@@ -55,12 +55,9 @@ void HStackWidget::processKeyEvent(const KeyEvent& event)
 
 void HStackWidget::setFocused(bool focused)
 {
-    if (mFocused != mItems.end())
+    for (auto it(mItems.begin()); it != mItems.end(); ++it)
     {
-        auto& widget(mFocused->widget);
-        
-        widget.setFocused(focused);
-        widget.invalidateWidget();
+        it->widget.setFocused(it == mFocused && focused);
     }
 }
 
@@ -81,10 +78,9 @@ void HStackWidget::parented()
         }
     }
 
-    // And then parent and focus them with the standard margin of 1.
-    for (auto it(mItems.begin()); it != mItems.end(); ++it)
+    // And then parent with the standard margin of 1.
+    for (auto& item : mItems)
     {
-        auto& item(*it);
         auto& widget(item.widget);
         
         auto height(minimumItemHeight);
@@ -102,8 +98,6 @@ void HStackWidget::parented()
         
         yOffset += height + 1;
         item.yOffset = yOffset;
-
-        item.widget.setFocused(it == mFocused);
     }
 }
 

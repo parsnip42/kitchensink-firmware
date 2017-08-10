@@ -6,28 +6,27 @@
 #include "types/strostream.h"
 
 StorageScreen::StorageScreen()
-    : mStatusLabel(">")
-    , mWidgetSet({ &mStatusLabel })
-    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), Font::kHeight)
+    : mItems({ mLabels[0], mLabels[1], mLabels[2], mLabels[3] })
+    , mHStackWidget(mItems, true)
 { }
 
 void StorageScreen::processKeyEvent(const KeyEvent& event)
 {
-    StrOStream out(mStatusLabel.text);
+    StrOStream out(mLabels[0].text);
 
     out.appendInt((int)event.keyId.type());
     out.appendStr(":");
     out.appendInt((int)event.keyId.value());
     out.appendStr(" ");
-    mStatusLabel.invalidateWidget();
+    mLabels[0].invalidateWidget();
 
-    if (mStatusLabel.text.length() > 40)
+    if (mLabels[0].text.length() > 40)
     {
-        mStatusLabel.text = "";
+        mLabels[0].text = "";
     }
 }
 
 Widget& StorageScreen::rootWidget()
 {
-    return mListWidget;;
+    return mHStackWidget;
 }

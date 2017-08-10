@@ -1,7 +1,8 @@
 #ifndef INCLUDED_STORAGESCREEN_H
 #define INCLUDED_STORAGESCREEN_H
 
-#include "ui/listwidget.h"
+#include "ui/hstackwidget.h"
+#include "ui/labelledwidget.h"
 #include "ui/labelwidget.h"
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
@@ -19,9 +20,9 @@ public:
     Widget& rootWidget();
     
 private:
-    LabelWidget  mStatusLabel;
-    WidgetSet<1> mWidgetSet;
-    ListWidget   mListWidget;
+    LabelWidget            mLabels[4];
+    HStackWidget::Items<4> mItems;
+    HStackWidget           mHStackWidget;
 };
 
 #endif

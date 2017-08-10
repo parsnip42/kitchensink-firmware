@@ -5,7 +5,6 @@
 #include "ui/combowidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
-#include "ui/widgetset.h"
 #include "keyeventstage.h"
 
 class ScreenStack;
@@ -34,7 +33,7 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    HStackWidget::Items<3>          mWidgetSet;
+    HStackWidget::Items<3>          mItems;
     HStackWidget                    mHStackWidget;
 };
 

@@ -13,9 +13,8 @@ class LabelledWidget : public Widget
 {
 public:
     LabelledWidget(const StrRef& text,
-                   Justify       justify,
-                   TWidget&&     nWidget,
-                   int           nSeparation);
+                   int           nSeparation,
+                   TWidget&&     nWidget = TWidget());
     
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
@@ -29,20 +28,17 @@ public:
     LabelWidget label;
     TWidget     widget;
     int         separation;
-    int         margin;
 };
 
 
 template <typename TWidget>
 inline
 LabelledWidget<TWidget>::LabelledWidget(const StrRef& text,
-                                        Justify       justify,
-                                        TWidget&&     nWidget,
-                                        int           nSeparation)
-    : label(text, justify)
+                                        int           nSeparation,
+                                        TWidget&&     nWidget)
+    : label(text, Justify::kLeft)
     , widget(std::move(nWidget))
     , separation(nSeparation)
-    , margin(justify == Justify::kRight ? 1 : 0)
 { }
 
 template <typename TWidget>
@@ -75,7 +71,7 @@ void LabelledWidget<TWidget>::parented()
     widget.setParent(this,
                      Rectangle(0,
                                0,
-                               size.width - (separation + margin),
+                               size.width - separation,
                                size.height));
 }
 
@@ -84,7 +80,7 @@ inline
 void LabelledWidget<TWidget>::render(const RasterLine& rasterLine, int row)
 {
     label.render(rasterLine.subset(0, separation), row);
-    widget.render(rasterLine.subset(separation + margin), row);
+    widget.render(rasterLine.subset(separation), row);
 }
 
 template <typename TWidget>
@@ -101,7 +97,7 @@ Dimension LabelledWidget<TWidget>::minimumSize() const
     auto labelMin(label.minimumSize());
     auto widgetMin(widget.minimumSize());
         
-    return Dimension(labelMin.width + margin + widgetMin.width,
+    return Dimension(labelMin.width + widgetMin.width,
                      std::max(labelMin.height, widgetMin.height));
 }
 

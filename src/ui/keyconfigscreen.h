@@ -2,6 +2,8 @@
 #define INCLUDED_KEYCONFIGSCREEN_H
 
 #include "ui/labelwidget.h"
+#include "ui/labelledwidget.h"
+#include "ui/hstackwidget.h"
 #include "keyeventstage.h"
 
 class Widget;
@@ -17,7 +19,11 @@ public:
     Widget& rootWidget();
     
 private:
-    LabelWidget mLabel;
+    LabelledWidget<LabelWidget> mLayerLabel;
+    LabelledWidget<LabelWidget> mRowLabel;
+    LabelledWidget<LabelWidget> mColumnLabel;
+    HStackWidget::Items<3>      mItems;
+    HStackWidget                mHStackWidget;
     
 private:
     KeyConfigScreen(const KeyConfigScreen&) = delete;

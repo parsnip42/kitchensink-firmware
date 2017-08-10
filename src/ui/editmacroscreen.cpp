@@ -33,17 +33,17 @@ EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
     : mScreenStack(screenStack)
     , mMacroSet(macroSet)
     , mMacroId(macroId)
-    , mTitleEntry("Name", Justify::kLeft,
-                  TextEntryWidget(timer),
-                  kLabelWidth)
-    , mShortcutEntry("Shortcut", Justify::kLeft,
-                     TextEntryWidget(timer),
-                     kLabelWidth)
-    , mTypeCombo("Type", Justify::kLeft,
-                 ComboWidget(mtds),
-                 kLabelWidth)
-    , mWidgetSet({ mTitleEntry, mShortcutEntry, mTypeCombo })
-    , mHStackWidget(mWidgetSet, true)
+    , mTitleEntry("Name",
+                  kLabelWidth,
+                  TextEntryWidget(timer))
+    , mShortcutEntry("Shortcut",
+                     kLabelWidth,
+                     TextEntryWidget(timer))
+    , mTypeCombo("Type",
+                 kLabelWidth,
+                 ComboWidget(mtds))
+    , mItems({{ mTitleEntry, mShortcutEntry, mTypeCombo }})
+    , mHStackWidget(mItems, true)
 {
     auto& macro(mMacroSet[mMacroId]);
 

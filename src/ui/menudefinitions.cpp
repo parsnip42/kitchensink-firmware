@@ -18,7 +18,7 @@ const std::array<MenuScreen::Item, 6> mainMenu = { {
     } };
 
 const std::array<MenuScreen::Item, 5> configMenu = { {
-        { StrRef("Layout Configuration"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 2) },
+        { StrRef("Edit Key Layout"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 2) },
         { StrRef("Edit Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 10) },
         { StrRef("Edit Secure Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 11) },
         { StrRef("Edit Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 12) },

@@ -1,15 +1,23 @@
 #include "keyconfigscreen.h"
 
 KeyConfigScreen::KeyConfigScreen()
-    : mLabel("TEST")
-{ }
+    : mLayerLabel("Layer", 50)
+    , mRowLabel("Row", 50)
+    , mColumnLabel("Column", 50)
+    , mItems({{ mLayerLabel, mRowLabel, mColumnLabel }})
+    , mHStackWidget(mItems, true)
+{
+    mHStackWidget.setFocused(false);
+}
 
 void KeyConfigScreen::processKeyEvent(const KeyEvent& event)
 {
-    
+    mLayerLabel.widget.text  = "1";
+    mRowLabel.widget.text    = "3";
+    mColumnLabel.widget.text = "7";
 }
 
 Widget& KeyConfigScreen::rootWidget()
 {
-    return mLabel;
+    return mHStackWidget;
 }
