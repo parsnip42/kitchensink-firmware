@@ -20,7 +20,7 @@ BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
     : mEventManager(eventManager)
     , mStatusLabel()
     , mWidgetSet({ &mStatusLabel })
-    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), LabelWidget::kPreferredHeight)
+    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), Font::kHeight)
 { }
 
 void BenchmarkScreen::processKeyEvent(const KeyEvent& event)

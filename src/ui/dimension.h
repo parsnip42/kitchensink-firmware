@@ -7,7 +7,7 @@ public:
     constexpr Dimension();
 
     constexpr Dimension(int nWidth,
-              int nHeight);
+                        int nHeight);
     
 public:
     int width;

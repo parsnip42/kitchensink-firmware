@@ -8,7 +8,7 @@
 StorageScreen::StorageScreen()
     : mStatusLabel(">")
     , mWidgetSet({ &mStatusLabel })
-    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), LabelWidget::kPreferredHeight)
+    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), Font::kHeight)
 { }
 
 void StorageScreen::processKeyEvent(const KeyEvent& event)

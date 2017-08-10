@@ -31,7 +31,8 @@ public:
     virtual void processKeyEvent(const KeyEvent& event) override;
     virtual void setFocused(bool nFocused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
-    
+    virtual Dimension minimumSize() const override;
+
 public:
     StrBuf<30>  text;
     std::size_t cursorPosition;

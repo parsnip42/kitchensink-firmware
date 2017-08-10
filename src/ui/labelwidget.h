@@ -14,15 +14,13 @@
 class LabelWidget : public Widget
 {
 public:
-    static constexpr int kPreferredHeight = Font::kHeight;
-
-public:
     explicit LabelWidget(const StrRef& nText    = StrRef(),
                          Justify       nJustify = Justify::kLeft);
 
 public:
     virtual void setFocused(bool focused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
+    virtual Dimension minimumSize() const override;
     
 public:
     StrBuf<48> text;

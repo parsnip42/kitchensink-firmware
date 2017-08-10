@@ -49,3 +49,8 @@ void LabelWidget::render(const RasterLine& rasterLine, int row)
 
     RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, 0x0);
 }
+
+Dimension LabelWidget::minimumSize() const
+{
+    return Dimension(0, Font::kHeight);
+}

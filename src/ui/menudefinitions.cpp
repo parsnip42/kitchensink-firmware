@@ -1,4 +1,4 @@
-#include "menudefinitions.h"
+#include "ui/menudefinitions.h"
 
 #include "keyboardstate.h"
 #include "keyid.h"
@@ -117,12 +117,7 @@ MenuScreen::Item createKeyMenuItem(std::size_t index)
         keyName = "Reserved";
     }
 
-    {
-        StrOStream os(item.title);
-
-        os.reset();
-        os.appendStr(keyName);
-    }
+    item.title = keyName;
 
     {
         StrOStream os(item.shortcut);

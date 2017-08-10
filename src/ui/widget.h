@@ -19,6 +19,7 @@ public:
     virtual void setFocused(bool focused);
     virtual void render(const RasterLine& rasterLine, int row) = 0;
     virtual void parented();
+    virtual Dimension minimumSize() const;
     
 public:
     void setParent(WidgetContainer* parent,
@@ -48,6 +49,12 @@ void Widget::setFocused(bool)
 inline
 void Widget::parented()
 { }
+
+inline
+Dimension Widget::minimumSize() const
+{
+    return Dimension(0, 0);
+}
 
 inline
 Dimension Widget::widgetSize() const

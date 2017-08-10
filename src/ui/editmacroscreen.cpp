@@ -42,8 +42,8 @@ EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
     , mTypeCombo("Type", Justify::kLeft,
                  ComboWidget(mtds),
                  kLabelWidth)
-    , mWidgetSet({ &mTitleEntry, &mShortcutEntry, &mTypeCombo })
-    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), TextEntryWidget::kPreferredHeight)
+    , mWidgetSet({ mTitleEntry, mShortcutEntry, mTypeCombo })
+    , mHStackWidget(mWidgetSet, true)
 {
     auto& macro(mMacroSet[mMacroId]);
 
@@ -56,7 +56,7 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
 {
     auto keyId(event.keyId);
 
-    if (Keys::ok(keyId) && mListWidget.lastWidgetFocused())
+    if (Keys::ok(keyId) && mHStackWidget.lastWidgetFocused())
     {
         if (event.pressed)
         {
@@ -80,13 +80,13 @@ void EditMacroScreen::processKeyEvent(const KeyEvent& event)
     }
     else
     {
-        mListWidget.processKeyEvent(event);
+        mHStackWidget.processKeyEvent(event);
     }
 }
 
 Widget& EditMacroScreen::rootWidget()
 {
-    return mListWidget;
+    return mHStackWidget;
 }
 
 

@@ -29,8 +29,10 @@ void ListWidget::processKeyEvent(const KeyEvent& event)
                 if (next != mItems.end())
                 {
                     (*mFocused)->setFocused(false);
+                    (*mFocused)->invalidateWidget();
                     ++mFocused;
                     (*mFocused)->setFocused(true);
+                    (*mFocused)->invalidateWidget();
                 }
             }
         }
@@ -42,8 +44,10 @@ void ListWidget::processKeyEvent(const KeyEvent& event)
             if (mFocused != mItems.begin())
             {
                 (*mFocused)->setFocused(false);
+                (*mFocused)->invalidateWidget();
                 --mFocused;
                 (*mFocused)->setFocused(true);
+                (*mFocused)->invalidateWidget();
             }
         }
     }
@@ -60,7 +64,10 @@ void ListWidget::setFocused(bool focused)
 {
     if (mFocused != mItems.end())
     {
-        (*mFocused)->setFocused(focused);
+        auto* widget(*mFocused);
+        
+        widget->setFocused(focused);
+        widget->invalidateWidget();
     }
 }
 
@@ -104,12 +111,7 @@ void ListWidget::render(const RasterLine& rasterLine, int row)
 
 void ListWidget::regionInvalidated(const Rectangle& region)
 {
-    Rectangle r(region.x,
-                region.y,
-                region.width,
-                region.height);
-    
-    invalidateRegion(r);
+    invalidateRegion(region);
 }
 
 bool ListWidget::lastWidgetFocused() const

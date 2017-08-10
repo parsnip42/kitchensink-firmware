@@ -21,6 +21,19 @@ void KeySource::setLayer(int layer, bool enabled)
     }
 }
 
+int KeySource::topLayer()
+{
+    for (int layer(mLayerMask.size() - 1); layer >= 0; --layer)
+    {
+        if (mLayerMask[layer])
+        {
+            return layer;
+        }
+    }
+
+    return -1;
+}
+
 void KeySource::pollKeyEvent(uint32_t       timeMs,
                              KeyEventStage& next)
 {

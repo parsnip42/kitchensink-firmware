@@ -17,7 +17,8 @@ public:
 
 public:
     void setLayer(int layer, bool enabled);
-    
+    int topLayer();
+
     void pollKeyEvent(uint32_t       timeMs,
                       KeyEventStage& next);
 

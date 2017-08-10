@@ -23,7 +23,8 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;
     virtual void regionInvalidated(const Rectangle& region) override;
-    
+    virtual Dimension minimumSize() const;
+
 public:
     LabelWidget label;
     TWidget     widget;
@@ -91,6 +92,17 @@ inline
 void LabelledWidget<TWidget>::regionInvalidated(const Rectangle& region)
 {
     invalidateRegion(region);
+}
+
+template <typename TWidget>
+inline
+Dimension LabelledWidget<TWidget>::minimumSize() const
+{
+    auto labelMin(label.minimumSize());
+    auto widgetMin(widget.minimumSize());
+        
+    return Dimension(labelMin.width + margin + widgetMin.width,
+                     std::max(labelMin.height, widgetMin.height));
 }
 
 #endif

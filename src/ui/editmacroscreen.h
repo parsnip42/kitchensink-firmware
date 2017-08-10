@@ -3,15 +3,14 @@
 
 #include "ui/textentrywidget.h"
 #include "ui/combowidget.h"
+#include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
-#include "ui/listwidget.h"
 #include "ui/widgetset.h"
 #include "keyeventstage.h"
 
 class ScreenStack;
 class Timer;
 class KeyEvent;
-class Macro;
 class MacroSet;
 class Widget;
 
@@ -35,8 +34,18 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    WidgetSet<3>                    mWidgetSet;
-    ListWidget                      mListWidget;
+    HStackWidget::Items<3>          mWidgetSet;
+    HStackWidget                    mHStackWidget;
 };
 
 #endif
+
+
+
+
+
+
+
+
+
+

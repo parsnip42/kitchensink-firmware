@@ -28,8 +28,6 @@ void TextEntryWidget::setFocused(bool nFocused)
     {
         mFlashTimer.cancel();
     }
-
-    invalidateWidget();
 }
 
 void TextEntryWidget::render(const RasterLine& rasterLine, int row)
@@ -165,8 +163,7 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
     invalidateWidget();
 }
 
-
-
-
-
-
+Dimension TextEntryWidget::minimumSize() const
+{
+    return Dimension(Font::kWidth + 4, Font::kHeight +4);
+}

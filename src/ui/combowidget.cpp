@@ -37,7 +37,6 @@ void ComboWidget::processKeyEvent(const KeyEvent& event)
 void ComboWidget::setFocused(bool nFocused)
 {
     focused = nFocused;
-    invalidateWidget();
 }
 
 void ComboWidget::render(const RasterLine& rasterLine, int row)
