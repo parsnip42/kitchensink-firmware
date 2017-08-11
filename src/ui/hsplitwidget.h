@@ -8,19 +8,19 @@ class HSplitWidget : public Widget
                    , public WidgetContainer
 {
 public:
-    HSplitWidget(Widget& top,
-                 Widget& bottom,
-                 int     splitPct);
+    HSplitWidget(Widget& nTop,
+                 Widget& nBottom,
+                 int     nSplitOffset);
 
 public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void regionInvalidated(const Rectangle& region) override;
     virtual void parented() override;
 
-private:
-    Widget& mTop;
-    Widget& mBottom;    
-    int     mSplitOffset;
+public:
+    Widget& top;
+    Widget& bottom;
+    int     splitOffset;
 };
 
 #endif

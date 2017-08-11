@@ -22,10 +22,10 @@ void HStackWidget::processKeyEvent(const KeyEvent& event)
                 if (next != mItems.end())
                 {
                    mFocused->widget.setFocused(false);
-                   mFocused->widget.invalidateWidget();
                     ++mFocused;
                    mFocused->widget.setFocused(true);
-                   mFocused->widget.invalidateWidget();
+
+                   invalidateWidget();
                 }
             }
         }
@@ -37,10 +37,10 @@ void HStackWidget::processKeyEvent(const KeyEvent& event)
             if (mFocused != mItems.begin())
             {
                mFocused->widget.setFocused(false);
-               mFocused->widget.invalidateWidget();
                 --mFocused;
                mFocused->widget.setFocused(true);
-               mFocused->widget.invalidateWidget();
+
+               invalidateWidget();
             }
         }
     }
@@ -51,6 +51,8 @@ void HStackWidget::processKeyEvent(const KeyEvent& event)
             mFocused->widget.processKeyEvent(event);
         }
     }
+
+    
 }
 
 void HStackWidget::setFocused(bool focused)
@@ -96,28 +98,35 @@ void HStackWidget::parented()
                                    size.width,
                                    height));
         
-        yOffset += height + 1;
         item.yOffset = yOffset;
+        item.height  = height;
+        
+        yOffset += height;
     }
+
+    mContentHeight = yOffset;
 }
 
 void HStackWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto rowOffset(0);
+    auto baseOffset(0);
+
+    if (mFocused != mItems.end())
+    {
+        auto& item(*mFocused);
+
+        baseOffset = item.yOffset;
+    }    
+
+    row += baseOffset;
     
     for (auto& item : mItems)
     {
-        if (row < item.yOffset)
+        if (row < (item.yOffset + item.height))
         {
-            if (row < item.yOffset - 1)
-            {
-                item.widget.render(rasterLine, row - rowOffset);
-            }
-            
+            item.widget.render(rasterLine, row - item.yOffset);
             return;
         }
-
-        rowOffset = item.yOffset;
     }
 }
 

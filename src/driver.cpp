@@ -11,6 +11,7 @@
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
 #include "layerprocessor.h"
+#include "ledsource.h"
 
 #include "storage/storage.h"
 
@@ -87,9 +88,12 @@ void loop()
                         keyboardState.layerStack);
 
     layerProcessor.keySource = &keySource;
+
+    LedSource ledSource;
     
     EventManager eventManager(timer,
                               keySource,
+                              ledSource,
                               multiKeyProcessor,
                               toplevel,
                               usbKeyboard);

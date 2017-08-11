@@ -26,16 +26,16 @@ void SmartKeyProcessor::processKeyEvent(const KeyEvent& event)
             case SmartKey::Type::kToggleAutoRelease:
                 if (event.pressed)
                 {
-                    mNext.processKeyEvent(KeyEvent(smartKey.keyId, !smartKey.triggered));
-                    smartKey.triggered = !smartKey.triggered;
+                    mNext.processKeyEvent(KeyEvent(smartKey.keyId, !smartKey.enabled));
+                    smartKey.enabled = !smartKey.enabled;
                 }
                 break;
 
             case SmartKey::Type::kHoldAutoRelease:
-                if (event.pressed != smartKey.triggered)
+                if (event.pressed != smartKey.enabled)
                 {
                     mNext.processKeyEvent(KeyEvent(smartKey.keyId, event.pressed));
-                    smartKey.triggered = event.pressed;
+                    smartKey.enabled = event.pressed;
                 }
                 break;
 
@@ -56,19 +56,19 @@ void SmartKeyProcessor::processKeyEvent(const KeyEvent& event)
                 if (event.pressed)
                 {
                     mNext.processKeyEvent(KeyEvent(smartKey.keyId, true));
-                    smartKey.triggered = true;
+                    smartKey.enabled = true;
                 }
                 else
                 {
                     mNext.processKeyEvent(KeyEvent(smartKey.keyId, false));
                     
-                    if (smartKey.triggered)
+                    if (smartKey.enabled)
                     {
                         mNext.processKeyEvent(KeyEvent(smartKey.auxKeyId, true));
                         mNext.processKeyEvent(KeyEvent(smartKey.auxKeyId, false));                    
                     }
                     
-                    smartKey.triggered = false;
+                    smartKey.enabled = false;
                 }
                 break;
 
@@ -84,30 +84,30 @@ void SmartKeyProcessor::processKeyEvent(const KeyEvent& event)
             switch (smartKey.type)
             {
             case SmartKey::Type::kToggle:
-                if (keyId == smartKey.keyId && smartKey.triggered)
+                if (keyId == smartKey.keyId && smartKey.enabled)
                 {
-                    smartKey.triggered = false;
+                    smartKey.enabled = false;
                 }
                 break;
                 
             case SmartKey::Type::kToggleAutoRelease:
-                if (smartKey.triggered && !event.pressed)
+                if (smartKey.enabled && !event.pressed)
                 {
                     mNext.processKeyEvent(KeyEvent(smartKey.keyId, false));
-                    smartKey.triggered = false;
+                    smartKey.enabled = false;
                 }
                 break;
 
             case SmartKey::Type::kHoldAutoRelease:
-                if (smartKey.triggered && !event.pressed)
+                if (smartKey.enabled && !event.pressed)
                 {
                     mNext.processKeyEvent(KeyEvent(smartKey.keyId, false));
-                    smartKey.triggered = false;
+                    smartKey.enabled = false;
                 }
                 break;
 
             case SmartKey::Type::kHoldOrTap:
-                smartKey.triggered = false;
+                smartKey.enabled = false;
                 break;
                 
             default:

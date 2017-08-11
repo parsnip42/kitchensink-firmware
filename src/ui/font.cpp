@@ -2,7 +2,6 @@
 
 namespace Font
 {
-
 /*
 const uint8_t fontData[] =
 {

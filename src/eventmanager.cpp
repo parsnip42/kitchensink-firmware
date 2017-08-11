@@ -3,13 +3,15 @@
 #include <elapsedMillis.h>
 
 EventManager::EventManager(Timer&              nTimer,
-                           KeySource&          source,
+                           KeySource&          keySource,
+                           LedSource&          ledSource,
                            KeyEventStage&      input,
                            ToplevelEventStage& toplevel,
                            KeyEventStage&      nDefaultOutput)
     : timer(nTimer)
     , defaultOutput(nDefaultOutput)
-    , mSource(source)
+    , mKeySource(keySource)
+    , mLedSource(ledSource)
     , mInput(input)
     , mToplevel(toplevel)
 { }
@@ -25,18 +27,20 @@ void EventManager::poll(KeyEventStage& output)
         
     mBuffer.pollKeyEvent(mInput);
     timer.pollKeyEvent(mInput);
-    mSource.pollKeyEvent(nowMs(), mInput);
+    mKeySource.pollKeyEvent(nowMs(), mInput);
+    mLedSource.pollKeyEvent(mInput);
 }
 
 void EventManager::flush(KeyEventStage& output)
 {
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
     
-    while (mSource.anyPressed() || !mBuffer.empty())
+    while (mKeySource.anyPressed() || !mBuffer.empty())
     {
         mBuffer.pollKeyEvent(mInput);
         timer.pollKeyEvent(mInput);
-        mSource.pollKeyEvent(nowMs(), mInput);
+        mKeySource.pollKeyEvent(nowMs(), mInput);
+        mLedSource.pollKeyEvent(mInput);
     }
 }
 

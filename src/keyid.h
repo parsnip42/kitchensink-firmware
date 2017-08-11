@@ -10,18 +10,26 @@ class KeyId
 public:
     enum class Type : uint8_t
     {
-        kKey    = 0,
-        kLayer  = 1,
-        kTick   = 2,
-        kMacro  = 3,
-        kSMacro = 4,
-        kAction = 5,
-        kDelay  = 6,
-        kMulti  = 7,
-        kSmart  = 8,
-        kScreen = 9
+        kKey     = 0,
+        kLayer   = 1,
+        kTick    = 2,
+        kMacro   = 3,
+        kSMacro  = 4,
+        kAction  = 5,
+        kDelay   = 6,
+        kMulti   = 7,
+        kSmart   = 8,
+        kScreen  = 9,
+        kLedMask = 10
     };
 
+    enum
+    {
+        NumLock    = 1,
+        CapsLock   = 2,
+        ScrollLock = 4
+    };
+    
 public:
     static constexpr KeyId Action(int actionId);
     static constexpr KeyId Layer(int layerId);
@@ -33,6 +41,7 @@ public:
     static constexpr KeyId Tick(uint32_t tickId);
     static constexpr KeyId Smart(int keyId);
     static constexpr KeyId Screen(ScreenId::Type type, int index);
+    static constexpr KeyId LedMask(uint8_t mask);
 
 public:
     constexpr KeyId(int keyCode = 0);
@@ -130,6 +139,12 @@ constexpr KeyId KeyId::Screen(ScreenId::Type type, int index)
     return KeyId(Type::kScreen,
                  static_cast<uint8_t>(type),
                  index);
+}
+
+inline
+constexpr KeyId KeyId::LedMask(uint8_t mask)
+{
+    return KeyId(Type::kLedMask, mask);
 }
 
 inline

@@ -1,22 +1,22 @@
 #include "ui/hsplitwidget.h"
 
-HSplitWidget::HSplitWidget(Widget& top,
-                           Widget& bottom,
-                           int     splitOffset)
-    : mTop(top)
-    , mBottom(bottom)    
-    , mSplitOffset(splitOffset + 1) // 1 pixel margin
+HSplitWidget::HSplitWidget(Widget& nTop,
+                           Widget& nBottom,
+                           int     nSplitOffset)
+    : top(nTop)
+    , bottom(nBottom)    
+    , splitOffset(nSplitOffset)
 { }
 
 void HSplitWidget::render(const RasterLine& rasterLine, int row)
 {
-    if (row < mSplitOffset)
+    if (row < splitOffset)
     {
-        mTop.render(rasterLine, row);
+        top.render(rasterLine, row);
     }
     else
     {
-        mBottom.render(rasterLine, row - mSplitOffset);
+        bottom.render(rasterLine, row - splitOffset);
     }   
 }
 
@@ -29,16 +29,14 @@ void HSplitWidget::parented()
 {
     auto size(widgetSize());
     
-    mTop.setParent(this,
-                   Rectangle(0,
-                             0,
-                             size.width,
-                             mSplitOffset));
-    mBottom.setParent(this,
-                      Rectangle(0,
-                                mSplitOffset,
-                                size.width,
-                                size.height - mSplitOffset));
+    top.setParent(this,
+                  Rectangle(0,
+                            0,
+                            size.width,
+                            splitOffset));
+    bottom.setParent(this,
+                     Rectangle(0,
+                               splitOffset,
+                               size.width,
+                               size.height - splitOffset));
 }
-
-

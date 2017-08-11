@@ -25,13 +25,14 @@ public:
     KeyId                            keyId;
     KeyId                            auxKeyId;
     Type                             type;
-    bool                             triggered;
+    bool                             enabled;
 };
+
 
 inline
 SmartKey::SmartKey()
     : type(kToggle)
-    , triggered(false)
+    , enabled(false)
 { }
 
 #endif

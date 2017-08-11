@@ -12,6 +12,7 @@
 #include "ui/benchmarkscreen.h"
 #include "ui/keyconfigscreen.h"
 #include "ui/keys.h"
+#include "ui/homescreen.h"
 #include "types/strostream.h"
 
 namespace
@@ -89,10 +90,14 @@ void ScreenManager::poll(KeyEventStage& next)
         
         if (mScreenStack.empty())
         {
-            OutputSink output(*this, next);
-
-            mSurface.redraw();
+            HomeScreen homeScreen(mEventManager.timer,
+                                  next);
             
+            OutputSink output(*this, homeScreen);
+            
+            Surface::WidgetGuard guard(mSurface,
+                                       homeScreen.rootWidget());
+
             while (!mScreenStack.dirty())
             {
                 mEventManager.poll(output);

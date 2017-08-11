@@ -22,6 +22,7 @@ public:
 
     private:
         int yOffset;
+        int height;
 
     private:
         friend class HStackWidget;
@@ -53,6 +54,7 @@ private:
     Range<iterator> mItems;
     bool            mLinear;
     iterator        mFocused;
+    int             mContentHeight;
 };
 
 
@@ -70,6 +72,7 @@ HStackWidget::HStackWidget(Items<Size>& items,
     : mItems(items.begin(), items.end())
     , mLinear(linear)
     , mFocused(items.begin())
+    , mContentHeight(0)
 {
     setFocused(true);
 }
