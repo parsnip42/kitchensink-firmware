@@ -24,13 +24,19 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;
 
+private:
+    void renderIndicator(const Entry&      entry,
+                         const RasterLine& rasterLine,
+                         int               row);
+    
 public:
     std::array<Entry, 9> entries;
     bool                 visible;
 
 private:
-    int  mWidgetWidth;
-    int  mWidgetHeight;
+    int mWidgetWidth;
+    int mWidgetHeight;
+    int mWidgetColumns;
 };
 
 #endif

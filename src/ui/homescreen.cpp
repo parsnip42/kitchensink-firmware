@@ -5,14 +5,14 @@ HomeScreen::HomeScreen(Timer&         timer,
     : mDisplayTimeout(timer.createHandle())
     , mNext(next)
 {
-    mHomeWidget.entries[0].text = "Num Lock";
+    mHomeWidget.entries[0].text    = "Num Lock";
     mHomeWidget.entries[0].visible = true;
     
-    mHomeWidget.entries[1].text = "Caps Lock";
-    mHomeWidget.entries[1].visible = true;
-    
-    mHomeWidget.entries[2].text = "Scroll Lock";
+    mHomeWidget.entries[2].text    = "Caps Lock";
     mHomeWidget.entries[2].visible = true;
+    
+    mHomeWidget.entries[4].text    = "Scroll Lock";
+    mHomeWidget.entries[4].visible = true;
 
     mDisplayTimeout.schedule(10000);
 }
@@ -33,8 +33,8 @@ void HomeScreen::processKeyEvent(const KeyEvent& event)
         auto mask(keyId.value());
         
         mHomeWidget.entries[0].value = mask & KeyId::NumLock;
-        mHomeWidget.entries[1].value = mask & KeyId::CapsLock;
-        mHomeWidget.entries[2].value = mask & KeyId::ScrollLock;
+        mHomeWidget.entries[2].value = mask & KeyId::CapsLock;
+        mHomeWidget.entries[4].value = mask & KeyId::ScrollLock;
 
         update();
         return;
