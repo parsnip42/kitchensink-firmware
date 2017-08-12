@@ -1,13 +1,18 @@
 #include "ui/homescreen.h"
 
-HomeScreen::HomeScreen(Timer&         timer,
-                       KeyEventStage& next)
+HomeScreen::HomeScreen(Timer&             timer,
+                       const SmartKeySet& smartKeySet,
+                       KeyEventStage&     next)
     : mDisplayTimeout(timer.createHandle())
+    , mSmartKeySet(smartKeySet)
     , mNext(next)
 {
     mHomeWidget.entries[0].text    = "Num Lock";
     mHomeWidget.entries[0].visible = true;
-    
+
+    mHomeWidget.entries[1].text    = "Shift Lock";
+    mHomeWidget.entries[1].visible = true;
+
     mHomeWidget.entries[2].text    = "Caps Lock";
     mHomeWidget.entries[2].visible = true;
     
@@ -39,8 +44,10 @@ void HomeScreen::processKeyEvent(const KeyEvent& event)
         update();
         return;
     }
-    
-    mNext.processKeyEvent(event);
+    else
+    {
+        mNext.processKeyEvent(event);
+    }
 }
 
 Widget& HomeScreen::rootWidget()
@@ -50,6 +57,7 @@ Widget& HomeScreen::rootWidget()
 
 void HomeScreen::update()
 {
+    mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
     mHomeWidget.visible = true;
     mHomeWidget.invalidateWidget();
     mDisplayTimeout.schedule(10000);

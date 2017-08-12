@@ -91,6 +91,7 @@ void ScreenManager::poll(KeyEventStage& next)
         if (mScreenStack.empty())
         {
             HomeScreen homeScreen(mEventManager.timer,
+                                  mKeyboardState.smartKeySet,
                                   next);
             
             OutputSink output(*this, homeScreen);

@@ -18,7 +18,6 @@
 #include "types/strutil.h"
 
 #include "ui/surface.h"
-#include "ui/home.h"
 #include "ui/screenstack.h"
 #include "ui/screenmanager.h"
 

@@ -4,14 +4,16 @@
 #include "ui/homewidget.h"
 #include "keyeventstage.h"
 #include "timer.h"
+#include "smartkeyset.h"
 
 class Widget;
 
 class HomeScreen : public KeyEventStage
 {
 public:
-    HomeScreen(Timer&         timer,
-               KeyEventStage& next);
+    HomeScreen(Timer&             timer,
+               const SmartKeySet& smartKeySet,
+               KeyEventStage&     next);
 
 public:
     virtual void processKeyEvent(const KeyEvent& event) override;
@@ -21,9 +23,10 @@ public:
     void update();
     
 private:
-    Timer::Handle  mDisplayTimeout;
-    HomeWidget     mHomeWidget;
-    KeyEventStage& mNext;
+    Timer::Handle      mDisplayTimeout;
+    const SmartKeySet& mSmartKeySet;
+    HomeWidget         mHomeWidget;
+    KeyEventStage&     mNext;
 };
 
 #endif
