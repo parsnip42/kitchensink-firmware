@@ -42,7 +42,11 @@ void HomeScreen::processKeyEvent(const KeyEvent& event)
         mHomeWidget.entries[4].value = mask & KeyId::ScrollLock;
 
         update();
-        return;
+    }
+    else if (keyId.type() == KeyId::Type::kSmart)
+    {
+        mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
+        update();
     }
     else
     {
@@ -57,7 +61,6 @@ Widget& HomeScreen::rootWidget()
 
 void HomeScreen::update()
 {
-    mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
     mHomeWidget.visible = true;
     mHomeWidget.invalidateWidget();
     mDisplayTimeout.schedule(10000);

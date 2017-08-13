@@ -54,10 +54,12 @@ private:
 
 ScreenManager::ScreenManager(Surface&       surface,
                              EventManager&  eventManager,
-                             KeyboardState& keyboardState)
+                             KeyboardState& keyboardState,
+                             HomeScreen&    homeScreen)
     : mSurface(surface)
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
+    , mHomeScreen(homeScreen)
     , mMenuDefinitions(keyboardState)
 { }
 
@@ -90,14 +92,10 @@ void ScreenManager::poll(KeyEventStage& next)
         
         if (mScreenStack.empty())
         {
-            HomeScreen homeScreen(mEventManager.timer,
-                                  mKeyboardState.smartKeySet,
-                                  next);
-            
-            OutputSink output(*this, homeScreen);
+            OutputSink output(*this, mHomeScreen);
             
             Surface::WidgetGuard guard(mSurface,
-                                       homeScreen.rootWidget());
+                                       mHomeScreen.rootWidget());
 
             while (!mScreenStack.dirty())
             {

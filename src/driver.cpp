@@ -20,6 +20,7 @@
 #include "ui/surface.h"
 #include "ui/screenstack.h"
 #include "ui/screenmanager.h"
+#include "ui/homescreen.h"
 
 #include "keyeventbuffer.h"
 #include "eventmanager.h"
@@ -97,9 +98,14 @@ void loop()
                               toplevel,
                               usbKeyboard);
     
+    HomeScreen homeScreen(eventManager.timer,
+                          keyboardState.smartKeySet,
+                          usbKeyboard);
+            
     ScreenManager screenManager(surface,
                                 eventManager,
-                                keyboardState);
+                                keyboardState,
+                                homeScreen);
 
     screenManager.poll(usbKeyboard);
 }

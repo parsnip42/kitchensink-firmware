@@ -8,13 +8,15 @@ class Surface;
 class EventManager;
 class KeyboardState;
 class StrOStream;
+class HomeScreen;
 
 class ScreenManager
 {    
 public:
     ScreenManager(Surface&       surface,
                   EventManager&  eventManager,
-                  KeyboardState& keyboardState);
+                  KeyboardState& keyboardState,
+                  HomeScreen&    homeScreen);
     
 public:
     void pushScreen(const ScreenId& screen);
@@ -41,6 +43,7 @@ private:
     Surface&        mSurface;
     EventManager&   mEventManager;
     KeyboardState&  mKeyboardState;
+    HomeScreen&     mHomeScreen;
     MenuDefinitions mMenuDefinitions;
     ScreenStack     mScreenStack;
 };
