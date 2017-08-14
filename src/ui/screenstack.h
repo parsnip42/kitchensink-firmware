@@ -1,14 +1,14 @@
 #ifndef INCLUDED_SCREENSTACK_H
 #define INCLUDED_SCREENSTACK_H
 
-#include "screenid.h"
+#include "event/screenevent.h"
 
 #include <array>
 
 class ScreenStack
 {
 private:
-    typedef std::array<ScreenId, 10> Data;
+    typedef std::array<ScreenEvent, 10> Data;
 
 public:
     typedef Data::const_iterator const_iterator;
@@ -17,11 +17,11 @@ public:
     ScreenStack();
 
 public:
-    const ScreenId& top() const;
+    const ScreenEvent& top() const;
     bool empty() const;
     bool full() const;
     
-    void push(const ScreenId& screenId);
+    void push(const ScreenEvent& screenEvent);
     void pop();
 
     bool dirty();
@@ -43,7 +43,7 @@ ScreenStack::ScreenStack()
 { }
 
 inline
-const ScreenId& ScreenStack::top() const
+const ScreenEvent& ScreenStack::top() const
 {
     return mData[mSize - 1];
 }
@@ -61,9 +61,9 @@ bool ScreenStack::full() const
 }
 
 inline
-void ScreenStack::push(const ScreenId& screenId)
+void ScreenStack::push(const ScreenEvent& screenEvent)
 {
-    mData[mSize++] = screenId;
+    mData[mSize++] = screenEvent;
     mDirty = true;
 }
 

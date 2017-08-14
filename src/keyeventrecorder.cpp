@@ -16,7 +16,7 @@ EventRecorder::EventRecorder(bool realtime)
 
 void EventRecorder::processEvent(const Event& event)
 {
-    if (event != ScreenEvent::create(ScreenId::Type::kHome, 0))
+    if (event != ScreenEvent::create(ScreenEvent::Type::kHome, 0))
     {
         if (!event.is<TickEvent>())
         {

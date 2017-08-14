@@ -55,7 +55,7 @@ inline
 constexpr bool cancel(const Event& event)
 {
     return (event == KeyEvent::create(KeyCodes::Esc) ||
-            event == ScreenEvent::create(ScreenId::Type::kHome, 0));
+            event == ScreenEvent::create(ScreenEvent::Type::kHome, 0));
 }
 
 inline

@@ -69,9 +69,9 @@ void EditMacroScreen::processEvent(const Event& event)
         mScreenStack.pop();
 
         auto realtime(mTypeCombo.widget.selectedItem == 1);
-        auto screenType(realtime ? ScreenId::Type::kRecordMacroRT : ScreenId::Type::kRecordMacro);
+        auto screenType(realtime ? ScreenEvent::Type::kRecordMacroRT : ScreenEvent::Type::kRecordMacro);
             
-        mScreenStack.push(ScreenId(screenType, mMacroId));
+        mScreenStack.push(ScreenEvent(screenType, mMacroId));
     }
     else
     {
@@ -83,9 +83,4 @@ Widget& EditMacroScreen::rootWidget()
 {
     return mHStackWidget;
 }
-
-
-
-
-
 

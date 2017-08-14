@@ -2,7 +2,6 @@
 
 #include "keyboardstate.h"
 #include "data/keycodes.h"
-#include "screenid.h"
 
 #include "event/keyevent.h"
 #include "event/actionevent.h"
@@ -40,17 +39,17 @@ constexpr Event Multi(int index)
 
 constexpr Event MainMenu()
 {
-    return ScreenEvent::create(ScreenId::Type::kHome, 0);
+    return ScreenEvent::create(ScreenEvent::Type::kHome, 0);
 }
 
 constexpr Event Menu(int index)
 {
-    return ScreenEvent::create(ScreenId::Type::kMenu, index);
+    return ScreenEvent::create(ScreenEvent::Type::kMenu, index);
 }
 
 constexpr Event EditMacro(int macroId)
 {
-    return ScreenEvent::create(ScreenId::Type::kEditMacro, macroId);
+    return ScreenEvent::create(ScreenEvent::Type::kEditMacro, macroId);
 }
 
 }

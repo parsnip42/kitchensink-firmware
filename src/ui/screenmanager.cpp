@@ -14,6 +14,7 @@
 #include "ui/keys.h"
 #include "ui/homescreen.h"
 #include "types/strostream.h"
+#include "event/screenevent.h"
 
 namespace
 {
@@ -34,8 +35,7 @@ public:
         {
             auto screenEvent(event.get<ScreenEvent>());
             
-            mScreenManager.pushScreen(ScreenId(screenEvent.type,
-                                               screenEvent.index));
+            mScreenManager.pushScreen(screenEvent);
         }
         else if (Keys::cancel(event))
         {
@@ -63,16 +63,17 @@ ScreenManager::ScreenManager(Surface&       surface,
     , mMenuDefinitions(keyboardState)
 { }
 
-void ScreenManager::pushScreen(const ScreenId& screenId)
+void ScreenManager::pushScreen(const ScreenEvent& screenEvent)
 {
     if (!mScreenStack.empty() &&
-        (screenId.type == ScreenId::Type::kHome || mScreenStack.top() == screenId))
+        (screenEvent.type == ScreenEvent::Type::kHome ||
+         mScreenStack.top() == screenEvent))
     {
         mScreenStack.pop();
     }
     else if (!mScreenStack.full())
     {
-        mScreenStack.push(screenId);
+        mScreenStack.push(screenEvent);
     }
 }
 
@@ -109,44 +110,44 @@ void ScreenManager::poll(EventStage& next)
     }
 }
 
-void ScreenManager::launch(const ScreenId& screenId)
+void ScreenManager::launch(const ScreenEvent& screenEvent)
 {
-    switch (screenId.type)
+    switch (screenEvent.type)
     {
-    case ScreenId::Type::kHome:
+    case ScreenEvent::Type::kHome:
         launchMenu(0);
         break;
         
-    case ScreenId::Type::kMenu:
-        launchMenu(screenId.index);
+    case ScreenEvent::Type::kMenu:
+        launchMenu(screenEvent.index);
         break;
 
-    case ScreenId::Type::kScreen:
-        launchScreen(screenId.index);
+    case ScreenEvent::Type::kScreen:
+        launchScreen(screenEvent.index);
         break;
 
-    case ScreenId::Type::kEditMacro:
+    case ScreenEvent::Type::kEditMacro:
         launchEditMacro(mKeyboardState.macroSet,
-                        screenId.index);
+                        screenEvent.index);
         break;
 
-    case ScreenId::Type::kRecordMacro:
-    case ScreenId::Type::kRecordMacroRT:
+    case ScreenEvent::Type::kRecordMacro:
+    case ScreenEvent::Type::kRecordMacroRT:
         launchRecordMacro(mKeyboardState.macroSet,
-                          screenId.index,
-                          screenId.type == ScreenId::Type::kRecordMacroRT);
+                          screenEvent.index,
+                          screenEvent.type == ScreenEvent::Type::kRecordMacroRT);
         break;
         
-    case ScreenId::Type::kEditSMacro:
+    case ScreenEvent::Type::kEditSMacro:
         launchEditMacro(mKeyboardState.secureMacroSet,
-                        screenId.index);
+                        screenEvent.index);
         break;
 
-    case ScreenId::Type::kRecordSMacro:
-    case ScreenId::Type::kRecordSMacroRT:
+    case ScreenEvent::Type::kRecordSMacro:
+    case ScreenEvent::Type::kRecordSMacroRT:
         launchRecordMacro(mKeyboardState.secureMacroSet,
-                          screenId.index,
-                          screenId.type == ScreenId::Type::kRecordSMacroRT);
+                          screenEvent.index,
+                          screenEvent.type == ScreenEvent::Type::kRecordSMacroRT);
 
         break;
     }
@@ -226,7 +227,7 @@ void ScreenManager::launchRecordMacro(MacroSet& macroSet,
 }
 
 void ScreenManager::displayScreen(EventStage& stage,
-                                  Widget&        content)
+                                  Widget&     content)
 {
     OutputSink output(*this, stage);
 
@@ -259,18 +260,18 @@ void ScreenManager::createTitlePath(const StrOStream& os)
     }
 }
 
-void ScreenManager::createTitle(const ScreenId&   screenId,
-                                const StrOStream& os)
+void ScreenManager::createTitle(const ScreenEvent& screenEvent,
+                                const StrOStream&  os)
 {
-    switch (screenId.type)
+    switch (screenEvent.type)
     {
-    case ScreenId::Type::kHome:
-    case ScreenId::Type::kMenu:
-        os.appendStr(mMenuDefinitions.getTitle(screenId.index));
+    case ScreenEvent::Type::kHome:
+    case ScreenEvent::Type::kMenu:
+        os.appendStr(mMenuDefinitions.getTitle(screenEvent.index));
         break;
 
-    case ScreenId::Type::kScreen:
-        switch (screenId.index)
+    case ScreenEvent::Type::kScreen:
+        switch (screenEvent.index)
         {
         case 0:
             os.appendStr("Storage");
@@ -286,21 +287,21 @@ void ScreenManager::createTitle(const ScreenId&   screenId,
         }
         break;
 
-    case ScreenId::Type::kEditMacro:
+    case ScreenEvent::Type::kEditMacro:
         os.appendStr("Edit Macro");
         break;
 
-    case ScreenId::Type::kRecordMacro:
-    case ScreenId::Type::kRecordMacroRT:
+    case ScreenEvent::Type::kRecordMacro:
+    case ScreenEvent::Type::kRecordMacroRT:
         os.appendStr("Record Macro");
         break;
         
-    case ScreenId::Type::kEditSMacro:
+    case ScreenEvent::Type::kEditSMacro:
         os.appendStr("Edit Secure Macro");
         break;
 
-    case ScreenId::Type::kRecordSMacro:
-    case ScreenId::Type::kRecordSMacroRT:
+    case ScreenEvent::Type::kRecordSMacro:
+    case ScreenEvent::Type::kRecordSMacroRT:
         os.appendStr("Record Secure Macro");
         break;
 

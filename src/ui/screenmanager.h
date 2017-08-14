@@ -9,6 +9,7 @@ class EventManager;
 class KeyboardState;
 class StrOStream;
 class HomeScreen;
+class ScreenEvent;
 
 class ScreenManager
 {    
@@ -19,23 +20,23 @@ public:
                   HomeScreen&    homeScreen);
     
 public:
-    void pushScreen(const ScreenId& screen);
+    void pushScreen(const ScreenEvent& screen);
     void popScreen();
     void poll(EventStage& next);
 
 private:
-    void launch(const ScreenId& screen);
+    void launch(const ScreenEvent& screen);
     void launchMenu(int menuId);
     void launchScreen(int screenId);
     void launchEditMacro(MacroSet& macroSet, int macroId);
     void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
 
     void displayScreen(EventStage& stage,
-                       Widget&        content);
+                       Widget&     content);
 
     void createTitlePath(const StrOStream& os);
-    void createTitle(const ScreenId&   screenId,
-                     const StrOStream& os);
+    void createTitle(const ScreenEvent& screen,
+                     const StrOStream&  os);
     
     void flush();
     
