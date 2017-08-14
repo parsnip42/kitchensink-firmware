@@ -3,27 +3,25 @@
 
 #include <cstdint>
 
-// Format:
-// 0bTTTTSSSSVVVVVVVV
-
 class Event
 {
 public:
     enum class Type : uint8_t
     {
-        kNull    = 0,
-        kTick    = 1,
-        kAction  = 2,
-        kDelay   = 3,
-        kScreen  = 4,
-        kLedMask = 5,
-
-        kKey     = 8,
-        kLayer   = 9,
-        kMulti   = 10,
-        kSmart   = 11,
-        kMacro   = 12,
-        kSMacro  = 13,
+        kNull       = 0,
+        kTick       = 1,
+        kAction     = 2,
+        kDelay      = 3,
+        kScreen     = 4,
+        kLedMask    = 5,
+        kInvalidate = 6,
+        
+        kKey        = 8,
+        kLayer      = 9,
+        kMulti      = 10,
+        kSmart      = 11,
+        kMacro      = 12,
+        kSMacro     = 13,
     };
 
 public:

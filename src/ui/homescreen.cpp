@@ -2,10 +2,11 @@
 
 #include "event/event.h"
 #include "event/ledmaskevent.h"
+#include "event/invalidateevent.h"
 
 HomeScreen::HomeScreen(Timer&             timer,
                        const SmartKeySet& smartKeySet,
-                       EventStage&     next)
+                       EventStage&        next)
     : mDisplayTimeout(timer.createHandle())
     , mSmartKeySet(smartKeySet)
     , mNext(next)
@@ -31,10 +32,8 @@ void HomeScreen::processEvent(const Event& event)
     {
         mHomeWidget.visible = false;
         mHomeWidget.invalidateWidget();
-        return;
     }
-
-    if (event.is<LedMaskEvent>())
+    else if (event.is<LedMaskEvent>())
     {
         auto ledMaskEvent(event.get<LedMaskEvent>());
         
@@ -44,11 +43,11 @@ void HomeScreen::processEvent(const Event& event)
 
         update();
     }
-    // else if (keyId.type() == KeyId::Type::kSmart)
-    // {
-    //     mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
-    //     update();
-    // }
+    else if (event.is<InvalidateEvent>())
+    {
+        mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
+        update();
+    }
     else
     {
         mNext.processEvent(event);

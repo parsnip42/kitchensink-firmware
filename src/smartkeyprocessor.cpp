@@ -2,6 +2,7 @@
 
 #include "event/event.h"
 #include "event/smartevent.h"
+#include "event/invalidateevent.h"
 
 SmartKeyProcessor::SmartKeyProcessor(SmartKeySet& smartKeys,
                                      EventStage&  next)
@@ -75,18 +76,25 @@ void SmartKeyProcessor::processEvent(const Event& event)
             default:
                 break;
             }
+
+            mNext.processEvent(InvalidateEvent::create(InvalidateEvent::Type::kSmartKey,
+                                                       index));
         }
     }
     else
     {
-        for (auto& smartKey : mSmartKeys)
+        for (size_t index(0); index < mSmartKeys.size(); ++index)
         {
+            auto& smartKey(mSmartKeys[index]);
+            
             switch (smartKey.type)
             {
             case SmartKey::Type::kToggle:
                 if (event == smartKey.event && smartKey.enabled)
                 {
                     smartKey.enabled = false;
+                    mNext.processEvent(InvalidateEvent::create(InvalidateEvent::Type::kSmartKey,
+                                                               index));
                 }
                 break;
                 

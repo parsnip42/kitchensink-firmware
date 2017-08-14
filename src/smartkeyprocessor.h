@@ -14,8 +14,8 @@ public:
     virtual void processEvent(const Event& event) override;
     
 private:
-    SmartKeySet&   mSmartKeys;
-    EventStage& mNext;
+    SmartKeySet& mSmartKeys;
+    EventStage&  mNext;
 };
 
 #endif

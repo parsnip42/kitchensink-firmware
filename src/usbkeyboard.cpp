@@ -27,20 +27,23 @@ void UsbKeyboard::processEvent(const Event& event)
     {
         auto keyEvent(event.get<KeyEvent>());
         auto keyCode(keyEvent.keyCode);
-
-        if (keyEvent.pressed)
+        
+        if (keyCode != 0)
         {
-            pressKey(keyCode);
-        }
-        else
-        {
-            releaseKey(keyCode);
-        }
-
-        if (mDirty)
-        {
-            usb_keyboard_send();
-            mDirty = false;
+            if (keyEvent.pressed)
+            {
+                pressKey(keyCode);
+            }
+            else
+            {
+                releaseKey(keyCode);
+            }
+            
+            if (mDirty)
+            {
+                usb_keyboard_send();
+                mDirty = false;
+            }
         }
     }
 }
