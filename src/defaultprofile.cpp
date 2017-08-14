@@ -3,6 +3,7 @@
 #include "keyboardstate.h"
 #include "data/keycodes.h"
 
+#include "event/event.h"
 #include "event/keyevent.h"
 #include "event/actionevent.h"
 #include "event/multievent.h"
@@ -10,7 +11,6 @@
 #include "event/layerevent.h"
 #include "event/macroevent.h"
 #include "event/smartevent.h"
-#include "event/event.h"
 
 namespace DefaultProfile
 {

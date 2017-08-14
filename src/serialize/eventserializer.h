@@ -12,7 +12,7 @@ namespace EventSerializer
 {
 
 void serialize(const Event& event, const StrOStream& os);
-void deserialize(const StrRef& keyIdStr, Event& event);
+void deserialize(const StrRef& eventStr, Event& event);
 
 };
 

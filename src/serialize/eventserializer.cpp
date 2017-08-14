@@ -1,148 +1,175 @@
 #include "serialize/eventserializer.h"
 
 #include "event/event.h"
+#include "event/keyevent.h"
+#include "event/actionevent.h"
+#include "event/delayevent.h"
+#include "event/multievent.h"
+#include "event/screenevent.h"
+#include "event/layerevent.h"
+#include "event/macroevent.h"
+#include "event/smartevent.h"
 #include "types/strutil.h"
 
 namespace EventSerializer
 {
 
-void serialize(const Event& event, const StrOStream& os)
+namespace
 {
-    // switch (keyId.type())
-    // {
-    // case KeyId::Type::kKey:
-    //     if (keyId.value() != 0)
-    //     {
-    //         os.appendChar('K');
 
-    //         auto keyName(KeyCodes::keyName(keyId.value()));
+void serialize(const KeyEvent& event, const StrOStream& os)
+{
+    os.appendChar('K');
 
-    //         if (!keyName.empty())
-    //         {
-    //             os.appendStr(keyName);
-    //         }
-    //         else
-    //         {
-    //             os.appendChar('_');
-    //             os.appendInt(keyId.value());
-    //         }
-    //     }
-    //     else
-    //     {
-    //         os.appendStr("_");
-    //     }
-    //     break;
+    auto keyName(KeyCodes::keyName(event.keyCode));
 
-    // case KeyId::Type::kLayer:
-    //     os.appendChar('L');
-    //     os.appendInt(keyId.value());
-    //     break;
-        
-    // case KeyId::Type::kMacro:
-    //     os.appendChar('M');
-    //     os.appendInt(keyId.value());
-    //     break;
-
-    // case KeyId::Type::kAction:
-    //     os.appendChar('A');
-    //     os.appendInt(keyId.value());
-    //     break;
-        
-    // case KeyId::Type::kDelay:
-    //     os.appendChar('D');
-    //     os.appendInt(static_cast<int>(keyId.delayMs()));
-    //     break;
-
-    // default:
-    //     os.appendStr("?");
-    //     break;
-    // }
+    if (!keyName.empty())
+    {
+        os.appendStr(keyName);
+    }
+    else
+    {
+        os.appendChar('_');
+        os.appendInt(event.keyCode);
+    }
 }
 
-void deserialize(const StrRef& keyIdStr, Event& event)
+void serialize(const LayerEvent& event, const StrOStream& os)
 {
-    // if (keyIdStr.empty())
-    // {
-    //     return;
-    // }
+    os.appendChar('L');
+    os.appendInt(event.layer);
+}
 
-    // switch (keyIdStr[0])
-    // {
-    // case 'K':
-    // {
-    //     auto keyCodeStr(keyIdStr.substr(1));
+void serialize(const MacroEvent& event, const StrOStream& os)
+{
+    os.appendChar('M');
+    os.appendInt(event.macroId);
+}
 
-    //     if (!keyCodeStr.empty() && keyCodeStr[0] == '_')
-    //     {
-    //         int index(0);
+void serialize(const ActionEvent& event, const StrOStream& os)
+{
+    os.appendChar('A');
+    os.appendInt(event.actionId);
+}
 
-    //         if (StrUtil::parseUInt(keyCodeStr.substr(1), index))
-    //         {
-    //             keyId = KeyId(index);
-    //         }
-    //     }
-    //     else
-    //     {
-    //         auto keyCode(KeyCodes::keyCode(keyCodeStr));
+void serialize(const DelayEvent& event, const StrOStream& os)
+{
+    os.appendChar('D');
+    os.appendInt(static_cast<int>(event.delayMs));
+}
+
+}
+
+void serialize(const Event& event, const StrOStream& os)
+{
+    if (event.is<KeyEvent>())
+    {
+        serialize(event.get<KeyEvent>(), os);
+    }
+    else if (event.is<LayerEvent>())
+    {
+        serialize(event.get<LayerEvent>(), os);
+    }
+    else if (event.is<MacroEvent>())
+    {
+        serialize(event.get<MacroEvent>(), os);
+    }
+    else if (event.is<ActionEvent>())
+    {
+        serialize(event.get<ActionEvent>(), os);
+    }
+    else if (event.is<DelayEvent>())
+    {
+        serialize(event.get<DelayEvent>(), os);
+    }
+    else
+    {
+        os.appendStr("?");
+    }
+}
+
+void deserialize(const StrRef& eventStr, Event& event)
+{
+    if (eventStr.empty())
+    {
+        return;
+    }
+    
+    switch (eventStr[0])
+    {
+    case 'K':
+    {
+        auto keyCodeStr(eventStr.substr(1));
+
+        if (!keyCodeStr.empty() && keyCodeStr[0] == '_')
+        {
+            int index(0);
+
+            if (StrUtil::parseUInt(keyCodeStr.substr(1), index))
+            {
+                event = KeyEvent::create(index);
+            }
+        }
+        else
+        {
+            auto keyCode(KeyCodes::keyCode(keyCodeStr));
             
-    //         if (keyCode != 0)
-    //         {
-    //             keyId = KeyId(keyCode);
-    //         }
-    //     }
-        
-    //     break;
-    // }
+            if (keyCode != 0)
+            {
+                event = KeyEvent::create(keyCode);
+            }
+        }
+    }
     
-    // case 'L':
-    // {
-    //     int index(0);
+    case 'L':
+    {
+        int index(0);
 
-    //     if (StrUtil::parseUInt(keyIdStr.substr(1), index))
-    //     {
-    //         keyId = KeyId::Layer(index);
-    //     }
+        if (StrUtil::parseUInt(eventStr.substr(1), index))
+        {
+            event = LayerEvent::create(index);
+        }
         
-    //     break;
-    // }
+        break;
+    }
 
-    // case 'M':
-    // {
-    //     int index(0);
+    case 'M':
+    {
+        int index(0);
 
-    //     if (StrUtil::parseUInt(keyIdStr.substr(1), index))
-    //     {
-    //         keyId = KeyId::Macro(index);
-    //     }
+        if (StrUtil::parseUInt(eventStr.substr(1), index))
+        {
+            event = MacroEvent::create(index);
+        }
         
-    //     break;
-    // }
+        break;
+    }
     
-    // case 'A':
-    // {
-    //     int index(0);
+    case 'A':
+    {
+        int index(0);
 
-    //     if (StrUtil::parseUInt(keyIdStr.substr(1), index))
-    //     {
-    //         keyId = KeyId::Action(index);
-    //     }
+        if (StrUtil::parseUInt(eventStr.substr(1), index))
+        {
+            event = ActionEvent::create(index);
+        }
 
-    //     break;
-    // }
+        break;
+    }
     
-    // case 'D':
-    // {
-    //     int delayMs(0);
+    case 'D':
+    {
+        int delayMs(0);
 
-    //     if (StrUtil::parseUInt(keyIdStr.substr(1), delayMs))
-    //     {
-    //         keyId = KeyId::Delay(delayMs);
-    //     }
+        if (StrUtil::parseUInt(eventStr.substr(1), delayMs))
+        {
+            event = DelayEvent::create(delayMs);
+        }
         
-    //     break;
-    // }
-    
-    // }
+        break;
+    }
+
+    }
 }
 
 }

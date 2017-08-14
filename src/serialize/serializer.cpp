@@ -81,19 +81,23 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
                     
                     while (!token.empty() && macroDataSize < macroData.size())
                     {
-                        // auto& keyEvent(macroData[macroDataSize++]);
+                        auto& event(macroData[macroDataSize++]);
+
+                        bool invert(false);
                         
-                        // if (token.beginsWith("!"))
-                        // {
-                        //     token = token.substr(1);
-                        //     keyEvent.pressed = false;
-                        // }
-                        // else
-                        // {
-                        //     keyEvent.pressed = true;
-                        // }
+                        if (token.beginsWith("!"))
+                        {
+                            token = token.substr(1);
+                            invert = true;
+                        }
                         
-                        // KeyIdSerializer::deserialize(token, keyEvent.keyId);
+                        EventSerializer::deserialize(token, event);
+
+                        if (invert)
+                        {
+                            event = event.invert();
+                        }
+                        
                         token = StrUtil::nextToken(value, " \t", token);
                     }
                 }
@@ -125,17 +129,12 @@ void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
 
     for (const auto& event : macro.content)
     {
-        // if (!event.pressed)
-        // {
-        //     os.write("!");
-        // }
-        
-        // StrBuf<24> str;
+        StrBuf<24> str;
 
-        // KeyIdSerializer::serialize(event.keyId, str);
-        // os.write(str);
+        EventSerializer::serialize(event, str);
+        os.write(str);
         
-        // os.write(" ");
+        os.write(" ");
     }
 
     os.write("\n");
@@ -156,11 +155,11 @@ void Serializer<Layer>::serialize(const Layer& layer, Storage::OStream& os)
     {
         os.write("row=");
         
-        for (const auto& key : row)
+        for (const auto& event : row)
         {
             StrBuf<24> str;
             
-            // KeyIdSerializer::serialize(key, str);
+            EventSerializer::serialize(event, str);
             
             os.write(str);
             os.write(" ");
