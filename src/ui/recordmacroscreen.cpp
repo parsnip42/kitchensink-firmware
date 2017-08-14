@@ -8,15 +8,16 @@
 #include "storage/storage.h"
 #include "serialize/serializer.h"
 #include "screenstack.h"
+#include "event/event.h"
 
 #include <cstdint>
 
-RecordMacroScreen::RecordMacroScreen(ScreenStack&   screenStack,
-                                     Timer&         timer,
-                                     MacroSet&      macroSet,
-                                     int            macroId,
-                                     bool           realtime,
-                                     KeyEventStage& next)
+RecordMacroScreen::RecordMacroScreen(ScreenStack& screenStack,
+                                     Timer&       timer,
+                                     MacroSet&    macroSet,
+                                     int          macroId,
+                                     bool         realtime,
+                                     EventStage&  next)
     : mScreenStack(screenStack)
     , mMacroSet(macroSet)
     , mMacroId(macroId)
@@ -30,7 +31,7 @@ RecordMacroScreen::RecordMacroScreen(ScreenStack&   screenStack,
     mFlashTimer.scheduleRepeating(500, 500);
 }
 
-void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
+void RecordMacroScreen::processEvent(const Event& event)
 {
     if (mFlashTimer.matches(event))
     {
@@ -50,8 +51,8 @@ void RecordMacroScreen::processKeyEvent(const KeyEvent& event)
         return;
     }
 
-    mNext.processKeyEvent(event);
-    mRecorder.processKeyEvent(event);
+    mNext.processEvent(event);
+    mRecorder.processEvent(event);
 
     if (mRecorder.complete())
     {

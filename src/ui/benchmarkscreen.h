@@ -1,29 +1,29 @@
 #ifndef INCLUDED_BENCHMARKSCREEN_H
 #define INCLUDED_BENCHMARKSCREEN_H
 
-#include "ui/listwidget.h"
+#include "ui/hstackwidget.h"
 #include "ui/labelwidget.h"
 #include "ui/widgetset.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 class EventManager;
 class Widget;
 
-class BenchmarkScreen : public KeyEventStage
+class BenchmarkScreen : public EventStage
 {
 public:
     explicit BenchmarkScreen(EventManager& eventManager);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     void run();
     Widget& rootWidget();
 
 private:
-    EventManager& mEventManager;
-    LabelWidget   mStatusLabel;
-    WidgetSet<1>  mWidgetSet;
-    ListWidget    mListWidget;
+    EventManager&          mEventManager;
+    LabelWidget            mStatusLabel;
+    HStackWidget::Items<1> mItems;
+    HStackWidget           mHStackWidget;
 };
 
 #endif

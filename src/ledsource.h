@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-class KeyEventStage;
+class EventStage;
 
 class LedSource
 {
@@ -11,7 +11,7 @@ public:
     LedSource();
     
 public:
-    void pollKeyEvent(KeyEventStage& next);
+    void pollEvent(EventStage& next);
     
 private:
     uint8_t mMaskValue;

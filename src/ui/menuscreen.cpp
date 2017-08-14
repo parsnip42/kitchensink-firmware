@@ -1,6 +1,6 @@
 #include "ui/menuscreen.h"
 
-#include "keyevent.h"
+#include "event/event.h"
 #include "ui/keys.h"
 #include "ui/menuitemwidget.h"
 #include "ui/screenstack.h"
@@ -17,7 +17,7 @@ MenuItemWidget createMenuItem(const MenuScreen::Item& item, std::size_t)
 
 MenuScreen::MenuScreen(const DataSource& dataSource,
                        ScreenStack&      screenStack,
-                       KeyEventStage&    next)
+                       EventStage&       next)
     : mDataSource(dataSource)
     , mMenuDataSource(dataSource, &createMenuItem)
     , mMenuWidget(mMenuDataSource)
@@ -25,24 +25,19 @@ MenuScreen::MenuScreen(const DataSource& dataSource,
     , mNext(next)
 { }
 
-void MenuScreen::processKeyEvent(const KeyEvent& event)
+void MenuScreen::processEvent(const Event& event)
 {
-    auto keyId(event.keyId);
-
-    if (Keys::ok(keyId))
+    if (Keys::ok(event))
     {
-        if (event.pressed)
-        {
-            auto keyId(mDataSource[mMenuWidget.filterIndex[mMenuWidget.selectedIndex()]].keyId);
+        auto event(mDataSource[mMenuWidget.filterIndex[mMenuWidget.selectedIndex()]].event);
             
-            mScreenStack.pop();
-            mNext.processKeyEvent(KeyEvent(keyId, true));
-            mNext.processKeyEvent(KeyEvent(keyId, false));
-        }
+        mScreenStack.pop();
+        mNext.processEvent(event);
+        mNext.processEvent(event.invert());
     }
     else 
     {
-        mMenuWidget.processKeyEvent(event);
+        mMenuWidget.processEvent(event);
     }
 }
 

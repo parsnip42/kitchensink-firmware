@@ -1,14 +1,14 @@
 #include "keyeventbuffer.h"
 
-void KeyEventBuffer::pollKeyEvent(KeyEventStage& next)
+void EventBuffer::pollEvent(EventStage& next)
 {
     if (!mBuffer.empty())
     {
-        next.processKeyEvent(mBuffer.pop());
+        next.processEvent(mBuffer.pop());
     }
 }
 
-void KeyEventBuffer::processKeyEvent(const KeyEvent& event)
+void EventBuffer::processEvent(const Event& event)
 {
     mBuffer.pushBack(event);
 }

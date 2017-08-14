@@ -2,64 +2,66 @@
 #define INCLUDED_KEYS_H
 
 #include "data/keycodes.h"
-#include "keyid.h"
+#include "event/event.h"
+#include "event/keyevent.h"
+#include "event/screenevent.h"
 
 namespace Keys
 {
 
 inline
-constexpr bool up(const KeyId& keyId)
+constexpr bool up(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::Up);
+    return event == KeyEvent::create(KeyCodes::Up);
 }
 
 inline
-constexpr bool down(const KeyId& keyId)
+constexpr bool down(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::Down);
+    return event == KeyEvent::create(KeyCodes::Down);
 }
 
 inline
-constexpr bool pageUp(const KeyId& keyId)
+constexpr bool pageUp(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::PageUp);
+    return event == KeyEvent::create(KeyCodes::PageUp);
 }
 
 inline
-constexpr bool pageDown(const KeyId& keyId)
+constexpr bool pageDown(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::PageDown);
+    return event == KeyEvent::create(KeyCodes::PageDown);
 }
 
 inline
-constexpr bool left(const KeyId& keyId)
+constexpr bool left(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::Left);
+    return event == KeyEvent::create(KeyCodes::Left);
 }
 
 inline
-constexpr bool right(const KeyId& keyId)
+constexpr bool right(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::Right);
+    return event == KeyEvent::create(KeyCodes::Right);
 }
 
 inline
-constexpr bool ok(const KeyId& keyId)
+constexpr bool ok(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::Enter);
+    return event == KeyEvent::create(KeyCodes::Enter);
 }
 
 inline
-constexpr bool cancel(const KeyId& keyId)
+constexpr bool cancel(const Event& event)
 {
-    return (keyId == KeyId(KeyCodes::Esc) ||
-            keyId == KeyId::Screen(ScreenId::Type::kHome, 0));
+    return (event == KeyEvent::create(KeyCodes::Esc) ||
+            event == ScreenEvent::create(ScreenId::Type::kHome, 0));
 }
 
 inline
-constexpr bool backspace(const KeyId& keyId)
+constexpr bool backspace(const Event& event)
 {
-    return keyId == KeyId(KeyCodes::Backspace);
+    return event == KeyEvent::create(KeyCodes::Backspace);
 }
 
 }

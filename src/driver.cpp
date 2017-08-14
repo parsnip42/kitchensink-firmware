@@ -67,12 +67,12 @@ void loop()
 
     LayerProcessor layerProcessor(actionProcessor);
 
-    MacroProcessor secureMacroProcessor(KeyId::Type::kSMacro,
+    MacroProcessor secureMacroProcessor(Event::Type::kSMacro,
                                         keyboardState.secureMacroSet,
                                         timer,
                                         layerProcessor);
 
-    MacroProcessor macroProcessor(KeyId::Type::kMacro,
+    MacroProcessor macroProcessor(Event::Type::kMacro,
                                   keyboardState.macroSet,
                                   timer,
                                   secureMacroProcessor);

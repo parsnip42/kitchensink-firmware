@@ -1,37 +1,37 @@
 #ifndef INCLUDED_KEYEVENTBUFFER_H
 #define INCLUDED_KEYEVENTBUFFER_H
 
-#include "keyeventstage.h"
-#include "keyevent.h"
+#include "eventstage.h"
+#include "event/event.h"
 #include "types/circularbuffer.h"
 
-class KeyEventBuffer : public KeyEventStage
+class EventBuffer : public EventStage
 {
 public:
-    KeyEventBuffer() = default;
+    EventBuffer() = default;
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     
-    void pollKeyEvent(KeyEventStage& next);
+    void pollEvent(EventStage& next);
 
 public:
     bool empty() const;
-    KeyEvent pop();
+    Event pop();
 
 private:
-    CircularBuffer<KeyEvent, 200> mBuffer;
+    CircularBuffer<Event, 200> mBuffer;
 };
 
 
 inline
-bool KeyEventBuffer::empty() const
+bool EventBuffer::empty() const
 {
     return mBuffer.empty();
 }
 
 inline
-KeyEvent KeyEventBuffer::pop()
+Event EventBuffer::pop()
 {
     return mBuffer.pop();
 }

@@ -2,8 +2,8 @@
 #define INCLUDED_EVENTMANAGER_H
 
 #include "keyeventbuffer.h"
-#include "keyeventstage.h"
-#include "keyevent.h"
+#include "eventstage.h"
+#include "event/event.h"
 #include "keysource.h"
 #include "ledsource.h"
 #include "timer.h"
@@ -11,34 +11,34 @@
 
 #include <cstdint>
 
-class EventManager : public KeyEventStage
+class EventManager : public EventStage
 {
 public:
     EventManager(Timer&              nTimer,
                  KeySource&          keySource,
                  LedSource&          ledSource,
-                 KeyEventStage&      input,
+                 EventStage&         input,
                  ToplevelEventStage& toplevel,
-                 KeyEventStage&      nDefaultOutput);
+                 EventStage&         nDefaultOutput);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
-    void poll(KeyEventStage& output);
-    void flush(KeyEventStage& output);
+    void poll(EventStage& output);
+    void flush(EventStage& output);
     
 public:
-    Timer&         timer;
-    KeyEventStage& defaultOutput;
+    Timer&      timer;
+    EventStage& defaultOutput;
     
 private:
     uint32_t nowMs() const;
     
 private:
-    KeyEventBuffer      mBuffer;
+    EventBuffer         mBuffer;
     KeySource&          mKeySource;
     LedSource&          mLedSource;
-    KeyEventStage&      mInput;
+    EventStage&         mInput;
     ToplevelEventStage& mToplevel;
 
 private:

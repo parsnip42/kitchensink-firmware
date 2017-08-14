@@ -1,35 +1,35 @@
 #ifndef INCLUDED_MACROPROCESSOR_H
 #define INCLUDED_MACROPROCESSOR_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "macroset.h"
 #include "timer.h"
 
-class KeyEvent;
+class Event;
 class MacroSet;
 
-class MacroProcessor : public KeyEventStage
+class MacroProcessor : public EventStage
 {
 public:
-    MacroProcessor(KeyId::Type     macroKeyType,
+    MacroProcessor(Event::Type     macroType,
                    const MacroSet& macroSet,
                    Timer&          timer,
-                   KeyEventStage&  next);
+                   EventStage&     next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
                                                                 
 private:
     void playback();
     
 private:
-    KeyId::Type                    mMacroKeyType;
+    Event::Type                    mMacroType;
     const MacroSet&                mMacroSet;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;
     Timer::Handle                  mPlaybackTimer;
-    KeyEventStage&                 mNext;
+    EventStage&                    mNext;
     
 private:
     MacroProcessor(const MacroProcessor&) = delete;

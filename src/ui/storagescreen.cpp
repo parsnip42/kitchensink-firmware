@@ -1,6 +1,6 @@
 #include "ui/storagescreen.h"
 
-#include "keyevent.h"
+#include "event/event.h"
 #include "storage/storage.h"
 #include "types/strbuf.h"
 #include "types/strostream.h"
@@ -10,13 +10,13 @@ StorageScreen::StorageScreen()
     , mHStackWidget(mItems, true)
 { }
 
-void StorageScreen::processKeyEvent(const KeyEvent& event)
+void StorageScreen::processEvent(const Event& event)
 {
     StrOStream out(mLabels[0].text);
 
-    out.appendInt((int)event.keyId.type());
+    out.appendInt((int)event.type());
     out.appendStr(":");
-    out.appendInt((int)event.keyId.value());
+    out.appendInt((int)event.value());
     out.appendStr(" ");
     mLabels[0].invalidateWidget();
 

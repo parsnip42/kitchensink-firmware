@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYSOURCE_H
 #define INCLUDED_KEYSOURCE_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "layerstack.h"
 
 #include <cstdint>
@@ -19,15 +19,15 @@ public:
     void setLayer(int layer, bool enabled);
     int topLayer();
 
-    void pollKeyEvent(uint32_t       timeMs,
-                      KeyEventStage& next);
+    void pollEvent(uint32_t    timeMs,
+                   EventStage& next);
 
     bool anyPressed();
 
 private:
     void processLayerChange(const LayerStack::Mask& currentMask,
                             const LayerStack::Mask& nextMask,
-                            KeyEventStage&          next);
+                            EventStage&          next);
 
 private:
     KsKeyboard&      mKeyboard;

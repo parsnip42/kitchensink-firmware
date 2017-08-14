@@ -3,8 +3,8 @@
 #include "layer.h"
 #include "keyid.h"
 #include "layerstack.h"
-#include "keyevent.h"
-#include "serialize/keyidserializer.h"
+#include "event/event.h"
+#include "serialize/eventserializer.h"
 #include "data/keycodes.h"
 #include "types/strutil.h"
 #include "types/strostream.h"
@@ -52,7 +52,7 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
             StrRef key;
             StrRef value;
 
-            std::array<KeyEvent, 200> macroData;
+            std::array<Event, 200> macroData;
             std::size_t macroDataSize(0);
 
             while (ini.nextProperty(key, value))
@@ -82,19 +82,19 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
                     
                     while (!token.empty() && macroDataSize < macroData.size())
                     {
-                        auto& keyEvent(macroData[macroDataSize++]);
+                        // auto& keyEvent(macroData[macroDataSize++]);
                         
-                        if (token.beginsWith("!"))
-                        {
-                            token = token.substr(1);
-                            keyEvent.pressed = false;
-                        }
-                        else
-                        {
-                            keyEvent.pressed = true;
-                        }
+                        // if (token.beginsWith("!"))
+                        // {
+                        //     token = token.substr(1);
+                        //     keyEvent.pressed = false;
+                        // }
+                        // else
+                        // {
+                        //     keyEvent.pressed = true;
+                        // }
                         
-                        KeyIdSerializer::deserialize(token, keyEvent.keyId);
+                        // KeyIdSerializer::deserialize(token, keyEvent.keyId);
                         token = StrUtil::nextToken(value, " \t", token);
                     }
                 }
@@ -126,17 +126,17 @@ void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
 
     for (const auto& event : macro.content)
     {
-        if (!event.pressed)
-        {
-            os.write("!");
-        }
+        // if (!event.pressed)
+        // {
+        //     os.write("!");
+        // }
         
-        StrBuf<24> str;
+        // StrBuf<24> str;
 
-        KeyIdSerializer::serialize(event.keyId, str);
-        os.write(str);
+        // KeyIdSerializer::serialize(event.keyId, str);
+        // os.write(str);
         
-        os.write(" ");
+        // os.write(" ");
     }
 
     os.write("\n");
@@ -161,7 +161,7 @@ void Serializer<Layer>::serialize(const Layer& layer, Storage::OStream& os)
         {
             StrBuf<24> str;
             
-            KeyIdSerializer::serialize(key, str);
+            // KeyIdSerializer::serialize(key, str);
             
             os.write(str);
             os.write(" ");
@@ -191,7 +191,7 @@ bool Serializer<Layer>::deserialize(Storage::IStream& is, Layer& layer)
         
         while (!token.empty() && index < row.size())
         {
-            KeyIdSerializer::deserialize(token, row[index++]);
+            // KeyIdSerializer::deserialize(token, row[index++]);
             token = StrUtil::nextToken(rowData, " \t", token);
         }
     }

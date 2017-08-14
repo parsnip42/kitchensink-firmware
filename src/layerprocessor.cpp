@@ -1,23 +1,25 @@
 #include "layerprocessor.h"
 
-#include "keyevent.h"
+#include "event/event.h"
 #include "keysource.h"
+#include "event/layerevent.h"
 
-LayerProcessor::LayerProcessor(KeyEventStage& next)
+LayerProcessor::LayerProcessor(EventStage& next)
     : keySource(nullptr)
     , mNext(next)
 { }
 
-void LayerProcessor::processKeyEvent(const KeyEvent& event)
+void LayerProcessor::processEvent(const Event& event)
 {
-    auto keyId(event.keyId);
-
-    if (keyId.type() == KeyId::Type::kLayer)
+    if (event.is<LayerEvent>())
     {
-        keySource->setLayer(keyId.value(), event.pressed);
+        auto layerEvent(event.get<LayerEvent>());
+
+        keySource->setLayer(layerEvent.layer,
+                            layerEvent.enable);
     }
     else
     {
-        mNext.processKeyEvent(event);
+        mNext.processEvent(event);
     }
 }

@@ -17,7 +17,7 @@ public:
                    TWidget&&     nWidget = TWidget());
     
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     virtual void setFocused(bool nFocused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;
@@ -43,9 +43,9 @@ LabelledWidget<TWidget>::LabelledWidget(const StrRef& text,
 
 template <typename TWidget>
 inline
-void LabelledWidget<TWidget>::processKeyEvent(const KeyEvent& event)
+void LabelledWidget<TWidget>::processEvent(const Event& event)
 {
-    widget.processKeyEvent(event);
+    widget.processEvent(event);
 }
 
 template <typename TWidget>

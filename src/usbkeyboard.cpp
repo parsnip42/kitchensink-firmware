@@ -1,6 +1,6 @@
 #include "usbkeyboard.h"
 
-#include "keyevent.h"
+#include "event/keyevent.h"
 #include "data/keycodes.h"
 
 #include <usb_keyboard.h>
@@ -21,16 +21,14 @@ UsbKeyboard::UsbKeyboard()
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
-void UsbKeyboard::processKeyEvent(const KeyEvent& event)
+void UsbKeyboard::processEvent(const Event& event)
 {
-    const auto& keyId(event.keyId);
-    
-    if (keyId.type() == KeyId::Type::kKey
-        && keyId.value() != 0)
+    if (event.is<KeyEvent>())
     {
-        auto keyCode(keyId.value());
-    
-        if (event.pressed)
+        auto keyEvent(event.get<KeyEvent>());
+        auto keyCode(keyEvent.keyCode);
+
+        if (keyEvent.pressed)
         {
             pressKey(keyCode);
         }
@@ -38,7 +36,7 @@ void UsbKeyboard::processKeyEvent(const KeyEvent& event)
         {
             releaseKey(keyCode);
         }
-        
+
         if (mDirty)
         {
             usb_keyboard_send();

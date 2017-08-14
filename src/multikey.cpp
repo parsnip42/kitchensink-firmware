@@ -1,16 +1,15 @@
 #include "multikey.h"
 
-#include "keyevent.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 void MultiKey::press()
 {
     mReleased = false;
     mTriggered = false;
-    mActiveKey = key(++mTaps);
+    mActiveEvent = event(++mTaps);
 }
 
-void MultiKey::release(KeyEventStage& next)
+void MultiKey::release(EventStage& next)
 {
     mReleased = true;
                 
@@ -19,27 +18,27 @@ void MultiKey::release(KeyEventStage& next)
         // Key has been pressed by the trigger, so this event is now
         // responsible for releasing the key.
         mTaps = 0;
-        next.processKeyEvent(KeyEvent(mActiveKey, false));
+        next.processEvent(mActiveEvent.invert());
     }
 }
 
-bool MultiKey::trigger(KeyEventStage& next)
+bool MultiKey::trigger(EventStage& next)
 {
     if (!mTriggered)
     {
         mTriggered = true;
         mTaps = 0;
 
-        auto activeKey(mActiveKey);
+        auto activeEvent(mActiveEvent);
         auto released(mReleased);
         
-        next.processKeyEvent(KeyEvent(activeKey, true));
+        next.processEvent(activeEvent);
         
         // If the key was marked as released before it was pressed by the
         // trigger, then we need to release it immediately too.
         if (released)
         {
-            next.processKeyEvent(KeyEvent(activeKey, false));
+            next.processEvent(mActiveEvent.invert());
         }
 
         return true;

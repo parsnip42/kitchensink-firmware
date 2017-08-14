@@ -1,8 +1,8 @@
 #ifndef INCLUDED_MENUSCREEN_H
 #define INCLUDED_MENUSCREEN_H
 
-#include "keyeventstage.h"
-#include "keyid.h"
+#include "eventstage.h"
+#include "event/event.h"
 #include "types/mappedobjectsource.h"
 #include "types/objectsource.h"
 #include "types/strbuf.h"
@@ -13,7 +13,7 @@ class Timer;
 class ScreenStack;
 class Widget;
 
-class MenuScreen : public KeyEventStage
+class MenuScreen : public EventStage
 {
 public:
     class Item
@@ -21,7 +21,7 @@ public:
     public:
         StrBuf<24> title;
         StrBuf<12> shortcut;
-        KeyId      keyId;
+        Event      event;
     };
     
 public:
@@ -33,10 +33,10 @@ private:
 public:
     MenuScreen(const DataSource& dataSource,
                ScreenStack&      screenStack,
-               KeyEventStage&    next);
+               EventStage&       next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     
     Widget& rootWidget();
     
@@ -45,7 +45,7 @@ private:
     MenuDataSource    mMenuDataSource;
     MenuWidget        mMenuWidget;
     ScreenStack&      mScreenStack;
-    KeyEventStage&    mNext;
+    EventStage&       mNext;
 };
 
 #endif

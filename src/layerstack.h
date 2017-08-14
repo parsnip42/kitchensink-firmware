@@ -2,7 +2,7 @@
 #define INCLUDED_LAYERSTACK_H
 
 #include "types/bitmask.h"
-#include "keyid.h"
+#include "event/event.h"
 #include "layer.h"
 #include "config.h"
 
@@ -24,7 +24,7 @@ public:
     LayerStack() = default;
 
 public:
-    KeyId at(const Mask& layerMask,
+    Event at(const Mask& layerMask,
              int         row,
              int         column) const;
     
@@ -32,7 +32,7 @@ public:
                     int         row,
                     int         column) const;
     
-    KeyId atIndex(int index,
+    Event atIndex(int index,
                   int row,
                   int column) const;
     

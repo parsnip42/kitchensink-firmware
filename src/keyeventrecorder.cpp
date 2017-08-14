@@ -1,8 +1,12 @@
 #include "keyeventrecorder.h"
 
+#include "event/delayevent.h"
+#include "event/screenevent.h"
+#include "event/tickevent.h"
+
 #include <elapsedMillis.h>
 
-KeyEventRecorder::KeyEventRecorder(bool realtime)
+EventRecorder::EventRecorder(bool realtime)
     : mLastMs(0)
     , mRealtime(realtime)
     , mContent()
@@ -10,11 +14,11 @@ KeyEventRecorder::KeyEventRecorder(bool realtime)
     , mComplete(false)
 { }
 
-void KeyEventRecorder::processKeyEvent(const KeyEvent& event)
+void EventRecorder::processEvent(const Event& event)
 {
-    if (event.keyId != KeyId::Screen(ScreenId::Type::kHome, 0))
+    if (event != ScreenEvent::create(ScreenId::Type::kHome, 0))
     {
-        if (event.keyId.type() != KeyId::Type::kTick)
+        if (!event.is<TickEvent>())
         {
             if (mSize < mContent.size())
             {
@@ -24,7 +28,7 @@ void KeyEventRecorder::processKeyEvent(const KeyEvent& event)
                     
                     if (mLastMs != 0)
                     {
-                        mContent[mSize++] = KeyEvent(KeyId::Delay(nowMs - mLastMs));    
+                        mContent[mSize++] = DelayEvent::create(nowMs - mLastMs); 
                     }
                     
                     mLastMs = nowMs;

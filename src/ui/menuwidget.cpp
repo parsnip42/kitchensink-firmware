@@ -3,7 +3,7 @@
 #include "ui/font.h"
 #include "ui/keys.h"
 #include "ui/menuitemwidget.h"
-#include "keyevent.h"
+#include "event/event.h"
 
 MenuWidget::MenuWidget(const DataSource& dataSource)
     : filterIndex(dataSource.size())
@@ -14,40 +14,35 @@ MenuWidget::MenuWidget(const DataSource& dataSource)
 {
 }
 
-void MenuWidget::processKeyEvent(const KeyEvent& event)
+void MenuWidget::processEvent(const Event& event)
 {
-    auto keyId(event.keyId);
-
-    if (event.pressed)
+    if (Keys::pageUp(event))
     {
-        if (Keys::pageUp(keyId))
+        moveSelection(-5);
+    }
+    else if (Keys::pageDown(event))
+    {
+        moveSelection(5);
+    }
+    else if (Keys::up(event))
+    {
+        moveSelection(-1);
+    }
+    else if (Keys::down(event))
+    {
+        moveSelection(1);
+    }
+    else if (Keys::backspace(event))
+    {
+        if (!filterStr.empty())
         {
-            moveSelection(-5);
-        }
-        else if (Keys::pageDown(keyId))
-        {
-            moveSelection(5);
-        }
-        else if (Keys::up(keyId))
-        {
-            moveSelection(-1);
-        }
-        else if (Keys::down(keyId))
-        {
-            moveSelection(1);
-        }
-        else if (Keys::backspace(keyId))
-        {
-            if (!filterStr.empty())
-            {
-                filterStr.erase(filterStr.end() - 1);
-                applyFilter();
-                update();
-            }
+            filterStr.erase(filterStr.end() - 1);
+            applyFilter();
+            update();
         }
     }
 
-    mVKeyboard.processKeyEvent(event);
+    mVKeyboard.processEvent(event);
 
     if (filterStr.length() < filterStr.capacity())
     {

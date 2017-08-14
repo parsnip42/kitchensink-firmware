@@ -10,7 +10,7 @@ KeyConfigScreen::KeyConfigScreen()
     mHStackWidget.setFocused(false);
 }
 
-void KeyConfigScreen::processKeyEvent(const KeyEvent& event)
+void KeyConfigScreen::processEvent(const Event& event)
 {
     mLayerLabel.widget.text  = "1";
     mRowLabel.widget.text    = "3";

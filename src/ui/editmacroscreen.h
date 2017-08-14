@@ -5,15 +5,15 @@
 #include "ui/combowidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 class ScreenStack;
 class Timer;
-class KeyEvent;
+class Event;
 class MacroSet;
 class Widget;
 
-class EditMacroScreen : public KeyEventStage
+class EditMacroScreen : public EventStage
 {
 public:
     EditMacroScreen(ScreenStack& screenStack,
@@ -22,7 +22,7 @@ public:
                     int          macroid);
     
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
     Widget& rootWidget();
 

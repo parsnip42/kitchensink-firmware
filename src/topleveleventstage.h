@@ -1,24 +1,24 @@
 #ifndef INCLUDED_TOPLEVELEVENTSTAGE_H
 #define INCLUDED_TOPLEVELEVENTSTAGE_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 #include <algorithm>
 
-class ToplevelEventStage : public KeyEventStage
+class ToplevelEventStage : public EventStage
 {
 public:
     class OutputGuard
     {
     public:
         OutputGuard(ToplevelEventStage& mTopLevel,
-                    KeyEventStage&      next);
+                    EventStage&      next);
         
         ~OutputGuard();
         
     private:
         ToplevelEventStage& mTopLevel;
-        KeyEventStage*      mNext;
+        EventStage*      mNext;
 
     private:
         OutputGuard(const OutputGuard&) = delete;
@@ -29,19 +29,19 @@ public:
     };
 
 public:
-    explicit ToplevelEventStage(KeyEventStage& next);
+    explicit ToplevelEventStage(EventStage& next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     
 private:
-    KeyEventStage* mNext;
+    EventStage* mNext;
 };
 
 
 inline
 ToplevelEventStage::OutputGuard::OutputGuard(ToplevelEventStage& topLevel,
-                                             KeyEventStage&      next)
+                                             EventStage&      next)
     : mTopLevel(topLevel)
     , mNext(&next)
 {
@@ -56,14 +56,14 @@ ToplevelEventStage::OutputGuard::~OutputGuard()
 
 
 inline
-ToplevelEventStage::ToplevelEventStage(KeyEventStage& next)
+ToplevelEventStage::ToplevelEventStage(EventStage& next)
     : mNext(&next)
 { }
 
 inline
-void ToplevelEventStage::processKeyEvent(const KeyEvent& event)
+void ToplevelEventStage::processEvent(const Event& event)
 {
-    mNext->processKeyEvent(event);
+    mNext->processEvent(event);
 }
 
 #endif

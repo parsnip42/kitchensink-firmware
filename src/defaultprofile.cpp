@@ -1,48 +1,55 @@
 #include "defaultprofile.h"
 
-#include "keyid.h"
 #include "keyboardstate.h"
 #include "data/keycodes.h"
 #include "screenid.h"
+
+#include "event/keyevent.h"
+#include "event/actionevent.h"
+#include "event/multievent.h"
+#include "event/screenevent.h"
+#include "event/layerevent.h"
+#include "event/macroevent.h"
+#include "event/event.h"
 
 namespace DefaultProfile
 {
 
 namespace
 {
-constexpr KeyId Macro(int macroId)
+constexpr Event Macro(int macroId)
 {
-    return KeyId::Macro(macroId);
+    return MacroEvent::create(macroId);
 }
 
-constexpr KeyId Layer(int layerId)
+constexpr Event Layer(int layerId)
 {
-    return KeyId::Layer(layerId);
+    return LayerEvent::create(layerId);
 }
 
-constexpr KeyId Bootloader()
+constexpr Event Bootloader()
 {
-    return KeyId::Action(0);
+    return ActionEvent::create(0);
 }
 
-constexpr KeyId Multi(int index)
+constexpr Event Multi(int index)
 {
-    return KeyId::Multi(index);
+    return MultiEvent::create(index);
 }
 
-constexpr KeyId MainMenu()
+constexpr Event MainMenu()
 {
-    return KeyId::Screen(ScreenId::Type::kHome, 0);
+    return ScreenEvent::create(ScreenId::Type::kHome, 0);
 }
 
-constexpr KeyId Menu(int index)
+constexpr Event Menu(int index)
 {
-    return KeyId::Screen(ScreenId::Type::kMenu, index);
+    return ScreenEvent::create(ScreenId::Type::kMenu, index);
 }
 
-constexpr KeyId EditMacro(int macroId)
+constexpr Event EditMacro(int macroId)
 {
-    return KeyId::Screen(ScreenId::Type::kEditMacro, macroId);
+    return ScreenEvent::create(ScreenId::Type::kEditMacro, macroId);
 }
 
 }
@@ -59,8 +66,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = "{";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(LBrace)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(LBrace)
         };
     }
     
@@ -70,8 +77,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = "}";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(RBrace)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(RBrace)
         };
     }
     
@@ -81,8 +88,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = "(";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(K9)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(K9)
         };
     }
 
@@ -92,8 +99,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = ")";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(K0)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(K0)
         };
     }
 
@@ -103,8 +110,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = "<";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(Comma)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(Comma)
         };
     }
 
@@ -114,8 +121,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = ">";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(Dot)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(Dot)
         };
     }
 
@@ -125,8 +132,8 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = "Ctrl+Spc";
         macro.content = {
-            KeyEvent(KeyId(LCtrl)),
-            KeyEvent(KeyId(Space)),
+            KeyEvent::create(LCtrl),
+            KeyEvent::create(Space)
         };
     }
 
@@ -136,26 +143,26 @@ void init(KeyboardState& keyboardState)
         macro.type = MacroType::kInvert;
         macro.name = "_";
         macro.content = {
-            KeyEvent(KeyId(LShift)),
-            KeyEvent(KeyId(Minus)),
+            KeyEvent::create(LShift),
+            KeyEvent::create(Minus)
         };
     }
 
-    keyboardState.multiSet[0].name = "Shift";
-    keyboardState.multiSet[0].keys[0] = LShift;
-    keyboardState.multiSet[0].keys[2] = KeyId::Smart(0);
+    // keyboardState.multiSet[0].name = "Shift";
+    // keyboardState.multiSet[0].keys[0] = LShift;
+    // keyboardState.multiSet[0].keys[2] = Event::Smart(0);
     
-    keyboardState.smartKeySet[0].name = "Shift Lock";
-    keyboardState.smartKeySet[0].type = SmartKey::Type::kToggle;
-    keyboardState.smartKeySet[0].keyId = LShift;
+    // keyboardState.smartKeySet[0].name = "Shift Lock";
+    // keyboardState.smartKeySet[0].type = SmartKey::Type::kToggle;
+    // keyboardState.smartKeySet[0].keyId = LShift;
 
-    keyboardState.multiSet[2].name = "Num Toggle";
-    keyboardState.multiSet[2].keys[0] = Layer(2);
-    keyboardState.multiSet[2].keys[2] = KeyId::Smart(2);
+    // keyboardState.multiSet[2].name = "Num Toggle";
+    // keyboardState.multiSet[2].keys[0] = Layer(2);
+    // keyboardState.multiSet[2].keys[2] = Event::Smart(2);
     
-    keyboardState.smartKeySet[2].name = "Num Toggle";
-    keyboardState.smartKeySet[2].type = SmartKey::Type::kToggle;
-    keyboardState.smartKeySet[2].keyId = Layer(2);
+    // keyboardState.smartKeySet[2].name = "Num Toggle";
+    // keyboardState.smartKeySet[2].type = SmartKey::Type::kToggle;
+    // keyboardState.smartKeySet[2].keyId = Layer(2);
 
 
     auto& layerStack(keyboardState.layerStack);

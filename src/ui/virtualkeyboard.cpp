@@ -1,29 +1,30 @@
 #include "ui/virtualkeyboard.h"
 
-#include "keyevent.h"
+#include "event/event.h"
+#include "event/keyevent.h"
 #include "data/keymap.h"
 
 VirtualKeyboard::VirtualKeyboard()
     : mActiveChar('\0')
 { }
 
-void VirtualKeyboard::processKeyEvent(const KeyEvent& event)
+void VirtualKeyboard::processEvent(const Event& event)
 {
     if (!mModifierState.processEvent(event))
     {
-        auto keyId(event.keyId);
-
-        if (keyId.type() == KeyId::Type::kKey)
+        if (event.is<KeyEvent>())
         {
-            if (event.pressed)
+            auto keyEvent(event.get<KeyEvent>());
+
+            if (keyEvent.pressed)
             {
                 if (mModifierState.shift())
                 {
-                    mActiveChar = KeyMap::getEntry(keyId.value()).shift;
+                    mActiveChar = KeyMap::getEntry(keyEvent.keyCode).shift;
                 }
                 else
                 {
-                    mActiveChar = KeyMap::getEntry(keyId.value()).dflt; 
+                    mActiveChar = KeyMap::getEntry(keyEvent.keyCode).dflt; 
                 }
             }
         }

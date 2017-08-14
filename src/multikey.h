@@ -1,37 +1,36 @@
 #ifndef INCLUDED_MULTIKEY_H
 #define INCLUDED_MULTIKEY_H
 
-#include "keyid.h"
+#include "event/event.h"
 #include "types/strbuf.h"
 #include "config.h"
 
 #include <array>
 
-class KeyEvent;
-class KeyEventStage;
+class EventStage;
 
 class MultiKey
 {
 public:
-    typedef std::array<KeyId, Config::kMultiKeyKeyCount> Keys;
+    typedef std::array<Event, Config::kMultiKeyKeyCount> Events;
     
 public:
     MultiKey();
     
 public:
-    KeyId key(int taps);
+    Event event(int taps);
 
     void press();
-    void release(KeyEventStage& next);
-    bool trigger(KeyEventStage& next);
+    void release(EventStage& next);
+    bool trigger(EventStage& next);
 
 public:
     StrBuf<Config::kMultiKeyNameLen> name;
-    Keys                             keys;
+    Events                           events;
 
 private:
     uint8_t mTaps;
-    KeyId   mActiveKey;
+    Event   mActiveEvent;
     bool    mReleased;
     bool    mTriggered;
 };
@@ -45,16 +44,16 @@ MultiKey::MultiKey()
 { }
 
 inline
-KeyId MultiKey::key(int taps)
+Event MultiKey::event(int taps)
 {
     std::size_t index(taps - 1);
     
-    if (index < keys.size())
+    if (index < events.size())
     {
-        return keys[index];
+        return events[index];
     }
 
-    return KeyId();
+    return Event();
 }
 
 #endif

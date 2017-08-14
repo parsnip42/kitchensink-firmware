@@ -1,19 +1,19 @@
 #ifndef INCLUDED_USBKEYBOARD_H
 #define INCLUDED_USBKEYBOARD_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 #include <cstdint>
 
-class KeyEvent;
+class Event;
 
-class UsbKeyboard : public KeyEventStage
+class UsbKeyboard : public EventStage
 {
 public:
     UsbKeyboard();
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
 private:
     void pressKey(uint8_t keyCode);

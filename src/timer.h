@@ -1,9 +1,9 @@
 #ifndef INCLUDED_TIMER_H
 #define INCLUDED_TIMER_H
 
-#include "keyid.h"
-#include "keyevent.h"
-#include "keyeventstage.h"
+#include "event/event.h"
+#include "event/tickevent.h"
+#include "eventstage.h"
 #include "types/orderedcircularbuffer.h"
 #include "config.h"
 
@@ -23,7 +23,7 @@ public:
         ~Handle();
 
     public:
-        bool matches(KeyEvent event) const;
+        bool matches(Event event) const;
 
         void schedule(uint32_t delayMs);
     
@@ -71,7 +71,7 @@ public:
     Timer() = default;
     
 public:
-    void pollKeyEvent(KeyEventStage& next);
+    void pollEvent(EventStage& next);
 
     Handle createHandle();
     
@@ -135,11 +135,11 @@ Timer::Handle& Timer::Handle::operator=(Handle&& rhs)
 }
 
 inline
-bool Timer::Handle::matches(KeyEvent event) const
+bool Timer::Handle::matches(Event event) const
 {
     if (mTimer)
     {
-        return event.keyId == KeyId::Tick(mTickId);
+        return event == TickEvent::create(mTickId);
     }
 
     return false;

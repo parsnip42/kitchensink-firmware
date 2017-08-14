@@ -1,24 +1,26 @@
 #ifndef INCLUDED_LAYERPROCESSOR_H
 #define INCLUDED_LAYERPROCESSOR_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 class KeySource;
-class KeyEvent;
+class Event;
 
-class LayerProcessor : public KeyEventStage
+class Event;
+
+class LayerProcessor : public EventStage
 {
 public:
-    explicit LayerProcessor(KeyEventStage& next);
+    explicit LayerProcessor(EventStage& next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
-
+    virtual void processEvent(const Event& event) override;
+    
 public:
     KeySource* keySource;
     
 private:
-    KeyEventStage& mNext;
+    EventStage& mNext;
     
 private:
     LayerProcessor(const LayerProcessor&) = delete;

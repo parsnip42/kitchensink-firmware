@@ -1,21 +1,21 @@
 #ifndef INCLUDED_WIDGET_H
 #define INCLUDED_WIDGET_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "ui/rasterline.h"
 #include "ui/rectangle.h"
 
 class Dimension;
 class WidgetContainer;
 
-class Widget : public KeyEventStage
+class Widget : public EventStage
 {
 public:
     Widget() = default;
     virtual ~Widget() = default;
     
 public:
-    virtual void processKeyEvent(const KeyEvent&) override;
+    virtual void processEvent(const Event&) override;
     virtual void setFocused(bool focused);
     virtual void render(const RasterLine& rasterLine, int row) = 0;
     virtual void parented();
@@ -39,7 +39,7 @@ private:
 
 
 inline
-void Widget::processKeyEvent(const KeyEvent&)
+void Widget::processEvent(const Event&)
 { }
 
 inline

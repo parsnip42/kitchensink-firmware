@@ -1,21 +1,21 @@
 #ifndef INCLUDED_SMARTKEYPROCESSOR_H
 #define INCLUDED_SMARTKEYPROCESSOR_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "smartkeyset.h"
 
-class SmartKeyProcessor : public KeyEventStage
+class SmartKeyProcessor : public EventStage
 {
 public:
-    SmartKeyProcessor(SmartKeySet&   smartKeys,
-                      KeyEventStage& next);
+    SmartKeyProcessor(SmartKeySet& smartKeys,
+                      EventStage&  next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     
 private:
     SmartKeySet&   mSmartKeys;
-    KeyEventStage& mNext;
+    EventStage& mNext;
 };
 
 #endif

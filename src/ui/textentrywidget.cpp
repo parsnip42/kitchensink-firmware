@@ -88,7 +88,7 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
     rasterLine[size.width - 1] = fg;
 }
 
-void TextEntryWidget::processKeyEvent(const KeyEvent& event)
+void TextEntryWidget::processEvent(const Event& event)
 {
     if (mFlashTimer.matches(event))
     {
@@ -99,68 +99,71 @@ void TextEntryWidget::processKeyEvent(const KeyEvent& event)
 
     cursorPosition = std::min(cursorPosition, text.length());
 
-    mVKeyboard.processKeyEvent(event);
+    mVKeyboard.processEvent(event);
 
-    auto keyId(event.keyId);
-
-    if (keyId.type() == KeyId::Type::kKey && event.pressed)
+    if (event.is<KeyEvent>())
     {
-        mFlash = true;
-        mFlashTimer.scheduleRepeating(1000, 500);
+        auto keyEvent(event.get<KeyEvent>());
 
-        switch (keyId.value())
+        if (keyEvent.pressed)
         {
-        case 0:
-            break;
-                
-        case KeyCodes::Left:
-            if (cursorPosition > 0)
-            {
-                --cursorPosition;
-            }
-            break;
-                
-        case KeyCodes::Right:
-            if (cursorPosition < text.length())
-            {
-                ++cursorPosition;
-            }
-            break;
-                
-        case KeyCodes::Home:
-            cursorPosition = 0;
-            break;
-                
-        case KeyCodes::End:
-            cursorPosition = text.length();
-            break;
+            mFlash = true;
+            mFlashTimer.scheduleRepeating(1000, 500);
 
-        case KeyCodes::Backspace:
-            if (cursorPosition > 0)
+            switch (keyEvent.keyCode)
             {
-                text.erase(text.begin() + cursorPosition - 1);
+            case 0:
+                break;
                 
-                --cursorPosition;
-            }
-            break;
-                
-        default:
-            if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)
-            {
-                char newChar(mVKeyboard.consumeChar());
-                    
-                if (newChar)
+            case KeyCodes::Left:
+                if (cursorPosition > 0)
                 {
-                    text.insert(text.begin() + cursorPosition, newChar);
-                        
+                    --cursorPosition;
+                }
+                break;
+                
+            case KeyCodes::Right:
+                if (cursorPosition < text.length())
+                {
                     ++cursorPosition;
                 }
-            }
-            break;
-        }
-    }
+                break;
+                
+            case KeyCodes::Home:
+                cursorPosition = 0;
+                break;
+                
+            case KeyCodes::End:
+                cursorPosition = text.length();
+                break;
 
-    invalidateWidget();
+            case KeyCodes::Backspace:
+                if (cursorPosition > 0)
+                {
+                    text.erase(text.begin() + cursorPosition - 1);
+                
+                    --cursorPosition;
+                }
+                break;
+                
+            default:
+                if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)
+                {
+                    char newChar(mVKeyboard.consumeChar());
+                    
+                    if (newChar)
+                    {
+                        text.insert(text.begin() + cursorPosition, newChar);
+                        
+                        ++cursorPosition;
+                    }
+                }
+                break;
+            }
+        }
+
+        invalidateWidget();
+    }
 }
 
 Dimension TextEntryWidget::minimumSize() const

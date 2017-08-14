@@ -18,36 +18,36 @@
 namespace
 {
 
-class OutputSink : public KeyEventStage
+class OutputSink : public EventStage
 {
 public:
     OutputSink(ScreenManager& screenManager,
-               KeyEventStage& next)
+               EventStage&    next)
         : mScreenManager(screenManager)
         , mNext(next)
     { }
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override
+    virtual void processEvent(const Event& event) override
     {
-        auto keyId(event.keyId);
-
-        if (keyId.type() == KeyId::Type::kScreen && event.pressed)
+        if (event.is<ScreenEvent>())
         {
-            mScreenManager.pushScreen(ScreenId(ScreenId::Type(keyId.screenType()),
-                                               keyId.value()));
+            auto screenEvent(event.get<ScreenEvent>());
+            
+            mScreenManager.pushScreen(ScreenId(screenEvent.type,
+                                               screenEvent.index));
         }
-        else if (Keys::cancel(keyId) && event.pressed)
+        else if (Keys::cancel(event))
         {
             mScreenManager.popScreen();
         }
         
-        mNext.processKeyEvent(event);
+        mNext.processEvent(event);
     }
 
 private:
     ScreenManager& mScreenManager;
-    KeyEventStage& mNext;
+    EventStage& mNext;
 };
 
 }
@@ -84,7 +84,7 @@ void ScreenManager::popScreen()
     }
 }
 
-void ScreenManager::poll(KeyEventStage& next)
+void ScreenManager::poll(EventStage& next)
 {
     while (true)
     {
@@ -225,7 +225,7 @@ void ScreenManager::launchRecordMacro(MacroSet& macroSet,
     displayScreen(screen, screen.rootWidget());
 }
 
-void ScreenManager::displayScreen(KeyEventStage& stage,
+void ScreenManager::displayScreen(EventStage& stage,
                                   Widget&        content)
 {
     OutputSink output(*this, stage);

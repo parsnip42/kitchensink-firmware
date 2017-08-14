@@ -1,8 +1,11 @@
 #include "ui/homescreen.h"
 
+#include "event/event.h"
+#include "event/ledmaskevent.h"
+
 HomeScreen::HomeScreen(Timer&             timer,
                        const SmartKeySet& smartKeySet,
-                       KeyEventStage&     next)
+                       EventStage&     next)
     : mDisplayTimeout(timer.createHandle())
     , mSmartKeySet(smartKeySet)
     , mNext(next)
@@ -22,7 +25,7 @@ HomeScreen::HomeScreen(Timer&             timer,
     mDisplayTimeout.schedule(10000);
 }
 
-void HomeScreen::processKeyEvent(const KeyEvent& event)
+void HomeScreen::processEvent(const Event& event)
 {
     if (mDisplayTimeout.matches(event))
     {
@@ -31,11 +34,9 @@ void HomeScreen::processKeyEvent(const KeyEvent& event)
         return;
     }
 
-    auto keyId(event.keyId);
-
-    if (keyId.type() == KeyId::Type::kLedMask)
+    if (event.is<LedMaskEvent>())
     {
-        auto mask(keyId.value());
+        auto mask(event.get<LedMaskEvent>().mask);
         
         mHomeWidget.entries[0].value = mask & KeyId::NumLock;
         mHomeWidget.entries[2].value = mask & KeyId::CapsLock;
@@ -43,14 +44,14 @@ void HomeScreen::processKeyEvent(const KeyEvent& event)
 
         update();
     }
-    else if (keyId.type() == KeyId::Type::kSmart)
-    {
-        mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
-        update();
-    }
+    // else if (keyId.type() == KeyId::Type::kSmart)
+    // {
+    //     mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
+    //     update();
+    // }
     else
     {
-        mNext.processKeyEvent(event);
+        mNext.processEvent(event);
     }
 }
 

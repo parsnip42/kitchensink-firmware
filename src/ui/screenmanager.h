@@ -21,7 +21,7 @@ public:
 public:
     void pushScreen(const ScreenId& screen);
     void popScreen();
-    void poll(KeyEventStage& next);
+    void poll(EventStage& next);
 
 private:
     void launch(const ScreenId& screen);
@@ -30,7 +30,7 @@ private:
     void launchEditMacro(MacroSet& macroSet, int macroId);
     void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
 
-    void displayScreen(KeyEventStage& stage,
+    void displayScreen(EventStage& stage,
                        Widget&        content);
 
     void createTitlePath(const StrOStream& os);

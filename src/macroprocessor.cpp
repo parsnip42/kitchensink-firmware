@@ -1,96 +1,98 @@
 #include "macroprocessor.h"
 #include "types/range.h"
-#include "keyevent.h"
+#include "event/event.h"
 #include "macro.h"
 
-MacroProcessor::MacroProcessor(KeyId::Type     macroKeyType,
+MacroProcessor::MacroProcessor(Event::Type     macroType,
                                const MacroSet& macroSet,
                                Timer&          timer,
-                               KeyEventStage&  next)
-    : mMacroKeyType(macroKeyType)
+                               EventStage&     next)
+    : mMacroType(macroType)
     , mMacroSet(macroSet)
     , mCurrent(nullptr)
     , mPlaybackTimer(timer.createHandle())
     , mNext(next)
 { }
 
-void MacroProcessor::processKeyEvent(const KeyEvent& event)
+void MacroProcessor::processEvent(const Event& event)
 {
-    const auto& keyId(event.keyId);
+    // const auto& keyId(event.keyId);
 
-    if (mPlaybackTimer.matches(event))
-    {
-        playback();
-    }
-    else if (keyId.type() == mMacroKeyType)
-    {
-        auto macroIndex(keyId.value());
+    // if (mPlaybackTimer.matches(event))
+    // {
+    //     playback();
+    // }
+    // else if (keyId.type() == mMacroKeyType)
+    // {
+    //     auto macroIndex(keyId.value());
 
-        if (macroIndex < mMacroSet.size())
-        {
-            const auto& macro(mMacroSet[keyId.value()]);
-            const auto& content(macro.content);
+    //     if (macroIndex < mMacroSet.size())
+    //     {
+    //         const auto& macro(mMacroSet[keyId.value()]);
+    //         const auto& content(macro.content);
 
-            if (!event.pressed && macro.type == MacroType::kInvert)
-            {
-                mCurrent = &macro;
-                mBegin   = content.end() - 1;
-                mEnd     = content.begin() - 1;
+    //         if (!event.pressed && macro.type == MacroType::kInvert)
+    //         {
+    //             mCurrent = &macro;
+    //             mBegin   = content.end() - 1;
+    //             mEnd     = content.begin() - 1;
                     
-                playback();
-            }
-            else
-            {
-                if (event.pressed)
-                {
-                    mCurrent = &macro;
-                    mBegin   = content.begin();
-                    mEnd     = content.end();
+    //             playback();
+    //         }
+    //         else
+    //         {
+    //             if (event.pressed)
+    //             {
+    //                 mCurrent = &macro;
+    //                 mBegin   = content.begin();
+    //                 mEnd     = content.end();
                     
-                    playback();
-                }
-            }
-        }
-    }
-    else
-    {
-        mNext.processKeyEvent(event);
-    }
+    //                 playback();
+    //             }
+    //         }
+    //     }
+    // }
+    // else
+    // {
+    //     mNext.processEvent(event);
+    // }
+    
+    mNext.processEvent(event);
 }
 
 void MacroProcessor::playback()
 {
-    if (mCurrent)
-    {
-        while (mBegin != mEnd)
-        {
-            const auto& event(*mBegin);
+    // if (mCurrent)
+    // {
+    //     while (mBegin != mEnd)
+    //     {
+    //         const auto& event(*mBegin);
             
-            bool forward(mBegin < mEnd);
+    //         bool forward(mBegin < mEnd);
             
-            if (forward)
-            {
-                ++mBegin;
-            }
-            else
-            {
-                --mBegin;
-            }
+    //         if (forward)
+    //         {
+    //             ++mBegin;
+    //         }
+    //         else
+    //         {
+    //             --mBegin;
+    //         }
             
-            if (event.keyId.type() == KeyId::Type::kDelay)
-            {
-                mPlaybackTimer.schedule(event.keyId.delayMs());
-                return;
-            }
-            else
-            {
-                mNext.processKeyEvent(KeyEvent(event.keyId,
-                                               !forward ^ event.pressed));
-            }
-        }
+    //         if (event.keyId.type() == KeyId::Type::kDelay)
+    //         {
+    //             mPlaybackTimer.schedule(event.keyId.delayMs());
+    //             return;
+    //         }
+    //         else
+    //         {
+    //             mNext.processEvent(Event(event.keyId,
+    //                                            !forward ^ event.pressed));
+    //         }
+    //     }
         
-        mCurrent = nullptr;
-    }
+    //     mCurrent = nullptr;
+    // }
 }
 
 

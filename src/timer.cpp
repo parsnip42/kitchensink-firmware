@@ -1,11 +1,11 @@
 #include "timer.h"
 #include "types/range.h"
-#include "keyevent.h"
+#include "event/event.h"
 
 #include <algorithm>
 #include <elapsedMillis.h>
 
-void Timer::pollKeyEvent(KeyEventStage& next)
+void Timer::pollEvent(EventStage& next)
 {
     auto timeMs(millis());
     
@@ -37,7 +37,7 @@ void Timer::pollKeyEvent(KeyEventStage& next)
                 timerEntry.repeatDelayMs = 0;
             }
             
-            next.processKeyEvent(KeyEvent(KeyId::Tick(tickId), true));
+            next.processEvent(TickEvent::create(tickId));
         }
     }
 }

@@ -4,17 +4,17 @@
 #include "ui/labelwidget.h"
 #include "ui/labelledwidget.h"
 #include "ui/hstackwidget.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 class Widget;
 
-class KeyConfigScreen : public KeyEventStage
+class KeyConfigScreen : public EventStage
 {
 public:
     KeyConfigScreen();
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
     Widget& rootWidget();
     

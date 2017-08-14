@@ -1,17 +1,16 @@
 #ifndef INCLUDED_VIRTUALKEYBOARD_H
 #define INCLUDED_VIRTUALKEYBOARD_H
 
-#include "keyid.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "modifierstate.h"
 
-class VirtualKeyboard : public KeyEventStage
+class VirtualKeyboard : public EventStage
 {
 public:
     VirtualKeyboard();
 
 public:
-    virtual void processKeyEvent(const KeyEvent& keyEvent) override;
+    virtual void processEvent(const Event& keyEvent) override;
     char consumeChar();
     
 private:

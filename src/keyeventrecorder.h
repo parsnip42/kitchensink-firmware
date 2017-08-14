@@ -1,25 +1,25 @@
 #ifndef INCLUDED_KEYEVENTRECORDER_H
 #define INCLUDED_KEYEVENTRECORDER_H
 
-#include "keyevent.h"
-#include "keyeventstage.h"
+#include "event/event.h"
+#include "eventstage.h"
 
 #include <array>
 #include <cstdint>
 
-class KeyEventRecorder : public KeyEventStage
+class EventRecorder : public EventStage
 {
 private:
-    typedef std::array<KeyEvent, 200> Content;
+    typedef std::array<Event, 200> Content;
     
 public:
     typedef Content::const_iterator const_iterator;
     
 public:
-    explicit KeyEventRecorder(bool realtime);
+    explicit EventRecorder(bool realtime);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
 public:
     const_iterator begin() const;
@@ -38,31 +38,31 @@ private:
 
 
 inline
-KeyEventRecorder::const_iterator KeyEventRecorder::begin() const
+EventRecorder::const_iterator EventRecorder::begin() const
 {
     return mContent.begin();
 }
 
 inline
-KeyEventRecorder::const_iterator KeyEventRecorder::end() const
+EventRecorder::const_iterator EventRecorder::end() const
 {
     return mContent.begin() + mSize;
 }
 
 inline
-std::size_t KeyEventRecorder::size() const
+std::size_t EventRecorder::size() const
 {
     return mSize;
 }
 
 inline
-bool KeyEventRecorder::complete() const
+bool EventRecorder::complete() const
 {
     return mComplete;
 }
 
 inline
-bool KeyEventRecorder::full() const
+bool EventRecorder::full() const
 {
     return mSize == mContent.size();
 }

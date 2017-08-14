@@ -13,24 +13,19 @@ ComboWidget::ComboWidget(ComboWidget::DataSource& dataSource)
     , mDataSource(dataSource)
 { }
 
-void ComboWidget::processKeyEvent(const KeyEvent& event)
+void ComboWidget::processEvent(const Event& event)
 {
-    if (!event.pressed)
+    if (Keys::left(event))
     {
-        auto keyId(event.keyId);
+        selectedItem += mDataSource.size() - 1;
+        selectedItem %= mDataSource.size();
+        invalidateWidget();
+    }
 
-        if (Keys::left(keyId))
-        {
-            selectedItem += mDataSource.size() - 1;
-            selectedItem %= mDataSource.size();
-            invalidateWidget();
-        }
-
-        if (Keys::right(keyId))
-        {
-            ++selectedItem %= mDataSource.size();
-            invalidateWidget();
-        }
+    if (Keys::right(event))
+    {
+        ++selectedItem %= mDataSource.size();
+        invalidateWidget();
     }
 }
 

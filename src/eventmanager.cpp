@@ -5,9 +5,9 @@
 EventManager::EventManager(Timer&              nTimer,
                            KeySource&          keySource,
                            LedSource&          ledSource,
-                           KeyEventStage&      input,
+                           EventStage&         input,
                            ToplevelEventStage& toplevel,
-                           KeyEventStage&      nDefaultOutput)
+                           EventStage&         nDefaultOutput)
     : timer(nTimer)
     , defaultOutput(nDefaultOutput)
     , mKeySource(keySource)
@@ -16,31 +16,31 @@ EventManager::EventManager(Timer&              nTimer,
     , mToplevel(toplevel)
 { }
 
-void EventManager::processKeyEvent(const KeyEvent& event)
+void EventManager::processEvent(const Event& event)
 {
-    mBuffer.processKeyEvent(event);
+    mBuffer.processEvent(event);
 }
 
-void EventManager::poll(KeyEventStage& output)
+void EventManager::poll(EventStage& output)
 {
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
         
-    mBuffer.pollKeyEvent(mInput);
-    timer.pollKeyEvent(mInput);
-    mKeySource.pollKeyEvent(nowMs(), mInput);
-    mLedSource.pollKeyEvent(mInput);
+    mBuffer.pollEvent(mInput);
+    timer.pollEvent(mInput);
+    mKeySource.pollEvent(nowMs(), mInput);
+    mLedSource.pollEvent(mInput);
 }
 
-void EventManager::flush(KeyEventStage& output)
+void EventManager::flush(EventStage& output)
 {
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
     
     while (mKeySource.anyPressed() || !mBuffer.empty())
     {
-        mBuffer.pollKeyEvent(mInput);
-        timer.pollKeyEvent(mInput);
-        mKeySource.pollKeyEvent(nowMs(), mInput);
-        mLedSource.pollKeyEvent(mInput);
+        mBuffer.pollEvent(mInput);
+        timer.pollEvent(mInput);
+        mKeySource.pollEvent(nowMs(), mInput);
+        mLedSource.pollEvent(mInput);
     }
 }
 

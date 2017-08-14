@@ -1,7 +1,7 @@
 #ifndef INCLUDED_TEXTENTRYWIDGET_H
 #define INCLUDED_TEXTENTRYWIDGET_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/dimension.h"
@@ -14,7 +14,7 @@
 #include <cstdint>
 
 class KeyId;
-class KeyEvent;
+class Event;
 class Timer;
 
 class TextEntryWidget : public Widget
@@ -28,7 +28,7 @@ public:
     TextEntryWidget(TextEntryWidget&&) = default;
     
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     virtual void setFocused(bool nFocused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual Dimension minimumSize() const override;

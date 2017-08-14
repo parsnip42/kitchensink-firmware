@@ -7,10 +7,10 @@
 namespace
 {
 
-class NullKeyStage : public KeyEventStage
+class NullKeyStage : public EventStage
 {
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override
+    virtual void processEvent(const Event& event) override
     { }
 };
 
@@ -19,11 +19,11 @@ public:
 BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
     : mEventManager(eventManager)
     , mStatusLabel()
-    , mWidgetSet({ &mStatusLabel })
-    , mListWidget(mWidgetSet.begin(), mWidgetSet.end(), Font::kHeight)
+    , mItems({ mStatusLabel })
+    , mHStackWidget(mItems, true)
 { }
 
-void BenchmarkScreen::processKeyEvent(const KeyEvent& event)
+void BenchmarkScreen::processEvent(const Event& event)
 {
     
 }
@@ -53,5 +53,5 @@ void BenchmarkScreen::run()
 
 Widget& BenchmarkScreen::rootWidget()
 {
-    return mListWidget;
+    return mHStackWidget;
 }

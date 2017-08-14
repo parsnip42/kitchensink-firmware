@@ -52,35 +52,30 @@ EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
     mTypeCombo.widget.selectedItem = 0;
 }
 
-void EditMacroScreen::processKeyEvent(const KeyEvent& event)
+void EditMacroScreen::processEvent(const Event& event)
 {
-    auto keyId(event.keyId);
-
-    if (Keys::ok(keyId) && mHStackWidget.lastWidgetFocused())
+    if (Keys::ok(event) && mHStackWidget.lastWidgetFocused())
     {
-        if (event.pressed)
-        {
-            auto& macro(mMacroSet[mMacroId]);
+        auto& macro(mMacroSet[mMacroId]);
             
-            MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-                                MacroType::kInvert :
-                                MacroType::kSync);
+        MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
+                            MacroType::kInvert :
+                            MacroType::kSync);
 
-            macro.type     = macroType;
-            macro.name     = mTitleEntry.widget.text;
-            macro.shortcut = mShortcutEntry.widget.text;
+        macro.type     = macroType;
+        macro.name     = mTitleEntry.widget.text;
+        macro.shortcut = mShortcutEntry.widget.text;
 
-            mScreenStack.pop();
+        mScreenStack.pop();
 
-            auto realtime(mTypeCombo.widget.selectedItem == 1);
-            auto screenType(realtime ? ScreenId::Type::kRecordMacroRT : ScreenId::Type::kRecordMacro);
+        auto realtime(mTypeCombo.widget.selectedItem == 1);
+        auto screenType(realtime ? ScreenId::Type::kRecordMacroRT : ScreenId::Type::kRecordMacro);
             
-            mScreenStack.push(ScreenId(screenType, mMacroId));
-        }
+        mScreenStack.push(ScreenId(screenType, mMacroId));
     }
     else
     {
-        mHStackWidget.processKeyEvent(event);
+        mHStackWidget.processEvent(event);
     }
 }
 

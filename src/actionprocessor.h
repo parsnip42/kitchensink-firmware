@@ -1,22 +1,22 @@
 #ifndef INCLUDED_ACTIONPROCESSOR_H
 #define INCLUDED_ACTIONPROCESSOR_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 
 #include <array>
 
-class KeyEvent;
+class Event;
 
-class ActionProcessor : public KeyEventStage
+class ActionProcessor : public EventStage
 {    
 public:
-    explicit ActionProcessor(KeyEventStage& next);
+    explicit ActionProcessor(EventStage& next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     
 private:
-    KeyEventStage& mNext;
+    EventStage& mNext;
     
 private:
     ActionProcessor(const ActionProcessor&) = delete;

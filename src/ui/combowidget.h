@@ -1,7 +1,7 @@
 #ifndef INCLUDED_COMBOWIDGET_H
 #define INCLUDED_COMBOWIDGET_H
 
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "types/strbuf.h"
 #include "types/objectsource.h"
 #include "ui/rectangle.h"
@@ -21,7 +21,7 @@ public:
     
 public:
     virtual void setFocused(bool focused) override;
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
 
 public:

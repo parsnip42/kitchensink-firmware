@@ -1,32 +1,32 @@
 #include "actionprocessor.h"
 
 #include "hardware/ctrlutil.h"
-#include "keyevent.h"
+#include "event/event.h"
 
-ActionProcessor::ActionProcessor(KeyEventStage& next)
+ActionProcessor::ActionProcessor(EventStage& next)
     : mNext(next)
 { }
 
-void ActionProcessor::processKeyEvent(const KeyEvent& event)
+void ActionProcessor::processEvent(const Event& event)
 {
-    const auto& keyId(event.keyId);
+    // const auto& keyId(event.keyId);
     
-    if (keyId.type() == KeyId::Type::kAction)
-    {
-        if (event.pressed)
-        {
-            switch (keyId.value())
-            {
-            case 0:
-                CtrlUtil::bootloader();
-                break;
+    // if (keyId.type() == KeyId::Type::kAction)
+    // {
+    //     if (event.pressed)
+    //     {
+    //         switch (keyId.value())
+    //         {
+    //         case 0:
+    //             CtrlUtil::bootloader();
+    //             break;
                 
-            default:
-                break;
-            }
-        }
-    }
+    //         default:
+    //             break;
+    //         }
+    //     }
+    // }
 
-    mNext.processKeyEvent(event);
+    mNext.processEvent(event);
 }
 

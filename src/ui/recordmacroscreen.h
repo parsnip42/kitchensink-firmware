@@ -1,9 +1,8 @@
 #ifndef INCLUDED_RECORDMACROSCREEN_H
 #define INCLUDED_RECORDMACROSCREEN_H
 
-#include "keyevent.h"
 #include "keyeventrecorder.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "timer.h"
 #include "ui/labelwidget.h"
 
@@ -11,7 +10,7 @@ class ScreenStack;
 class Timer;
 class MacroSet;
 
-class RecordMacroScreen : public KeyEventStage
+class RecordMacroScreen : public EventStage
 {    
 public:
     RecordMacroScreen(ScreenStack&   screenStack,
@@ -19,22 +18,22 @@ public:
                       MacroSet&      macroSet,
                       int            macroId,
                       bool           realtime,
-                      KeyEventStage& next);
+                      EventStage& next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event);
+    virtual void processEvent(const Event& event);
 
     Widget& rootWidget();
     
 private:
-    ScreenStack&     mScreenStack;
-    MacroSet&        mMacroSet;
-    int              mMacroId;
-    KeyEventRecorder mRecorder;
-    LabelWidget      mLabelWidget;
-    Timer::Handle    mFlashTimer;
-    bool             mFlash;
-    KeyEventStage&   mNext;
+    ScreenStack&  mScreenStack;
+    MacroSet&     mMacroSet;
+    int           mMacroId;
+    EventRecorder mRecorder;
+    LabelWidget   mLabelWidget;
+    Timer::Handle mFlashTimer;
+    bool          mFlash;
+    EventStage&   mNext;
     
 private:
     RecordMacroScreen(const RecordMacroScreen&) = delete;

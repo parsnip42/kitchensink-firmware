@@ -1,14 +1,14 @@
 #include "modifierstate.h"
 
-#include "keyevent.h"
+#include "event/event.h"
+#include "event/keyevent.h"
 
-bool ModifierState::processEvent(const KeyEvent& event)
+bool ModifierState::processEvent(const Event& event)
 {
-    auto keyId(event.keyId);
-    
-    if (keyId.type() == KeyId::Type::kKey)
+    if (event.is<KeyEvent>())
     {
-        auto keyCode(keyId.value());
+        auto keyEvent(event.get<KeyEvent>());
+        auto keyCode(keyEvent.keyCode);
 
         if (keyCode >= KeyCodes::ModifierOffset)
         {
@@ -16,7 +16,7 @@ bool ModifierState::processEvent(const KeyEvent& event)
 
             if (modifier < keyState.size())
             {
-                keyState[modifier] = event.pressed;
+                keyState[modifier] = keyEvent.pressed;
             }
             
             return true;

@@ -1,31 +1,31 @@
 #ifndef INCLUDED_AUTOREPEAT_H
 #define INCLUDED_AUTOREPEAT_H
 
-#include "keyevent.h"
-#include "keyeventstage.h"
+#include "event/event.h"
+#include "eventstage.h"
 #include "timer.h"
 
 #include <cstdint>
 
-class AutoRepeat : public KeyEventStage
+class AutoRepeat : public EventStage
 {
 public:
     explicit AutoRepeat(Timer&         timer,
-                        KeyEventStage& next);
+                        EventStage& next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
-    KeyId activeKey();
+    Event activeEvent();
 
 public:
     uint32_t repeatDelay;
     uint32_t repeatRate;
     
 private:
-    Timer::Handle  mRepeatTimer;
-    KeyId          mKeyId;
-    KeyEventStage& mNext;
+    Timer::Handle mRepeatTimer;
+    Event         mEvent;
+    EventStage&   mNext;
 
 private:
     AutoRepeat(const AutoRepeat&) = delete;

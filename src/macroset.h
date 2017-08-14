@@ -1,7 +1,6 @@
 #ifndef INCLUDED_MACROSET_H
 #define INCLUDED_MACROSET_H
 
-#include "keyevent.h"
 #include "macro.h"
 #include "macrotype.h"
 #include "macrodatapool.h"

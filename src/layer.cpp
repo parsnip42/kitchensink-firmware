@@ -1,6 +1,6 @@
 #include "layer.h"
 
-KeyId Layer::at(int row, int column) const
+Event Layer::at(int row, int column) const
 {
     if (row >= 0 && row < kRows &&
         column >= 0 && column < kColumns)
@@ -9,7 +9,7 @@ KeyId Layer::at(int row, int column) const
     }
     else
     {
-        return KeyId();
+        return Event();
     }
 }
 
@@ -19,6 +19,6 @@ void Layer::clear()
 
     for (auto& row : mapping)
     {
-        row.fill(KeyId());
+        row.fill(Event());
     }
 }

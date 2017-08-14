@@ -4,31 +4,38 @@
 #include "keyid.h"
 #include "data/keycodes.h"
 #include "screenid.h"
+#include "event/event.h"
+#include "event/actionevent.h"
+#include "event/keyevent.h"
+#include "event/screenevent.h"
+#include "event/macroevent.h"
+#include "event/multievent.h"
+// #include "event/smartevent.h"
 
 namespace
 {
 
 const std::array<MenuScreen::Item, 6> mainMenu = { {
-        { StrRef("Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 1) },
-        { StrRef("Secure Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 2) },
-        { StrRef("Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 3) },
-        { StrRef("Layers"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 4) },
-        { StrRef("Configuration"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 5) },
-        { StrRef("System"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 6) },
+        { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 1) },
+        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 2) },
+        { StrRef("Keys"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 3) },
+        { StrRef("Layers"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 4) },
+        { StrRef("Configuration"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 5) },
+        { StrRef("System"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 6) },
     } };
 
 const std::array<MenuScreen::Item, 5> configMenu = { {
-        { StrRef("Edit Key Layout"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 2) },
-        { StrRef("Edit Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 10) },
-        { StrRef("Edit Secure Macros"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 11) },
-        { StrRef("Edit Multi Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 12) },
-        { StrRef("Edit Smart Keys"), StrRef(), KeyId::Screen(ScreenId::Type::kMenu, 13) },
+        { StrRef("Edit Key Layout"), StrRef(), ScreenEvent::create(ScreenId::Type::kScreen, 2) },
+        { StrRef("Edit Macros"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 10) },
+        { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 11) },
+        { StrRef("Edit Multi Keys"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 12) },
+        { StrRef("Edit Smart Keys"), StrRef(), ScreenEvent::create(ScreenId::Type::kMenu, 13) },
     } };
 
 const std::array<MenuScreen::Item, 3> systemMenu = { {
-        { StrRef("Storage"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 0) },
-        { StrRef("Benchmark"), StrRef(), KeyId::Screen(ScreenId::Type::kScreen, 1) },
-        { StrRef("Bootloader"), StrRef(), KeyId::Action(0) } 
+        { StrRef("Storage"), StrRef(), ScreenEvent::create(ScreenId::Type::kScreen, 0) },
+        { StrRef("Benchmark"), StrRef(), ScreenEvent::create(ScreenId::Type::kScreen, 1) },
+        { StrRef("Bootloader"), StrRef(), ActionEvent::create(0) } 
     } };
 
 
@@ -38,7 +45,7 @@ MenuScreen::Item createMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    item.keyId    = KeyId::Macro(index);
+    item.event    = MacroEvent::create(index);
         
     return item;
 }
@@ -49,7 +56,7 @@ MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    item.keyId    = KeyId::Screen(ScreenId::Type::kEditMacro, index);
+    item.event    = ScreenEvent::create(ScreenId::Type::kEditMacro, index);
         
     return item;
 }
@@ -60,7 +67,7 @@ MenuScreen::Item createSMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    item.keyId    = KeyId::SMacro(index);
+    // item.event    = KeyId::SMacro(index);
         
     return item;
 }
@@ -71,7 +78,7 @@ MenuScreen::Item createEditSMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    item.keyId    = KeyId::Screen(ScreenId::Type::kEditSMacro, index);
+    item.event    = ScreenEvent::create(ScreenId::Type::kEditSMacro, index);
         
     return item;
 }
@@ -81,7 +88,7 @@ MenuScreen::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index
     MenuScreen::Item item;
         
     item.title = multi.name;
-    item.keyId = KeyId::Multi(index);
+    item.event = MultiEvent::create(index);
         
     return item;
 }
@@ -91,7 +98,7 @@ MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index
     MenuScreen::Item item;
         
     item.title = smart.name;
-    item.keyId = KeyId::Smart(index);
+    // item.event = KeyId::Smart(index);
         
     return item;
 }
@@ -101,7 +108,7 @@ MenuScreen::Item createLayerMenuItem(const Layer& layer, std::size_t index)
     MenuScreen::Item item;
         
     item.title = layer.name;
-    item.keyId = KeyId();
+    item.event = Event();
         
     return item;
 }
@@ -127,7 +134,7 @@ MenuScreen::Item createKeyMenuItem(std::size_t index)
         os.appendInt(index + 1, "%2.2x");
     }
     
-    item.keyId = KeyId(index + 1);
+    item.event = KeyEvent::create(index + 1);
 
     return item;
 }

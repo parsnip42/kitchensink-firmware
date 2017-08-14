@@ -1,58 +1,48 @@
 #include "ui/hstackwidget.h"
 
 #include "ui/keys.h"
-#include "keyevent.h"
+#include "event/event.h"
 
 #include <algorithm>
 
-void HStackWidget::processKeyEvent(const KeyEvent& event)
+void HStackWidget::processEvent(const Event& event)
 {
-    auto keyId(event.keyId);
-    
-    if (Keys::down(keyId) || Keys::ok(keyId))
+    if (Keys::down(event) || Keys::ok(event))
     {
-        if (event.pressed)
+        if (mFocused != mItems.end())
         {
-            if (mFocused != mItems.end())
+            auto next(mFocused);
+                
+            ++next;
+                
+            if (next != mItems.end())
             {
-                auto next(mFocused);
-                
-                ++next;
-                
-                if (next != mItems.end())
-                {
-                   mFocused->widget.setFocused(false);
-                    ++mFocused;
-                   mFocused->widget.setFocused(true);
+                mFocused->widget.setFocused(false);
+                ++mFocused;
+                mFocused->widget.setFocused(true);
 
-                   invalidateWidget();
-                }
+                invalidateWidget();
             }
         }
     }
-    else if (Keys::up(keyId))
+    else if (Keys::up(event))
     {
-        if (event.pressed)
+        if (mFocused != mItems.begin())
         {
-            if (mFocused != mItems.begin())
-            {
-               mFocused->widget.setFocused(false);
-                --mFocused;
-               mFocused->widget.setFocused(true);
+            mFocused->widget.setFocused(false);
+            --mFocused;
+            mFocused->widget.setFocused(true);
 
-               invalidateWidget();
-            }
+            invalidateWidget();
         }
     }
     else
     {
         if (mFocused != mItems.end())
         {
-            mFocused->widget.processKeyEvent(event);
+            mFocused->widget.processEvent(event);
         }
     }
-
-    
 }
 
 void HStackWidget::setFocused(bool focused)

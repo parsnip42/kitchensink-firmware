@@ -1,24 +1,24 @@
 #include "multikeyprocessor.h"
 
-#include "keyevent.h"
+#include "event/event.h"
+#include "event/multievent.h"
 
-void MultiKeyProcessor::processKeyEvent(const KeyEvent& event)
+void MultiKeyProcessor::processEvent(const Event& event)
 {
     if (mReleaseTimer.matches(event))
     {
         mMultiKeySet[mLast].trigger(mNext);
         return;
     }
-    
-    const auto& keyId(event.keyId);
 
-    if (keyId.type() == KeyId::Type::kMulti)
+    if (event.is<MultiEvent>())
     {
-        auto multiId(keyId.value());
+        auto multiEvent(event.get<MultiEvent>());
+        auto multiId(multiEvent.multiId);
         
         if (multiId < mMultiKeySet.size())
         {
-            if (event.pressed)
+            if (multiEvent.pressed)
             {
                 mReleaseTimer.schedule(300);
                 mMultiKeySet[multiId].press();
@@ -39,6 +39,6 @@ void MultiKeyProcessor::processKeyEvent(const KeyEvent& event)
     else
     {
         mMultiKeySet[mLast].trigger(mNext);
-        mNext.processKeyEvent(event);   
+        mNext.processEvent(event);   
     }
 }

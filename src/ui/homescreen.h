@@ -2,21 +2,21 @@
 #define INCLUDED_HOMESCREEN_H
 
 #include "ui/homewidget.h"
-#include "keyeventstage.h"
+#include "eventstage.h"
 #include "timer.h"
 #include "smartkeyset.h"
 
 class Widget;
 
-class HomeScreen : public KeyEventStage
+class HomeScreen : public EventStage
 {
 public:
     HomeScreen(Timer&             timer,
                const SmartKeySet& smartKeySet,
-               KeyEventStage&     next);
+               EventStage&        next);
 
 public:
-    virtual void processKeyEvent(const KeyEvent& event) override;
+    virtual void processEvent(const Event& event) override;
 
     Widget& rootWidget();
 
@@ -26,7 +26,7 @@ private:
     Timer::Handle      mDisplayTimeout;
     const SmartKeySet& mSmartKeySet;
     HomeWidget         mHomeWidget;
-    KeyEventStage&     mNext;
+    EventStage&        mNext;
 };
 
 #endif

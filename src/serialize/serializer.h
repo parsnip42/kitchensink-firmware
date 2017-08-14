@@ -10,8 +10,7 @@
 
 #include <array>
 
-class KeyEvent;
-class KeyId;
+class Event;
 class Layer;
 class LayerStack;
 

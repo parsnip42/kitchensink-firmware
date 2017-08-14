@@ -4,7 +4,7 @@
 #include "types/bitmask.h"
 #include "data/keycodes.h"
 
-class KeyEvent;
+class Event;
 
 class ModifierState
 {
@@ -28,7 +28,7 @@ public:
     constexpr bool altGr() const;
     constexpr bool gui() const;
 
-    bool processEvent(const KeyEvent& event);
+    bool processEvent(const Event& event);
     
 private:
     Bitmask<8> keyState;

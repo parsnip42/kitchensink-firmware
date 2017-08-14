@@ -1,5 +1,6 @@
 #include "keysource.h"
 
+#include "event/keyevent.h"
 #include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keylocation.h"
@@ -34,22 +35,25 @@ int KeySource::topLayer()
     return -1;
 }
 
-void KeySource::pollKeyEvent(uint32_t       timeMs,
-                             KeyEventStage& next)
+void KeySource::pollEvent(uint32_t    timeMs,
+                          EventStage& next)
 {
     // Layer changes shouldn't take effect until the next set of key events -
     // take a copy of the mask.
     auto currentLayerMask(mLayerMask);
 
-    mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& event)
+    mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& keyboardEvent)
     {
-        auto keyId(mLayerStack.at(currentLayerMask,
-                                  event.row,
-                                  event.column));
+        auto event(mLayerStack.at(currentLayerMask,
+                                  keyboardEvent.row,
+                                  keyboardEvent.column));
 
-        auto keyEvent(KeyEvent(keyId, event.pressed));
-
-        next.processKeyEvent(keyEvent);
+        if (!keyboardEvent.pressed)
+        {
+            event = event.invert();
+        }
+        
+        next.processEvent(event);
     });
 
     if (currentLayerMask != mLayerMask)
@@ -74,22 +78,22 @@ bool KeySource::anyPressed()
 
 void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
                                    const LayerStack::Mask& nextMask,
-                                   KeyEventStage&          next)
+                                   EventStage&          next)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
-        auto currentKey(mLayerStack.at(currentMask,
+        auto currentEvent(mLayerStack.at(currentMask,
                                        event.row,
                                        event.column));
         
-        auto nextKey(mLayerStack.at(nextMask,
+        auto nextEvent(mLayerStack.at(nextMask,
                                     event.row,
                                     event.column));
 
-        if (currentKey != nextKey)
+        if (currentEvent != nextEvent)
         {
-            next.processKeyEvent(KeyEvent(currentKey, false));
-            next.processKeyEvent(KeyEvent(nextKey, true));
+            // next.processEvent(Event(currentKey, false));
+            // next.processEvent(Event(nextKey, true));
         }
     });
 }
