@@ -1,7 +1,7 @@
 #ifndef INCLUDED_MENUSCREEN_H
 #define INCLUDED_MENUSCREEN_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "event/event.h"
 #include "types/mappedobjectsource.h"
 #include "types/objectsource.h"

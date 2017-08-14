@@ -1,7 +1,7 @@
 #ifndef INCLUDED_TEXTENTRYWIDGET_H
 #define INCLUDED_TEXTENTRYWIDGET_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/dimension.h"

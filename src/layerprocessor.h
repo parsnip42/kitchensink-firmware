@@ -1,7 +1,7 @@
 #ifndef INCLUDED_LAYERPROCESSOR_H
 #define INCLUDED_LAYERPROCESSOR_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 class KeySource;
 class Event;

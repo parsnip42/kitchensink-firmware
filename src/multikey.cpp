@@ -1,6 +1,6 @@
 #include "multikey.h"
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 void MultiKey::press()
 {

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYEVENTBUFFER_H
 #define INCLUDED_KEYEVENTBUFFER_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "event/event.h"
 #include "types/circularbuffer.h"
 

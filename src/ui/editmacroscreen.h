@@ -5,7 +5,7 @@
 #include "ui/combowidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 class ScreenStack;
 class Timer;

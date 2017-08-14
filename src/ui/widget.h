@@ -1,7 +1,7 @@
 #ifndef INCLUDED_WIDGET_H
 #define INCLUDED_WIDGET_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "ui/rasterline.h"
 #include "ui/rectangle.h"
 

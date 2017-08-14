@@ -2,7 +2,7 @@
 #define INCLUDED_AUTOREPEAT_H
 
 #include "event/event.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "timer.h"
 
 #include <cstdint>

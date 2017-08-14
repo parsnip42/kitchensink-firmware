@@ -2,7 +2,7 @@
 #define INCLUDED_KEYEVENTRECORDER_H
 
 #include "event/event.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 #include <array>
 #include <cstdint>

@@ -3,7 +3,7 @@
 
 #include "event/event.h"
 #include "event/tickevent.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "types/orderedcircularbuffer.h"
 #include "config.h"
 

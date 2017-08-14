@@ -4,7 +4,7 @@
 #include "ui/hstackwidget.h"
 #include "ui/labelwidget.h"
 #include "ui/widgetset.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 class EventManager;
 class Widget;

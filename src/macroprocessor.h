@@ -1,7 +1,7 @@
 #ifndef INCLUDED_MACROPROCESSOR_H
 #define INCLUDED_MACROPROCESSOR_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "macroset.h"
 #include "timer.h"
 

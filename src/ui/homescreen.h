@@ -2,7 +2,7 @@
 #define INCLUDED_HOMESCREEN_H
 
 #include "ui/homewidget.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "timer.h"
 #include "smartkeyset.h"
 

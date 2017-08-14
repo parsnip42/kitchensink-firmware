@@ -2,7 +2,7 @@
 #define INCLUDED_EVENTMANAGER_H
 
 #include "keyeventbuffer.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "event/event.h"
 #include "keysource.h"
 #include "ledsource.h"

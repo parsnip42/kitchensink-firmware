@@ -2,7 +2,7 @@
 #define INCLUDED_MULTIKEYPROCESSOR_H
 
 #include "multikeyset.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "timer.h"
 
 #include <cstdint>

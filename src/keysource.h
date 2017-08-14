@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYSOURCE_H
 #define INCLUDED_KEYSOURCE_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "layerstack.h"
 
 #include <cstdint>

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_TOPLEVELEVENTSTAGE_H
 #define INCLUDED_TOPLEVELEVENTSTAGE_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 #include <algorithm>
 

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_VIRTUALKEYBOARD_H
 #define INCLUDED_VIRTUALKEYBOARD_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "modifierstate.h"
 
 class VirtualKeyboard : public EventStage

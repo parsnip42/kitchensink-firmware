@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SMARTKEYPROCESSOR_H
 #define INCLUDED_SMARTKEYPROCESSOR_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "smartkeyset.h"
 
 class SmartKeyProcessor : public EventStage

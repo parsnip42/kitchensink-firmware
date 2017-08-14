@@ -2,7 +2,7 @@
 #define INCLUDED_RECORDMACROSCREEN_H
 
 #include "keyeventrecorder.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "timer.h"
 #include "ui/labelwidget.h"
 

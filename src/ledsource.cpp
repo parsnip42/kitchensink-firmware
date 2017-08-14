@@ -1,7 +1,7 @@
 #include "ledsource.h"
 
 #include "event/ledmaskevent.h"
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 #include <usb_keyboard.h>
 

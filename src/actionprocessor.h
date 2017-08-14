@@ -1,7 +1,7 @@
 #ifndef INCLUDED_ACTIONPROCESSOR_H
 #define INCLUDED_ACTIONPROCESSOR_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 
 #include <array>
 

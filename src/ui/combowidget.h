@@ -1,7 +1,7 @@
 #ifndef INCLUDED_COMBOWIDGET_H
 #define INCLUDED_COMBOWIDGET_H
 
-#include "eventstage.h"
+#include "event/eventstage.h"
 #include "types/strbuf.h"
 #include "types/objectsource.h"
 #include "ui/rectangle.h"
