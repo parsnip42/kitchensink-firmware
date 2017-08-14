@@ -45,7 +45,12 @@ public:
     Event(int value)
         : mData(static_cast<uint16_t>(Type::kKey) << kTypeOffset |
                 (value & kValueMask))
-    { }
+    {
+        if (value == 0)
+        {
+            mData=0;
+        }
+    }
 
 
 public:
@@ -143,7 +148,7 @@ constexpr Event Event::invert() const
 {
     Event e(*this);
 
-    if (e.type() >= Type::kKey)
+    if ((int)e.type() >= 8)
     {
         e.mData ^= (kSubTypeMask << kSubTypeOffset);
 

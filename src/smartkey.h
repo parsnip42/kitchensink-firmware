@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SMARTKEY_H
 #define INCLUDED_SMARTKEY_H
 
-#include "keyid.h"
+#include "event/event.h"
 #include "types/strbuf.h"
 #include "config.h"
 
@@ -22,8 +22,8 @@ public:
     
 public:
     StrBuf<Config::kSmartKeyNameLen> name;
-    KeyId                            keyId;
-    KeyId                            auxKeyId;
+    Event                            event;
+    Event                            auxEvent;
     Type                             type;
     bool                             enabled;
 };

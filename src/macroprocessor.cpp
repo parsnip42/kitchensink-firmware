@@ -1,6 +1,8 @@
 #include "macroprocessor.h"
 #include "types/range.h"
 #include "event/event.h"
+#include "event/macroevent.h"
+#include "event/delayevent.h"
 #include "macro.h"
 
 MacroProcessor::MacroProcessor(Event::Type     macroType,
@@ -16,83 +18,79 @@ MacroProcessor::MacroProcessor(Event::Type     macroType,
 
 void MacroProcessor::processEvent(const Event& event)
 {
-    // const auto& keyId(event.keyId);
+    if (mPlaybackTimer.matches(event))
+    {
+        playback();
+    }
+    else if (event.is<MacroEvent>())
+    {
+        auto macroEvent(event.get<MacroEvent>());
+        auto macroId(macroEvent.macroId);
 
-    // if (mPlaybackTimer.matches(event))
-    // {
-    //     playback();
-    // }
-    // else if (keyId.type() == mMacroKeyType)
-    // {
-    //     auto macroIndex(keyId.value());
+        if (macroId < mMacroSet.size())
+        {
+            const auto& macro(mMacroSet[macroId]);
+            const auto& content(macro.content);
 
-    //     if (macroIndex < mMacroSet.size())
-    //     {
-    //         const auto& macro(mMacroSet[keyId.value()]);
-    //         const auto& content(macro.content);
-
-    //         if (!event.pressed && macro.type == MacroType::kInvert)
-    //         {
-    //             mCurrent = &macro;
-    //             mBegin   = content.end() - 1;
-    //             mEnd     = content.begin() - 1;
+            if (!macroEvent.pressed && macro.type == MacroType::kInvert)
+            {
+                mCurrent = &macro;
+                mBegin   = content.end() - 1;
+                mEnd     = content.begin() - 1;
                     
-    //             playback();
-    //         }
-    //         else
-    //         {
-    //             if (event.pressed)
-    //             {
-    //                 mCurrent = &macro;
-    //                 mBegin   = content.begin();
-    //                 mEnd     = content.end();
+                playback();
+            }
+            else
+            {
+                if (macroEvent.pressed)
+                {
+                    mCurrent = &macro;
+                    mBegin   = content.begin();
+                    mEnd     = content.end();
                     
-    //                 playback();
-    //             }
-    //         }
-    //     }
-    // }
-    // else
-    // {
-    //     mNext.processEvent(event);
-    // }
-    
-    mNext.processEvent(event);
+                    playback();
+                }
+            }
+        }
+    }
+    else
+    {
+        mNext.processEvent(event);
+    }
 }
 
 void MacroProcessor::playback()
 {
-    // if (mCurrent)
-    // {
-    //     while (mBegin != mEnd)
-    //     {
-    //         const auto& event(*mBegin);
+    if (mCurrent)
+    {
+        while (mBegin != mEnd)
+        {
+            const auto& event(*mBegin);
             
-    //         bool forward(mBegin < mEnd);
+            bool forward(mBegin < mEnd);
             
-    //         if (forward)
-    //         {
-    //             ++mBegin;
-    //         }
-    //         else
-    //         {
-    //             --mBegin;
-    //         }
+            if (forward)
+            {
+                ++mBegin;
+            }
+            else
+            {
+                --mBegin;
+            }
             
-    //         if (event.keyId.type() == KeyId::Type::kDelay)
-    //         {
-    //             mPlaybackTimer.schedule(event.keyId.delayMs());
-    //             return;
-    //         }
-    //         else
-    //         {
-    //             mNext.processEvent(Event(event.keyId,
-    //                                            !forward ^ event.pressed));
-    //         }
-    //     }
+            if (event.is<DelayEvent>())
+            {
+                mPlaybackTimer.schedule(event.get<DelayEvent>().delayMs);
+                return;
+            }
+            else
+            {
+                mNext.processEvent(forward ? event : event.invert());
+            }
+        }
         
-    //     mCurrent = nullptr;
-    // }
+        mCurrent = nullptr;
+    }
 }
 
 

@@ -9,6 +9,14 @@ public:
     static constexpr Event::Type kType = Event::Type::kLedMask;
 
 public:
+    enum
+    {
+        NumLock    = 1,
+        CapsLock   = 2,
+        ScrollLock = 4
+    };
+
+public:
     static constexpr Event create(uint8_t mask);
     
 private:

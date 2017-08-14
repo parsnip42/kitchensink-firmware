@@ -16,7 +16,7 @@ private:
     
 public:
     uint8_t macroId;
-    bool    enable;
+    bool    pressed;
 
 private:
     friend class Event;
@@ -32,7 +32,7 @@ constexpr Event MacroEvent::create(uint8_t macroId)
 inline
 constexpr MacroEvent::MacroEvent(const Event& event)
     : macroId(event.value())
-    , enable(!event.subType())
+    , pressed(!event.subType())
 { }
 
 #endif

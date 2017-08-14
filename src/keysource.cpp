@@ -92,8 +92,8 @@ void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
 
         if (currentEvent != nextEvent)
         {
-            // next.processEvent(Event(currentKey, false));
-            // next.processEvent(Event(nextKey, true));
+            next.processEvent(currentEvent.invert());
+            next.processEvent(nextEvent);
         }
     });
 }

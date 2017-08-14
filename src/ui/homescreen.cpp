@@ -38,9 +38,9 @@ void HomeScreen::processEvent(const Event& event)
     {
         auto mask(event.get<LedMaskEvent>().mask);
         
-        mHomeWidget.entries[0].value = mask & KeyId::NumLock;
-        mHomeWidget.entries[2].value = mask & KeyId::CapsLock;
-        mHomeWidget.entries[4].value = mask & KeyId::ScrollLock;
+        mHomeWidget.entries[0].value = mask & LedMaskEvent::NumLock;
+        mHomeWidget.entries[2].value = mask & LedMaskEvent::CapsLock;
+        mHomeWidget.entries[4].value = mask & LedMaskEvent::ScrollLock;
 
         update();
     }

@@ -16,6 +16,8 @@ void StorageScreen::processEvent(const Event& event)
 
     out.appendInt((int)event.type());
     out.appendStr(":");
+    out.appendInt((int)event.subType());
+    out.appendStr(":");
     out.appendInt((int)event.value());
     out.appendStr(" ");
     mLabels[0].invalidateWidget();
