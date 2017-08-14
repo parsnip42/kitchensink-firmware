@@ -1,7 +1,6 @@
 #include "ui/menudefinitions.h"
 
 #include "keyboardstate.h"
-#include "keyid.h"
 #include "data/keycodes.h"
 #include "screenid.h"
 #include "event/event.h"
@@ -10,7 +9,7 @@
 #include "event/screenevent.h"
 #include "event/macroevent.h"
 #include "event/multievent.h"
-// #include "event/smartevent.h"
+#include "event/smartevent.h"
 
 namespace
 {
@@ -98,7 +97,7 @@ MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index
     MenuScreen::Item item;
         
     item.title = smart.name;
-    // item.event = KeyId::Smart(index);
+    item.event = SmartEvent::create(index);
         
     return item;
 }

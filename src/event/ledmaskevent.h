@@ -8,12 +8,12 @@ class LedMaskEvent
 public:
     static constexpr Event::Type kType = Event::Type::kLedMask;
 
-public:
+private:
     enum
     {
-        NumLock    = 1,
-        CapsLock   = 2,
-        ScrollLock = 4
+        kNumLock    = 1,
+        kCapsLock   = 2,
+        kScrollLock = 4
     };
 
 public:
@@ -21,8 +21,13 @@ public:
     
 private:
     explicit constexpr LedMaskEvent(const Event& event);
-    
+
 public:
+    bool numLock() const;
+    bool capsLock() const;
+    bool scrollLock() const;
+    
+private:
     uint8_t mask;
 
 private:
@@ -40,5 +45,23 @@ inline
 constexpr LedMaskEvent::LedMaskEvent(const Event& event)
     : mask(event.value())
 { }
+
+inline
+bool LedMaskEvent::numLock() const
+{
+    return mask & kNumLock;
+}
+
+inline
+bool LedMaskEvent::capsLock() const
+{
+    return mask & kCapsLock;
+}
+
+inline
+bool LedMaskEvent::scrollLock() const
+{
+    return mask & kScrollLock;
+}
 
 #endif

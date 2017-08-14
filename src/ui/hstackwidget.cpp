@@ -66,7 +66,7 @@ void HStackWidget::parented()
         for (auto& item : mItems)
         {
             minimumItemHeight = std::max(item.widget.minimumSize().height,
-                                     minimumItemHeight);
+                                         minimumItemHeight);
         }
     }
 
@@ -99,16 +99,16 @@ void HStackWidget::parented()
 
 void HStackWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto baseOffset(0);
+    // auto baseOffset(0);
 
-    if (mFocused != mItems.end())
-    {
-        auto& item(*mFocused);
+    // if (mFocused != mItems.end())
+    // {
+    //     auto& item(*mFocused);
 
-        baseOffset = item.yOffset;
-    }    
+    //     baseOffset = item.yOffset;
+    // }    
 
-    row += baseOffset;
+    // row += baseOffset;
     
     for (auto& item : mItems)
     {

@@ -1,7 +1,6 @@
 #include "serializer.h"
 
 #include "layer.h"
-#include "keyid.h"
 #include "layerstack.h"
 #include "event/event.h"
 #include "serialize/eventserializer.h"
