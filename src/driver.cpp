@@ -50,14 +50,14 @@ void loop()
     
     DefaultProfile::init(keyboardState);
 
-    // {
-    //     Storage storage;
+    {
+        Storage storage;
         
-    //     auto is(storage.read(Storage::Region::Macro));
-    //     Serializer<MacroSet> s;
+        auto is(storage.read(Storage::Region::Macro));
+        Serializer<MacroSet> s;
         
-    //     s.deserialize(is, keyboardState.macroSet);
-    // }
+        s.deserialize(is, keyboardState.macroSet);
+    }
 
     Timer timer;
     

@@ -19,6 +19,11 @@ namespace
 
 void serialize(const KeyEvent& event, const StrOStream& os)
 {
+    if (!event.pressed)
+    {
+        os.appendChar('!');
+    }
+    
     os.appendChar('K');
 
     auto keyName(KeyCodes::keyName(event.keyCode));
@@ -36,12 +41,22 @@ void serialize(const KeyEvent& event, const StrOStream& os)
 
 void serialize(const LayerEvent& event, const StrOStream& os)
 {
+    if (!event.enable)
+    {
+        os.appendChar('!');
+    }
+    
     os.appendChar('L');
     os.appendInt(event.layer);
 }
 
 void serialize(const MacroEvent& event, const StrOStream& os)
 {
+    if (!event.pressed)
+    {
+        os.appendChar('!');
+    }
+    
     os.appendChar('M');
     os.appendInt(event.macroId);
 }
@@ -94,9 +109,16 @@ void deserialize(const StrRef& eventStr, Event& event)
     {
         return;
     }
-    
+
     switch (eventStr[0])
     {
+    case '!':
+    {
+        deserialize(eventStr.substr(1), event);
+        event = event.invert();
+        break;
+    }
+    
     case 'K':
     {
         auto keyCodeStr(eventStr.substr(1));

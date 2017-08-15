@@ -83,6 +83,8 @@ void SmartKeyProcessor::processEvent(const Event& event)
     }
     else
     {
+        mNext.processEvent(event);
+        
         for (size_t index(0); index < mSmartKeys.size(); ++index)
         {
             auto& smartKey(mSmartKeys[index]);
@@ -99,30 +101,37 @@ void SmartKeyProcessor::processEvent(const Event& event)
                 break;
                 
             case SmartKey::Type::kToggleAutoRelease:
-                // if (smartKey.enabled && !smartEvent.pressed)
-                // {
-                //     mNext.processEvent(Event(smartKey.keyId, false));
-                //     smartKey.enabled = false;
-                // }
+                if (smartKey.enabled)
+                {
+                    mNext.processEvent(smartKey.event.invert());
+                    smartKey.enabled = false;
+                    mNext.processEvent(InvalidateEvent::create(InvalidateEvent::Type::kSmartKey,
+                                                               index));
+                }
                 break;
 
             case SmartKey::Type::kHoldAutoRelease:
-                // if (smartKey.enabled && !smartEvent.pressed)
-                // {
-                //     mNext.processEvent(Event(smartKey.keyId, false));
-                //     smartKey.enabled = false;
-                // }
+                if (smartKey.enabled)
+                {
+                    mNext.processEvent(smartKey.event.invert());
+                    smartKey.enabled = false;
+                    mNext.processEvent(InvalidateEvent::create(InvalidateEvent::Type::kSmartKey,
+                                                               index));
+                }
                 break;
 
             case SmartKey::Type::kHoldOrTap:
-                smartKey.enabled = false;
+                if (smartKey.enabled)
+                {
+                    smartKey.enabled = false;
+                    mNext.processEvent(InvalidateEvent::create(InvalidateEvent::Type::kSmartKey,
+                                                               index));
+                }
                 break;
                 
             default:
                 break;
             }
         }
-        
-        mNext.processEvent(event);
     }
 }

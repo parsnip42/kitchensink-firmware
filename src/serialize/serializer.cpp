@@ -83,20 +83,7 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
                     {
                         auto& event(macroData[macroDataSize++]);
 
-                        bool invert(false);
-                        
-                        if (token.beginsWith("!"))
-                        {
-                            token = token.substr(1);
-                            invert = true;
-                        }
-                        
                         EventSerializer::deserialize(token, event);
-
-                        if (invert)
-                        {
-                            event = event.invert();
-                        }
                         
                         token = StrUtil::nextToken(value, " \t", token);
                     }
@@ -132,8 +119,8 @@ void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
         StrBuf<24> str;
 
         EventSerializer::serialize(event, str);
-        os.write(str);
         
+        os.write(str);
         os.write(" ");
     }
 
@@ -189,7 +176,7 @@ bool Serializer<Layer>::deserialize(Storage::IStream& is, Layer& layer)
         
         while (!token.empty() && index < row.size())
         {
-            // KeyIdSerializer::deserialize(token, row[index++]);
+            EventSerializer::deserialize(token, row[index++]);
             token = StrUtil::nextToken(rowData, " \t", token);
         }
     }

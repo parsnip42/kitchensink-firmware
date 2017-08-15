@@ -40,6 +40,7 @@ public:
                     uint8_t subType,
                     uint8_t value);
 
+    // FIXME: Remove!
     Event(int value)
         : mData(static_cast<uint16_t>(Type::kKey) << kTypeOffset |
                 (value & kValueMask))
