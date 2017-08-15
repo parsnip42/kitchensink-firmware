@@ -1,7 +1,7 @@
 #ifndef INCLUDED_RECORDMACROSCREEN_H
 #define INCLUDED_RECORDMACROSCREEN_H
 
-#include "keyeventrecorder.h"
+#include "eventrecorder.h"
 #include "event/eventstage.h"
 #include "timer.h"
 #include "ui/labelwidget.h"
@@ -13,12 +13,12 @@ class MacroSet;
 class RecordMacroScreen : public EventStage
 {    
 public:
-    RecordMacroScreen(ScreenStack&   screenStack,
-                      Timer&         timer,
-                      MacroSet&      macroSet,
-                      int            macroId,
-                      bool           realtime,
-                      EventStage& next);
+    RecordMacroScreen(ScreenStack& screenStack,
+                      Timer&       timer,
+                      MacroSet&    macroSet,
+                      int          macroId,
+                      bool         realtime,
+                      EventStage&  next);
 
 public:
     virtual void processEvent(const Event& event);

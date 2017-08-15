@@ -1,5 +1,5 @@
-#ifndef INCLUDED_KEYEVENTRECORDER_H
-#define INCLUDED_KEYEVENTRECORDER_H
+#ifndef INCLUDED_EVENTRECORDER_H
+#define INCLUDED_EVENTRECORDER_H
 
 #include "event/event.h"
 #include "event/eventstage.h"

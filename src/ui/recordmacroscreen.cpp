@@ -3,7 +3,7 @@
 #include "macro.h"
 #include "ui/surface.h"
 #include "types/strostream.h"
-#include "keyeventrecorder.h"
+#include "eventrecorder.h"
 #include "eventmanager.h"
 #include "storage/storage.h"
 #include "serialize/serializer.h"

@@ -5,10 +5,12 @@
 #include "keyboardstate.h"
 #include "keylocation.h"
 
+#include <elapsedMillis.h>
+
 KeySource::KeySource(KsKeyboard& keyboard,
-                     LayerStack& layerStack)
-    : mKeyboard(keyboard)
-    , mLayerStack(layerStack)
+                     LayerStack& nLayerStack)
+    : layerStack(nLayerStack)
+    , mKeyboard(keyboard)
     , mLayerMask()
 {
     mLayerMask[0] = true;
@@ -35,16 +37,17 @@ int KeySource::topLayer()
     return -1;
 }
 
-void KeySource::pollEvent(uint32_t    timeMs,
-                          EventStage& next)
+void KeySource::pollEvent(EventStage& next)
 {
+    auto timeMs(millis());
+    
     // Layer changes shouldn't take effect until the next set of key events -
     // take a copy of the mask.
     auto currentLayerMask(mLayerMask);
 
     mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& keyboardEvent)
     {
-        auto event(mLayerStack.at(currentLayerMask,
+        auto event(layerStack.at(currentLayerMask,
                                   keyboardEvent.row,
                                   keyboardEvent.column));
 
@@ -76,19 +79,40 @@ bool KeySource::anyPressed()
     return pressed;
 }
 
+KeyLocation KeySource::readNextKeyLocation()
+{
+    KeyLocation location;
+    bool keyPressed(false);
+
+    do
+    {
+        mKeyboard.poll(millis(), [&](const KsKeyboard::Event& keyboardEvent)
+        {
+            if (keyboardEvent.pressed)
+            {
+                location.row    = keyboardEvent.row;
+                location.column = keyboardEvent.column;
+                keyPressed = true;
+            }
+        });
+    } while (!keyPressed);
+    
+    return location;
+}
+
 void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
                                    const LayerStack::Mask& nextMask,
-                                   EventStage&          next)
+                                   EventStage&             next)
 {
     mKeyboard.pressed([&](const KsKeyboard::Event& event)
     {
-        auto currentEvent(mLayerStack.at(currentMask,
-                                       event.row,
-                                       event.column));
+        auto currentEvent(layerStack.at(currentMask,
+                                        event.row,
+                                        event.column));
         
-        auto nextEvent(mLayerStack.at(nextMask,
-                                    event.row,
-                                    event.column));
+        auto nextEvent(layerStack.at(nextMask,
+                                     event.row,
+                                     event.column));
 
         if (currentEvent != nextEvent)
         {

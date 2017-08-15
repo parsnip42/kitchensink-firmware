@@ -1,16 +1,14 @@
 #include "eventmanager.h"
 
-#include <elapsedMillis.h>
-
 EventManager::EventManager(Timer&              nTimer,
-                           KeySource&          keySource,
+                           KeySource&          nKeySource,
                            LedSource&          ledSource,
                            EventStage&         input,
                            ToplevelEventStage& toplevel,
                            EventStage&         nDefaultOutput)
     : timer(nTimer)
+    , keySource(nKeySource)
     , defaultOutput(nDefaultOutput)
-    , mKeySource(keySource)
     , mLedSource(ledSource)
     , mInput(input)
     , mToplevel(toplevel)
@@ -27,7 +25,7 @@ void EventManager::poll(EventStage& output)
         
     mBuffer.pollEvent(mInput);
     timer.pollEvent(mInput);
-    mKeySource.pollEvent(nowMs(), mInput);
+    keySource.pollEvent(mInput);
     mLedSource.pollEvent(mInput);
 }
 
@@ -35,16 +33,11 @@ void EventManager::flush(EventStage& output)
 {
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
     
-    while (mKeySource.anyPressed() || !mBuffer.empty())
+    while (keySource.anyPressed() || !mBuffer.empty())
     {
         mBuffer.pollEvent(mInput);
         timer.pollEvent(mInput);
-        mKeySource.pollEvent(nowMs(), mInput);
+        keySource.pollEvent(mInput);
         mLedSource.pollEvent(mInput);
     }
-}
-
-uint32_t EventManager::nowMs() const
-{
-    return millis();
 }

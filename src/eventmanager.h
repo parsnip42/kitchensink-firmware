@@ -15,7 +15,7 @@ class EventManager : public EventStage
 {
 public:
     EventManager(Timer&              nTimer,
-                 KeySource&          keySource,
+                 KeySource&          nKeySource,
                  LedSource&          ledSource,
                  EventStage&         input,
                  ToplevelEventStage& toplevel,
@@ -29,14 +29,11 @@ public:
     
 public:
     Timer&      timer;
+    KeySource&  keySource;
     EventStage& defaultOutput;
     
 private:
-    uint32_t nowMs() const;
-    
-private:
     EventBuffer         mBuffer;
-    KeySource&          mKeySource;
     LedSource&          mLedSource;
     EventStage&         mInput;
     ToplevelEventStage& mToplevel;
@@ -44,9 +41,6 @@ private:
 private:
     EventManager(const EventManager&) = delete;
     EventManager& operator=(const EventManager&) = delete;
-    
-private:
-    friend class RefocusGuard;
 };
 
 #endif

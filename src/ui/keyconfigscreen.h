@@ -6,12 +6,13 @@
 #include "ui/hstackwidget.h"
 #include "event/eventstage.h"
 
+class KeySource;
 class Widget;
 
 class KeyConfigScreen : public EventStage
 {
 public:
-    KeyConfigScreen();
+    explicit KeyConfigScreen(KeySource& keySource);
 
 public:
     virtual void processEvent(const Event& event) override;
@@ -19,9 +20,10 @@ public:
     Widget& rootWidget();
     
 private:
+    KeySource&                  mKeySource;
     LabelledWidget<LabelWidget> mLayerLabel;
-    LabelledWidget<LabelWidget> mRowLabel;
-    LabelledWidget<LabelWidget> mColumnLabel;
+    LabelledWidget<LabelWidget> mLocationLabel;
+    LabelledWidget<LabelWidget> mCurrentLabel;
     HStackWidget::Items<3>      mItems;
     HStackWidget                mHStackWidget;
     

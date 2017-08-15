@@ -189,7 +189,7 @@ void ScreenManager::launchScreen(int screenId)
 
     case 2:
     {
-        KeyConfigScreen screen;
+        KeyConfigScreen screen(mEventManager.keySource);
 
         displayScreen(screen,
                       screen.rootWidget());

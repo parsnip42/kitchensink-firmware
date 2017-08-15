@@ -9,7 +9,6 @@ public:
 public:
     int row;
     int column;
-    int layer;
 };
 
 
@@ -17,7 +16,6 @@ inline
 constexpr KeyLocation::KeyLocation()
     : row(0)
     , column(0)
-    , layer(0)
 { }
 
 #endif
