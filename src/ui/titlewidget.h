@@ -9,7 +9,7 @@
 class TitleWidget : public Widget
 {
 public:
-    static constexpr int kPreferredHeight = Font::kHeight + 2;
+    static constexpr int kPreferredHeight = Font::kHeight + 3;
     
 public:
     explicit TitleWidget(const StrRef& nText = StrRef());

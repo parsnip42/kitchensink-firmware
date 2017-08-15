@@ -23,7 +23,7 @@ HomeScreen::HomeScreen(Timer&             timer,
     mHomeWidget.entries[4].text    = "Scroll Lock";
     mHomeWidget.entries[4].visible = true;
 
-    mDisplayTimeout.schedule(10000);
+    mHomeWidget.visible = false;
 }
 
 void HomeScreen::processEvent(const Event& event)

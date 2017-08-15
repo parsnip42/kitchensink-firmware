@@ -1,13 +1,12 @@
 #ifndef INCLUDED_TEXTENTRYWIDGET_H
 #define INCLUDED_TEXTENTRYWIDGET_H
 
+#include "timer.h"
 #include "event/eventstage.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/dimension.h"
-#include "eventmanager.h"
 #include "ui/widget.h"
-#include "ui/surface.h"
 #include "ui/virtualkeyboard.h"
 #include "ui/widgetcontainer.h"
 
@@ -19,9 +18,6 @@ class Timer;
 
 class TextEntryWidget : public Widget
 {
-public:
-    static constexpr int kPreferredHeight = Font::kHeight + 4;
-
 public:
     explicit TextEntryWidget(Timer& timer);
 

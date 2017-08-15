@@ -15,6 +15,7 @@
 #include "ui/homescreen.h"
 #include "types/strostream.h"
 #include "event/screenevent.h"
+#include "eventmanager.h"
 
 namespace
 {
@@ -47,19 +48,17 @@ public:
 
 private:
     ScreenManager& mScreenManager;
-    EventStage& mNext;
+    EventStage&    mNext;
 };
 
 }
 
 ScreenManager::ScreenManager(Surface&       surface,
                              EventManager&  eventManager,
-                             KeyboardState& keyboardState,
-                             HomeScreen&    homeScreen)
+                             KeyboardState& keyboardState)
     : mSurface(surface)
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
-    , mHomeScreen(homeScreen)
     , mMenuDefinitions(keyboardState)
 { }
 
@@ -93,10 +92,14 @@ void ScreenManager::poll(EventStage& next)
         
         if (mScreenStack.empty())
         {
-            OutputSink output(*this, mHomeScreen);
+            HomeScreen homeScreen(mEventManager.timer,
+                                  mKeyboardState.smartKeySet,
+                                  mEventManager.defaultOutput);
+            
+            OutputSink output(*this, homeScreen);
             
             Surface::WidgetGuard guard(mSurface,
-                                       mHomeScreen.rootWidget());
+                                       homeScreen.rootWidget());
 
             while (!mScreenStack.dirty())
             {

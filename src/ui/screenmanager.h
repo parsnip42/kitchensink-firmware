@@ -8,7 +8,6 @@ class Surface;
 class EventManager;
 class KeyboardState;
 class StrOStream;
-class HomeScreen;
 class ScreenEvent;
 
 class ScreenManager
@@ -16,8 +15,7 @@ class ScreenManager
 public:
     ScreenManager(Surface&       surface,
                   EventManager&  eventManager,
-                  KeyboardState& keyboardState,
-                  HomeScreen&    homeScreen);
+                  KeyboardState& keyboardState);
     
 public:
     void pushScreen(const ScreenEvent& screen);
@@ -44,7 +42,6 @@ private:
     Surface&        mSurface;
     EventManager&   mEventManager;
     KeyboardState&  mKeyboardState;
-    HomeScreen&     mHomeScreen;
     MenuDefinitions mMenuDefinitions;
     ScreenStack     mScreenStack;
 };

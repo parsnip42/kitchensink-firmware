@@ -36,7 +36,7 @@ void AutoRepeat::processEvent(const Event& event)
                 mRepeatTimer.scheduleRepeating(repeatDelay,
                                                repeatRate);
             }
-            else if (!keyEvent.pressed && event == mEvent)
+            else if (!keyEvent.pressed && event.invert() == mEvent)
             {
                 mRepeatTimer.cancel();
                 mEvent = Event();

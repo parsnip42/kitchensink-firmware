@@ -8,11 +8,12 @@ KeyConfigScreen::KeyConfigScreen(KeySource& keySource)
     : mKeySource(keySource)
     , mLayerLabel("Layer", 70)
     , mLocationLabel("Location", 70)
-    , mCurrentLabel("Current", 70)
-    , mItems({{ mLayerLabel, mLocationLabel, mCurrentLabel }})
+    , mEventEntry("Current", 70)
+    , mItems({{ mLayerLabel, mLocationLabel, mEventEntry }})
     , mHStackWidget(mItems, true)
 {
     mHStackWidget.setFocused(false);
+    mEventEntry.setFocused(true);
 }
 
 void KeyConfigScreen::processEvent(const Event& event)
@@ -21,7 +22,6 @@ void KeyConfigScreen::processEvent(const Event& event)
     {
         mLayerLabel.widget.text    = "Waiting";
         mLocationLabel.widget.text = "Waiting";
-        mCurrentLabel.widget.text  = "Waiting";
         mHStackWidget.invalidateWidget();
                 
         auto layer(mKeySource.topLayer());
@@ -42,13 +42,16 @@ void KeyConfigScreen::processEvent(const Event& event)
             
         {
             auto event(mKeySource.layerStack[layer].at(location.row, location.column));
-            
-            StrOStream os(mCurrentLabel.widget.text);
-            os.reset();
-            EventSerializer::serialize(event, os);
+
+            mEventEntry.widget.event = event;
+            mEventEntry.widget.update();
         }
-            
+        
         mHStackWidget.invalidateWidget();
+    }
+    else
+    {
+        mEventEntry.processEvent(event);
     }
 }
 
