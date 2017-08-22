@@ -53,7 +53,7 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
 
 void EditMacroScreen::processEvent(const Event& event)
 {
-    if (Keys::ok(event) && mHStackWidget.lastWidgetFocused())
+    if (Keys::ok(event) && &mHStackWidget.focused() == &mTypeCombo)
     {
         auto& macro(mMacroSet[mMacroId]);
             

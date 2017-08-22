@@ -28,7 +28,7 @@ void BenchmarkScreen::processEvent(const Event& event)
     
 }
 
-void BenchmarkScreen::run()
+void BenchmarkScreen::screenInit()
 {
     auto start(millis());
 

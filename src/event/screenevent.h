@@ -19,7 +19,10 @@ public:
         kRecordMacro    = 5,
         kRecordMacroRT  = 6,
         kRecordSMacro   = 7,
-        kRecordSMacroRT = 8
+        kRecordSMacroRT = 8,
+        kEditLayer      = 9,
+        kEditMulti      = 10,
+        kEditSmart      = 11,
     };
 
 public:

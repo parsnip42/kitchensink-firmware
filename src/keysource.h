@@ -25,7 +25,7 @@ public:
     bool anyPressed();
 
 public:
-    KeyLocation readNextKeyLocation();
+    bool readKeyLocation(KeyLocation& location);
     
 private:
     void processLayerChange(const LayerStack::Mask& currentMask,

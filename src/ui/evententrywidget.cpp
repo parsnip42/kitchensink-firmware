@@ -30,6 +30,7 @@ void EventEntryWidget::processEvent(const Event& inEvent)
 void EventEntryWidget::setFocused(bool focused)
 {
     mFocused = focused;
+    mFlash   = false;
 }
 
 void EventEntryWidget::render(const RasterLine& rasterLine, int row)

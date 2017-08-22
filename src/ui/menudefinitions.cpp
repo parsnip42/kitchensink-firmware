@@ -13,17 +13,16 @@
 namespace
 {
 
-const std::array<MenuScreen::Item, 6> mainMenu = { {
+const std::array<MenuScreen::Item, 5> mainMenu = { {
         { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 1) },
         { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 2) },
         { StrRef("Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 3) },
-        { StrRef("Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 4) },
         { StrRef("Configuration"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 5) },
         { StrRef("System"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 6) },
     } };
 
 const std::array<MenuScreen::Item, 5> configMenu = { {
-        { StrRef("Edit Key Layout"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 2) },
+        { StrRef("Edit Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 4) },
         { StrRef("Edit Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 10) },
         { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 11) },
         { StrRef("Edit Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 12) },
@@ -86,8 +85,8 @@ MenuScreen::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index
     MenuScreen::Item item;
         
     item.title = multi.name;
-    item.event = MultiEvent::create(index);
-        
+    item.event = ScreenEvent::create(ScreenEvent::Type::kEditMulti, index);
+
     return item;
 }
 
@@ -96,7 +95,7 @@ MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index
     MenuScreen::Item item;
         
     item.title = smart.name;
-    item.event = SmartEvent::create(index);
+    item.event = ScreenEvent::create(ScreenEvent::Type::kEditSmart, index);
         
     return item;
 }
@@ -106,7 +105,7 @@ MenuScreen::Item createLayerMenuItem(const Layer& layer, std::size_t index)
     MenuScreen::Item item;
         
     item.title = layer.name;
-    item.event = Event();
+    item.event = ScreenEvent::create(ScreenEvent::Type::kEditLayer, index);
         
     return item;
 }
@@ -186,10 +185,10 @@ const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const
         return mEditSMacroDataSource;
 
     case 12:
-        return mSmartKeyDataSource;
+        return mMultiKeyDataSource;
         
     case 13:
-        return mMultiKeyDataSource;
+        return mSmartKeyDataSource;
         
     default:
         return mEmptyMenuSource;
@@ -228,10 +227,10 @@ StrRef MenuDefinitions::getTitle(int id) const
         return "Secure Macros";
 
     case 12:
-        return "Smart Keys";
+        return "Multi Keys";
         
     case 13:
-        return "Multi Keys";
+        return "Smart Keys";
 
     default:
         return "";

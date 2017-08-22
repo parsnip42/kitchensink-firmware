@@ -5,11 +5,12 @@
 #include "ui/labelledwidget.h"
 #include "ui/labelwidget.h"
 #include "ui/widgetset.h"
+#include "ui/screen.h"
 #include "event/eventstage.h"
 
 class Widget;
 
-class StorageScreen : public EventStage
+class StorageScreen : public Screen
 {
 public:
     StorageScreen();
@@ -17,7 +18,7 @@ public:
 public:
     virtual void processEvent(const Event& event) override;
     
-    Widget& rootWidget();
+    virtual Widget& rootWidget() override;
     
 private:
     LabelWidget            mLabels[4];

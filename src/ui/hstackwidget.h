@@ -48,7 +48,7 @@ public:
     virtual void regionInvalidated(const Rectangle& region) override;
     
 public:
-    bool lastWidgetFocused() const;
+    Widget& focused() const;
 
 private:
     Range<iterator> mItems;

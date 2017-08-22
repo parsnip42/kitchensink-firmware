@@ -79,25 +79,18 @@ bool KeySource::anyPressed()
     return pressed;
 }
 
-KeyLocation KeySource::readNextKeyLocation()
+bool KeySource::readKeyLocation(KeyLocation& location)
 {
-    KeyLocation location;
-    bool keyPressed(false);
-
-    do
-    {
-        mKeyboard.poll(millis(), [&](const KsKeyboard::Event& keyboardEvent)
-        {
-            if (!keyboardEvent.pressed)
-            {
-                location.row    = keyboardEvent.row;
-                location.column = keyboardEvent.column;
-                keyPressed = true;
-            }
-        });
-    } while (!keyPressed);
+    bool locationSet(false);
     
-    return location;
+    mKeyboard.pressed([&](const KsKeyboard::Event& keyboardEvent)
+    {
+        location.row    = keyboardEvent.row;
+        location.column = keyboardEvent.column;
+        locationSet = true;
+    }); 
+    
+    return locationSet;
 }
 
 void KeySource::processLayerChange(const LayerStack::Mask& currentMask,

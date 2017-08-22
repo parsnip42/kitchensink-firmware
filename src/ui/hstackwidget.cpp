@@ -125,19 +125,7 @@ void HStackWidget::regionInvalidated(const Rectangle& region)
     invalidateRegion(region);
 }
 
-bool HStackWidget::lastWidgetFocused() const
+Widget& HStackWidget::focused() const
 {
-    if (mFocused != mItems.end())
-    {
-        auto next(mFocused);
-        
-        ++next;
-        
-        if (next != mItems.end())
-        {
-            return false;
-        }
-    }
-    
-    return true;
+    return mFocused->widget;
 }

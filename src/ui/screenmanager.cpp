@@ -10,7 +10,9 @@
 #include "ui/recordmacroscreen.h"
 #include "ui/storagescreen.h"
 #include "ui/benchmarkscreen.h"
-#include "ui/keyconfigscreen.h"
+#include "ui/layerconfigscreen.h"
+#include "ui/multiconfigscreen.h"
+#include "ui/smartconfigscreen.h"
 #include "ui/keys.h"
 #include "ui/homescreen.h"
 #include "types/strostream.h"
@@ -99,17 +101,19 @@ void ScreenManager::launch(const ScreenEvent& screenEvent)
                           screenEvent.index,
                           screenEvent.type == ScreenEvent::Type::kRecordMacroRT);
         break;
-        
-    // case ScreenEvent::Type::kEditSMacro:
-    //     launchEditMacro(mKeyboardState.secureMacroSet,
-    //                     screenEvent.index);
-    //     break;
 
-    // case ScreenEvent::Type::kRecordSMacro:
-    // case ScreenEvent::Type::kRecordSMacroRT:
-    //     launchRecordMacro(mKeyboardState.secureMacroSet,
-    //                       screenEvent.index,
-    //                       screenEvent.type == ScreenEvent::Type::kRecordSMacroRT);
+    case ScreenEvent::Type::kEditLayer:
+        launchEditLayer(mKeyboardState.layerStack,
+                        screenEvent.index);
+        break;
+
+    case ScreenEvent::Type::kEditSmart:
+        launchEditSmartKey(screenEvent.index);
+        break;
+
+    case ScreenEvent::Type::kEditMulti:
+        launchEditMultiKey(screenEvent.index);
+        break;
 
     default:
         launchHome();
@@ -152,28 +156,17 @@ void ScreenManager::launchScreen(int screenId)
     {
     case 0:
     {
-        // StorageScreen screen;
+        StorageScreen screen;
 
-        // displayScreen("Storage", screen);
+        displayScreen("Storage", screen);
         break;
     }
             
     case 1:
     {
-        // BenchmarkScreen screen(mEventManager);
+        BenchmarkScreen screen(mEventManager);
 
-        // displayScreen(screen,
-        //               screen.rootWidget());
-        break;
-    }
-
-    case 2:
-    {
-        KeyConfigScreen screen(mEventManager.timer,
-                               mEventManager.keySource,
-                               mKeyboardState.layerStack[0]);
-        
-        displayScreen("Key Configuration", screen);
+        displayScreen("Benchmarking", screen);
         break;
     }
 
@@ -204,6 +197,32 @@ void ScreenManager::launchRecordMacro(MacroSet& macroSet,
                              mEventManager.defaultOutput);
     
     displayScreen("Record Macro", screen);
+}
+
+void ScreenManager::launchEditLayer(LayerStack& layerStack,
+                                    int         layerId)
+{
+    LayerConfigScreen screen(mEventManager.timer,
+                             mEventManager.keySource,
+                             mKeyboardState.layerStack[layerId]);
+    
+    displayScreen("Layer Configuration", screen);
+}
+
+void ScreenManager::launchEditMultiKey(int multiKeyId)
+{
+    MultiConfigScreen screen(mEventManager.timer,
+                             mKeyboardState.multiSet[multiKeyId]);
+
+    displayScreen("Multi Key Configuration", screen);   
+}
+
+void ScreenManager::launchEditSmartKey(int smartKeyId)
+{
+    SmartConfigScreen screen(mEventManager.timer,
+                             mKeyboardState.smartKeySet[smartKeyId]);
+
+    displayScreen("Smart Key Configuration", screen);
 }
 
 void ScreenManager::displayScreen(const StrRef& title,

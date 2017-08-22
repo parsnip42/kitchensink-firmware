@@ -29,6 +29,10 @@ private:
     void launchScreen(int screenId);
     void launchEditMacro(MacroSet& macroSet, int macroId);
     void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
+    void launchEditLayer(LayerStack& layerStack,
+                         int         layerId);
+    void launchEditMultiKey(int multiKeyId);
+    void launchEditSmartKey(int smartKeyId);
 
     void displayScreen(const StrRef& title,
                        Screen&       screen);
