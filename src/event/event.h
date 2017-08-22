@@ -145,10 +145,11 @@ constexpr T Event::get() const
 inline
 constexpr Event Event::invert() const
 {
-    Event e(*this);
 
-    if ((int)e.type() >= 8)
+    if (type() >= Type::kKey)
     {
+        Event e(*this);
+        
         e.mData ^= (kSubTypeMask << kSubTypeOffset);
 
         return e;

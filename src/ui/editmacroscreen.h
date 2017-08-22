@@ -5,6 +5,7 @@
 #include "ui/combowidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
+#include "ui/screen.h"
 #include "event/eventstage.h"
 
 class ScreenStack;
@@ -13,21 +14,20 @@ class Event;
 class MacroSet;
 class Widget;
 
-class EditMacroScreen : public EventStage
+class EditMacroScreen : public Screen
 {
 public:
-    EditMacroScreen(ScreenStack& screenStack,
-                    Timer&       timer,
-                    MacroSet&    macroSet,
-                    int          macroid);
+    EditMacroScreen(Timer&      timer,
+                    MacroSet&   macroSet,
+                    int         macroid,
+                    EventStage& next);
     
 public:
     virtual void processEvent(const Event& event) override;
 
-    Widget& rootWidget();
+    virtual Widget& rootWidget() override;
 
 private:
-    ScreenStack&                    mScreenStack;
     MacroSet&                       mMacroSet;
     int                             mMacroId;
     LabelledWidget<TextEntryWidget> mTitleEntry;
@@ -35,6 +35,7 @@ private:
     LabelledWidget<ComboWidget>     mTypeCombo;
     HStackWidget::Items<3>          mItems;
     HStackWidget                    mHStackWidget;
+    EventStage&                     mNext;
 };
 
 #endif

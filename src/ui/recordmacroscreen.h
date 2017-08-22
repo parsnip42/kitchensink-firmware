@@ -3,22 +3,21 @@
 
 #include "eventrecorder.h"
 #include "event/eventstage.h"
-#include "timer.h"
 #include "ui/labelwidget.h"
+#include "ui/screen.h"
+#include "timer.h"
 
-class ScreenStack;
 class Timer;
 class MacroSet;
 
-class RecordMacroScreen : public EventStage
+class RecordMacroScreen : public Screen
 {    
 public:
-    RecordMacroScreen(ScreenStack& screenStack,
-                      Timer&       timer,
-                      MacroSet&    macroSet,
-                      int          macroId,
-                      bool         realtime,
-                      EventStage&  next);
+    RecordMacroScreen(Timer&      timer,
+                      MacroSet&   macroSet,
+                      int         macroId,
+                      bool        realtime,
+                      EventStage& next);
 
 public:
     virtual void processEvent(const Event& event);
@@ -26,7 +25,6 @@ public:
     Widget& rootWidget();
     
 private:
-    ScreenStack&  mScreenStack;
     MacroSet&     mMacroSet;
     int           mMacroId;
     EventRecorder mRecorder;

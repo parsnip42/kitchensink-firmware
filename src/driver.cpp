@@ -18,7 +18,6 @@
 #include "types/strutil.h"
 
 #include "ui/surface.h"
-#include "ui/screenstack.h"
 #include "ui/screenmanager.h"
 
 #include "keyeventbuffer.h"
@@ -66,13 +65,11 @@ void loop()
 
     LayerProcessor layerProcessor(actionProcessor);
 
-    MacroProcessor secureMacroProcessor(Event::Type::kSMacro,
-                                        keyboardState.secureMacroSet,
+    MacroProcessor secureMacroProcessor(keyboardState.secureMacroSet,
                                         timer,
                                         layerProcessor);
 
-    MacroProcessor macroProcessor(Event::Type::kMacro,
-                                  keyboardState.macroSet,
+    MacroProcessor macroProcessor(keyboardState.macroSet,
                                   timer,
                                   secureMacroProcessor);
 

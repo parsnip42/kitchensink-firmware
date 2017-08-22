@@ -194,4 +194,66 @@ void deserialize(const StrRef& eventStr, Event& event)
     }
 }
 
+namespace
+{
+
+void serializeReadable(const KeyEvent& event, const StrOStream& os)
+{
+    auto keyName(KeyCodes::keyName(event.keyCode));
+
+    if (!keyName.empty())
+    {
+        os.appendStr(keyName);
+    }
+    else
+    {
+        os.appendStr("0x");
+        os.appendInt(event.keyCode, "%2.2x");
+    }
+}
+
+void serializeReadable(const LayerEvent& event, const StrOStream& os)
+{
+    os.appendStr("Layer ");
+    os.appendInt(event.layer);
+}
+
+void serializeReadable(const MacroEvent& event, const StrOStream& os)
+{
+    os.appendStr("Macro ");
+    os.appendInt(event.macroId);
+}
+
+void serializeReadable(const ActionEvent& event, const StrOStream& os)
+{
+    os.appendStr("Action ");
+    os.appendInt(event.actionId);
+}
+
+}
+
+void serializeReadable(const Event& event, const StrOStream& os)
+{
+    if (event.is<KeyEvent>())
+    {
+        serializeReadable(event.get<KeyEvent>(), os);
+    }
+    else if (event.is<LayerEvent>())
+    {
+        serializeReadable(event.get<LayerEvent>(), os);
+    }
+    else if (event.is<MacroEvent>())
+    {
+        serializeReadable(event.get<MacroEvent>(), os);
+    }
+    else if (event.is<ActionEvent>())
+    {
+        serializeReadable(event.get<ActionEvent>(), os);
+    }
+    else
+    {
+        os.appendStr("?");
+    }
+}
+
 }

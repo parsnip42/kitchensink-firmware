@@ -10,6 +10,7 @@
 #include "types/filterindex.h"
 #include "types/objectsource.h"
 #include "types/strbuf.h"
+#include "event/event.h"
 
 #include <cstdint>
 
@@ -19,7 +20,16 @@ class MenuWidget : public Widget
                  , public WidgetContainer
 {
 public:
-    typedef ObjectSource<MenuItemWidget> DataSource;
+    class Item
+    {
+    public:
+        StrBuf<24> title;
+        StrBuf<12> shortcut;
+        Event      event;
+    };
+    
+public:
+    typedef ObjectSource<Item> DataSource;
 
 public:
     explicit MenuWidget(const DataSource& dataSource);
@@ -31,7 +41,7 @@ public:
     virtual void regionInvalidated(const Rectangle& region) override;
 
 public:
-    int selectedIndex() const;
+    Item selectedItem() const;
     void update();
     
 private:

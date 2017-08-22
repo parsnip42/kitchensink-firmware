@@ -1,8 +1,8 @@
 #ifndef INCLUDED_SCREENMANAGER_H
 #define INCLUDED_SCREENMANAGER_H
 
-#include "menudefinitions.h"
-#include "ui/screenstack.h"
+#include "ui/menudefinitions.h"
+#include "event/screenevent.h"
 
 class Surface;
 class EventManager;
@@ -18,32 +18,37 @@ public:
                   KeyboardState& keyboardState);
     
 public:
-    void pushScreen(const ScreenEvent& screen);
-    void popScreen();
+    // virtual void processEvent(const Event& event) override;
+
     void poll(EventStage& next);
 
 private:
     void launch(const ScreenEvent& screen);
+    void launchHome();
     void launchMenu(int menuId);
     void launchScreen(int screenId);
     void launchEditMacro(MacroSet& macroSet, int macroId);
     void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
 
-    void displayScreen(EventStage& stage,
-                       Widget&     content);
-
-    void createTitlePath(const StrOStream& os);
-    void createTitle(const ScreenEvent& screen,
-                     const StrOStream&  os);
-    
-    void flush();
+    void displayScreen(const StrRef& title,
+                       Screen&       screen);
     
 private:
     Surface&        mSurface;
     EventManager&   mEventManager;
     KeyboardState&  mKeyboardState;
     MenuDefinitions mMenuDefinitions;
-    ScreenStack     mScreenStack;
+
+public:
+    ScreenEvent     mCurrent;
 };
 
 #endif
+
+
+
+
+
+
+
+

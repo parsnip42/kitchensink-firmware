@@ -1,6 +1,7 @@
 #ifndef INCLUDED_EVENTENTRYWIDGET_H
 #define INCLUDED_EVENTENTRYWIDGET_H
 
+#include "timer.h"
 #include "ui/widget.h"
 #include "event/event.h"
 #include "types/strbuf.h"
@@ -8,7 +9,7 @@
 class EventEntryWidget : public Widget
 {
 public:
-    EventEntryWidget();
+    explicit EventEntryWidget(Timer& timer);
 
     EventEntryWidget(EventEntryWidget&&) = default;
 
@@ -25,8 +26,10 @@ public:
     Event event;
     
 private:
-    StrBuf<24> mEventStr;
-    bool       mFocused;
+    Timer::Handle mFlashTimer;
+    StrBuf<24>    mEventStr;
+    bool          mFocused;
+    bool          mFlash;
 
 private:
     EventEntryWidget(const EventEntryWidget&) = delete;

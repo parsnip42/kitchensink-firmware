@@ -11,8 +11,7 @@ class MacroSet;
 class MacroProcessor : public EventStage
 {
 public:
-    MacroProcessor(Event::Type     macroType,
-                   const MacroSet& macroSet,
+    MacroProcessor(const MacroSet& macroSet,
                    Timer&          timer,
                    EventStage&     next);
 
@@ -23,7 +22,6 @@ private:
     void playback();
     
 private:
-    Event::Type                    mMacroType;
     const MacroSet&                mMacroSet;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;

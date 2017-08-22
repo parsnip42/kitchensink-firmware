@@ -5,14 +5,26 @@
 #include "ui/renderutil.h"
 #include "serialize/eventserializer.h"
 
-EventEntryWidget::EventEntryWidget()
-    : mFocused(true)
-{ }
+EventEntryWidget::EventEntryWidget(Timer& timer)
+    : mFlashTimer(timer.createHandle())
+    , mFocused(true)
+    , mFlash(true)
+{
+    mFlashTimer.scheduleRepeating(250, 250);
+}
 
 void EventEntryWidget::processEvent(const Event& inEvent)
 {
-    event = inEvent;
-    update();
+    if (mFlashTimer.matches(inEvent))
+    {
+        mFlash = !mFlash;
+        invalidateWidget();
+    }
+    else
+    {
+        event = inEvent;
+        update();
+    }
 }
 
 void EventEntryWidget::setFocused(bool focused)
@@ -24,6 +36,11 @@ void EventEntryWidget::render(const RasterLine& rasterLine, int row)
 {
     auto fg(mFocused ? Colors::kBlack : Colors::kWhite);
     auto bg(mFocused ? Colors::kWhite : Colors::kBlack);
+
+    if (mFlash)
+    {
+        std::swap(fg, bg);
+    }
     
     RenderUtil::text(mEventStr, 0, row, rasterLine, fg, bg);
 }
@@ -36,7 +53,8 @@ Dimension EventEntryWidget::minimumSize() const
 void EventEntryWidget::update()
 {
     mEventStr.clear();
-    EventSerializer::serialize(event, mEventStr);
+    
+    EventSerializer::serializeReadable(event, mEventStr);
     
     invalidateWidget();
 }

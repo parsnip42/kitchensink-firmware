@@ -3,49 +3,32 @@
 
 #include "event/eventstage.h"
 #include "event/event.h"
-#include "types/mappedobjectsource.h"
 #include "types/objectsource.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
 #include "ui/menuwidget.h"
+#include "ui/screen.h"
 
-class Timer;
 class ScreenStack;
 class Widget;
 
-class MenuScreen : public EventStage
+class MenuScreen : public Screen
 {
 public:
-    class Item
-    {
-    public:
-        StrBuf<24> title;
-        StrBuf<12> shortcut;
-        Event      event;
-    };
+    typedef MenuWidget::Item               Item;
+    typedef ObjectSource<MenuWidget::Item> DataSource;
     
-public:
-    typedef ObjectSource<Item> DataSource;
-    
-private:
-    typedef MappedObjectSource<MenuItemWidget, DataSource> MenuDataSource;
-        
 public:
     MenuScreen(const DataSource& dataSource,
-               ScreenStack&      screenStack,
                EventStage&       next);
 
 public:
     virtual void processEvent(const Event& event) override;
-    
-    Widget& rootWidget();
+    virtual Widget& rootWidget() override;
     
 private:
-    const DataSource& mDataSource;
-    MenuDataSource    mMenuDataSource;
-    MenuWidget        mMenuWidget;
-    ScreenStack&      mScreenStack;
-    EventStage&       mNext;
+    MenuWidget   mMenuWidget;
+    EventStage&  mNext;
 };
 
 #endif

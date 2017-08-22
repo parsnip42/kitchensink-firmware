@@ -88,7 +88,7 @@ KeyLocation KeySource::readNextKeyLocation()
     {
         mKeyboard.poll(millis(), [&](const KsKeyboard::Event& keyboardEvent)
         {
-            if (keyboardEvent.pressed)
+            if (!keyboardEvent.pressed)
             {
                 location.row    = keyboardEvent.row;
                 location.column = keyboardEvent.column;

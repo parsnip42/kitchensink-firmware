@@ -35,15 +35,20 @@ public:
         if (event.is<ScreenEvent>())
         {
             auto screenEvent(event.get<ScreenEvent>());
-            
-            mScreenManager.pushScreen(screenEvent);
+
+            if (mScreenManager.mCurrent != screenEvent)
+            {
+                mScreenManager.mCurrent = screenEvent;
+            }
+            else
+            {
+                mScreenManager.mCurrent = ScreenEvent(ScreenEvent::Type::kHome, 0);
+            }
         }
-        else if (Keys::cancel(event))
+        else
         {
-            mScreenManager.popScreen();
+            mNext.processEvent(event);
         }
-        
-        mNext.processEvent(event);
     }
 
 private:
@@ -60,56 +65,14 @@ ScreenManager::ScreenManager(Surface&       surface,
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
     , mMenuDefinitions(keyboardState)
+    , mCurrent(ScreenEvent::Type::kHome, 0)
 { }
-
-void ScreenManager::pushScreen(const ScreenEvent& screenEvent)
-{
-    if (!mScreenStack.empty() &&
-        (screenEvent.type == ScreenEvent::Type::kHome ||
-         mScreenStack.top() == screenEvent))
-    {
-        mScreenStack.pop();
-    }
-    else if (!mScreenStack.full())
-    {
-        mScreenStack.push(screenEvent);
-    }
-}
-
-void ScreenManager::popScreen()
-{
-    if (!mScreenStack.empty())
-    {
-        mScreenStack.pop();
-    }
-}
 
 void ScreenManager::poll(EventStage& next)
 {
     while (true)
     {
-        flush();
-        
-        if (mScreenStack.empty())
-        {
-            HomeScreen homeScreen(mEventManager.timer,
-                                  mKeyboardState.smartKeySet,
-                                  mEventManager.defaultOutput);
-            
-            OutputSink output(*this, homeScreen);
-            
-            Surface::WidgetGuard guard(mSurface,
-                                       homeScreen.rootWidget());
-
-            while (!mScreenStack.dirty())
-            {
-                mEventManager.poll(output);
-            }
-        }
-        else
-        {
-            launch(mScreenStack.top());
-        }
+        launch(mCurrent);
     }
 }
 
@@ -117,10 +80,6 @@ void ScreenManager::launch(const ScreenEvent& screenEvent)
 {
     switch (screenEvent.type)
     {
-    case ScreenEvent::Type::kHome:
-        launchMenu(0);
-        break;
-        
     case ScreenEvent::Type::kMenu:
         launchMenu(screenEvent.index);
         break;
@@ -141,31 +100,50 @@ void ScreenManager::launch(const ScreenEvent& screenEvent)
                           screenEvent.type == ScreenEvent::Type::kRecordMacroRT);
         break;
         
-    case ScreenEvent::Type::kEditSMacro:
-        launchEditMacro(mKeyboardState.secureMacroSet,
-                        screenEvent.index);
-        break;
+    // case ScreenEvent::Type::kEditSMacro:
+    //     launchEditMacro(mKeyboardState.secureMacroSet,
+    //                     screenEvent.index);
+    //     break;
 
-    case ScreenEvent::Type::kRecordSMacro:
-    case ScreenEvent::Type::kRecordSMacroRT:
-        launchRecordMacro(mKeyboardState.secureMacroSet,
-                          screenEvent.index,
-                          screenEvent.type == ScreenEvent::Type::kRecordSMacroRT);
+    // case ScreenEvent::Type::kRecordSMacro:
+    // case ScreenEvent::Type::kRecordSMacroRT:
+    //     launchRecordMacro(mKeyboardState.secureMacroSet,
+    //                       screenEvent.index,
+    //                       screenEvent.type == ScreenEvent::Type::kRecordSMacroRT);
 
+    default:
+        launchHome();
         break;
     }
+}
+
+void ScreenManager::launchHome()
+{
+    auto current(mCurrent);
+    
+    HomeScreen screen(mEventManager.timer,
+                      mKeyboardState.smartKeySet,
+                      mEventManager.defaultOutput);
+    
+    OutputSink output(*this, screen);
+
+    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+
+    while (current == mCurrent)
+    {
+        mEventManager.poll(output);
+    }
+
+    mEventManager.flush(output);
 }
 
 void ScreenManager::launchMenu(int menuId)
 {
     MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
-                      mScreenStack,
                       mEventManager);
-            
-    AutoRepeat autoRepeat(mEventManager.timer,
-                          screen);
     
-    displayScreen(autoRepeat, screen.rootWidget());
+    displayScreen(mMenuDefinitions.getTitle(menuId),
+                  screen);
 }
 
 void ScreenManager::launchScreen(int screenId)
@@ -174,28 +152,28 @@ void ScreenManager::launchScreen(int screenId)
     {
     case 0:
     {
-        StorageScreen screen;
+        // StorageScreen screen;
 
-        displayScreen(screen,
-                      screen.rootWidget());
+        // displayScreen("Storage", screen);
         break;
     }
             
     case 1:
     {
-        BenchmarkScreen screen(mEventManager);
+        // BenchmarkScreen screen(mEventManager);
 
-        displayScreen(screen,
-                      screen.rootWidget());
+        // displayScreen(screen,
+        //               screen.rootWidget());
         break;
     }
 
     case 2:
     {
-        KeyConfigScreen screen(mEventManager.keySource);
-
-        displayScreen(screen,
-                      screen.rootWidget());
+        KeyConfigScreen screen(mEventManager.timer,
+                               mEventManager.keySource,
+                               mKeyboardState.layerStack[0]);
+        
+        displayScreen("Key Configuration", screen);
         break;
     }
 
@@ -207,115 +185,53 @@ void ScreenManager::launchScreen(int screenId)
 void ScreenManager::launchEditMacro(MacroSet& macroSet,
                                     int       macroId)
 {
-    EditMacroScreen screen(mScreenStack,
-                           mEventManager.timer,
+    EditMacroScreen screen(mEventManager.timer,
                            macroSet,
-                           macroId);
+                           macroId,
+                           mEventManager);
 
-    displayScreen(screen, screen.rootWidget());
+    displayScreen("Edit Macro", screen);
 }
 
 void ScreenManager::launchRecordMacro(MacroSet& macroSet,
                                       int       macroId,
                                       bool      realtime)
 {
-    RecordMacroScreen screen(mScreenStack,
-                             mEventManager.timer,
+    RecordMacroScreen screen(mEventManager.timer,
                              macroSet,
                              macroId,
                              realtime,
                              mEventManager.defaultOutput);
     
-    displayScreen(screen, screen.rootWidget());
+    displayScreen("Record Macro", screen);
 }
 
-void ScreenManager::displayScreen(EventStage& stage,
-                                  Widget&     content)
+void ScreenManager::displayScreen(const StrRef& title,
+                                  Screen&       screen)
 {
-    OutputSink output(*this, stage);
+    auto current(mCurrent);
+    
+    AutoRepeat autoRepeat(mEventManager.timer,
+                          screen);
+    
+    OutputSink output(*this, autoRepeat);
 
     TitleWidget titleWidget;
-
-    createTitlePath(titleWidget.text);
-
-    HSplitWidget hSplit(titleWidget,       
-                        content,
+    
+    titleWidget.text = title;
+    
+    HSplitWidget hSplit(titleWidget,    
+                        screen.rootWidget(),
                         TitleWidget::kPreferredHeight);
 
     Surface::WidgetGuard guard(mSurface, hSplit);
 
-    while (!mScreenStack.dirty())
+    screen.screenInit();
+    
+    while (current == mCurrent)
     {
         mEventManager.poll(output);
     }
-}
 
-void ScreenManager::createTitlePath(const StrOStream& os)
-{
-    for (auto it(mScreenStack.begin()); it != mScreenStack.end(); ++it)
-    {
-        if (it != mScreenStack.begin())
-        {
-            os.appendStr(" : ");
-        }
-        
-        createTitle(*it, os);
-    }
-}
-
-void ScreenManager::createTitle(const ScreenEvent& screenEvent,
-                                const StrOStream&  os)
-{
-    switch (screenEvent.type)
-    {
-    case ScreenEvent::Type::kHome:
-    case ScreenEvent::Type::kMenu:
-        os.appendStr(mMenuDefinitions.getTitle(screenEvent.index));
-        break;
-
-    case ScreenEvent::Type::kScreen:
-        switch (screenEvent.index)
-        {
-        case 0:
-            os.appendStr("Storage");
-            break;
-            
-        case 1:
-            os.appendStr("Benchmark");
-            break;
-
-        case 2:
-            os.appendStr("Layout Configuration");
-            break;
-        }
-        break;
-
-    case ScreenEvent::Type::kEditMacro:
-        os.appendStr("Edit Macro");
-        break;
-
-    case ScreenEvent::Type::kRecordMacro:
-    case ScreenEvent::Type::kRecordMacroRT:
-        os.appendStr("Record Macro");
-        break;
-        
-    case ScreenEvent::Type::kEditSMacro:
-        os.appendStr("Edit Secure Macro");
-        break;
-
-    case ScreenEvent::Type::kRecordSMacro:
-    case ScreenEvent::Type::kRecordSMacroRT:
-        os.appendStr("Record Secure Macro");
-        break;
-
-    default:
-        break;
-    }
-}
-
-void ScreenManager::flush()
-{
-    OutputSink output(*this, mEventManager.defaultOutput);
-    
     mEventManager.flush(output);
 }

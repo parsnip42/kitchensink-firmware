@@ -1,6 +1,7 @@
 #ifndef INCLUDED_HOMESCREEN_H
 #define INCLUDED_HOMESCREEN_H
 
+#include "ui/screen.h"
 #include "ui/homewidget.h"
 #include "event/eventstage.h"
 #include "timer.h"
@@ -8,7 +9,7 @@
 
 class Widget;
 
-class HomeScreen : public EventStage
+class HomeScreen : public Screen
 {
 public:
     HomeScreen(Timer&             timer,
@@ -17,8 +18,7 @@ public:
 
 public:
     virtual void processEvent(const Event& event) override;
-
-    Widget& rootWidget();
+    virtual Widget& rootWidget() override;
 
     void update();
     

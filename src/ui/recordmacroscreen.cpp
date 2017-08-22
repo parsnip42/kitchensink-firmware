@@ -7,19 +7,17 @@
 #include "eventmanager.h"
 #include "storage/storage.h"
 #include "serialize/serializer.h"
-#include "screenstack.h"
 #include "event/event.h"
+#include "event/screenevent.h"
 
 #include <cstdint>
 
-RecordMacroScreen::RecordMacroScreen(ScreenStack& screenStack,
-                                     Timer&       timer,
-                                     MacroSet&    macroSet,
-                                     int          macroId,
-                                     bool         realtime,
-                                     EventStage&  next)
-    : mScreenStack(screenStack)
-    , mMacroSet(macroSet)
+RecordMacroScreen::RecordMacroScreen(Timer&      timer,
+                                     MacroSet&   macroSet,
+                                     int         macroId,
+                                     bool        realtime,
+                                     EventStage& next)
+    : mMacroSet(macroSet)
     , mMacroId(macroId)
     , mRecorder(realtime)
     , mLabelWidget("Recording",
@@ -68,7 +66,7 @@ void RecordMacroScreen::processEvent(const Event& event)
                 
         s.serialize(mMacroSet, os);
 
-        mScreenStack.pop();
+        mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
     }
 }
 

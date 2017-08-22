@@ -33,9 +33,8 @@ void EventManager::flush(EventStage& output)
 {
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
     
-    while (keySource.anyPressed() || !mBuffer.empty())
+    while (keySource.anyPressed())
     {
-        mBuffer.pollEvent(mInput);
         timer.pollEvent(mInput);
         keySource.pollEvent(mInput);
         mLedSource.pollEvent(mInput);

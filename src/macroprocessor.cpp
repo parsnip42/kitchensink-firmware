@@ -5,12 +5,10 @@
 #include "event/delayevent.h"
 #include "macro.h"
 
-MacroProcessor::MacroProcessor(Event::Type     macroType,
-                               const MacroSet& macroSet,
+MacroProcessor::MacroProcessor(const MacroSet& macroSet,
                                Timer&          timer,
                                EventStage&     next)
-    : mMacroType(macroType)
-    , mMacroSet(macroSet)
+    : mMacroSet(macroSet)
     , mCurrent(nullptr)
     , mPlaybackTimer(timer.createHandle())
     , mNext(next)

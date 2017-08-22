@@ -5,7 +5,6 @@
 #include "ui/combowidget.h"
 #include "ui/focusutil.h"
 #include "ui/keys.h"
-#include "screenstack.h"
 #include "types/arrayobjectsource.h"
 #include "storage/storage.h"
 #include "serialize/serializer.h"
@@ -26,12 +25,11 @@ constexpr int kLabelWidth = Font::width("Shortcut ");
 
 }
 
-EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
-                                 Timer&       timer,
+EditMacroScreen::EditMacroScreen(Timer&       timer,
                                  MacroSet&    macroSet,
-                                 int          macroId)
-    : mScreenStack(screenStack)
-    , mMacroSet(macroSet)
+                                 int          macroId,
+                                 EventStage&  next)
+    : mMacroSet(macroSet)
     , mMacroId(macroId)
     , mTitleEntry("Name",
                   kLabelWidth,
@@ -44,6 +42,7 @@ EditMacroScreen::EditMacroScreen(ScreenStack& screenStack,
                  ComboWidget(mtds))
     , mItems({{ mTitleEntry, mShortcutEntry, mTypeCombo }})
     , mHStackWidget(mItems, true)
+    , mNext(next)
 {
     auto& macro(mMacroSet[mMacroId]);
 
@@ -66,12 +65,10 @@ void EditMacroScreen::processEvent(const Event& event)
         macro.name     = mTitleEntry.widget.text;
         macro.shortcut = mShortcutEntry.widget.text;
 
-        mScreenStack.pop();
-
         auto realtime(mTypeCombo.widget.selectedItem == 1);
         auto screenType(realtime ? ScreenEvent::Type::kRecordMacroRT : ScreenEvent::Type::kRecordMacro);
             
-        mScreenStack.push(ScreenEvent(screenType, mMacroId));
+        mNext.processEvent(ScreenEvent::create(screenType, mMacroId));        
     }
     else
     {
@@ -83,4 +80,3 @@ Widget& EditMacroScreen::rootWidget()
 {
     return mHStackWidget;
 }
-

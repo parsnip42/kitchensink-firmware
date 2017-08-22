@@ -39,7 +39,7 @@ constexpr Event Multi(int index)
 
 constexpr Event MainMenu()
 {
-    return ScreenEvent::create(ScreenEvent::Type::kHome, 0);
+    return ScreenEvent::create(ScreenEvent::Type::kMenu, 0);
 }
 
 constexpr Event Menu(int index)

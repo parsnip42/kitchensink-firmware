@@ -4,55 +4,54 @@
 #include "event/keyevent.h"
 #include "serialize/eventserializer.h"
 
-KeyConfigScreen::KeyConfigScreen(KeySource& keySource)
+
+#include "types/mappedobjectsource.h"
+
+
+
+KeyConfigScreen::KeyConfigScreen(Timer&     timer,
+                                 KeySource& keySource,
+                                 Layer&     layer)
     : mKeySource(keySource)
-    , mLayerLabel("Layer", 70)
-    , mLocationLabel("Location", 70)
-    , mEventEntry("Current", 70)
-    , mItems({{ mLayerLabel, mLocationLabel, mEventEntry }})
+    , mLayer(layer)
+    , mTitleEntry("Name", 70, TextEntryWidget(timer))
+    , mLocationProperty("Location", 70)
+    , mEventEntry("Current", 70, EventEntryWidget(timer))
+    , mItems({{ mTitleEntry, mLocationProperty, mEventEntry }})
     , mHStackWidget(mItems, true)
 {
-    mHStackWidget.setFocused(false);
-    mEventEntry.setFocused(true);
+    mTitleEntry.widget.text = mLayer.name;
 }
 
 void KeyConfigScreen::processEvent(const Event& event)
 {
-    if (Keys::ok(event))
-    {
-        mLayerLabel.widget.text    = "Waiting";
-        mLocationLabel.widget.text = "Waiting";
-        mHStackWidget.invalidateWidget();
-                
-        auto layer(mKeySource.topLayer());
-        auto location(mKeySource.readNextKeyLocation());
+    mHStackWidget.processEvent(event);
+}
 
-        { 
-            mLayerLabel.widget.text =
-                mKeySource.layerStack[layer].name;
-        }
+void KeyConfigScreen::screenInit()
+{
+    mHStackWidget.invalidateWidget();
 
-        {
-            StrOStream os(mLocationLabel.widget.text);
-            os.reset();
-            os.appendInt(location.row);
-            os.appendStr(", ");
-            os.appendInt(location.column);
-        }
-            
-        {
-            auto event(mKeySource.layerStack[layer].at(location.row, location.column));
-
-            mEventEntry.widget.event = event;
-            mEventEntry.widget.update();
-        }
+    // auto location(mKeySource.readNextKeyLocation());
+    
+    // { 
+    // }
+    
+    // {
+    //     StrOStream os(mLocationProperty.value);
         
-        mHStackWidget.invalidateWidget();
-    }
-    else
-    {
-        mEventEntry.processEvent(event);
-    }
+    //     os.reset();
+    //     os.appendInt(location.row);
+    //     os.appendStr(", ");
+    //     os.appendInt(location.column);
+    // }
+
+    // auto event(mKeySource.layerStack[layer].at(location.row, location.column));
+    
+    // mEventEntry.widget.event = event;
+    mEventEntry.widget.update();
+
+    mHStackWidget.invalidateWidget();
 }
 
 Widget& KeyConfigScreen::rootWidget()

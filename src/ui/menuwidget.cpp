@@ -41,29 +41,31 @@ void MenuWidget::processEvent(const Event& event)
             update();
         }
     }
-
-    mVKeyboard.processEvent(event);
-
-    if (filterStr.length() < filterStr.capacity())
+    else
     {
-        auto newChar(mVKeyboard.consumeChar());
-                    
-        if (newChar)
+        mVKeyboard.processEvent(event);
+        
+        if (filterStr.length() < filterStr.capacity())
         {
-            filterStr.insert(filterStr.end(), newChar);
-
-            // Optimistic check for results - apply the filter first and then
-            // revert the change only if no results are found.
-            applyFilter();
+            auto newChar(mVKeyboard.consumeChar());
             
-            if (filterIndex.filteredSize() == 0)
+            if (newChar)
             {
-                filterStr.erase(filterStr.end() - 1);
+                filterStr.insert(filterStr.end(), newChar);
+                
+                // Optimistic check for results - apply the filter first and then
+                // revert the change only if no results are found.
                 applyFilter();
-            }
-            else
-            {
-                update();
+                
+                if (filterIndex.filteredSize() == 0)
+                {
+                    filterStr.erase(filterStr.end() - 1);
+                    applyFilter();
+                }
+                else
+                {
+                    update();
+                }
             }
         }
     }
@@ -112,7 +114,8 @@ void MenuWidget::render(const RasterLine& rasterLine, int row)
 
 void MenuWidget::regionInvalidated(const Rectangle& region)
 {
-    
+    // This space intentionally left blank - we manage any invalidation within
+    // this widget and not it's children.
 }
 
 void MenuWidget::moveSelection(int direction)
@@ -130,8 +133,12 @@ void MenuWidget::populateMenuItem(int index)
 {
     if (index != mWidgetIndex)
     {
-        mWidget = mDataSource[filterIndex[index]];
-        mWidget.filter = filterStr;
+        const auto& item(mDataSource[filterIndex[index]]);
+
+        mWidget.text     = item.title;
+        mWidget.shortcut = item.shortcut;
+        mWidget.filter   = filterStr;
+        
         mWidget.setParent(this, Rectangle(0, 0, widgetSize().width, MenuItemWidget::kPreferredHeight));
         mWidget.setFocused(mFocused && index == mSelectedIndex);
     }
@@ -139,9 +146,9 @@ void MenuWidget::populateMenuItem(int index)
     mWidgetIndex = index;
 }
 
-int MenuWidget::selectedIndex() const
+MenuWidget::Item MenuWidget::selectedItem() const
 {
-    return mSelectedIndex;
+    return mDataSource[filterIndex[mSelectedIndex]];
 }
 
 void MenuWidget::applyFilter()
@@ -150,9 +157,9 @@ void MenuWidget::applyFilter()
         mDataSource.size(),
         [&](std::size_t index)
         {
-            auto item = mDataSource[index];
+            const auto& item(mDataSource[index]);
 
-            return (StrRef(item.text).beginsWithCase(filterStr) ||
+            return (StrRef(item.title).beginsWithCase(filterStr) ||
                     StrRef(item.shortcut).beginsWithCase(filterStr));
         });
 }

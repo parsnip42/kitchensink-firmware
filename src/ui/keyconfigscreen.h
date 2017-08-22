@@ -1,33 +1,43 @@
 #ifndef INCLUDED_KEYCONFIGSCREEN_H
 #define INCLUDED_KEYCONFIGSCREEN_H
 
+#include "ui/textentrywidget.h"
 #include "ui/labelwidget.h"
 #include "ui/labelledwidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/evententrywidget.h"
+#include "ui/propertywidget.h"
+#include "ui/screen.h"
 #include "event/eventstage.h"
 
 class KeySource;
 class Widget;
+class Timer;
+class Layer;
 
-class KeyConfigScreen : public EventStage
+class KeyConfigScreen : public Screen
 {
 public:
-    explicit KeyConfigScreen(KeySource& keySource);
+    KeyConfigScreen(Timer&     timer,
+                    KeySource& keySource,
+                    Layer&     layer);
 
 public:
     virtual void processEvent(const Event& event) override;
 
-    Widget& rootWidget();
+public:
+    virtual void screenInit() override;
+    virtual Widget& rootWidget() override;
     
 private:
     KeySource&                       mKeySource;
-    LabelledWidget<LabelWidget>      mLayerLabel;
-    LabelledWidget<LabelWidget>      mLocationLabel;
+    Layer&                           mLayer;
+    LabelledWidget<TextEntryWidget>  mTitleEntry;
+    PropertyWidget                   mLocationProperty;
     LabelledWidget<EventEntryWidget> mEventEntry;
     HStackWidget::Items<3>           mItems;
     HStackWidget                     mHStackWidget;
-    
+
 private:
     KeyConfigScreen(const KeyConfigScreen&) = delete;
     KeyConfigScreen& operator=(const KeyConfigScreen&) = delete;
