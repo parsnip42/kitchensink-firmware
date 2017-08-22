@@ -22,11 +22,11 @@ const std::array<MenuScreen::Item, 5> mainMenu = { {
     } };
 
 const std::array<MenuScreen::Item, 5> configMenu = { {
-        { StrRef("Edit Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 4) },
-        { StrRef("Edit Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 10) },
-        { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 11) },
-        { StrRef("Edit Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 12) },
-        { StrRef("Edit Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 13) },
+        { StrRef("Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 4) },
+        { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 10) },
+        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 11) },
+        { StrRef("Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 12) },
+        { StrRef("Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 13) },
     } };
 
 const std::array<MenuScreen::Item, 3> systemMenu = { {

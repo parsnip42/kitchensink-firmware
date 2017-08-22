@@ -22,8 +22,8 @@ SmartConfigScreen::SmartConfigScreen(Timer&    timer,
     : mSmartKey(smartKey)
     , mTitleEntry("Name", 70, TextEntryWidget(timer))
     , mTypeCombo("Type", 70, ComboWidget(stds))
-    , mEventEntry("Current", 70, EventEntryWidget(timer))
-    , mAuxEventEntry("Current", 70, EventEntryWidget(timer))
+    , mEventEntry("Key", 70, EventEntryWidget(timer))
+    , mAuxEventEntry("Aux Key", 70, EventEntryWidget(timer))
     , mItems({{ mTitleEntry, mTypeCombo, mEventEntry, mAuxEventEntry }})
     , mHStackWidget(mItems, true)
 { }

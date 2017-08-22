@@ -7,6 +7,7 @@
 #include "ui/evententrywidget.h"
 #include "ui/keylocationwidget.h"
 #include "ui/screen.h"
+#include "ui/singlewidget.h"
 #include "event/eventstage.h"
 
 class KeySource;
@@ -35,6 +36,7 @@ private:
     LabelledWidget<EventEntryWidget>  mEventEntry;
     HStackWidget::Items<3>            mItems;
     HStackWidget                      mHStackWidget;
+    SingleWidget                      mRootWidget;
 
 private:
     LayerConfigScreen(const LayerConfigScreen&) = delete;
