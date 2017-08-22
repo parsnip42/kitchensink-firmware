@@ -21,11 +21,11 @@ public:
     virtual Widget& rootWidget() override;
 
 private:
-    MultiKey&                        mMultiKey;
-    LabelledWidget<TextEntryWidget>  mTitleEntry;
-    LabelledWidget<EventEntryWidget> mEventEntry;
-    HStackWidget::Items<2>           mItems;
-    HStackWidget                     mHStackWidget;
+    MultiKey&                                       mMultiKey;
+    LabelledWidget<TextEntryWidget>                 mTitleEntry;
+    std::array<LabelledWidget<EventEntryWidget>, 2> mEventEntry;
+    HStackWidget::Items<3>                          mItems;
+    HStackWidget                                    mHStackWidget;
 };
 
 #endif

@@ -13,7 +13,7 @@
 namespace
 {
 
-const std::array<MenuScreen::Item, 5> mainMenu = { {
+const std::array<MenuWidget::Item, 5> mainMenu = { {
         { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 1) },
         { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 2) },
         { StrRef("Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 3) },
@@ -21,7 +21,7 @@ const std::array<MenuScreen::Item, 5> mainMenu = { {
         { StrRef("System"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 6) },
     } };
 
-const std::array<MenuScreen::Item, 5> configMenu = { {
+const std::array<MenuWidget::Item, 5> configMenu = { {
         { StrRef("Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 4) },
         { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 10) },
         { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 11) },
@@ -29,16 +29,16 @@ const std::array<MenuScreen::Item, 5> configMenu = { {
         { StrRef("Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 13) },
     } };
 
-const std::array<MenuScreen::Item, 3> systemMenu = { {
+const std::array<MenuWidget::Item, 3> systemMenu = { {
         { StrRef("Storage"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 0) },
         { StrRef("Benchmark"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 1) },
         { StrRef("Bootloader"), StrRef(), ActionEvent::create(0) } 
     } };
 
 
-MenuScreen::Item createMacroMenuItem(const Macro& macro, std::size_t index)
+MenuWidget::Item createMacroMenuItem(const Macro& macro, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
@@ -47,9 +47,9 @@ MenuScreen::Item createMacroMenuItem(const Macro& macro, std::size_t index)
     return item;
 }
 
-MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
+MenuWidget::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
@@ -58,9 +58,9 @@ MenuScreen::Item createEditMacroMenuItem(const Macro& macro, std::size_t index)
     return item;
 }
 
-MenuScreen::Item createSMacroMenuItem(const Macro& macro, std::size_t index)
+MenuWidget::Item createSMacroMenuItem(const Macro& macro, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
@@ -69,9 +69,9 @@ MenuScreen::Item createSMacroMenuItem(const Macro& macro, std::size_t index)
     return item;
 }
 
-MenuScreen::Item createEditSMacroMenuItem(const Macro& macro, std::size_t index)
+MenuWidget::Item createEditSMacroMenuItem(const Macro& macro, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
@@ -80,9 +80,9 @@ MenuScreen::Item createEditSMacroMenuItem(const Macro& macro, std::size_t index)
     return item;
 }
 
-MenuScreen::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index)
+MenuWidget::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title = multi.name;
     item.event = ScreenEvent::create(ScreenEvent::Type::kEditMulti, index);
@@ -90,9 +90,9 @@ MenuScreen::Item createMultiKeyMenuItem(const MultiKey& multi, std::size_t index
     return item;
 }
 
-MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index)
+MenuWidget::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title = smart.name;
     item.event = ScreenEvent::create(ScreenEvent::Type::kEditSmart, index);
@@ -100,9 +100,9 @@ MenuScreen::Item createSmartKeyMenuItem(const SmartKey& smart, std::size_t index
     return item;
 }
 
-MenuScreen::Item createLayerMenuItem(const Layer& layer, std::size_t index)
+MenuWidget::Item createLayerMenuItem(const Layer& layer, std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
         
     item.title = layer.name;
     item.event = ScreenEvent::create(ScreenEvent::Type::kEditLayer, index);
@@ -110,9 +110,9 @@ MenuScreen::Item createLayerMenuItem(const Layer& layer, std::size_t index)
     return item;
 }
 
-MenuScreen::Item createKeyMenuItem(std::size_t index)
+MenuWidget::Item createKeyMenuItem(std::size_t index)
 {
-    MenuScreen::Item item;
+    MenuWidget::Item item;
     
     auto keyName(KeyCodes::keyName(index + 1));
 
@@ -153,7 +153,7 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mKeyDataSource(254, &createKeyMenuItem)
 { }
 
-const MenuScreen::DataSource& MenuDefinitions::getDataSource(int id) const
+const MenuWidget::DataSource& MenuDefinitions::getDataSource(int id) const
 {
     switch (id)
     {

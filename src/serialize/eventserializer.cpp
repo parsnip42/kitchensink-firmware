@@ -9,6 +9,7 @@
 #include "event/layerevent.h"
 #include "event/macroevent.h"
 #include "event/smartevent.h"
+#include "event/tickevent.h"
 #include "types/strutil.h"
 
 namespace EventSerializer
@@ -230,6 +231,12 @@ void serializeReadable(const ActionEvent& event, const StrOStream& os)
     os.appendInt(event.actionId);
 }
 
+void serializeReadable(const TickEvent& event, const StrOStream& os)
+{
+    os.appendStr("Tick ");
+    os.appendInt(event.tickId);
+}
+
 }
 
 void serializeReadable(const Event& event, const StrOStream& os)
@@ -249,6 +256,10 @@ void serializeReadable(const Event& event, const StrOStream& os)
     else if (event.is<ActionEvent>())
     {
         serializeReadable(event.get<ActionEvent>(), os);
+    }
+    else if (event.is<TickEvent>())
+    {
+        serializeReadable(event.get<TickEvent>(), os);
     }
     else
     {

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_MENUDEFINITIONS_H
 #define INCLUDED_MENUDEFINITIONS_H
 
-#include "ui/menuscreen.h"
+#include "ui/menuwidget.h"
 #include "types/arrayobjectsource.h"
 #include "types/mappedobjectsource.h"
 #include "types/generatedobjectsource.h"
@@ -11,7 +11,6 @@
 #include "layerstack.h"
 #include "data/keycodes.h"
 
-class StrOStream;
 class KeyboardState;
 
 class MenuDefinitions
@@ -21,22 +20,22 @@ public:
 
 public:
     StrRef getTitle(int id) const;
-    const MenuScreen::DataSource& getDataSource(int id) const;
+    const MenuWidget::DataSource& getDataSource(int id) const;
 
 private:
-    const ArrayObjectSource<MenuScreen::Item> mMainMenuSource;
-    const ArrayObjectSource<MenuScreen::Item> mConfigMenuSource;
-    const ArrayObjectSource<MenuScreen::Item> mSystemMenuSource;
-    const ArrayObjectSource<MenuScreen::Item> mEmptyMenuSource;
+    const ArrayObjectSource<MenuWidget::Item> mMainMenuSource;
+    const ArrayObjectSource<MenuWidget::Item> mConfigMenuSource;
+    const ArrayObjectSource<MenuWidget::Item> mSystemMenuSource;
+    const ArrayObjectSource<MenuWidget::Item> mEmptyMenuSource;
 
-    const MappedObjectSource<MenuScreen::Item, MacroSet>    mMacroDataSource;
-    const MappedObjectSource<MenuScreen::Item, MacroSet>    mEditMacroDataSource;
-    const MappedObjectSource<MenuScreen::Item, MacroSet>    mSMacroDataSource;
-    const MappedObjectSource<MenuScreen::Item, MacroSet>    mEditSMacroDataSource;
-    const MappedObjectSource<MenuScreen::Item, MultiKeySet> mMultiKeyDataSource;
-    const MappedObjectSource<MenuScreen::Item, SmartKeySet> mSmartKeyDataSource;
-    const MappedObjectSource<MenuScreen::Item, LayerStack>  mLayerDataSource;
-    const GeneratedObjectSource<MenuScreen::Item>           mKeyDataSource;
+    const MappedObjectSource<MenuWidget::Item, MacroSet>    mMacroDataSource;
+    const MappedObjectSource<MenuWidget::Item, MacroSet>    mEditMacroDataSource;
+    const MappedObjectSource<MenuWidget::Item, MacroSet>    mSMacroDataSource;
+    const MappedObjectSource<MenuWidget::Item, MacroSet>    mEditSMacroDataSource;
+    const MappedObjectSource<MenuWidget::Item, MultiKeySet> mMultiKeyDataSource;
+    const MappedObjectSource<MenuWidget::Item, SmartKeySet> mSmartKeyDataSource;
+    const MappedObjectSource<MenuWidget::Item, LayerStack>  mLayerDataSource;
+    const GeneratedObjectSource<MenuWidget::Item>           mKeyDataSource;
 
 private:
     MenuDefinitions(const MenuDefinitions&) = delete;

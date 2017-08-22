@@ -1,6 +1,7 @@
 #include "ui/smartconfigscreen.h"
 
 #include "types/arrayobjectsource.h"
+#include "smartkey.h"
 
 namespace
 {
@@ -26,7 +27,12 @@ SmartConfigScreen::SmartConfigScreen(Timer&    timer,
     , mAuxEventEntry("Aux Key", 70, EventEntryWidget(timer))
     , mItems({{ mTitleEntry, mTypeCombo, mEventEntry, mAuxEventEntry }})
     , mHStackWidget(mItems, true)
-{ }
+{
+    mTitleEntry.widget.text        = mSmartKey.name;
+    mTypeCombo.widget.selectedItem = static_cast<int>(mSmartKey.type);
+    mEventEntry.widget.event       = mSmartKey.event;
+    mAuxEventEntry.widget.event    = mSmartKey.auxEvent;
+}
 
 void SmartConfigScreen::processEvent(const Event& event)
 {
@@ -37,3 +43,12 @@ Widget& SmartConfigScreen::rootWidget()
 {
     return mHStackWidget;
 }
+
+
+
+
+
+
+
+
+

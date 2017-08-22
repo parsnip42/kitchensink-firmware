@@ -2,6 +2,7 @@
 #define INCLUDED_SCREENMANAGER_H
 
 #include "ui/menudefinitions.h"
+#include "ui/screen.h"
 #include "event/screenevent.h"
 
 class Surface;

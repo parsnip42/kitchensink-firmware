@@ -8,20 +8,19 @@ class Event
 public:
     enum class Type : uint8_t
     {
-        kNull       = 0,
-        kTick       = 1,
-        kAction     = 2,
-        kDelay      = 3,
-        kScreen     = 4,
-        kLedMask    = 5,
-        kInvalidate = 6,
-        
-        kKey        = 8,
-        kLayer      = 9,
-        kMulti      = 10,
-        kSmart      = 11,
-        kMacro      = 12,
-        kSMacro     = 13,
+        kKey        = 0,
+        kLayer      = 1,
+        kMulti      = 2,
+        kSmart      = 3,
+        kMacro      = 4,
+        kSMacro     = 5,
+
+        kTick       = 7,
+        kAction     = 8,
+        kDelay      = 9,
+        kScreen     = 10,
+        kLedMask    = 11,
+        kInvalidate = 12,  
     };
 
 public:
@@ -47,7 +46,7 @@ public:
     {
         if (value == 0)
         {
-            mData=0;
+            mData = 0;
         }
     }
 
@@ -55,6 +54,8 @@ public:
 public:
     constexpr Type type() const;
 
+    constexpr bool inverted() const;
+    
     constexpr uint8_t subType() const;
     
     constexpr uint8_t value() const;
@@ -143,10 +144,15 @@ constexpr T Event::get() const
 }
 
 inline
+constexpr bool Event::inverted() const
+{
+    return (type() < Type::kTick) && (subType() != 0);
+}
+
+inline
 constexpr Event Event::invert() const
 {
-
-    if (type() >= Type::kKey)
+    if (type() < Type::kTick)
     {
         Event e(*this);
         

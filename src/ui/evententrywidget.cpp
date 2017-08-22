@@ -3,10 +3,13 @@
 #include "ui/colors.h"
 #include "ui/font.h"
 #include "ui/renderutil.h"
+#include "ui/keys.h"
 #include "serialize/eventserializer.h"
+#include "event/tickevent.h"
 
 EventEntryWidget::EventEntryWidget(Timer& timer)
     : mFlashTimer(timer.createHandle())
+    , mEventStr("<Unset>")
     , mFocused(true)
     , mFlash(true)
 {
@@ -20,10 +23,17 @@ void EventEntryWidget::processEvent(const Event& inEvent)
         mFlash = !mFlash;
         invalidateWidget();
     }
-    else
+    else if (Keys::ok(inEvent))
     {
-        event = inEvent;
-        update();
+        
+    }
+    else if (!inEvent.is<TickEvent>())
+    {
+        if (!inEvent.inverted())
+        {
+            event = inEvent;
+            update();
+        }
     }
 }
 
@@ -42,7 +52,11 @@ void EventEntryWidget::render(const RasterLine& rasterLine, int row)
     {
         std::swap(fg, bg);
     }
+
+    mEventStr.clear();
     
+    EventSerializer::serializeReadable(event, mEventStr);
+
     RenderUtil::text(mEventStr, 0, row, rasterLine, fg, bg);
 }
 
@@ -53,9 +67,6 @@ Dimension EventEntryWidget::minimumSize() const
 
 void EventEntryWidget::update()
 {
-    mEventStr.clear();
-    
-    EventSerializer::serializeReadable(event, mEventStr);
     
     invalidateWidget();
 }
