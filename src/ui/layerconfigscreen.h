@@ -36,7 +36,6 @@ private:
     LabelledWidget<EventEntryWidget>  mEventEntry;
     HStackWidget::Items<3>            mItems;
     HStackWidget                      mHStackWidget;
-    SingleWidget                      mRootWidget;
 
 private:
     LayerConfigScreen(const LayerConfigScreen&) = delete;

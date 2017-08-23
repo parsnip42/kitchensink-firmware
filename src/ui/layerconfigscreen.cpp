@@ -14,7 +14,6 @@ LayerConfigScreen::LayerConfigScreen(Timer&     timer,
     , mEventEntry("Current", 70, EventEntryWidget(timer))
     , mItems({{ mTitleEntry, mKeyLocation, mEventEntry }})
     , mHStackWidget(mItems, true)
-    , mRootWidget(mHStackWidget)
 {
     mTitleEntry.widget.text = mLayer.name;
 }
@@ -39,7 +38,7 @@ void LayerConfigScreen::processEvent(const Event& event)
 
 Widget& LayerConfigScreen::rootWidget()
 {
-    return mRootWidget;
+    return mHStackWidget;
 }
 
 

@@ -2,7 +2,7 @@
 #define INCLUDED_BENCHMARKSCREEN_H
 
 #include "ui/hstackwidget.h"
-#include "ui/labelwidget.h"
+#include "ui/propertywidget.h"
 #include "ui/widgetset.h"
 #include "ui/screen.h"
 #include "event/eventstage.h"
@@ -22,8 +22,10 @@ public:
 
 private:
     EventManager&          mEventManager;
-    LabelWidget            mStatusLabel;
-    HStackWidget::Items<1> mItems;
+    PropertyWidget         mMemoryUsage;
+    PropertyWidget         mConfigSize;
+    PropertyWidget         mScanRate;
+    HStackWidget::Items<3> mItems;
     HStackWidget           mHStackWidget;
 };
 

@@ -1,6 +1,8 @@
 #include "ui/benchmarkscreen.h"
 
 #include "eventmanager.h"
+#include "hardware/ctrlutil.h"
+#include "keyboardstate.h"
 
 #include <elapsedMillis.h>
 
@@ -18,8 +20,10 @@ public:
 
 BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
     : mEventManager(eventManager)
-    , mStatusLabel()
-    , mItems({ mStatusLabel })
+    , mMemoryUsage("Free Memory", 100)
+    , mConfigSize("Config Size", 100)
+    , mScanRate("Scan Rate", 100)
+    , mItems({ mMemoryUsage, mConfigSize, mScanRate })
     , mHStackWidget(mItems, true)
 { }
 
@@ -30,25 +34,43 @@ void BenchmarkScreen::processEvent(const Event& event)
 
 void BenchmarkScreen::screenInit()
 {
+    {
+        StrOStream os(mMemoryUsage.value);
+
+        os.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
+        os.appendStr(" bytes");
+        
+        mMemoryUsage.invalidateWidget();
+    }
+    
+    {
+        StrOStream os(mConfigSize.value);
+
+        os.appendInt(sizeof(KeyboardState));
+        os.appendStr(" bytes");
+        
+        mConfigSize.invalidateWidget();
+    }
+
     auto start(millis());
 
     NullKeyStage nullNext;
     
-    for (int i(0); i < 1000; ++i)
+    for (int i(0); i < 500; ++i)
     {
         mEventManager.poll(nullNext);
     }
     
     auto end(millis());
 
-    StrOStream os(mStatusLabel.text);
-    
-    os.appendInt(static_cast<int>(end-start));
-    os.appendStr("ms (");
-    os.appendInt(static_cast<int>(1000000 / (end-start)));
-    os.appendStr(" polls/s)");
+    {
+        StrOStream os(mScanRate.value);
+        
+        os.appendInt(static_cast<int>((500 * 1000) / (end - start)));
+        os.appendStr(" polls/s");
 
-    mStatusLabel.invalidateWidget();
+        mScanRate.invalidateWidget();
+    }
 }
 
 Widget& BenchmarkScreen::rootWidget()
