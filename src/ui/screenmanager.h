@@ -4,6 +4,8 @@
 #include "ui/menudefinitions.h"
 #include "ui/screen.h"
 #include "event/screenevent.h"
+#include "event/eventstage.h"
+#include "types/circularbuffer.h"
 
 class Surface;
 class EventManager;
@@ -19,24 +21,27 @@ public:
                   KeyboardState& keyboardState);
     
 public:
-    // virtual void processEvent(const Event& event) override;
-
     void poll(EventStage& next);
 
 private:
-    void launch(const ScreenEvent& screen);
+    void launch(const ScreenEvent& screen,
+                EventStage&        next);
+
     void launchHome();
-    void launchMenu(int menuId);
+
+    void launchMenu(int         menuId,
+                    EventStage& next);
+    
     void launchScreen(int screenId);
     void launchEditMacro(MacroSet& macroSet, int macroId);
     void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
-    void launchEditLayer(LayerStack& layerStack,
-                         int         layerId);
+    void launchEditLayer(int layerId);
     void launchEditMultiKey(int multiKeyId);
     void launchEditSmartKey(int smartKeyId);
 
     void displayScreen(const StrRef& title,
-                       Screen&       screen);
+                       Screen&       screen,
+                       bool          transient = true);
     
 private:
     Surface&        mSurface;
@@ -45,7 +50,7 @@ private:
     MenuDefinitions mMenuDefinitions;
 
 public:
-    ScreenEvent     mCurrent;
+    CircularBuffer<ScreenEvent, 12> mScreenEventQueue;
 };
 
 #endif

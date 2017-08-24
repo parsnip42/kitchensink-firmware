@@ -16,6 +16,7 @@ Surface::WidgetGuard::WidgetGuard(Surface& surface,
 Surface::WidgetGuard::~WidgetGuard()
 {
     mSurface.setRootWidget(mWidget);
+    mSurface.redraw();
 }
 
 

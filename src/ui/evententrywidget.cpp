@@ -45,10 +45,10 @@ void EventEntryWidget::setFocused(bool focused)
 
 void EventEntryWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto fg(mFocused ? Colors::kBlack : Colors::kWhite);
-    auto bg(mFocused ? Colors::kWhite : Colors::kBlack);
+    auto fg(Colors::kWhite);
+    auto bg(Colors::kBlack);
 
-    if (mFlash)
+    if (mFocused && mFlash)
     {
         std::swap(fg, bg);
     }
@@ -67,6 +67,5 @@ Dimension EventEntryWidget::minimumSize() const
 
 void EventEntryWidget::update()
 {
-    
     invalidateWidget();
 }

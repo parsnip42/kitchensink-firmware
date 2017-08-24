@@ -2,6 +2,7 @@
 
 #include "eventmanager.h"
 #include "hardware/ctrlutil.h"
+#include "storage/storage.h"
 #include "keyboardstate.h"
 
 #include <elapsedMillis.h>

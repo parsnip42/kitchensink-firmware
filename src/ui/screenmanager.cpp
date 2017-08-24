@@ -37,15 +37,8 @@ public:
         if (event.is<ScreenEvent>())
         {
             auto screenEvent(event.get<ScreenEvent>());
-
-            if (mScreenManager.mCurrent != screenEvent)
-            {
-                mScreenManager.mCurrent = screenEvent;
-            }
-            else
-            {
-                mScreenManager.mCurrent = ScreenEvent(ScreenEvent::Type::kHome, 0);
-            }
+            
+            mScreenManager.mScreenEventQueue.pushBack(screenEvent);
         }
         else
         {
@@ -67,23 +60,30 @@ ScreenManager::ScreenManager(Surface&       surface,
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
     , mMenuDefinitions(keyboardState)
-    , mCurrent(ScreenEvent::Type::kHome, 0)
-{ }
+{
+    mScreenEventQueue.pushBack(ScreenEvent(ScreenEvent::Type::kHome, 0));
+}
 
 void ScreenManager::poll(EventStage& next)
 {
     while (true)
     {
-        launch(mCurrent);
+        if (!mScreenEventQueue.empty())
+        {
+            launch(mScreenEventQueue.pop(),
+                   mEventManager);
+        }
     }
 }
 
-void ScreenManager::launch(const ScreenEvent& screenEvent)
+void ScreenManager::launch(const ScreenEvent& screenEvent,
+                           EventStage&        next)
 {
     switch (screenEvent.type)
     {
     case ScreenEvent::Type::kMenu:
-        launchMenu(screenEvent.index);
+        launchMenu(screenEvent.index,
+                   next);
         break;
 
     case ScreenEvent::Type::kScreen:
@@ -103,8 +103,7 @@ void ScreenManager::launch(const ScreenEvent& screenEvent)
         break;
 
     case ScreenEvent::Type::kEditLayer:
-        launchEditLayer(mKeyboardState.layerStack,
-                        screenEvent.index);
+        launchEditLayer(screenEvent.index);
         break;
 
     case ScreenEvent::Type::kEditSmart:
@@ -123,28 +122,41 @@ void ScreenManager::launch(const ScreenEvent& screenEvent)
 
 void ScreenManager::launchHome()
 {
-    auto current(mCurrent);
-    
     HomeScreen screen(mEventManager.timer,
                       mKeyboardState.smartKeySet,
                       mEventManager.defaultOutput);
     
     OutputSink output(*this, screen);
-
+    
     Surface::WidgetGuard guard(mSurface, screen.rootWidget());
 
-    while (current == mCurrent)
+    while (true)
     {
         mEventManager.poll(output);
-    }
 
-    mEventManager.flush(output);
+        if (!mScreenEventQueue.empty())
+        {
+            auto event(mScreenEventQueue.pop());
+
+            if (event.type != ScreenEvent::Type::kHome)
+            {
+                mEventManager.flush(output);
+                launch(event, mEventManager.defaultOutput);
+            }
+            else
+            {
+                mEventManager.flush(output);
+                launchMenu(0, mEventManager);
+            }
+        }
+    }
 }
 
-void ScreenManager::launchMenu(int menuId)
+void ScreenManager::launchMenu(int         menuId,
+                               EventStage& next)
 {
     MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
-                      mEventManager);
+                      next);
     
     displayScreen(mMenuDefinitions.getTitle(menuId),
                   screen);
@@ -183,7 +195,7 @@ void ScreenManager::launchEditMacro(MacroSet& macroSet,
                            macroId,
                            mEventManager);
 
-    displayScreen("Edit Macro", screen);
+    displayScreen("Edit Macro", screen, false);
 }
 
 void ScreenManager::launchRecordMacro(MacroSet& macroSet,
@@ -199,14 +211,13 @@ void ScreenManager::launchRecordMacro(MacroSet& macroSet,
     displayScreen("Record Macro", screen);
 }
 
-void ScreenManager::launchEditLayer(LayerStack& layerStack,
-                                    int         layerId)
+void ScreenManager::launchEditLayer(int layerId)
 {
     LayerConfigScreen screen(mEventManager.timer,
                              mEventManager.keySource,
                              mKeyboardState.layerStack[layerId]);
     
-    displayScreen("Layer Configuration", screen);
+    displayScreen("Layer Configuration", screen, false);
 }
 
 void ScreenManager::launchEditMultiKey(int multiKeyId)
@@ -214,7 +225,7 @@ void ScreenManager::launchEditMultiKey(int multiKeyId)
     MultiConfigScreen screen(mEventManager.timer,
                              mKeyboardState.multiSet[multiKeyId]);
 
-    displayScreen("Multi Key Configuration", screen);   
+    displayScreen("Multi Key Configuration", screen, false);   
 }
 
 void ScreenManager::launchEditSmartKey(int smartKeyId)
@@ -222,19 +233,18 @@ void ScreenManager::launchEditSmartKey(int smartKeyId)
     SmartConfigScreen screen(mEventManager.timer,
                              mKeyboardState.smartKeySet[smartKeyId]);
 
-    displayScreen("Smart Key Configuration", screen);
+    displayScreen("Smart Key Configuration", screen, false);
 }
 
 void ScreenManager::displayScreen(const StrRef& title,
-                                  Screen&       screen)
+                                  Screen&       screen,
+                                  bool          transient)
 {
-    auto current(mCurrent);
-    
     AutoRepeat autoRepeat(mEventManager.timer,
                           screen);
     
     OutputSink output(*this, autoRepeat);
-
+    
     TitleWidget titleWidget;
     
     titleWidget.text = title;
@@ -246,11 +256,55 @@ void ScreenManager::displayScreen(const StrRef& title,
     Surface::WidgetGuard guard(mSurface, hSplit);
 
     screen.screenInit();
-    
-    while (current == mCurrent)
-    {
-        mEventManager.poll(output);
-    }
 
-    mEventManager.flush(output);
+    if (transient)
+    {
+        ScreenEvent nextEvent(ScreenEvent::Type::kHome, 0);
+        
+        while (true)
+        {
+            mEventManager.poll(output);
+
+            if (!mScreenEventQueue.empty())
+            {
+                nextEvent = mScreenEventQueue.pop();
+                break;
+            }
+        }
+
+        if (nextEvent.type != ScreenEvent::Type::kHome)
+        {
+            mEventManager.flush(output);
+            launch(nextEvent, mEventManager);
+        }
+    }
+    else
+    {
+        while (true)
+        {
+            mEventManager.poll(output);
+
+            if (!mScreenEventQueue.empty())
+            {
+                auto event(mScreenEventQueue.pop());
+                
+                if (event.type != ScreenEvent::Type::kHome)
+                {
+                        
+                    mEventManager.flush(output);
+                    launch(event, output);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+    }
 }
+
+
+
+
+

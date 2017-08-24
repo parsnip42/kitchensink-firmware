@@ -1,5 +1,5 @@
-#ifndef INCLUDED_KEYEVENTBUFFER_H
-#define INCLUDED_KEYEVENTBUFFER_H
+#ifndef INCLUDED_EVENTBUFFER_H
+#define INCLUDED_EVENTBUFFER_H
 
 #include "event/eventstage.h"
 #include "event/event.h"
@@ -20,7 +20,7 @@ public:
     Event pop();
 
 private:
-    CircularBuffer<Event, 200> mBuffer;
+    CircularBuffer<Event, 48> mBuffer;
 };
 
 
