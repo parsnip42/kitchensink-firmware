@@ -98,5 +98,5 @@ void loop()
                                 eventManager,
                                 keyboardState);
 
-    screenManager.poll(usbKeyboard);
+    screenManager.poll();
 }

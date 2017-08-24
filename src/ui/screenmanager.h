@@ -21,27 +21,44 @@ public:
                   KeyboardState& keyboardState);
     
 public:
-    void poll(EventStage& next);
+    void poll();
 
 private:
+    bool transient(const ScreenEvent& screenEvent) const;
+
     void launch(const ScreenEvent& screen,
                 EventStage&        next);
 
     void launchHome();
 
-    void launchMenu(int         menuId,
-                    EventStage& next);
+    void launchMenu(int                menuId,
+                    const ScreenEvent& sourceEvent,
+                    EventStage&        next);
     
-    void launchScreen(int screenId);
-    void launchEditMacro(MacroSet& macroSet, int macroId);
-    void launchRecordMacro(MacroSet& macroSet, int macroId, bool realtime);
-    void launchEditLayer(int layerId);
-    void launchEditMultiKey(int multiKeyId);
-    void launchEditSmartKey(int smartKeyId);
+    void launchScreen(int                screenId,
+                      const ScreenEvent& sourceEvent);
 
-    void displayScreen(const StrRef& title,
-                       Screen&       screen,
-                       bool          transient = true);
+    void launchEditMacro(MacroSet&          macroSet,
+                         int                macroId,
+                         const ScreenEvent& sourceEvent);
+
+    void launchRecordMacro(MacroSet&          macroSet,
+                           int                macroId,
+                           bool               realtime,
+                           const ScreenEvent& sourceEvent);
+
+    void launchEditLayer(int                layerId,
+                         const ScreenEvent& sourceEvent);
+
+    void launchEditMultiKey(int                multiKeyId,
+                            const ScreenEvent& sourceEvent);
+    
+    void launchEditSmartKey(int                smartKeyId,
+                            const ScreenEvent& sourceEvent);
+
+    void displayScreen(const StrRef&      title,
+                       Screen&            screen,
+                       const ScreenEvent& sourceEvent);
     
 private:
     Surface&        mSurface;

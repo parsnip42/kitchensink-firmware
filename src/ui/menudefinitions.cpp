@@ -114,7 +114,7 @@ MenuWidget::Item createKeyMenuItem(std::size_t index)
 {
     MenuWidget::Item item;
     
-    auto keyName(KeyCodes::keyName(index + 1));
+    auto keyName(KeyCodes::keyName(index));
 
     if (keyName == "")
     {
@@ -123,15 +123,16 @@ MenuWidget::Item createKeyMenuItem(std::size_t index)
 
     item.title = keyName;
 
+    if (index != 0)
     {
         StrOStream os(item.shortcut);
         
         os.reset();
         os.appendStr("0x");
-        os.appendInt(index + 1, "%2.2x");
+        os.appendInt(index, "%2.2x");
     }
     
-    item.event = KeyEvent::create(index + 1);
+    item.event = KeyEvent::create(index);
 
     return item;
 }
@@ -150,7 +151,7 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mMultiKeyDataSource(keyboardState.multiSet, &createMultiKeyMenuItem)
     , mSmartKeyDataSource(keyboardState.smartKeySet, &createSmartKeyMenuItem)
     , mLayerDataSource(keyboardState.layerStack, &createLayerMenuItem)
-    , mKeyDataSource(254, &createKeyMenuItem)
+    , mKeyDataSource(255, &createKeyMenuItem)
 { }
 
 const MenuWidget::DataSource& MenuDefinitions::getDataSource(int id) const
