@@ -9,7 +9,7 @@ LayerProcessor::LayerProcessor(EventStage& next)
     , mNext(next)
 { }
 
-void LayerProcessor::processEvent(const Event& event)
+bool LayerProcessor::processEvent(const Event& event)
 {
     if (event.is<LayerEvent>())
     {
@@ -22,4 +22,6 @@ void LayerProcessor::processEvent(const Event& event)
     {
         mNext.processEvent(event);
     }
+
+    return true;
 }

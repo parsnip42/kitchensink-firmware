@@ -8,7 +8,7 @@ VirtualKeyboard::VirtualKeyboard()
     : mActiveChar('\0')
 { }
 
-void VirtualKeyboard::processEvent(const Event& event)
+bool VirtualKeyboard::processEvent(const Event& event)
 {
     if (!mModifierState.processEvent(event))
     {
@@ -29,6 +29,8 @@ void VirtualKeyboard::processEvent(const Event& event)
             }
         }
     }
+
+    return true;
 }
 
 char VirtualKeyboard::consumeChar()

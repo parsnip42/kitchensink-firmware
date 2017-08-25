@@ -18,22 +18,25 @@ LayerConfigScreen::LayerConfigScreen(Timer&     timer,
     mTitleEntry.widget.text = mLayer.name;
 }
 
-void LayerConfigScreen::processEvent(const Event& event)
+bool LayerConfigScreen::processEvent(const Event& event)
 {
+    // if (&mHStackWidget.focused() == &mKeyLocation)
+    // {
+    //     mKeyLocation.processEvent(event);
 
-    if (&mHStackWidget.focused() == &mKeyLocation)
-    {
-        mKeyLocation.processEvent(event);
-        mEventEntry.widget.event = mLayer.at(mKeyLocation.widget.location.row,
-                                             mKeyLocation.widget.location.column);
+    //     const auto& location(mKeyLocation.widget.location);
+        
+    //     mEventEntry.widget.event = mLayer.at(location.row,
+    //                                          location.column);
 
-        mEventEntry.widget.update();
-
-    }
-    else
-    {
+    //     mEventEntry.widget.update();
+    // }
+    // else
+    // {
         mHStackWidget.processEvent(event);
-    }
+    // }
+
+        return true;
 }
 
 Widget& LayerConfigScreen::rootWidget()

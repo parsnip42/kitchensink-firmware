@@ -7,7 +7,6 @@
 #include "ui/evententrywidget.h"
 #include "ui/keylocationwidget.h"
 #include "ui/screen.h"
-#include "ui/singlewidget.h"
 #include "event/eventstage.h"
 
 class KeySource;
@@ -23,7 +22,7 @@ public:
                       Layer&     layer);
 
 public:
-    virtual void processEvent(const Event& event) override;
+    virtual bool processEvent(const Event& event) override;
 
 public:
     virtual Widget& rootWidget() override;

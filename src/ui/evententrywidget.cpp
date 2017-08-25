@@ -16,16 +16,12 @@ EventEntryWidget::EventEntryWidget(Timer& timer)
     mFlashTimer.scheduleRepeating(250, 250);
 }
 
-void EventEntryWidget::processEvent(const Event& inEvent)
+bool EventEntryWidget::processEvent(const Event& inEvent)
 {
     if (mFlashTimer.matches(inEvent))
     {
         mFlash = !mFlash;
         invalidateWidget();
-    }
-    else if (Keys::ok(inEvent))
-    {
-        
     }
     else if (!inEvent.is<TickEvent>())
     {
@@ -35,6 +31,8 @@ void EventEntryWidget::processEvent(const Event& inEvent)
             update();
         }
     }
+
+    return true;
 }
 
 void EventEntryWidget::setFocused(bool focused)
@@ -43,7 +41,8 @@ void EventEntryWidget::setFocused(bool focused)
     mFlash   = false;
 }
 
-void EventEntryWidget::render(const RasterLine& rasterLine, int row)
+void EventEntryWidget::render(const RasterLine& rasterLine,
+                              int               row)
 {
     auto fg(Colors::kWhite);
     auto bg(Colors::kBlack);

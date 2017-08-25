@@ -12,22 +12,22 @@ KeyLocationWidget::KeyLocationWidget(Timer&     timer,
     , mLocationStr("Waiting")
     , mFocused(true)
     , mFlash(true)
+    , mTrigger(false)
 {
     mFlashTimer.scheduleRepeating(250, 250);
 }
 
-void KeyLocationWidget::processEvent(const Event& event)
+bool KeyLocationWidget::processEvent(const Event& event)
 {
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
 
-        if (mKeySource.readKeyLocation(location))
+        if (mTrigger && mKeySource.readKeyLocation(location))
         {
             StrOStream os(mLocationStr);
             
             os.reset();
-            
             os.appendChar('(');
             os.appendInt(location.row);
             os.appendStr(", ");
@@ -35,24 +35,34 @@ void KeyLocationWidget::processEvent(const Event& event)
             os.appendChar(')');
 
             mLocationSet = true;
+            mTrigger = false;
         }
     }
 
     invalidateWidget();
+
+    return true;
 }
 
 void KeyLocationWidget::setFocused(bool focused)
 {
     mFocused = focused;
     mFlash = false;
+
+    if (focused)
+    {
+        mTrigger = true;
+        mLocationStr = "Waiting";
+    }
 }
 
-void KeyLocationWidget::render(const RasterLine& rasterLine, int row)
+void KeyLocationWidget::render(const RasterLine& rasterLine,
+                               int               row)
 {
-    auto fg(mFocused ? Colors::kBlack : Colors::kWhite);
-    auto bg(mFocused ? Colors::kWhite : Colors::kBlack);
+    auto fg(Colors::kWhite);
+    auto bg(Colors::kBlack);
 
-    if (mFlash)
+    if (mFocused && mFlash)
     {
         std::swap(fg, bg);
     }

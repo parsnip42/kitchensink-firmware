@@ -11,7 +11,7 @@ StorageScreen::StorageScreen()
     , mHStackWidget(mItems, true)
 { }
 
-void StorageScreen::processEvent(const Event& event)
+bool StorageScreen::processEvent(const Event& event)
 {
     StrOStream out(mLabels[0].text);
 
@@ -25,6 +25,8 @@ void StorageScreen::processEvent(const Event& event)
     {
         mLabels[0].text = "";
     }
+
+    return true;
 }
 
 Widget& StorageScreen::rootWidget()

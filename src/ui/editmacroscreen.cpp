@@ -51,7 +51,7 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
     mTypeCombo.widget.selectedItem = 0;
 }
 
-void EditMacroScreen::processEvent(const Event& event)
+bool EditMacroScreen::processEvent(const Event& event)
 {
     if (Keys::ok(event) && &mHStackWidget.focused() == &mTypeCombo)
     {
@@ -74,6 +74,8 @@ void EditMacroScreen::processEvent(const Event& event)
     {
         mHStackWidget.processEvent(event);
     }
+
+    return true;
 }
 
 Widget& EditMacroScreen::rootWidget()

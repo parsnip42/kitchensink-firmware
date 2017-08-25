@@ -14,9 +14,9 @@ EventManager::EventManager(Timer&              nTimer,
     , mToplevel(toplevel)
 { }
 
-void EventManager::processEvent(const Event& event)
+bool EventManager::processEvent(const Event& event)
 {
-    mBuffer.processEvent(event);
+    return mBuffer.processEvent(event);
 }
 
 void EventManager::poll(EventStage& output)

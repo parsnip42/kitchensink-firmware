@@ -14,7 +14,7 @@ EventRecorder::EventRecorder(bool realtime)
     , mComplete(false)
 { }
 
-void EventRecorder::processEvent(const Event& event)
+bool EventRecorder::processEvent(const Event& event)
 {
     if (event != ScreenEvent::create(ScreenEvent::Type::kHome, 0))
     {
@@ -45,6 +45,8 @@ void EventRecorder::processEvent(const Event& event)
     {
         mComplete = true;
     }
+
+    return true;
 }
 
 

@@ -14,7 +14,7 @@ public:
     EventEntryWidget(EventEntryWidget&&) = default;
 
 public:
-    virtual void processEvent(const Event& inEvent) override;
+    virtual bool processEvent(const Event& inEvent) override;
     virtual void setFocused(bool nFocused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual Dimension minimumSize() const override;

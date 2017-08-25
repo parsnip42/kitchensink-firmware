@@ -26,7 +26,7 @@ HomeScreen::HomeScreen(Timer&             timer,
     mHomeWidget.visible = false;
 }
 
-void HomeScreen::processEvent(const Event& event)
+bool HomeScreen::processEvent(const Event& event)
 {
     if (mDisplayTimeout.matches(event))
     {
@@ -52,6 +52,8 @@ void HomeScreen::processEvent(const Event& event)
     {
         mNext.processEvent(event);
     }
+
+    return true;
 }
 
 Widget& HomeScreen::rootWidget()

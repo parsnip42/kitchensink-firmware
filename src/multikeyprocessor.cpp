@@ -3,15 +3,13 @@
 #include "event/event.h"
 #include "event/multievent.h"
 
-void MultiKeyProcessor::processEvent(const Event& event)
+bool MultiKeyProcessor::processEvent(const Event& event)
 {
     if (mReleaseTimer.matches(event))
     {
         mMultiKeySet[mLast].trigger(mNext);
-        return;
     }
-
-    if (event.is<MultiEvent>())
+    else if (event.is<MultiEvent>())
     {
         auto multiEvent(event.get<MultiEvent>());
         auto multiId(multiEvent.multiId);
@@ -41,4 +39,6 @@ void MultiKeyProcessor::processEvent(const Event& event)
         mMultiKeySet[mLast].trigger(mNext);
         mNext.processEvent(event);   
     }
+
+    return true;
 }

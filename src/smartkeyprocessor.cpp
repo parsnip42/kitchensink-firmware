@@ -10,7 +10,7 @@ SmartKeyProcessor::SmartKeyProcessor(SmartKeySet& smartKeys,
     , mNext(next)
 { }
 
-void SmartKeyProcessor::processEvent(const Event& event)
+bool SmartKeyProcessor::processEvent(const Event& event)
 {
     if (event.is<SmartEvent>())
     {
@@ -134,4 +134,6 @@ void SmartKeyProcessor::processEvent(const Event& event)
             }
         }
     }
+
+    return true;
 }

@@ -16,7 +16,7 @@ public:
     explicit BenchmarkScreen(EventManager& eventManager);
 
 public:
-    virtual void processEvent(const Event& event) override;
+    virtual bool processEvent(const Event& event) override;
     virtual void screenInit() override;
     virtual Widget& rootWidget() override;
 

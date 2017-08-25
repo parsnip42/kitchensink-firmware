@@ -13,7 +13,7 @@ ComboWidget::ComboWidget(ComboWidget::DataSource& dataSource)
     , mDataSource(dataSource)
 { }
 
-void ComboWidget::processEvent(const Event& event)
+bool ComboWidget::processEvent(const Event& event)
 {
     if (Keys::left(event))
     {
@@ -27,6 +27,8 @@ void ComboWidget::processEvent(const Event& event)
         ++selectedItem %= mDataSource.size();
         invalidateWidget();
     }
+
+    return true;
 }
 
 void ComboWidget::setFocused(bool nFocused)

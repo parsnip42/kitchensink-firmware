@@ -5,7 +5,7 @@
 
 #include <algorithm>
 
-void HStackWidget::processEvent(const Event& event)
+bool HStackWidget::processEvent(const Event& event)
 {
     if (Keys::down(event) || Keys::ok(event))
     {
@@ -43,6 +43,8 @@ void HStackWidget::processEvent(const Event& event)
             mFocused->widget.processEvent(event);
         }
     }
+
+    return true;
 }
 
 void HStackWidget::setFocused(bool focused)

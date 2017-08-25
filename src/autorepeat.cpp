@@ -11,7 +11,7 @@ AutoRepeat::AutoRepeat(Timer&         timer,
     , mNext(next)
 { }
 
-void AutoRepeat::processEvent(const Event& event)
+bool AutoRepeat::processEvent(const Event& event)
 {
     if (mRepeatTimer.matches(event))
     {
@@ -45,4 +45,6 @@ void AutoRepeat::processEvent(const Event& event)
 
         mNext.processEvent(event);
     }
+
+    return true;
 }

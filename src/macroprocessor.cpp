@@ -14,7 +14,7 @@ MacroProcessor::MacroProcessor(const MacroSet& macroSet,
     , mNext(next)
 { }
 
-void MacroProcessor::processEvent(const Event& event)
+bool MacroProcessor::processEvent(const Event& event)
 {
     if (mPlaybackTimer.matches(event))
     {
@@ -55,6 +55,8 @@ void MacroProcessor::processEvent(const Event& event)
     {
         mNext.processEvent(event);
     }
+
+    return true;
 }
 
 void MacroProcessor::playback()

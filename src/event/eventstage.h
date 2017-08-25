@@ -10,7 +10,7 @@ public:
     virtual ~EventStage() = default;
     
 public:
-    virtual void processEvent(const Event& event) = 0;
+    virtual bool processEvent(const Event& event) = 0;
 };
 
 #endif

@@ -34,9 +34,9 @@ SmartConfigScreen::SmartConfigScreen(Timer&    timer,
     mAuxEventEntry.widget.event    = mSmartKey.auxEvent;
 }
 
-void SmartConfigScreen::processEvent(const Event& event)
+bool SmartConfigScreen::processEvent(const Event& event)
 {
-    mHStackWidget.processEvent(event);
+    return mHStackWidget.processEvent(event);
 }
 
 Widget& SmartConfigScreen::rootWidget()

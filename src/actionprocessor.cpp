@@ -8,7 +8,7 @@ ActionProcessor::ActionProcessor(EventStage& next)
     : mNext(next)
 { }
 
-void ActionProcessor::processEvent(const Event& event)
+bool ActionProcessor::processEvent(const Event& event)
 {
     if (event.is<ActionEvent>())
     {
@@ -28,5 +28,7 @@ void ActionProcessor::processEvent(const Event& event)
     {
         mNext.processEvent(event);
     }
+
+    return true;
 }
 

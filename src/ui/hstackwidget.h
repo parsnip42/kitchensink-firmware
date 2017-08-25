@@ -41,7 +41,7 @@ public:
                  bool         linear);
     
 public:
-    virtual void processEvent(const Event& event) override;
+    virtual bool processEvent(const Event& event) override;
     virtual void setFocused(bool focused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual void parented() override;

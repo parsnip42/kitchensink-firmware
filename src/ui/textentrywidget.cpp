@@ -88,13 +88,13 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
     rasterLine[size.width - 1] = fg;
 }
 
-void TextEntryWidget::processEvent(const Event& event)
+bool TextEntryWidget::processEvent(const Event& event)
 {
     if (mFlashTimer.matches(event))
     {
         mFlash = !mFlash;
         invalidateWidget();
-        return;
+        return true;
     }
 
     cursorPosition = std::min(cursorPosition, text.length());
@@ -164,6 +164,8 @@ void TextEntryWidget::processEvent(const Event& event)
 
         invalidateWidget();
     }
+
+    return true;
 }
 
 Dimension TextEntryWidget::minimumSize() const

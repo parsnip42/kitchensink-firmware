@@ -13,7 +13,7 @@ public:
     UsbKeyboard();
 
 public:
-    virtual void processEvent(const Event& event) override;
+    virtual bool processEvent(const Event& event) override;
 
 private:
     void pressKey(uint8_t keyCode);

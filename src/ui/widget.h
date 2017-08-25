@@ -15,7 +15,7 @@ public:
     virtual ~Widget() = default;
     
 public:
-    virtual void processEvent(const Event&) override;
+    virtual bool processEvent(const Event&) override;
     virtual void setFocused(bool focused);
     virtual void render(const RasterLine& rasterLine, int row) = 0;
     virtual void parented();
@@ -39,8 +39,10 @@ private:
 
 
 inline
-void Widget::processEvent(const Event&)
-{ }
+bool Widget::processEvent(const Event&)
+{
+    return false;
+}
 
 inline
 void Widget::setFocused(bool)

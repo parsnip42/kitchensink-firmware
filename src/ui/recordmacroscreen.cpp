@@ -29,7 +29,7 @@ RecordMacroScreen::RecordMacroScreen(Timer&      timer,
     mFlashTimer.scheduleRepeating(500, 500);
 }
 
-void RecordMacroScreen::processEvent(const Event& event)
+bool RecordMacroScreen::processEvent(const Event& event)
 {
     if (mFlashTimer.matches(event))
     {
@@ -46,28 +46,31 @@ void RecordMacroScreen::processEvent(const Event& event)
         }
         
         mLabelWidget.invalidateWidget();
-        return;
     }
-
-    mNext.processEvent(event);
-    mRecorder.processEvent(event);
-
-    if (mRecorder.complete())
+    else
     {
-        auto& macro(mMacroSet[mMacroId]);
+        mNext.processEvent(event);
+        mRecorder.processEvent(event);
         
-        macro.content.assign(mRecorder.begin(),
-                             mRecorder.end());
-
-        Storage storage;
-        Serializer<MacroSet> s;
-                
-        auto os(storage.write(Storage::Region::Macro));
-                
-        s.serialize(mMacroSet, os);
-
-        mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
+        if (mRecorder.complete())
+        {
+            auto& macro(mMacroSet[mMacroId]);
+            
+            macro.content.assign(mRecorder.begin(),
+                                 mRecorder.end());
+            
+            Storage storage;
+            Serializer<MacroSet> s;
+            
+            auto os(storage.write(Storage::Region::Macro));
+            
+            s.serialize(mMacroSet, os);
+            
+            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
+        }
     }
+    
+    return true;
 }
 
 Widget& RecordMacroScreen::rootWidget()

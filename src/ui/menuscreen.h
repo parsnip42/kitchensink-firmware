@@ -23,7 +23,7 @@ public:
                EventStage&       next);
 
 public:
-    virtual void processEvent(const Event& event) override;
+    virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
     
 private:

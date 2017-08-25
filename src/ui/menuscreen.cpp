@@ -11,7 +11,7 @@ MenuScreen::MenuScreen(const DataSource& dataSource,
     , mNext(next)
 { }
 
-void MenuScreen::processEvent(const Event& event)
+bool MenuScreen::processEvent(const Event& event)
 {
     if (Keys::ok(event))
     {
@@ -29,6 +29,8 @@ void MenuScreen::processEvent(const Event& event)
     {
         mMenuWidget.processEvent(event);
     }
+
+    return true;
 }
 
 Widget& MenuScreen::rootWidget()

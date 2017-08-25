@@ -12,9 +12,9 @@ MultiConfigScreen::MultiConfigScreen(Timer&    timer,
     , mHStackWidget(mItems, true)
 { }
 
-void MultiConfigScreen::processEvent(const Event& event)
+bool MultiConfigScreen::processEvent(const Event& event)
 {
-    mHStackWidget.processEvent(event);
+    return mHStackWidget.processEvent(event);
 }
 
 Widget& MultiConfigScreen::rootWidget()

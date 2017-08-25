@@ -8,7 +8,9 @@ void EventBuffer::pollEvent(EventStage& next)
     }
 }
 
-void EventBuffer::processEvent(const Event& event)
+bool EventBuffer::processEvent(const Event& event)
 {
     mBuffer.pushBack(event);
+
+    return true;
 }

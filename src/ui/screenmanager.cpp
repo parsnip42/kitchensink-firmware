@@ -32,7 +32,7 @@ public:
     { }
 
 public:
-    virtual void processEvent(const Event& event) override
+    virtual bool processEvent(const Event& event) override
     {
         if (event.is<ScreenEvent>())
         {
@@ -44,6 +44,8 @@ public:
         {
             mNext.processEvent(event);
         }
+
+        return true;
     }
 
 private:
@@ -169,8 +171,8 @@ void ScreenManager::launchMenu(int                menuId,
                   sourceEvent);
 }
 
-void ScreenManager::launchScreen(int screenId,
-                                  const ScreenEvent& sourceEvent)
+void ScreenManager::launchScreen(int                screenId,
+                                 const ScreenEvent& sourceEvent)
 {
     switch (screenId)
     {

@@ -14,7 +14,7 @@ MenuWidget::MenuWidget(const DataSource& dataSource)
 {
 }
 
-void MenuWidget::processEvent(const Event& event)
+bool MenuWidget::processEvent(const Event& event)
 {
     if (Keys::pageUp(event))
     {
@@ -69,6 +69,8 @@ void MenuWidget::processEvent(const Event& event)
             }
         }
     }
+
+    return true;
 }
 
 void MenuWidget::setFocused(bool focused)

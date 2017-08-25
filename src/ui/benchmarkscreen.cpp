@@ -13,8 +13,10 @@ namespace
 class NullKeyStage : public EventStage
 {
 public:
-    virtual void processEvent(const Event& event) override
-    { }
+    virtual bool processEvent(const Event& event) override
+    {
+        return true;
+    }
 };
 
 }
@@ -28,9 +30,9 @@ BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
     , mHStackWidget(mItems, true)
 { }
 
-void BenchmarkScreen::processEvent(const Event& event)
+bool BenchmarkScreen::processEvent(const Event& event)
 {
-    
+    return false;
 }
 
 void BenchmarkScreen::screenInit()

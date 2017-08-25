@@ -16,7 +16,7 @@ public:
                       KeySource& keySource);
 
 public:
-    virtual void processEvent(const Event& inEvent) override;
+    virtual bool processEvent(const Event& inEvent) override;
     virtual void setFocused(bool nFocused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual Dimension minimumSize() const override;
@@ -31,6 +31,7 @@ private:
     bool          mLocationSet;
     bool          mFocused;
     bool          mFlash;
+    bool          mTrigger;
 };
 
 #endif

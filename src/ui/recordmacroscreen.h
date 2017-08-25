@@ -20,7 +20,7 @@ public:
                       EventStage& next);
 
 public:
-    virtual void processEvent(const Event& event);
+    virtual bool processEvent(const Event& event);
 
     Widget& rootWidget();
     

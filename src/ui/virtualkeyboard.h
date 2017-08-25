@@ -10,7 +10,7 @@ public:
     VirtualKeyboard();
 
 public:
-    virtual void processEvent(const Event& keyEvent) override;
+    virtual bool processEvent(const Event& keyEvent) override;
     char consumeChar();
     
 private:

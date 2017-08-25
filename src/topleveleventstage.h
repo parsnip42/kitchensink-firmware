@@ -32,7 +32,7 @@ public:
     explicit ToplevelEventStage(EventStage& next);
 
 public:
-    virtual void processEvent(const Event& event) override;
+    virtual bool processEvent(const Event& event) override;
     
 private:
     EventStage* mNext;
@@ -61,9 +61,9 @@ ToplevelEventStage::ToplevelEventStage(EventStage& next)
 { }
 
 inline
-void ToplevelEventStage::processEvent(const Event& event)
+bool ToplevelEventStage::processEvent(const Event& event)
 {
-    mNext->processEvent(event);
+    return mNext->processEvent(event);
 }
 
 #endif

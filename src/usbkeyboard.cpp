@@ -21,7 +21,7 @@ UsbKeyboard::UsbKeyboard()
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
-void UsbKeyboard::processEvent(const Event& event)
+bool UsbKeyboard::processEvent(const Event& event)
 {
     if (event.is<KeyEvent>())
     {
@@ -45,7 +45,11 @@ void UsbKeyboard::processEvent(const Event& event)
                 mDirty = false;
             }
         }
+        
+        return true;
     }
+
+    return false;
 }
 
 void UsbKeyboard::pressKey(uint8_t keyCode)
