@@ -7,14 +7,19 @@
 
 bool HStackWidget::processEvent(const Event& event)
 {
-    if (Keys::down(event) || Keys::ok(event))
+    if (mFocused != mItems.end() &&
+        mFocused->widget.processEvent(event))
+    {
+        // Skip
+    }
+    else if (Keys::down(event) || Keys::ok(event))
     {
         if (mFocused != mItems.end())
         {
             auto next(mFocused);
                 
             ++next;
-                
+            
             if (next != mItems.end())
             {
                 mFocused->widget.setFocused(false);
@@ -38,10 +43,7 @@ bool HStackWidget::processEvent(const Event& event)
     }
     else
     {
-        if (mFocused != mItems.end())
-        {
-            mFocused->widget.processEvent(event);
-        }
+        return false;
     }
 
     return true;

@@ -12,6 +12,7 @@ EventEntryWidget::EventEntryWidget(Timer& timer)
     , mEventStr("<Unset>")
     , mFocused(true)
     , mFlash(true)
+    , mTrigger(false)
 {
     mFlashTimer.scheduleRepeating(250, 250);
 }
@@ -23,31 +24,49 @@ bool EventEntryWidget::processEvent(const Event& inEvent)
         mFlash = !mFlash;
         invalidateWidget();
     }
-    else if (!inEvent.is<TickEvent>())
+    else if (mTrigger)
     {
-        if (!inEvent.inverted())
+        if (!inEvent.is<TickEvent>() &&
+            !inEvent.inverted())
         {
+            mTrigger = false;
             event = inEvent;
-            update();
+            invalidateWidget();
+
+            return true;
         }
     }
+    else if (Keys::ok(inEvent))
+    {
+        mTrigger = true;
+        invalidateWidget();
+    }
+    else
+    {
+        return false;
+    }
 
-    return true;
+    return mTrigger;
 }
 
 void EventEntryWidget::setFocused(bool focused)
 {
     mFocused = focused;
     mFlash   = false;
+
+    if (!mFocused)
+    {
+        mTrigger = false;
+    }
 }
 
 void EventEntryWidget::render(const RasterLine& rasterLine,
                               int               row)
 {
-    auto fg(Colors::kWhite);
+    auto fg(mFocused ? Colors::kFocused : Colors::kUnfocused);
     auto bg(Colors::kBlack);
 
-    if (mFocused && mFlash)
+    if (mFocused && mTrigger && mFlash)
     {
         std::swap(fg, bg);
     }

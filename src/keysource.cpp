@@ -56,7 +56,10 @@ void KeySource::pollEvent(EventStage& next)
             event = event.invert();
         }
         
-        next.processEvent(event);
+        if (event != Event())
+        {
+            next.processEvent(event);
+        }
     });
 
     if (currentLayerMask != mLayerMask)

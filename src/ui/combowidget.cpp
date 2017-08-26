@@ -21,13 +21,16 @@ bool ComboWidget::processEvent(const Event& event)
         selectedItem %= mDataSource.size();
         invalidateWidget();
     }
-
-    if (Keys::right(event))
+    else if (Keys::right(event))
     {
         ++selectedItem %= mDataSource.size();
         invalidateWidget();
     }
-
+    else
+    {
+        return false;
+    }
+    
     return true;
 }
 

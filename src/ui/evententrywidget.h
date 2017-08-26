@@ -30,6 +30,7 @@ private:
     StrBuf<24>    mEventStr;
     bool          mFocused;
     bool          mFlash;
+    bool          mTrigger;
 
 private:
     EventEntryWidget(const EventEntryWidget&) = delete;

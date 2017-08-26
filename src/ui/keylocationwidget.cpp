@@ -3,6 +3,7 @@
 #include "ui/colors.h"
 #include "ui/font.h"
 #include "ui/renderutil.h"
+#include "ui/keys.h"
 #include "keysource.h"
 
 KeyLocationWidget::KeyLocationWidget(Timer&     timer,
@@ -37,32 +38,36 @@ bool KeyLocationWidget::processEvent(const Event& event)
             mLocationSet = true;
             mTrigger = false;
         }
+
+        invalidateWidget();
+    }
+    else if (Keys::ok(event))
+    {
+        mTrigger = true;
+        mLocationStr = "Waiting";
+        invalidateWidget();
+    }
+    else
+    {
+        return false;
     }
 
-    invalidateWidget();
-
-    return true;
+    return mTrigger;
 }
 
 void KeyLocationWidget::setFocused(bool focused)
 {
     mFocused = focused;
     mFlash = false;
-
-    if (focused)
-    {
-        mTrigger = true;
-        mLocationStr = "Waiting";
-    }
 }
 
 void KeyLocationWidget::render(const RasterLine& rasterLine,
                                int               row)
 {
-    auto fg(Colors::kWhite);
+    auto fg(mFocused ? Colors::kFocused : Colors::kUnfocused);
     auto bg(Colors::kBlack);
 
-    if (mFocused && mFlash)
+    if (mFocused && mTrigger && mFlash)
     {
         std::swap(fg, bg);
     }

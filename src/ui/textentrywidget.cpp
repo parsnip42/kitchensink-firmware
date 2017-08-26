@@ -157,15 +157,21 @@ bool TextEntryWidget::processEvent(const Event& event)
                         
                         ++cursorPosition;
                     }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 break;
             }
         }
 
         invalidateWidget();
+        
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 Dimension TextEntryWidget::minimumSize() const
