@@ -103,16 +103,22 @@ void HStackWidget::parented()
 
 void HStackWidget::render(const RasterLine& rasterLine, int row)
 {
-    // auto baseOffset(0);
+    auto size(widgetSize());
+    auto offset(0);
 
-    // if (mFocused != mItems.end())
-    // {
-    //     auto& item(*mFocused);
+    if (mFocused != mItems.end())
+    {
+        auto& item(*mFocused);
 
-    //     baseOffset = item.yOffset;
-    // }    
+        offset = item.yOffset;
+    }
 
-    // row += baseOffset;
+    auto offsetMax(std::min(size.height, mContentHeight));
+
+    offset -= ((offsetMax * std::distance(mItems.begin(), mFocused)) / (std::distance(mItems.begin(), mItems.end())));
+    
+
+    row += offset;
     
     for (auto& item : mItems)
     {
