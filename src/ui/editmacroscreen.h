@@ -1,12 +1,13 @@
 #ifndef INCLUDED_EDITMACROSCREEN_H
 #define INCLUDED_EDITMACROSCREEN_H
 
-#include "ui/textentrywidget.h"
+#include "event/eventstage.h"
+#include "ui/buttonwidget.h"
 #include "ui/combowidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
 #include "ui/screen.h"
-#include "event/eventstage.h"
+#include "ui/textentrywidget.h"
 
 class ScreenStack;
 class Timer;
@@ -33,19 +34,12 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    HStackWidget::Items<3>          mItems;
+    ButtonWidget                    mRecordButton;
+    HStackWidget::Items<4>          mItems;
     HStackWidget                    mHStackWidget;
     EventStage&                     mNext;
 };
 
 #endif
-
-
-
-
-
-
-
-
 
 

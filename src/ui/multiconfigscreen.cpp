@@ -6,9 +6,11 @@ MultiConfigScreen::MultiConfigScreen(Timer&    timer,
     , mTitleEntry("Name", 70, TextEntryWidget(timer))
     , mEventEntry({{
                 LabelledWidget<EventEntryWidget>("Tap 1", 70, EventEntryWidget(timer)),
-                LabelledWidget<EventEntryWidget>("Tap 2", 70, EventEntryWidget(timer))
+                LabelledWidget<EventEntryWidget>("Tap 2", 70, EventEntryWidget(timer)),
+                LabelledWidget<EventEntryWidget>("Tap 3", 70, EventEntryWidget(timer)),
+                LabelledWidget<EventEntryWidget>("Tap 4", 70, EventEntryWidget(timer))
                 }})
-    , mItems({{ mTitleEntry, mEventEntry[0], mEventEntry[1] }})
+    , mItems({{ mTitleEntry, mEventEntry[0], mEventEntry[1], mEventEntry[2], mEventEntry[3] }})
     , mHStackWidget(mItems, true)
 { }
 

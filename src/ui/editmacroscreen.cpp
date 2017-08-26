@@ -40,7 +40,8 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
     , mTypeCombo("Type",
                  kLabelWidth,
                  ComboWidget(mtds))
-    , mItems({{ mTitleEntry, mShortcutEntry, mTypeCombo }})
+    , mRecordButton("Record")
+    , mItems({{ mTitleEntry, mShortcutEntry, mTypeCombo, mRecordButton }})
     , mHStackWidget(mItems, true)
     , mNext(next)
 {
@@ -53,7 +54,9 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
 
 bool EditMacroScreen::processEvent(const Event& event)
 {
-    if (Keys::ok(event) && &mHStackWidget.focused() == &mTypeCombo)
+    mHStackWidget.processEvent(event);
+
+    if (mRecordButton.activated)
     {
         auto& macro(mMacroSet[mMacroId]);
             
@@ -69,10 +72,6 @@ bool EditMacroScreen::processEvent(const Event& event)
         auto screenType(realtime ? ScreenEvent::Type::kRecordMacroRT : ScreenEvent::Type::kRecordMacro);
             
         mNext.processEvent(ScreenEvent::create(screenType, mMacroId));        
-    }
-    else
-    {
-        mHStackWidget.processEvent(event);
     }
 
     return true;

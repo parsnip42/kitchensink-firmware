@@ -23,8 +23,8 @@ public:
 private:
     MultiKey&                                       mMultiKey;
     LabelledWidget<TextEntryWidget>                 mTitleEntry;
-    std::array<LabelledWidget<EventEntryWidget>, 2> mEventEntry;
-    HStackWidget::Items<3>                          mItems;
+    std::array<LabelledWidget<EventEntryWidget>, 4> mEventEntry;
+    HStackWidget::Items<5>                          mItems;
     HStackWidget                                    mHStackWidget;
 };
 
