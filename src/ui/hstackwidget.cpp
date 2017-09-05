@@ -97,29 +97,15 @@ void HStackWidget::parented()
         
         yOffset += height;
     }
-
+    
     mContentHeight = yOffset;
 }
 
 void HStackWidget::render(const RasterLine& rasterLine, int row)
 {
-    auto size(widgetSize());
-    auto offset(0);
+    row += renderOffset();
 
-    if (mFocused != mItems.end())
-    {
-        auto& item(*mFocused);
-
-        offset = item.yOffset;
-    }
-
-    auto offsetMax(std::min(size.height, mContentHeight));
-
-    offset -= ((offsetMax * std::distance(mItems.begin(), mFocused)) / (std::distance(mItems.begin(), mItems.end())));
-    
-
-    row += offset;
-    
+    // TODO: Binary search for target widget.
     for (auto& item : mItems)
     {
         if (row < (item.yOffset + item.height))
@@ -132,10 +118,19 @@ void HStackWidget::render(const RasterLine& rasterLine, int row)
 
 void HStackWidget::regionInvalidated(const Rectangle& region)
 {
-    invalidateRegion(region);
+    invalidateRegion(region.offsetY(-renderOffset()));
 }
 
 Widget& HStackWidget::focused() const
 {
     return mFocused->widget;
+}
+
+int HStackWidget::renderOffset() const
+{
+    auto size(widgetSize());
+
+    auto offsetMax(std::max(size.height, mContentHeight) - size.height);
+    
+    return ((offsetMax * std::distance(mItems.begin(), mFocused)) / (std::distance(mItems.begin(), mItems.end()) - 1));
 }

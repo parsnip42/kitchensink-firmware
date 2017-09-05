@@ -27,7 +27,7 @@ bool MenuScreen::processEvent(const Event& event)
     }
     else 
     {
-        mMenuWidget.processEvent(event);
+        return mMenuWidget.processEvent(event);
     }
 
     return true;

@@ -43,7 +43,7 @@ bool AutoRepeat::processEvent(const Event& event)
             }
         }
 
-        mNext.processEvent(event);
+        return mNext.processEvent(event);
     }
 
     return true;

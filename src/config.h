@@ -17,7 +17,6 @@ constexpr std::size_t kMacroPoolSize    = 1024;
 
 constexpr std::size_t kMultiKeyNameLen  = 12;
 constexpr std::size_t kMultiKeyCount    = 5;
-constexpr std::size_t kMultiKeyKeyCount = 4;
 
 constexpr std::size_t kSmartKeyNameLen  = 12;
 constexpr std::size_t kSmartKeyCount    = 10;

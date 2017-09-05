@@ -44,12 +44,12 @@ bool MenuWidget::processEvent(const Event& event)
     else
     {
         mVKeyboard.processEvent(event);
+
+        auto newChar(mVKeyboard.consumeChar());
         
-        if (filterStr.length() < filterStr.capacity())
+        if (newChar)
         {
-            auto newChar(mVKeyboard.consumeChar());
-            
-            if (newChar)
+            if (filterStr.length() < filterStr.capacity())
             {
                 filterStr.insert(filterStr.end(), newChar);
                 
@@ -67,6 +67,10 @@ bool MenuWidget::processEvent(const Event& event)
                     update();
                 }
             }
+        }
+        else
+        {
+            return false;
         }
     }
 

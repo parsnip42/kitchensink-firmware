@@ -14,6 +14,10 @@ public:
               int nHeight);
 
     explicit Rectangle(const Dimension& dimension);
+
+public:
+    Rectangle offsetX(int offset) const;
+    Rectangle offsetY(int offset) const;
     
 public:
     int x;
@@ -49,5 +53,25 @@ Rectangle::Rectangle(const Dimension& dimension)
     , width(dimension.width)
     , height(dimension.height)
 { }
+
+inline
+Rectangle Rectangle::offsetX(int offset) const
+{
+    auto rect(*this);
+
+    rect.x += offset;
+
+    return rect;
+}
+
+inline
+Rectangle Rectangle::offsetY(int offset) const
+{
+    auto rect(*this);
+
+    rect.y += offset;
+
+    return rect;
+}
 
 #endif

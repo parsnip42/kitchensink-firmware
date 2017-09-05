@@ -51,6 +51,9 @@ public:
     Widget& focused() const;
 
 private:
+    int renderOffset() const;
+    
+private:
     Range<iterator> mItems;
     bool            mLinear;
     iterator        mFocused;

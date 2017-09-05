@@ -54,7 +54,7 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
 
 bool EditMacroScreen::processEvent(const Event& event)
 {
-    mHStackWidget.processEvent(event);
+    auto processed(mHStackWidget.processEvent(event));
 
     if (mRecordButton.activated)
     {
@@ -74,7 +74,7 @@ bool EditMacroScreen::processEvent(const Event& event)
         mNext.processEvent(ScreenEvent::create(screenType, mMacroId));        
     }
 
-    return true;
+    return processed;
 }
 
 Widget& EditMacroScreen::rootWidget()

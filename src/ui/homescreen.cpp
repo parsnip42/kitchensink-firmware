@@ -50,7 +50,7 @@ bool HomeScreen::processEvent(const Event& event)
     }
     else
     {
-        mNext.processEvent(event);
+         return mNext.processEvent(event);
     }
 
     return true;

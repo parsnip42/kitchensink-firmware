@@ -11,8 +11,10 @@ class EventStage;
 
 class MultiKey
 {
+private:
+    static const size_t kMultiKeyKeyCount = 4;
 public:
-    typedef std::array<Event, Config::kMultiKeyKeyCount> Events;
+    typedef std::array<Event, kMultiKeyKeyCount> Events;
     
 public:
     MultiKey();

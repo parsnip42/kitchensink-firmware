@@ -34,17 +34,20 @@ public:
 public:
     virtual bool processEvent(const Event& event) override
     {
-        if (event.is<ScreenEvent>())
+        if (!mNext.processEvent(event))
         {
-            auto screenEvent(event.get<ScreenEvent>());
+            if (event.is<ScreenEvent>())
+            {
+                auto screenEvent(event.get<ScreenEvent>());
             
-            mScreenManager.mScreenEventQueue.pushBack(screenEvent);
+                mScreenManager.mScreenEventQueue.pushBack(screenEvent);
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
-        {
-            mNext.processEvent(event);
-        }
-
+        
         return true;
     }
 

@@ -49,7 +49,8 @@ bool RecordMacroScreen::processEvent(const Event& event)
     }
     else
     {
-        mNext.processEvent(event);
+        auto processed(mNext.processEvent(event));
+        
         mRecorder.processEvent(event);
         
         if (mRecorder.complete())
@@ -68,6 +69,8 @@ bool RecordMacroScreen::processEvent(const Event& event)
             
             mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
         }
+
+        return processed;
     }
     
     return true;
