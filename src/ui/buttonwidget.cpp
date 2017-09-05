@@ -7,7 +7,7 @@
 
 ButtonWidget::ButtonWidget(const StrRef& nText)
     : text(nText)
-    , activated(false)
+    , activated()
     , mFocused(true)
 { }
 
@@ -15,8 +15,8 @@ bool ButtonWidget::processEvent(const Event& event)
 {
     if (Keys::ok(event))
     {
-        activated = true;
-
+        activated.fireAction();
+        
         return true;
     }
 

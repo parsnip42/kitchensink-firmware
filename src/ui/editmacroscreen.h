@@ -29,6 +29,9 @@ public:
     virtual Widget& rootWidget() override;
 
 private:
+    void onRecord();
+    
+private:
     MacroSet&                       mMacroSet;
     int                             mMacroId;
     LabelledWidget<TextEntryWidget> mTitleEntry;

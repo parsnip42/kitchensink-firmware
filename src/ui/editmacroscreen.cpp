@@ -50,34 +50,34 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
     mTitleEntry.widget.text        = macro.name;
     mShortcutEntry.widget.text     = macro.shortcut;
     mTypeCombo.widget.selectedItem = 0;
+    
+    mRecordButton.activated = Action::memFn<EditMacroScreen, &EditMacroScreen::onRecord>(this);
 }
 
 bool EditMacroScreen::processEvent(const Event& event)
 {
-    auto processed(mHStackWidget.processEvent(event));
-
-    if (mRecordButton.activated)
-    {
-        auto& macro(mMacroSet[mMacroId]);
-            
-        MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-                            MacroType::kInvert :
-                            MacroType::kSync);
-
-        macro.type     = macroType;
-        macro.name     = mTitleEntry.widget.text;
-        macro.shortcut = mShortcutEntry.widget.text;
-
-        auto realtime(mTypeCombo.widget.selectedItem == 1);
-        auto screenType(realtime ? ScreenEvent::Type::kRecordMacroRT : ScreenEvent::Type::kRecordMacro);
-            
-        mNext.processEvent(ScreenEvent::create(screenType, mMacroId));        
-    }
-
-    return processed;
+    return mHStackWidget.processEvent(event);
 }
 
 Widget& EditMacroScreen::rootWidget()
 {
     return mHStackWidget;
+}
+
+void EditMacroScreen::onRecord()
+{
+    auto& macro(mMacroSet[mMacroId]);
+                
+    MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
+                        MacroType::kInvert :
+                        MacroType::kSync);
+                
+    macro.type     = macroType;
+    macro.name     = mTitleEntry.widget.text;
+    macro.shortcut = mShortcutEntry.widget.text;
+                
+    auto realtime(mTypeCombo.widget.selectedItem == 1);
+    auto screenType(realtime ? ScreenEvent::Type::kRecordMacroRT : ScreenEvent::Type::kRecordMacro);
+                
+    mNext.processEvent(ScreenEvent::create(screenType, mMacroId));
 }
