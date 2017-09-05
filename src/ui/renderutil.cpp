@@ -18,7 +18,7 @@ int fill(const RasterLine& row, uint8_t color)
 
 int text(const StrRef& str, int x, int line, const RasterLine& row, uint8_t fg, uint8_t bg)
 {
-    auto xStart(x);
+    auto len(std::min<int>(row.size(), Font::width(str)));
     
     if (line >= 0 && line < Font::kHeight)
     {
@@ -44,8 +44,12 @@ int text(const StrRef& str, int x, int line, const RasterLine& row, uint8_t fg, 
             }
         }
     }
-
-    return x - xStart;
+    else
+    {
+        fill(row.subset(x, len), bg);
+    }
+    
+    return len;
 }
 
 int textPrefix(const StrRef& prefix, const StrRef& str, int x, int line, const RasterLine& row, uint8_t prefixFg, uint8_t prefixBg, uint8_t fg, uint8_t bg)

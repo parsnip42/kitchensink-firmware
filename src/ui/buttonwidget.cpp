@@ -44,9 +44,11 @@ void ButtonWidget::render(const RasterLine& rasterLine, int row)
     uint8_t fg(Colors::kBlack);
     uint8_t bg(mFocused ? Colors::kFocused : Colors::kUnfocused);
 
-    RenderUtil::fill(rasterLine.subset(0, xOffset), bg);
+    RenderUtil::fill(rasterLine.subset(xOffset / 3, xOffset * 2 / 3), bg);
     xOffset += RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, bg);
-    RenderUtil::fill(rasterLine.subset(xOffset), bg);
+
+    auto trailing(rasterLine.subset(xOffset, (rasterLine.size() - xOffset) * 2 / 3));
+    RenderUtil::fill(trailing, bg);
 }
 
 Dimension ButtonWidget::minimumSize() const
