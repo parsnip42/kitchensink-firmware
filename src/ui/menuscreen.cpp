@@ -23,7 +23,13 @@ bool MenuScreen::processEvent(const Event& event)
         }
         
         mNext.processEvent(event);
-        mNext.processEvent(event.invert());
+
+        auto inverted(event.invert());
+
+        if (inverted != Event())
+        {
+            mNext.processEvent(inverted);
+        }
     }
     else 
     {
