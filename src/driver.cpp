@@ -23,12 +23,12 @@
 #include "types/strbuf.h"
 #include "types/strostream.h"
 
-void setup()
+extern "C" void setup()
 {
     KeyMatrix::setup();
 }
 
-void loop()
+extern "C" void loop()
 {
     Display display;
 
