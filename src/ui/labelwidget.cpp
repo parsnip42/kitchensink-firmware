@@ -5,6 +5,7 @@
 #include "ui/rectangle.h"
 #include "ui/renderutil.h"
 #include "ui/font.h"
+#include "ui/colors.h"
 
 LabelWidget::LabelWidget(const StrRef& nText,
                          Justify       nJustify)
@@ -45,9 +46,9 @@ void LabelWidget::render(const RasterLine& rasterLine, int row)
         yOffset = (size.height - Font::kHeight) / 2;
     }
 
-    uint8_t fg(mFocused ? 0xf : 0x7);
+    uint8_t fg(mFocused ? Colors::kFocused : Colors::kUnfocused);
 
-    RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, 0x0);
+    RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, Colors::kBackground);
 }
 
 Dimension LabelWidget::minimumSize() const

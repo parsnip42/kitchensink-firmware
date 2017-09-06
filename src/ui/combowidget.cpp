@@ -1,11 +1,12 @@
 #include "ui/combowidget.h"
 
 #include "autorepeat.h"
+#include "types/strref.h"
 #include "ui/keys.h"
 #include "ui/rectangle.h"
 #include "ui/renderutil.h"
 #include "ui/widgetcontainer.h"
-#include "types/strref.h"
+#include "ui/colors.h"
 
 ComboWidget::ComboWidget(ComboWidget::DataSource& dataSource)
     : selectedItem(0)
@@ -43,7 +44,7 @@ void ComboWidget::render(const RasterLine& rasterLine, int row)
 {
     auto size(widgetSize());
     
-    uint8_t fg(focused ? 0xf : 0x7);
+    uint8_t fg(focused ? Colors::kFocused : Colors::kUnfocused);
 
     auto yOffset(0);
     
@@ -60,7 +61,7 @@ void ComboWidget::render(const RasterLine& rasterLine, int row)
                        row - yOffset,
                        rasterLine,
                        fg,
-                       0x0);
+                       Colors::kBackground);
 
     if (row >= 3 && row <= size.height - 3)
     {
@@ -72,7 +73,7 @@ void ComboWidget::render(const RasterLine& rasterLine, int row)
             int yDistance(abs(halfHeight - row));
             
             rasterLine[xOffset] = (x > yDistance && x < yDistance + 2) ? fg : 0x0;
-            rasterLine[xOffset + (size.width - halfHeight)] = ((halfHeight - x) > yDistance && (halfHeight - x) < yDistance + 2) ? fg : 0x0;
+            rasterLine[xOffset + (size.width - halfHeight)] = ((halfHeight - x) > yDistance && (halfHeight - x) < yDistance + 2) ? fg : Colors::kBackground;
         }
     }
 }

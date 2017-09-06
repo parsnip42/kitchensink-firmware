@@ -23,10 +23,13 @@ bool EventEntryWidget::processEvent(const Event& inEvent)
     {
         mFlash = !mFlash;
         invalidateWidget();
+
+        return true;
     }
     else if (mTrigger)
     {
         if (!inEvent.is<TickEvent>() &&
+            !inEvent.is<ScreenEvent>() &&
             !inEvent.inverted())
         {
             mTrigger = false;
@@ -40,13 +43,11 @@ bool EventEntryWidget::processEvent(const Event& inEvent)
     {
         mTrigger = true;
         invalidateWidget();
-    }
-    else
-    {
-        return false;
-    }
 
-    return mTrigger;
+        return true;
+    }
+    
+    return false;
 }
 
 void EventEntryWidget::setFocused(bool focused)

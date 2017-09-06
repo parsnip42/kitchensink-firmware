@@ -19,7 +19,7 @@ bool MenuScreen::processEvent(const Event& event)
 
         if (!event.is<ScreenEvent>())
         {
-            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
+            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
         }
         
         mNext.processEvent(event);

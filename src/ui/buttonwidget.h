@@ -7,8 +7,7 @@
 #include "types/strref.h"
 
 class ButtonWidget : public Widget
-{
-    
+{    
 public:
     explicit ButtonWidget(const StrRef& nText);
 

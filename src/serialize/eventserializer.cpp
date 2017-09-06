@@ -237,6 +237,18 @@ void serializeReadable(const TickEvent& event, const StrOStream& os)
     os.appendInt(event.tickId);
 }
 
+void serializeReadable(const MultiEvent& event, const StrOStream& os)
+{
+    os.appendStr("Multi ");
+    os.appendInt(event.multiId);
+}
+
+void serializeReadable(const SmartEvent& event, const StrOStream& os)
+{
+    os.appendStr("Smart ");
+    os.appendInt(event.smartId);
+}
+
 }
 
 void serializeReadable(const Event& event, const StrOStream& os)
@@ -260,6 +272,14 @@ void serializeReadable(const Event& event, const StrOStream& os)
     else if (event.is<TickEvent>())
     {
         serializeReadable(event.get<TickEvent>(), os);
+    }
+    else if (event.is<MultiEvent>())
+    {
+        serializeReadable(event.get<MultiEvent>(), os);
+    }
+    else if (event.is<SmartEvent>())
+    {
+        serializeReadable(event.get<SmartEvent>(), os);
     }
     else
     {

@@ -7,6 +7,7 @@
 #include "ui/rectangle.h"
 #include "ui/renderutil.h"
 #include "ui/surface.h"
+#include "ui/colors.h"
 
 TextEntryWidget::TextEntryWidget(Timer& timer)
     : cursorPosition(1000)
@@ -33,8 +34,8 @@ void TextEntryWidget::setFocused(bool nFocused)
 void TextEntryWidget::render(const RasterLine& rasterLine, int row)
 {
     auto size(widgetSize());
-    uint8_t fg(focused ? 0xf : 0x7);
-    
+    uint8_t fg(focused ? Colors::kFocused : Colors::kUnfocused);
+
     cursorPosition = std::min(cursorPosition, text.length());
     
     auto yOffset(0);
@@ -49,7 +50,7 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
                        row - yOffset,
                        rasterLine,
                        fg,
-                       0x0);
+                       Colors::kBackground);
     
     if (row >= 2 && row < size.height - 2)
     {
@@ -61,7 +62,7 @@ void TextEntryWidget::render(const RasterLine& rasterLine, int row)
         }
 
         uint8_t cursorFg(fg);
-        uint8_t cursorBg(0);
+        uint8_t cursorBg(Colors::kBackground);
 
         if (mFlash)
         {

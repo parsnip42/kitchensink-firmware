@@ -7,7 +7,6 @@
 
 ButtonWidget::ButtonWidget(const StrRef& nText)
     : text(nText)
-    , activated()
     , mFocused(true)
 { }
 

@@ -27,7 +27,7 @@ public:
 
 public:
     static constexpr Event create(Type    type,
-                                  uint8_t index);
+                                  uint8_t index = 0);
 
 public:
     constexpr ScreenEvent();

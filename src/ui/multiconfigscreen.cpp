@@ -1,9 +1,11 @@
 #include "ui/multiconfigscreen.h"
 
+#include "event/screenevent.h"
 #include "multikey.h"
 
-MultiConfigScreen::MultiConfigScreen(Timer&    timer,
-                                     MultiKey& multiKey)
+MultiConfigScreen::MultiConfigScreen(Timer&      timer,
+                                     MultiKey&   multiKey,
+                                     EventStage& next)
     : mMultiKey(multiKey)
     , mTitleEntry("Name", 70, TextEntryWidget(timer))
     , mEventEntry({{
@@ -12,8 +14,15 @@ MultiConfigScreen::MultiConfigScreen(Timer&    timer,
                 LabelledWidget<EventEntryWidget>("Tap 3", 70, EventEntryWidget(timer)),
                 LabelledWidget<EventEntryWidget>("Tap 4", 70, EventEntryWidget(timer))
                 }})
-    , mItems({{ mTitleEntry, mEventEntry[0], mEventEntry[1], mEventEntry[2], mEventEntry[3] }})
+    , mSaveButton("Save")
+    , mItems({{ mTitleEntry,
+                mEventEntry[0],
+                mEventEntry[1],
+                mEventEntry[2],
+                mEventEntry[3],
+                mSaveButton }})
     , mHStackWidget(mItems, true)
+    , mNext(next)
 {
     mTitleEntry.widget.text = mMultiKey.name;
 
@@ -21,6 +30,9 @@ MultiConfigScreen::MultiConfigScreen(Timer&    timer,
     {
         mEventEntry[i].widget.event = multiKey.events[i];
     }
+
+    mSaveButton.activated = Action::memFn<MultiConfigScreen,
+                                          &MultiConfigScreen::onSave>(this);
 }
 
 bool MultiConfigScreen::processEvent(const Event& event)
@@ -31,4 +43,16 @@ bool MultiConfigScreen::processEvent(const Event& event)
 Widget& MultiConfigScreen::rootWidget()
 {
     return mHStackWidget;
+}
+
+void MultiConfigScreen::onSave()
+{
+    mMultiKey.name = mTitleEntry.widget.text;
+
+    for (std::size_t i(0); i < mEventEntry.size(); ++i)
+    {
+        mMultiKey.events[i] = mEventEntry[i].widget.event;
+    }
+
+    mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
 }

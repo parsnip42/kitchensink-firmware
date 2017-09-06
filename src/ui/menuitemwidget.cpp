@@ -1,5 +1,6 @@
 #include "ui/menuitemwidget.h"
 
+#include "ui/colors.h"
 #include "ui/renderutil.h"
 
 MenuItemWidget::MenuItemWidget(const StrRef& nText,
@@ -21,13 +22,13 @@ void MenuItemWidget::render(const RasterLine& rasterLine, int row)
 
     if (mFocused)
     {
-        fg = 0x0;
-        bg = 0xf;
+        fg = Colors::kBackground;
+        bg = Colors::kFocused;
     }
     else
     {
-        fg = 0x7;
-        bg = 0x0;
+        fg = Colors::kUnfocused;
+        bg = Colors::kBackground;
     }
 
     auto size(widgetSize());

@@ -250,7 +250,8 @@ void ScreenManager::launchEditMultiKey(int                multiKeyId,
                                        const ScreenEvent& sourceEvent)
 {
     MultiConfigScreen screen(mEventManager.timer,
-                             mKeyboardState.multiSet[multiKeyId]);
+                             mKeyboardState.multiSet[multiKeyId],
+                             mEventManager);
 
     displayScreen("Multi Key Configuration",
                   screen,
@@ -261,7 +262,8 @@ void ScreenManager::launchEditSmartKey(int                smartKeyId,
                                        const ScreenEvent& sourceEvent)
 {
     SmartConfigScreen screen(mEventManager.timer,
-                             mKeyboardState.smartKeySet[smartKeyId]);
+                             mKeyboardState.smartKeySet[smartKeyId],
+                             mEventManager);
 
     displayScreen("Smart Key Configuration",
                   screen,

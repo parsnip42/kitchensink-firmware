@@ -11,7 +11,7 @@
 class ComboWidget : public Widget
 {
 public:
-    typedef StrBuf<20>         Item;
+    typedef StrBuf<24>         Item;
     typedef ObjectSource<Item> DataSource;
 
 public:
