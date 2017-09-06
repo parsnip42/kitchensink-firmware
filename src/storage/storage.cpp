@@ -15,14 +15,17 @@ const char* getRegionFile(Storage::Region region)
 {
     switch (region)
     {
-    case Storage::Region::Config:
+    case Storage::Region::kConfig:
         return "config.ini";
 
-    case Storage::Region::Layer:
+    case Storage::Region::kLayer:
         return "layer.ini";
         
-    case Storage::Region::Macro:
+    case Storage::Region::kMacro:
         return "macro.ini";
+
+    case Storage::Region::kSecureMacro:
+        return "securemacro.aes";
 
     default:
         return "unknown.ini";

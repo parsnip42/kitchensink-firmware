@@ -28,7 +28,7 @@ template <typename T, void (T::*MemFunc)()>
 inline
 Action Action::memFn(T* t)
 {
-    return Action(t, [](void *data)
+    return Action(t, [](void* data)
     {
         (((T*)data)->*MemFunc)();
     });

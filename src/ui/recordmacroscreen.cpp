@@ -1,14 +1,14 @@
 #include "ui/recordmacroscreen.h"
 
 #include "macro.h"
+#include "macroset.h"
 #include "ui/surface.h"
 #include "types/strostream.h"
 #include "eventrecorder.h"
 #include "eventmanager.h"
-#include "storage/storage.h"
-#include "serialize/serializer.h"
 #include "event/event.h"
 #include "event/screenevent.h"
+#include "keyboardstateutil.h"
 
 #include <cstdint>
 
@@ -60,12 +60,7 @@ bool RecordMacroScreen::processEvent(const Event& event)
             macro.content.assign(mRecorder.begin(),
                                  mRecorder.end());
             
-            Storage storage;
-            Serializer<MacroSet> s;
-            
-            auto os(storage.write(Storage::Region::Macro));
-            
-            s.serialize(mMacroSet, os);
+            KeyboardStateUtil::store(mMacroSet);
             
             mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
         }

@@ -5,17 +5,13 @@
 #include "keyboardstate.h"
 #include "keysource.h"
 #include "usbkeyboard.h"
-#include "serialize/serializer.h"
-#include "serialize/iniformat.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
 #include "layerprocessor.h"
 #include "ledsource.h"
-
-#include "storage/storage.h"
-
 #include "types/strutil.h"
+#include "keyboardstateutil.h"
 
 #include "ui/surface.h"
 #include "ui/screenmanager.h"
@@ -47,15 +43,7 @@ void loop()
     KeyboardState keyboardState;
     
     DefaultProfile::init(keyboardState);
-
-    {
-        Storage storage;
-        
-        auto is(storage.read(Storage::Region::Macro));
-        Serializer<MacroSet> s;
-        
-        s.deserialize(is, keyboardState.macroSet);
-    }
+    KeyboardStateUtil::load(keyboardState);
 
     Timer timer;
     

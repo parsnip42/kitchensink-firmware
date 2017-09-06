@@ -53,9 +53,10 @@ public:
 public:
     enum class Region : int
     {
-        Config = 0,
-        Layer = 1,
-        Macro = 2
+        kConfig      = 0,
+        kLayer       = 1,
+        kMacro       = 2,
+        kSecureMacro = 3
     };
     
 public:
@@ -74,7 +75,7 @@ private:
     mutable SdFat mSdFat;
 };
 
-#endif /* INCLUDED_STORAGE_H */
+#endif
 
 
 
