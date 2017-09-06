@@ -21,6 +21,12 @@ LayerConfigScreen::LayerConfigScreen(Timer&     timer,
 {
     mTitleEntry.widget.text = mLayer.name;
 
+    mKeyLocation.widget.locationSelected = Action::memFn<LayerConfigScreen,
+                                                         &LayerConfigScreen::onLocationSelected>(this);
+
+    mEventEntry.widget.eventSelected = Action::memFn<LayerConfigScreen,
+                                                     &LayerConfigScreen::onEventSelected>(this);
+    
     mUpdateButton.activated = Action::memFn<LayerConfigScreen,
                                             &LayerConfigScreen::onUpdate>(this);
 }
@@ -35,6 +41,22 @@ Widget& LayerConfigScreen::rootWidget()
     return mHStackWidget;
 }
 
+void LayerConfigScreen::onLocationSelected()
+{
+    const auto& location(mKeyLocation.widget.location);
+
+    mEventEntry.widget.event = mLayer.at(location.row, location.column);
+    
+    mHStackWidget.setFocused(mEventEntry);
+    mHStackWidget.invalidateWidget();
+}
+
+void LayerConfigScreen::onEventSelected()
+{
+    mHStackWidget.setFocused(mUpdateButton);
+    mHStackWidget.invalidateWidget();
+}
+
 void LayerConfigScreen::onUpdate()
 {
     mLayer.name = mTitleEntry.widget.text;
@@ -45,6 +67,8 @@ void LayerConfigScreen::onUpdate()
                location.column,
                mEventEntry.widget.event);
 
+    mKeyLocation.widget.clear();
+    mEventEntry.widget.event = Event();
     mHStackWidget.setFocused(mKeyLocation);
     mHStackWidget.invalidateWidget();
 }

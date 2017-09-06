@@ -3,6 +3,7 @@
 
 #include "timer.h"
 #include "ui/widget.h"
+#include "ui/action.h"
 #include "event/event.h"
 #include "types/strbuf.h"
 
@@ -23,8 +24,9 @@ public:
     void update();
     
 public:
-    Event event;
-    
+    Event  event;
+    Action eventSelected;
+
 private:
     Timer::Handle mFlashTimer;
     StrBuf<24>    mEventStr;

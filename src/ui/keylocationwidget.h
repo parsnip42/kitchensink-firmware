@@ -2,6 +2,7 @@
 #define INCLUDED_KEYLOCATIONWIDGET_H
 
 #include "ui/widget.h"
+#include "ui/action.h"
 #include "types/strbuf.h"
 #include "keylocation.h"
 #include "timer.h"
@@ -22,7 +23,11 @@ public:
     virtual Dimension minimumSize() const override;
 
 public:
+    void clear();
+    
+public:
     KeyLocation location;
+    Action      locationSelected;
     
 private:
     KeySource&    mKeySource;

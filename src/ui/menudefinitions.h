@@ -26,6 +26,7 @@ private:
     const ArrayObjectSource<MenuWidget::Item> mMainMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mConfigMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mSystemMenuSource;
+    const ArrayObjectSource<MenuWidget::Item> mEventMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mEmptyMenuSource;
 
     const MappedObjectSource<MenuWidget::Item, MacroSet>    mMacroDataSource;

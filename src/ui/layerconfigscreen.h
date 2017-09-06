@@ -27,6 +27,8 @@ public:
     virtual Widget& rootWidget() override;
 
 private:
+    void onLocationSelected();
+    void onEventSelected();
     void onUpdate();
     
 private:

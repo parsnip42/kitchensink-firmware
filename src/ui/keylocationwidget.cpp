@@ -35,6 +35,7 @@ bool KeyLocationWidget::processEvent(const Event& event)
             os.appendInt(location.column);
             os.appendChar(')');
 
+            locationSelected.fireAction();
             mLocationSet = true;
             mTrigger = false;
         }
@@ -78,4 +79,9 @@ void KeyLocationWidget::render(const RasterLine& rasterLine,
 Dimension KeyLocationWidget::minimumSize() const
 {
     return Dimension(0, Font::kHeight);
+}
+
+void KeyLocationWidget::clear()
+{
+    mLocationStr = "Waiting";
 }

@@ -35,6 +35,10 @@ const std::array<MenuWidget::Item, 3> systemMenu = { {
         { StrRef("Bootloader"), StrRef(), ActionEvent::create(0) } 
     } };
 
+const std::array<MenuWidget::Item, 2> eventMenu = { {
+        { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 1) },
+        { StrRef("Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 3) }
+    } };
 
 MenuWidget::Item createMacroMenuItem(const Macro& macro, std::size_t index)
 {
@@ -143,6 +147,7 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     : mMainMenuSource(mainMenu.begin(), mainMenu.end())
     , mConfigMenuSource(configMenu.begin(), configMenu.end())
     , mSystemMenuSource(systemMenu.begin(), systemMenu.end())
+    , mEventMenuSource(eventMenu.begin(), eventMenu.end())
     , mEmptyMenuSource(mainMenu.end(), mainMenu.end())
     , mMacroDataSource(keyboardState.macroSet, &createMacroMenuItem)
     , mEditMacroDataSource(keyboardState.macroSet, &createEditMacroMenuItem)
@@ -190,7 +195,10 @@ const MenuWidget::DataSource& MenuDefinitions::getDataSource(int id) const
         
     case 13:
         return mSmartKeyDataSource;
-        
+
+    case 20:
+        return mEventMenuSource;
+
     default:
         return mEmptyMenuSource;
     }

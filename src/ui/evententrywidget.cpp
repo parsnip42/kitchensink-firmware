@@ -35,6 +35,7 @@ bool EventEntryWidget::processEvent(const Event& inEvent)
             mTrigger = false;
             event = inEvent;
             invalidateWidget();
+            eventSelected.fireAction();
 
             return true;
         }
