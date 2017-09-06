@@ -22,6 +22,7 @@ public:
 
 public:
     Event at(int row, int column) const;
+    void set(int row, int column, const Event& event);
     void clear();
     
 public:

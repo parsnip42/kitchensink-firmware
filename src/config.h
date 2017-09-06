@@ -13,6 +13,7 @@ constexpr std::size_t kLayerNameLen     = 12;
 constexpr std::size_t kMacroNameLen     = 12;
 constexpr std::size_t kMacroShortcutLen = 12;
 constexpr std::size_t kMacroCount       = 30;
+constexpr std::size_t kMacroMaxSize     = 200;
 constexpr std::size_t kMacroPoolSize    = 1024;
 
 constexpr std::size_t kMultiKeyNameLen  = 12;

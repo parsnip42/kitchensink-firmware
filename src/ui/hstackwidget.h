@@ -49,7 +49,8 @@ public:
     
 public:
     Widget& focused() const;
-
+    void setFocused(const Widget& widget);
+    
 private:
     int renderOffset() const;
     

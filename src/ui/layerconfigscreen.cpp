@@ -12,10 +12,17 @@ LayerConfigScreen::LayerConfigScreen(Timer&     timer,
     , mTitleEntry("Name", 70, TextEntryWidget(timer))
     , mKeyLocation("Location", 70, KeyLocationWidget(timer, keySource))
     , mEventEntry("Current", 70, EventEntryWidget(timer))
-    , mItems({{ mTitleEntry, mKeyLocation, mEventEntry }})
+    , mUpdateButton("Update")
+    , mItems({{ mTitleEntry,
+                mKeyLocation,
+                mEventEntry,
+                mUpdateButton }})
     , mHStackWidget(mItems, true)
 {
     mTitleEntry.widget.text = mLayer.name;
+
+    mUpdateButton.activated = Action::memFn<LayerConfigScreen,
+                                            &LayerConfigScreen::onUpdate>(this);
 }
 
 bool LayerConfigScreen::processEvent(const Event& event)
@@ -28,10 +35,19 @@ Widget& LayerConfigScreen::rootWidget()
     return mHStackWidget;
 }
 
+void LayerConfigScreen::onUpdate()
+{
+    mLayer.name = mTitleEntry.widget.text;
 
+    const auto& location(mKeyLocation.widget.location);
+    
+    mLayer.set(location.row,
+               location.column,
+               mEventEntry.widget.event);
 
-
-
+    mHStackWidget.setFocused(mKeyLocation);
+    mHStackWidget.invalidateWidget();
+}
 
 
 

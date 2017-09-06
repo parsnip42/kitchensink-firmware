@@ -3,6 +3,7 @@
 
 #include "event/event.h"
 #include "event/eventstage.h"
+#include "config.h"
 
 #include <array>
 #include <cstdint>
@@ -10,7 +11,7 @@
 class EventRecorder : public EventStage
 {
 private:
-    typedef std::array<Event, 200> Content;
+    typedef std::array<Event, Config::kMacroMaxSize> Content;
     
 public:
     typedef Content::const_iterator const_iterator;
@@ -29,11 +30,11 @@ public:
     bool full() const;
     
 private:
-    uint32_t       mLastMs;
-    bool           mRealtime;
-    Content        mContent;
-    std::size_t    mSize;
-    bool           mComplete;
+    uint32_t    mLastMs;
+    bool        mRealtime;
+    Content     mContent;
+    std::size_t mSize;
+    bool        mComplete;
 };
 
 

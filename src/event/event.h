@@ -68,7 +68,9 @@ public:
     constexpr T get() const;
     
     constexpr Event invert() const;
-    
+
+    constexpr bool isUserEvent() const;
+
 private:
     uint16_t mData;
 
@@ -164,6 +166,23 @@ constexpr Event Event::invert() const
     {
         return Event();
     }
+}
+
+inline
+constexpr bool Event::isUserEvent() const
+{
+    // This event was created directly as a result of user interaction with the
+    // device.
+    auto t(type());
+
+    return (t == Type::kKey ||
+            t == Type::kLayer ||
+            t == Type::kMulti ||
+            t == Type::kSmart ||
+            t == Type::kMacro ||
+            t == Type::kSMacro ||
+            t == Type::kAction ||
+            t == Type::kScreen);
 }
 
 #endif

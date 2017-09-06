@@ -13,6 +13,15 @@ Event Layer::at(int row, int column) const
     }
 }
 
+void Layer::set(int row, int column, const Event& event)
+{
+    if (row >= 0 && row < kRows &&
+        column >= 0 && column < kColumns)
+    {
+        mapping[row][column] = event;
+    }
+}
+
 void Layer::clear()
 {
     name.clear();

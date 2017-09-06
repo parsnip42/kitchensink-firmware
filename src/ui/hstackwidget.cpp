@@ -126,6 +126,22 @@ Widget& HStackWidget::focused() const
     return mFocused->widget;
 }
 
+void HStackWidget::setFocused(const Widget& widget)
+{
+    for (auto it(mItems.begin()); it != mItems.end(); ++it)
+    {
+        if (&(it->widget) == &widget)
+        {
+            it->widget.setFocused(true);
+            mFocused = it;
+        }
+        else
+        {
+            it->widget.setFocused(false);
+        }
+    }
+}
+
 int HStackWidget::renderOffset() const
 {
     auto size(widgetSize());

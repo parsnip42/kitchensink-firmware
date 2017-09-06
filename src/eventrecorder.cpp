@@ -16,9 +16,9 @@ EventRecorder::EventRecorder(bool realtime)
 
 bool EventRecorder::processEvent(const Event& event)
 {
-    if (event != ScreenEvent::create(ScreenEvent::Type::kHome, 0))
+    if (event != ScreenEvent::create(ScreenEvent::Type::kHome))
     {
-        if (!event.is<TickEvent>())
+        if (event.isUserEvent())
         {
             if (mSize < mContent.size())
             {

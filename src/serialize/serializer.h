@@ -42,4 +42,4 @@ struct Serializer<Layer>
     bool deserialize(Storage::IStream& is, Layer& layer);
 };
 
-#endif /* INCLUDED_SERIALIZER_H */
+#endif

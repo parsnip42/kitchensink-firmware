@@ -7,9 +7,11 @@
 #include "data/keycodes.h"
 #include "types/strutil.h"
 #include "types/strostream.h"
+#include "config.h"
 
 #include "serialize/iniformat.h"
 
+#include "mbedtls/aes.h"
 
 void Serializer<MacroSet>::serialize(const MacroSet& macroSet, Storage::OStream& os)
 {
@@ -51,7 +53,7 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
             StrRef key;
             StrRef value;
 
-            std::array<Event, 200> macroData;
+            std::array<Event, Config::kMacroMaxSize> macroData;
             std::size_t macroDataSize(0);
 
             while (ini.nextProperty(key, value))
