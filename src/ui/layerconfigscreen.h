@@ -23,8 +23,6 @@ public:
 
 public:
     virtual bool processEvent(const Event& event) override;
-
-public:
     virtual Widget& rootWidget() override;
     
 private:

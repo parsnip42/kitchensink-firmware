@@ -12,7 +12,6 @@
 
 #include <cstdint>
 
-class KeyId;
 class Event;
 class Timer;
 

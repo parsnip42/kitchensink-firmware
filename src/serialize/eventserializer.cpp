@@ -7,6 +7,7 @@
 #include "event/multievent.h"
 #include "event/screenevent.h"
 #include "event/layerevent.h"
+#include "event/ledmaskevent.h"
 #include "event/macroevent.h"
 #include "event/smartevent.h"
 #include "event/tickevent.h"
@@ -18,13 +19,20 @@ namespace EventSerializer
 namespace
 {
 
+void serialize(const ActionEvent& event, const StrOStream& os)
+{
+    os.appendChar('A');
+    os.appendInt(event.actionId);
+}
+
+void serialize(const DelayEvent& event, const StrOStream& os)
+{
+    os.appendChar('D');
+    os.appendInt(static_cast<int>(event.delayMs));
+}
+
 void serialize(const KeyEvent& event, const StrOStream& os)
 {
-    if (!event.pressed)
-    {
-        os.appendChar('!');
-    }
-    
     os.appendChar('K');
 
     auto keyName(KeyCodes::keyName(event.keyCode));
@@ -42,43 +50,54 @@ void serialize(const KeyEvent& event, const StrOStream& os)
 
 void serialize(const LayerEvent& event, const StrOStream& os)
 {
-    if (!event.enable)
-    {
-        os.appendChar('!');
-    }
-    
     os.appendChar('L');
     os.appendInt(event.layer);
 }
 
 void serialize(const MacroEvent& event, const StrOStream& os)
 {
-    if (!event.pressed)
-    {
-        os.appendChar('!');
-    }
-    
     os.appendChar('M');
     os.appendInt(event.macroId);
 }
 
-void serialize(const ActionEvent& event, const StrOStream& os)
+void serialize(const MultiEvent& event, const StrOStream& os)
 {
-    os.appendChar('A');
-    os.appendInt(event.actionId);
+    os.appendChar('N');
+    os.appendInt(event.multiId);
 }
 
-void serialize(const DelayEvent& event, const StrOStream& os)
+void serialize(const ScreenEvent& event, const StrOStream& os)
 {
-    os.appendChar('D');
-    os.appendInt(static_cast<int>(event.delayMs));
+    os.appendChar('U');
+    os.appendInt(static_cast<int>(event.type));
+    os.appendChar(':');
+    os.appendInt(event.index);
+}
+
+void serialize(const SmartEvent& event, const StrOStream& os)
+{
+    os.appendChar('S');
+    os.appendInt(event.smartId);
 }
 
 }
 
 void serialize(const Event& event, const StrOStream& os)
 {
-    if (event.is<KeyEvent>())
+    if (event.inverted())
+    {
+        os.appendChar('!');
+    }
+
+    if (event.is<ActionEvent>())
+    {
+        serialize(event.get<ActionEvent>(), os);
+    }
+    else if (event.is<DelayEvent>())
+    {
+        serialize(event.get<DelayEvent>(), os);
+    }
+    else if (event.is<KeyEvent>())
     {
         serialize(event.get<KeyEvent>(), os);
     }
@@ -90,13 +109,17 @@ void serialize(const Event& event, const StrOStream& os)
     {
         serialize(event.get<MacroEvent>(), os);
     }
-    else if (event.is<ActionEvent>())
+    else if (event.is<MultiEvent>())
     {
-        serialize(event.get<ActionEvent>(), os);
+        serialize(event.get<MultiEvent>(), os);
     }
-    else if (event.is<DelayEvent>())
+    else if (event.is<ScreenEvent>())
     {
-        serialize(event.get<DelayEvent>(), os);
+        serialize(event.get<ScreenEvent>(), os);
+    }
+    else if (event.is<SmartEvent>())
+    {
+        serialize(event.get<SmartEvent>(), os);
     }
     else
     {
@@ -119,7 +142,31 @@ void deserialize(const StrRef& eventStr, Event& event)
         event = event.invert();
         break;
     }
+
+    case 'A':
+    {
+        int index(0);
+
+        if (StrUtil::parseUInt(eventStr.substr(1), index))
+        {
+            event = ActionEvent::create(index);
+        }
+
+        break;
+    }
     
+    case 'D':
+    {
+        int delayMs(0);
+
+        if (StrUtil::parseUInt(eventStr.substr(1), delayMs))
+        {
+            event = DelayEvent::create(delayMs);
+        }
+        
+        break;
+    }
+
     case 'K':
     {
         auto keyCodeStr(eventStr.substr(1));
@@ -168,25 +215,47 @@ void deserialize(const StrRef& eventStr, Event& event)
         break;
     }
     
-    case 'A':
+    case 'N':
     {
         int index(0);
 
         if (StrUtil::parseUInt(eventStr.substr(1), index))
         {
-            event = ActionEvent::create(index);
+            event = MultiEvent::create(index);
         }
-
+        
         break;
     }
     
-    case 'D':
+    case 'U':
     {
-        int delayMs(0);
+        int type(0);
 
-        if (StrUtil::parseUInt(eventStr.substr(1), delayMs))
+        auto contentStr(eventStr.substr(1));
+        auto token(StrUtil::nextToken(contentStr, ":"));
+
+        if (StrUtil::parseUInt(token, type))
         {
-            event = DelayEvent::create(delayMs);
+            token = StrUtil::nextToken(contentStr, ":", token);
+
+            int index(0);
+            
+            if (StrUtil::parseUInt(token, index))
+            {
+                event = ScreenEvent::create(static_cast<ScreenEvent::Type>(type),
+                                            index);
+            }
+        }
+        break;
+    }
+    
+    case 'S':
+    {
+        int index(0);
+
+        if (StrUtil::parseUInt(eventStr.substr(1), index))
+        {
+            event = SmartEvent::create(index);
         }
         
         break;
@@ -197,6 +266,18 @@ void deserialize(const StrRef& eventStr, Event& event)
 
 namespace
 {
+
+void serializeReadable(const ActionEvent& event, const StrOStream& os)
+{
+    os.appendStr("Action ");
+    os.appendInt(event.actionId);
+}
+
+void serializeReadable(const DelayEvent& event, const StrOStream& os)
+{
+    os.appendStr("Delay ");
+    os.appendInt(event.delayMs);
+}
 
 void serializeReadable(const KeyEvent& event, const StrOStream& os)
 {
@@ -219,22 +300,18 @@ void serializeReadable(const LayerEvent& event, const StrOStream& os)
     os.appendInt(event.layer);
 }
 
+void serializeReadable(const LedMaskEvent& event, const StrOStream& os)
+{
+    os.appendStr("LED ");
+    os.appendChar(event.numLock() ? 'N' : '-');
+    os.appendChar(event.capsLock() ? 'C' : '-');
+    os.appendChar(event.scrollLock() ? 'S' : '-');
+}
+
 void serializeReadable(const MacroEvent& event, const StrOStream& os)
 {
     os.appendStr("Macro ");
     os.appendInt(event.macroId);
-}
-
-void serializeReadable(const ActionEvent& event, const StrOStream& os)
-{
-    os.appendStr("Action ");
-    os.appendInt(event.actionId);
-}
-
-void serializeReadable(const TickEvent& event, const StrOStream& os)
-{
-    os.appendStr("Tick ");
-    os.appendInt(event.tickId);
 }
 
 void serializeReadable(const MultiEvent& event, const StrOStream& os)
@@ -243,17 +320,44 @@ void serializeReadable(const MultiEvent& event, const StrOStream& os)
     os.appendInt(event.multiId);
 }
 
+void serializeReadable(const ScreenEvent& event, const StrOStream& os)
+{
+    os.appendStr("Screen ");
+    os.appendInt(static_cast<int>(event.type));
+    os.appendChar(':');
+    os.appendInt(event.index);
+}
+
 void serializeReadable(const SmartEvent& event, const StrOStream& os)
 {
     os.appendStr("Smart ");
     os.appendInt(event.smartId);
 }
 
+void serializeReadable(const TickEvent& event, const StrOStream& os)
+{
+    os.appendStr("Tick ");
+    os.appendInt(event.tickId);
+}
+
 }
 
 void serializeReadable(const Event& event, const StrOStream& os)
 {
-    if (event.is<KeyEvent>())
+    if (event.inverted())
+    {
+        os.appendChar('!');
+    }
+    
+    if (event.is<ActionEvent>())
+    {
+        serializeReadable(event.get<ActionEvent>(), os);
+    }
+    else if (event.is<DelayEvent>())
+    {
+        serializeReadable(event.get<DelayEvent>(), os);
+    }
+    else if (event.is<KeyEvent>())
     {
         serializeReadable(event.get<KeyEvent>(), os);
     }
@@ -261,25 +365,29 @@ void serializeReadable(const Event& event, const StrOStream& os)
     {
         serializeReadable(event.get<LayerEvent>(), os);
     }
+    else if (event.is<LedMaskEvent>())
+    {
+        serializeReadable(event.get<LedMaskEvent>(), os);
+    }
     else if (event.is<MacroEvent>())
     {
         serializeReadable(event.get<MacroEvent>(), os);
-    }
-    else if (event.is<ActionEvent>())
-    {
-        serializeReadable(event.get<ActionEvent>(), os);
-    }
-    else if (event.is<TickEvent>())
-    {
-        serializeReadable(event.get<TickEvent>(), os);
     }
     else if (event.is<MultiEvent>())
     {
         serializeReadable(event.get<MultiEvent>(), os);
     }
+    else if (event.is<ScreenEvent>())
+    {
+        serializeReadable(event.get<ScreenEvent>(), os);
+    }
     else if (event.is<SmartEvent>())
     {
         serializeReadable(event.get<SmartEvent>(), os);
+    }
+    else if (event.is<TickEvent>())
+    {
+        serializeReadable(event.get<TickEvent>(), os);
     }
     else
     {

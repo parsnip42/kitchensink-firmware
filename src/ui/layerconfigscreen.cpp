@@ -20,23 +20,7 @@ LayerConfigScreen::LayerConfigScreen(Timer&     timer,
 
 bool LayerConfigScreen::processEvent(const Event& event)
 {
-    // if (&mHStackWidget.focused() == &mKeyLocation)
-    // {
-    //     mKeyLocation.processEvent(event);
-
-    //     const auto& location(mKeyLocation.widget.location);
-        
-    //     mEventEntry.widget.event = mLayer.at(location.row,
-    //                                          location.column);
-
-    //     mEventEntry.widget.update();
-    // }
-    // else
-    // {
-        mHStackWidget.processEvent(event);
-    // }
-
-        return true;
+    return mHStackWidget.processEvent(event);
 }
 
 Widget& LayerConfigScreen::rootWidget()

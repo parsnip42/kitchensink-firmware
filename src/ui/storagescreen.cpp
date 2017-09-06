@@ -15,7 +15,7 @@ bool StorageScreen::processEvent(const Event& event)
 {
     StrOStream out(mLabels[0].text);
 
-    EventSerializer::serialize(event, out);
+    EventSerializer::serializeReadable(event, out);
 
     out.appendStr(" ");
 
@@ -26,7 +26,7 @@ bool StorageScreen::processEvent(const Event& event)
         mLabels[0].text = "";
     }
 
-    return true;
+    return false;
 }
 
 Widget& StorageScreen::rootWidget()
