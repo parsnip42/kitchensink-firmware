@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYS_H
 #define INCLUDED_KEYS_H
 
-#include "data/keycodes.h"
+#include "data/keycode.h"
 #include "event/event.h"
 #include "event/keyevent.h"
 #include "event/screenevent.h"

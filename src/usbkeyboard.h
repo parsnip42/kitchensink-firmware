@@ -2,6 +2,7 @@
 #define INCLUDED_USBKEYBOARD_H
 
 #include "event/eventstage.h"
+#include "data/keycode.h"
 
 #include <cstdint>
 
@@ -16,8 +17,8 @@ public:
     virtual bool processEvent(const Event& event) override;
 
 private:
-    void pressKey(uint8_t keyCode);
-    void releaseKey(uint8_t keyCode);
+    void pressKey(KeyCode key);
+    void releaseKey(KeyCode key);
 
 private:
     int     mKeyNum;

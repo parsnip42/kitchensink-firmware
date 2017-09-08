@@ -1,7 +1,7 @@
 #include "usbkeyboard.h"
 
 #include "event/keyevent.h"
-#include "data/keycodes.h"
+#include "data/keycodeutil.h"
 
 #include <usb_keyboard.h>
 #include <cstring>
@@ -26,17 +26,17 @@ bool UsbKeyboard::processEvent(const Event& event)
     if (event.is<KeyEvent>())
     {
         auto keyEvent(event.get<KeyEvent>());
-        auto keyCode(static_cast<uint8_t>(keyEvent.key));
+        auto key(keyEvent.key);
         
-        if (keyCode != 0)
+        if (key != KeyCode::None)
         {
             if (keyEvent.pressed)
             {
-                pressKey(keyCode);
+                pressKey(key);
             }
             else
             {
-                releaseKey(keyCode);
+                releaseKey(key);
             }
             
             if (mDirty)
@@ -52,13 +52,15 @@ bool UsbKeyboard::processEvent(const Event& event)
     return false;
 }
 
-void UsbKeyboard::pressKey(uint8_t keyCode)
+void UsbKeyboard::pressKey(KeyCode key)
 {
+    auto keyCode(static_cast<size_t>(key));
+    
     if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7))))
     {
-        if (keyCode >= KeyCodes::ModifierOffset)
+        if (KeyCodeUtil::modifier(key))
         {
-            keyboard_modifier_keys |= (1 << (keyCode - KeyCodes::ModifierOffset));
+            keyboard_modifier_keys |= (1 << KeyCodeUtil::modifierIndex(key));
             mDirty = true;
         }
         else if (mKeyNum < 6)
@@ -71,13 +73,15 @@ void UsbKeyboard::pressKey(uint8_t keyCode)
     }
 }
 
-void UsbKeyboard::releaseKey(uint8_t keyCode)
+void UsbKeyboard::releaseKey(KeyCode key)
 {
+    auto keyCode(static_cast<size_t>(key));
+
     if (mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
     {
-        if (keyCode >= KeyCodes::ModifierOffset)
+        if (KeyCodeUtil::modifier(key))
         {
-            keyboard_modifier_keys &= ~(1 << (keyCode - KeyCodes::ModifierOffset));
+            keyboard_modifier_keys &= ~(1 << KeyCodeUtil::modifierIndex(key));
             mDirty = true;
         }
         else

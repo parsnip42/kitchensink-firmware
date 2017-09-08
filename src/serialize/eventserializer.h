@@ -3,7 +3,6 @@
 
 #include "types/strbuf.h"
 #include "types/strref.h"
-#include "data/keycodes.h"
 #include "types/strostream.h"
 
 class Event;

@@ -1,7 +1,8 @@
 #include "ui/menudefinitions.h"
 
 #include "keyboardstate.h"
-#include "data/keycodes.h"
+#include "data/keycode.h"
+#include "data/keycodeutil.h"
 #include "event/event.h"
 #include "event/actionevent.h"
 #include "event/keyevent.h"
@@ -49,7 +50,7 @@ MenuWidget::Item createKeyMenuItem(std::size_t index)
 {
     MenuWidget::Item item;
     
-    auto keyName(KeyCodes::keyName(static_cast<KeyCode>(index)));
+    auto keyName(KeyCodeUtil::keyName(static_cast<KeyCode>(index)));
 
     if (keyName == "")
     {

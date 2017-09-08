@@ -1,6 +1,7 @@
-#include "data/keycodes.h"
+#include "keycodeutil.h"
+#include "data/keycodeutil.h"
 
-namespace KeyCodes
+namespace KeyCodeUtil
 {
 namespace
 {
@@ -199,10 +200,9 @@ StrRef keyName(KeyCode key)
     {
         return Keys[keyIndex];
     }
-    else if ((keyIndex >= ModifierOffset) &&
-             (keyIndex < (ModifierOffset + ModifierCount)))
+    else if (modifier(key))
     {
-        return Modifiers[keyIndex - ModifierOffset];
+        return Modifiers[modifierIndex(key)];
     }
     
     return StrRef();
@@ -226,7 +226,7 @@ KeyCode keyCode(const StrRef& keyName)
     {
         if (keyName == Modifiers[i])
         {
-            return static_cast<KeyCode>(i + ModifierOffset);
+            return static_cast<KeyCode>(i + kModifierOffset);
         }
     }
 

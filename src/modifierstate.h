@@ -2,21 +2,22 @@
 #define INCLUDED_MODIFIERSTATE_H
 
 #include "types/bitmask.h"
-#include "data/keycodes.h"
+#include "data/keycode.h"
+#include "data/keycodeutil.h"
 
 class Event;
 
 class ModifierState
 {
 private:
-    static constexpr auto kLCtrl  = static_cast<uint8_t>(KeyCode::LCtrl) - KeyCodes::ModifierOffset;
-    static constexpr auto kLShift = static_cast<uint8_t>(KeyCode::LShift) - KeyCodes::ModifierOffset;
-    static constexpr auto kLAlt   = static_cast<uint8_t>(KeyCode::LAlt) - KeyCodes::ModifierOffset;
-    static constexpr auto kLGui   = static_cast<uint8_t>(KeyCode::LGui) - KeyCodes::ModifierOffset;
-    static constexpr auto kRCtrl  = static_cast<uint8_t>(KeyCode::RCtrl) - KeyCodes::ModifierOffset;
-    static constexpr auto kRShift = static_cast<uint8_t>(KeyCode::RShift) - KeyCodes::ModifierOffset;
-    static constexpr auto kRAlt   = static_cast<uint8_t>(KeyCode::RAlt) - KeyCodes::ModifierOffset;
-    static constexpr auto kRGui   = static_cast<uint8_t>(KeyCode::RGui) - KeyCodes::ModifierOffset;
+    static constexpr auto kLCtrl  = KeyCodeUtil::modifierIndex(KeyCode::LCtrl);
+    static constexpr auto kLShift = KeyCodeUtil::modifierIndex(KeyCode::LShift);
+    static constexpr auto kLAlt   = KeyCodeUtil::modifierIndex(KeyCode::LAlt);
+    static constexpr auto kLGui   = KeyCodeUtil::modifierIndex(KeyCode::LGui);
+    static constexpr auto kRCtrl  = KeyCodeUtil::modifierIndex(KeyCode::RCtrl);
+    static constexpr auto kRShift = KeyCodeUtil::modifierIndex(KeyCode::RShift);
+    static constexpr auto kRAlt   = KeyCodeUtil::modifierIndex(KeyCode::RAlt);
+    static constexpr auto kRGui   = KeyCodeUtil::modifierIndex(KeyCode::RGui);
     
 public:
     constexpr ModifierState() = default;
@@ -31,7 +32,7 @@ public:
     bool processEvent(const Event& event);
     
 private:
-    Bitmask<8> keyState;
+    Bitmask<KeyCodeUtil::kModifierCount> keyState;
 };
 
 

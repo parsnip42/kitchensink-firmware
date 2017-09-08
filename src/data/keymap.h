@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYMAP_KEYMAP_H
 #define INCLUDED_KEYMAP_KEYMAP_H
 
-#include "data/keycodes.h"
+#include "data/keycode.h"
 
 #include <cstdint>
 

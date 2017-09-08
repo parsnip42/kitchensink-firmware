@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYEVENT_H
 #define INCLUDED_KEYEVENT_H
 
-#include "data/keycodes.h"
+#include "data/keycode.h"
 #include "event/event.h"
 
 class KeyEvent

@@ -12,6 +12,8 @@
 #include "event/smartevent.h"
 #include "event/tickevent.h"
 #include "types/strutil.h"
+#include "data/keycode.h"
+#include "data/keycodeutil.h"
 
 namespace EventSerializer
 {
@@ -35,7 +37,7 @@ void serialize(const KeyEvent& event, const StrOStream& os)
 {
     os.appendChar('K');
 
-    auto keyName(KeyCodes::keyName(event.key));
+    auto keyName(KeyCodeUtil::keyName(event.key));
 
     if (!keyName.empty())
     {
@@ -182,11 +184,11 @@ void deserialize(const StrRef& eventStr, Event& event)
         }
         else
         {
-            auto keyCode(KeyCodes::keyCode(keyCodeStr));
+            auto key(KeyCodeUtil::keyCode(keyCodeStr));
             
-            if (keyCode != KeyCode::None)
+            if (key != KeyCode::None)
             {
-                event = KeyEvent::create(keyCode);
+                event = KeyEvent::create(key);
             }
         }
     }
@@ -281,7 +283,7 @@ void serializeReadable(const DelayEvent& event, const StrOStream& os)
 
 void serializeReadable(const KeyEvent& event, const StrOStream& os)
 {
-    auto keyName(KeyCodes::keyName(event.key));
+    auto keyName(KeyCodeUtil::keyName(event.key));
 
     if (!keyName.empty())
     {

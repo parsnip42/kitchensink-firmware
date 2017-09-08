@@ -1,6 +1,7 @@
 #include "autorepeat.h"
 
-#include "data/keycodes.h"
+#include "data/keycode.h"
+#include "data/keycodeutil.h"
 #include "event/keyevent.h"
 
 AutoRepeat::AutoRepeat(Timer&         timer,
@@ -26,11 +27,8 @@ bool AutoRepeat::processEvent(const Event& event)
         if (event.is<KeyEvent>())
         {
             auto keyEvent(event.get<KeyEvent>());
-            auto keyCode(static_cast<uint8_t>(keyEvent.key));
 
-            if (keyCode > 0 &&
-                keyCode < KeyCodes::ModifierOffset &&
-                keyEvent.pressed)
+            if (!KeyCodeUtil::modifier(keyEvent.key) && keyEvent.pressed)
             {
                 mEvent = event;
                 mRepeatTimer.scheduleRepeating(repeatDelay,

@@ -1,6 +1,6 @@
 #include "ui/textentrywidget.h"
 
-#include "data/keycodes.h"
+#include "data/keycode.h"
 #include "data/keymap.h"
 #include "ui/font.h"
 #include "ui/keys.h"

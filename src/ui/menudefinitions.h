@@ -9,7 +9,6 @@
 #include "multikeyset.h"
 #include "smartkeyset.h"
 #include "layerstack.h"
-#include "data/keycodes.h"
 
 class KeyboardState;
 

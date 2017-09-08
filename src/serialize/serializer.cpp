@@ -4,7 +4,7 @@
 #include "layerstack.h"
 #include "event/event.h"
 #include "serialize/eventserializer.h"
-#include "data/keycodes.h"
+#include "data/keycode.h"
 #include "types/strutil.h"
 #include "types/strostream.h"
 #include "config.h"

@@ -1,7 +1,5 @@
-#ifndef INCLUDED_KEYCODES_H
-#define INCLUDED_KEYCODES_H
-
-#include "types/strref.h"
+#ifndef INCLUDED_KEYCODE_H
+#define INCLUDED_KEYCODE_H
 
 #include <cstdint>
 
@@ -182,15 +180,5 @@ enum class KeyCode : uint8_t
     RAlt           = 0xe6, // Keyboard RightAlt
     RGui           = 0xe7  // Keyboard Right GUI
 };
-
-namespace KeyCodes
-{
-
-constexpr uint8_t ModifierOffset = 0xe0;
-
-StrRef keyName(KeyCode key);
-KeyCode keyCode(const StrRef& keyName);
-
-}
 
 #endif

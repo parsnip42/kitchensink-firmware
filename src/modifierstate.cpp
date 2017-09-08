@@ -8,16 +8,11 @@ bool ModifierState::processEvent(const Event& event)
     if (event.is<KeyEvent>())
     {
         auto keyEvent(event.get<KeyEvent>());
-        auto keyCode(static_cast<uint8_t>(keyEvent.key));
+        auto key(keyEvent.key);
 
-        if (keyCode >= KeyCodes::ModifierOffset)
+        if (KeyCodeUtil::modifier(key))
         {
-            std::size_t modifier(keyCode - KeyCodes::ModifierOffset);
-
-            if (modifier < keyState.size())
-            {
-                keyState[modifier] = keyEvent.pressed;
-            }
+            keyState[KeyCodeUtil::modifierIndex(key)] = keyEvent.pressed;
             
             return true;
         }

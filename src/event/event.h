@@ -1,7 +1,7 @@
 #ifndef INCLUDED_EVENT_H
 #define INCLUDED_EVENT_H
 
-#include "data/keycodes.h"
+#include "data/keycode.h"
 #include <cstdint>
 
 class Event
@@ -87,7 +87,7 @@ constexpr bool operator!=(const Event& lhs, const Event& rhs)
 
 inline
 constexpr Event::Event()
-    : mData(0)
+    : Event(KeyCode::None)
 { }
 
 inline

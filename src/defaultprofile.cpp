@@ -1,7 +1,7 @@
 #include "defaultprofile.h"
 
 #include "keyboardstate.h"
-#include "data/keycodes.h"
+#include "data/keycode.h"
 
 #include "event/event.h"
 #include "event/keyevent.h"
