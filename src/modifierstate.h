@@ -9,14 +9,14 @@ class Event;
 class ModifierState
 {
 private:
-    static constexpr auto kLCtrl  = KeyCodes::LCtrl - KeyCodes::ModifierOffset;
-    static constexpr auto kLShift = KeyCodes::LShift - KeyCodes::ModifierOffset;
-    static constexpr auto kLAlt   = KeyCodes::LAlt - KeyCodes::ModifierOffset;
-    static constexpr auto kLGui   = KeyCodes::LGui - KeyCodes::ModifierOffset;
-    static constexpr auto kRCtrl  = KeyCodes::RCtrl - KeyCodes::ModifierOffset;
-    static constexpr auto kRShift = KeyCodes::RShift - KeyCodes::ModifierOffset;
-    static constexpr auto kRAlt   = KeyCodes::RAlt - KeyCodes::ModifierOffset;
-    static constexpr auto kRGui   = KeyCodes::RGui - KeyCodes::ModifierOffset;
+    static constexpr auto kLCtrl  = static_cast<uint8_t>(KeyCode::LCtrl) - KeyCodes::ModifierOffset;
+    static constexpr auto kLShift = static_cast<uint8_t>(KeyCode::LShift) - KeyCodes::ModifierOffset;
+    static constexpr auto kLAlt   = static_cast<uint8_t>(KeyCode::LAlt) - KeyCodes::ModifierOffset;
+    static constexpr auto kLGui   = static_cast<uint8_t>(KeyCode::LGui) - KeyCodes::ModifierOffset;
+    static constexpr auto kRCtrl  = static_cast<uint8_t>(KeyCode::RCtrl) - KeyCodes::ModifierOffset;
+    static constexpr auto kRShift = static_cast<uint8_t>(KeyCode::RShift) - KeyCodes::ModifierOffset;
+    static constexpr auto kRAlt   = static_cast<uint8_t>(KeyCode::RAlt) - KeyCodes::ModifierOffset;
+    static constexpr auto kRGui   = static_cast<uint8_t>(KeyCode::RGui) - KeyCodes::ModifierOffset;
     
 public:
     constexpr ModifierState() = default;

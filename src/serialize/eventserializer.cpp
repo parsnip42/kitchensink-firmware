@@ -35,7 +35,7 @@ void serialize(const KeyEvent& event, const StrOStream& os)
 {
     os.appendChar('K');
 
-    auto keyName(KeyCodes::keyName(event.keyCode));
+    auto keyName(KeyCodes::keyName(event.key));
 
     if (!keyName.empty())
     {
@@ -44,7 +44,7 @@ void serialize(const KeyEvent& event, const StrOStream& os)
     else
     {
         os.appendChar('_');
-        os.appendInt(event.keyCode);
+        os.appendInt(static_cast<int>(event.key));
     }
 }
 
@@ -177,14 +177,14 @@ void deserialize(const StrRef& eventStr, Event& event)
 
             if (StrUtil::parseUInt(keyCodeStr.substr(1), index))
             {
-                event = KeyEvent::create(index);
+                event = KeyEvent::create(static_cast<KeyCode>(index));
             }
         }
         else
         {
             auto keyCode(KeyCodes::keyCode(keyCodeStr));
             
-            if (keyCode != 0)
+            if (keyCode != KeyCode::None)
             {
                 event = KeyEvent::create(keyCode);
             }
@@ -281,7 +281,7 @@ void serializeReadable(const DelayEvent& event, const StrOStream& os)
 
 void serializeReadable(const KeyEvent& event, const StrOStream& os)
 {
-    auto keyName(KeyCodes::keyName(event.keyCode));
+    auto keyName(KeyCodes::keyName(event.key));
 
     if (!keyName.empty())
     {
@@ -290,7 +290,7 @@ void serializeReadable(const KeyEvent& event, const StrOStream& os)
     else
     {
         os.appendStr("0x");
-        os.appendInt(event.keyCode, "%2.2x");
+        os.appendInt(static_cast<uint8_t>(event.key), "%2.2x");
     }
 }
 

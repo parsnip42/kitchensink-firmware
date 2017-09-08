@@ -44,7 +44,6 @@ private:
 
     void launchRecordMacro(MacroSet&          macroSet,
                            int                macroId,
-                           bool               realtime,
                            const ScreenEvent& sourceEvent);
 
     void launchEditLayer(int                layerId,

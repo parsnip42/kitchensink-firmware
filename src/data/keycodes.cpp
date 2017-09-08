@@ -191,44 +191,46 @@ const char* const Modifiers[] =
 const std::size_t ModifierCount(sizeof(Modifiers) / sizeof(*Modifiers));
 }
 
-StrRef keyName(keycode_t keyCode)
+StrRef keyName(KeyCode key)
 {
-    if (keyCode < KeyCount)
+    size_t keyIndex(static_cast<size_t>(key));
+    
+    if (keyIndex < KeyCount)
     {
-        return Keys[keyCode];
+        return Keys[keyIndex];
     }
-    else if ((keyCode >= ModifierOffset) &&
-             (keyCode < (ModifierOffset + ModifierCount)))
+    else if ((keyIndex >= ModifierOffset) &&
+             (keyIndex < (ModifierOffset + ModifierCount)))
     {
-        return Modifiers[keyCode - ModifierOffset];
+        return Modifiers[keyIndex - ModifierOffset];
     }
     
     return StrRef();
 }
 
-keycode_t keyCode(const StrRef& keyName)
+KeyCode keyCode(const StrRef& keyName)
 {
     // Intentionally avoiding the use of a lookup table to save
     // memory. If performance becomes a problem, we should create an
     // ordered index for a binary search.
-    for (keycode_t i(0); i < KeyCount; ++i)
+    for (size_t i(0); i < KeyCount; ++i)
     {
         // And this might need to be case-insensitive too.
         if (keyName == Keys[i])
         {
-            return i;
+            return static_cast<KeyCode>(i);
         }
     }
 
-    for (keycode_t i(0); i < ModifierCount; ++i)
+    for (size_t i(0); i < ModifierCount; ++i)
     {
         if (keyName == Modifiers[i])
         {
-            return i + ModifierOffset;
+            return static_cast<KeyCode>(i + ModifierOffset);
         }
     }
 
-    return 0;
+    return KeyCode::None;
 }
 
 }

@@ -20,11 +20,11 @@ bool VirtualKeyboard::processEvent(const Event& event)
             {
                 if (mModifierState.shift())
                 {
-                    mActiveChar = KeyMap::getEntry(keyEvent.keyCode).shift;
+                    mActiveChar = KeyMap::getEntry(keyEvent.key).shift;
                 }
                 else
                 {
-                    mActiveChar = KeyMap::getEntry(keyEvent.keyCode).dflt; 
+                    mActiveChar = KeyMap::getEntry(keyEvent.key).dflt; 
                 }
             }
         }

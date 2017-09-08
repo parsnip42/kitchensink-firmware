@@ -30,7 +30,7 @@ bool MacroProcessor::processEvent(const Event& event)
             const auto& macro(mMacroSet[macroId]);
             const auto& content(macro.content);
 
-            if (!macroEvent.pressed && macro.type == MacroType::kInvert)
+            if (!macroEvent.pressed && macro.type == Macro::Type::kInvert)
             {
                 mCurrent = &macro;
                 mBegin   = content.end() - 1;
@@ -66,8 +66,7 @@ void MacroProcessor::playback()
         while (mBegin != mEnd)
         {
             const auto& event(*mBegin);
-            
-            bool forward(mBegin < mEnd);
+            auto forward(mBegin < mEnd);
             
             if (forward)
             {

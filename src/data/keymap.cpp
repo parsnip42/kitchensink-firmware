@@ -70,9 +70,9 @@ const std::array<Entry, 0xff> tableData{{
 
 }
 
-const Entry& getEntry(uint8_t n)
+const Entry& getEntry(KeyCode key)
 {
-    return tableData[n];
+    return tableData[static_cast<size_t>(key)];
 }
 
 }

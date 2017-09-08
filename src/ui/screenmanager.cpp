@@ -65,13 +65,14 @@ ScreenManager::ScreenManager(Surface&       surface,
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
     , mMenuDefinitions(keyboardState)
-{
-}
+{ }
 
 void ScreenManager::poll()
 {
     while (true)
     {
+        mEventManager.flush(mEventManager.defaultOutput);
+
         if (!mScreenEventQueue.empty())
         {
             launch(mScreenEventQueue.pop(),
@@ -119,10 +120,8 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
         break;
 
     case ScreenEvent::Type::kRecordMacro:
-    case ScreenEvent::Type::kRecordMacroRT:
         launchRecordMacro(mKeyboardState.macroSet,
                           screenEvent.index,
-                          screenEvent.type == ScreenEvent::Type::kRecordMacroRT,
                           screenEvent);
         break;
 
@@ -220,18 +219,39 @@ void ScreenManager::launchEditMacro(MacroSet&          macroSet,
 
 void ScreenManager::launchRecordMacro(MacroSet&          macroSet,
                                       int                macroId,
-                                      bool               realtime,
                                       const ScreenEvent& sourceEvent)
 {
+    // FIXME: Cleanup special case.
+    
     RecordMacroScreen screen(mEventManager.timer,
                              macroSet,
                              macroId,
-                             realtime,
                              mEventManager.defaultOutput);
     
-    displayScreen("Record Macro",
-                  screen,
-                  sourceEvent);
+    OutputSink output(*this, screen);
+    
+    TitleWidget titleWidget;
+    
+    titleWidget.text = "Record Macro";
+    
+    HSplitWidget hSplit(titleWidget,    
+                        screen.rootWidget(),
+                        TitleWidget::kPreferredHeight);
+
+    Surface::WidgetGuard guard(mSurface, hSplit);
+
+    screen.screenInit();
+
+    while (true)
+    {
+        mEventManager.poll(output);
+
+        if (!mScreenEventQueue.empty())
+        {
+            mScreenEventQueue.pop();
+            break;
+        }
+    }
 }
 
 void ScreenManager::launchEditLayer(int                layerId,

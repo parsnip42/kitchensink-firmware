@@ -12,56 +12,56 @@ namespace Keys
 inline
 constexpr bool up(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::Up);
+    return event == KeyEvent::create(KeyCode::Up);
 }
 
 inline
 constexpr bool down(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::Down);
+    return event == KeyEvent::create(KeyCode::Down);
 }
 
 inline
 constexpr bool pageUp(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::PageUp);
+    return event == KeyEvent::create(KeyCode::PageUp);
 }
 
 inline
 constexpr bool pageDown(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::PageDown);
+    return event == KeyEvent::create(KeyCode::PageDown);
 }
 
 inline
 constexpr bool left(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::Left);
+    return event == KeyEvent::create(KeyCode::Left);
 }
 
 inline
 constexpr bool right(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::Right);
+    return event == KeyEvent::create(KeyCode::Right);
 }
 
 inline
 constexpr bool ok(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::Enter);
+    return event == KeyEvent::create(KeyCode::Enter);
 }
 
 inline
 constexpr bool cancel(const Event& event)
 {
-    return (event == KeyEvent::create(KeyCodes::Esc) ||
+    return (event == KeyEvent::create(KeyCode::Esc) ||
             event == ScreenEvent::create(ScreenEvent::Type::kHome, 0));
 }
 
 inline
 constexpr bool backspace(const Event& event)
 {
-    return event == KeyEvent::create(KeyCodes::Backspace);
+    return event == KeyEvent::create(KeyCode::Backspace);
 }
 
 }

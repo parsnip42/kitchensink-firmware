@@ -2,7 +2,6 @@
 #define INCLUDED_MACROSET_H
 
 #include "macro.h"
-#include "macrotype.h"
 #include "macrodatapool.h"
 #include "types/strref.h"
 #include "types/strbuf.h"

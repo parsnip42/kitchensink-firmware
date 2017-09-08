@@ -28,7 +28,7 @@ bool EventEntryWidget::processEvent(const Event& inEvent)
     }
     else if (mTrigger)
     {
-        if (!inEvent.is<TickEvent>() &&
+        if (inEvent.isUserEvent() &&
             !inEvent.is<ScreenEvent>() &&
             !inEvent.inverted())
         {

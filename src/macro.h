@@ -1,16 +1,20 @@
 #ifndef INCLUDED_MACRO_H
 #define INCLUDED_MACRO_H
 
-#include "macrotype.h"
 #include "macrodatapool.h"
 #include "types/strbuf.h"
 #include "config.h"
 
-#include <array>
-#include <algorithm>
-
 class Macro
 {
+public:
+    enum class Type : uint8_t
+    {
+        kSync     = 0,
+        kRealtime = 1,
+        kInvert   = 2
+    };
+
 public:
     class Content
     {
@@ -45,7 +49,7 @@ public:
           std::size_t    index);
 
 public:
-    MacroType                         type;
+    Type                              type;
     StrBuf<Config::kMacroNameLen>     name;
     StrBuf<Config::kMacroShortcutLen> shortcut;
     Content                           content;

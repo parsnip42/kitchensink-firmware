@@ -111,34 +111,34 @@ bool TextEntryWidget::processEvent(const Event& event)
             mFlash = true;
             mFlashTimer.scheduleRepeating(1000, 500);
 
-            switch (keyEvent.keyCode)
+            switch (keyEvent.key)
             {
-            case 0:
+            case KeyCode::None:
                 break;
                 
-            case KeyCodes::Left:
+            case KeyCode::Left:
                 if (cursorPosition > 0)
                 {
                     --cursorPosition;
                 }
                 break;
                 
-            case KeyCodes::Right:
+            case KeyCode::Right:
                 if (cursorPosition < text.length())
                 {
                     ++cursorPosition;
                 }
                 break;
                 
-            case KeyCodes::Home:
+            case KeyCode::Home:
                 cursorPosition = 0;
                 break;
                 
-            case KeyCodes::End:
+            case KeyCode::End:
                 cursorPosition = text.length();
                 break;
 
-            case KeyCodes::Backspace:
+            case KeyCode::Backspace:
                 if (cursorPosition > 0)
                 {
                     text.erase(text.begin() + cursorPosition - 1);

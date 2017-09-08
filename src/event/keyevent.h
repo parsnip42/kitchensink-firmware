@@ -10,28 +10,28 @@ public:
     static constexpr Event::Type kType = Event::Type::kKey;
 
 public:
-    static constexpr Event create(keycode_t keyCode);
+    static constexpr Event create(KeyCode key);
 
 public:
     explicit constexpr KeyEvent(const Event& event);
     
 public:
-    keycode_t keyCode;
-    bool      pressed;
+    KeyCode key;
+    bool    pressed;
 
 private:
     friend class Event;
 };
 
 inline
-constexpr Event KeyEvent::create(keycode_t keyCode)
+constexpr Event KeyEvent::create(KeyCode key)
 {
-    return Event(kType, keyCode);
+    return Event(kType, static_cast<uint8_t>(key));
 }
 
 inline
 constexpr KeyEvent::KeyEvent(const Event& event)
-    : keyCode(event.value())
+    : key(static_cast<KeyCode>(event.value()))
     , pressed(event.subType() == 0)
 { }
 

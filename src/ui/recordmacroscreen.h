@@ -16,7 +16,6 @@ public:
     RecordMacroScreen(Timer&      timer,
                       MacroSet&   macroSet,
                       int         macroId,
-                      bool        realtime,
                       EventStage& next);
 
 public:

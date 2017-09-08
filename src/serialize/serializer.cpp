@@ -74,7 +74,7 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
                     
                     StrUtil::parseUInt(value, typeVal);
 
-                    macro.type = static_cast<MacroType>(typeVal);
+                    macro.type = static_cast<Macro::Type>(typeVal);
                 }
 
                 if (key == "content")

@@ -53,13 +53,13 @@ extern "C" void loop()
 
     LayerProcessor layerProcessor(actionProcessor);
 
-    MacroProcessor secureMacroProcessor(keyboardState.secureMacroSet,
-                                        timer,
-                                        layerProcessor);
+    // MacroProcessor secureMacroProcessor(keyboardState.secureMacroSet,
+    //                                     timer,
+    //                                     layerProcessor);
 
     MacroProcessor macroProcessor(keyboardState.macroSet,
                                   timer,
-                                  secureMacroProcessor);
+                                  layerProcessor);
 
     SmartKeyProcessor smartKeyProcessor(keyboardState.smartKeySet,
                                         macroProcessor);

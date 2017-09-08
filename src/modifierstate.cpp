@@ -8,7 +8,7 @@ bool ModifierState::processEvent(const Event& event)
     if (event.is<KeyEvent>())
     {
         auto keyEvent(event.get<KeyEvent>());
-        auto keyCode(keyEvent.keyCode);
+        auto keyCode(static_cast<uint8_t>(keyEvent.key));
 
         if (keyCode >= KeyCodes::ModifierOffset)
         {

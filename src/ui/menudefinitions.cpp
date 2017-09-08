@@ -23,11 +23,11 @@ const std::array<MenuWidget::Item, 5> mainMenu = { {
     } };
 
 const std::array<MenuWidget::Item, 5> configMenu = { {
-        { StrRef("Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 20) },
-        { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 21) },
-        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 22) },
-        { StrRef("Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 23) },
-        { StrRef("Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 24) },
+        { StrRef("Edit Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 20) },
+        { StrRef("Edit Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 21) },
+        { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 22) },
+        { StrRef("Edit Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 23) },
+        { StrRef("Edit Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 24) },
     } };
 
 const std::array<MenuWidget::Item, 3> systemMenu = { {
@@ -49,7 +49,7 @@ MenuWidget::Item createKeyMenuItem(std::size_t index)
 {
     MenuWidget::Item item;
     
-    auto keyName(KeyCodes::keyName(index));
+    auto keyName(KeyCodes::keyName(static_cast<KeyCode>(index)));
 
     if (keyName == "")
     {
@@ -67,7 +67,7 @@ MenuWidget::Item createKeyMenuItem(std::size_t index)
         os.appendInt(index, "%2.2x");
     }
     
-    item.event = KeyEvent::create(index);
+    item.event = KeyEvent::create(static_cast<KeyCode>(index));
 
     return item;
 }
@@ -291,19 +291,19 @@ StrRef MenuDefinitions::getTitle(int id) const
         return "Smart Keys";
 
     case 20:
-        return "Layers";
+        return "Edit Layers";
 
     case 21:
-        return "Macros";
+        return "Edit Macros";
         
     case 22:
-        return "Secure Macros";
+        return "Edit Secure Macros";
                                
     case 23:
-        return "Multi Keys";
+        return "Edit Multi Keys";
         
     case 24:
-        return "Smart Keys";
+        return "Edit Smart Keys";
 
         
     default:

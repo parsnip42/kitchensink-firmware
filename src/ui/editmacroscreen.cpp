@@ -52,7 +52,7 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
 
     mTitleEntry.widget.text        = macro.name;
     mShortcutEntry.widget.text     = macro.shortcut;
-    mTypeCombo.widget.selectedItem = 0;
+    mTypeCombo.widget.selectedItem = static_cast<int>(macro.type);
     
     mRecordButton.activated = Action::memFn<EditMacroScreen,
                                             &EditMacroScreen::onRecord>(this);
@@ -72,16 +72,16 @@ void EditMacroScreen::onRecord()
 {
     auto& macro(mMacroSet[mMacroId]);
                 
-    MacroType macroType((mTypeCombo.widget.selectedItem == 2) ?
-                        MacroType::kInvert :
-                        MacroType::kSync);
+    auto macroType(static_cast<Macro::Type>(mTypeCombo.widget.selectedItem));
                 
     macro.type     = macroType;
     macro.name     = mTitleEntry.widget.text;
     macro.shortcut = mShortcutEntry.widget.text;
                 
-    auto realtime(mTypeCombo.widget.selectedItem == 1);
-    auto screenType(realtime ? ScreenEvent::Type::kRecordMacroRT : ScreenEvent::Type::kRecordMacro);
-                
-    mNext.processEvent(ScreenEvent::create(screenType, mMacroId));
+    mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kRecordMacro, mMacroId));
 }
+
+
+
+
+

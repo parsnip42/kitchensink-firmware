@@ -1,6 +1,8 @@
 #ifndef INCLUDED_KEYMAP_KEYMAP_H
 #define INCLUDED_KEYMAP_KEYMAP_H
 
+#include "data/keycodes.h"
+
 #include <cstdint>
 
 namespace KeyMap
@@ -24,7 +26,7 @@ constexpr Entry::Entry(char nDflt,
     , shift(nShift)
 { }
 
-const Entry& getEntry(uint8_t n);
+const Entry& getEntry(KeyCode key);
 
 }
 

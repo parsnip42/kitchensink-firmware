@@ -17,12 +17,10 @@ public:
         kEditMacro      = 3,
         kEditSMacro     = 4,
         kRecordMacro    = 5,
-        kRecordMacroRT  = 6,
-        kRecordSMacro   = 7,
-        kRecordSMacroRT = 8,
-        kEditLayer      = 9,
-        kEditMulti      = 10,
-        kEditSmart      = 11,
+        kRecordSMacro   = 6,
+        kEditLayer      = 7,
+        kEditMulti      = 8,
+        kEditSmart      = 9,
     };
 
 public:

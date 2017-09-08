@@ -56,105 +56,103 @@ constexpr Event EditMacro(int macroId)
 
 void init(KeyboardState& keyboardState)
 {
-    using namespace KeyCodes;
-
     auto& macroSet(keyboardState.macroSet);
     
     {
         auto& macro(macroSet[0]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = "{";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(LBrace)
+            KeyCode::LShift,
+            KeyCode::LBrace
         };
     }
     
     {
         auto& macro(macroSet[1]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = "}";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(RBrace)
+            KeyCode::LShift,
+            KeyCode::RBrace
         };
     }
     
     {
         auto& macro(macroSet[2]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = "(";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(K9)
+            KeyCode::LShift,
+            KeyCode::K9
         };
     }
 
   {
         auto& macro(macroSet[3]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = ")";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(K0)
+            KeyCode::LShift,
+            KeyCode::K0
         };
     }
 
     {
         auto& macro(macroSet[4]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = "<";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(Comma)
+            KeyCode::LShift,
+            KeyCode::Comma
         };
     }
 
     {
         auto& macro(macroSet[5]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = ">";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(Dot)
+            KeyCode::LShift,
+            KeyCode::Dot
         };
     }
 
     {
         auto& macro(macroSet[6]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = "Ctrl+Spc";
         macro.content = {
-            KeyEvent::create(LCtrl),
-            KeyEvent::create(Space)
+            KeyCode::LCtrl,
+            KeyCode::Space
         };
     }
 
     {
         auto& macro(macroSet[7]);
 
-        macro.type = MacroType::kInvert;
+        macro.type = Macro::Type::kInvert;
         macro.name = "_";
         macro.content = {
-            KeyEvent::create(LShift),
-            KeyEvent::create(Minus)
+            KeyCode::LShift,
+            KeyCode::Minus
         };
     }
 
     keyboardState.multiSet[0].name = "Shift";
-    keyboardState.multiSet[0].events[0] = LShift;
+    keyboardState.multiSet[0].events[0] = KeyCode::LShift;
     keyboardState.multiSet[0].events[2] = SmartEvent::create(0);
     
     keyboardState.smartKeySet[0].name = "Shift Lock";
     keyboardState.smartKeySet[0].type = SmartKey::Type::kToggle;
-    keyboardState.smartKeySet[0].event = LShift;
+    keyboardState.smartKeySet[0].event = KeyCode::LShift;
 
     keyboardState.multiSet[2].name = "Num Toggle";
     keyboardState.multiSet[2].events[0] = Layer(2);
@@ -168,48 +166,39 @@ void init(KeyboardState& keyboardState)
     
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
-            { { Grave, NonUsHash, K1, K2, K3, K4, K5, NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21),  Macro(22), Layer(3), K6, K7, K8, K9, K0, Minus, Equal } },
-            { { Esc, Macro(7), Q, W, E, R, T, Tab, Macro(12), Macro(13),                    /**/ Macro(23),  Macro(24), Backspace, Y, U, I, O, P, LBrace, RBrace } },
-            { { 0, Layer(2), A, S, D, F, G, 0, Macro(14), Macro(15),                        /**/ Macro(25),  Menu(3), 0, H, J, K, L, Semicolon, Enter } },
-            { { 0, Multi(0), Z, X, C, V, B, Delete, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(1), Quote, N, M, Comma, Dot, Slash, Multi(0) } },
-            { { 0, LGui, NumLock, CapsLock, ScrollLock, 0,
-                LCtrl, Layer(1), LAlt, 0,                                     /**/ 0,LAlt, Space, RCtrl, End, Left, Up, Down, Right } }
+            { { KeyCode::Grave, KeyCode::NonUsHash, KeyCode::K1, KeyCode::K2, KeyCode::K3, KeyCode::K4, KeyCode::K5, KeyCode::NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21), Macro(22),Layer(3), KeyCode::K6, KeyCode::K7, KeyCode::K8, KeyCode::K9, KeyCode::K0, KeyCode::Minus, KeyCode::Equal } },
+            { { KeyCode::Esc, Macro(7), KeyCode::Q, KeyCode::W, KeyCode::E, KeyCode::R, KeyCode::T, KeyCode::Tab, Macro(12), Macro(13),                    /**/ Macro(23), Macro(24), KeyCode::Backspace, KeyCode::Y, KeyCode::U, KeyCode::I, KeyCode::O, KeyCode::P, KeyCode::LBrace, KeyCode::RBrace } },
+            { { KeyCode::_, Layer(2), KeyCode::A, KeyCode::S, KeyCode::D, KeyCode::F, KeyCode::G, KeyCode::_, Macro(14), Macro(15),                       /**/ Macro(25), Menu(3), KeyCode::_, KeyCode::H, KeyCode::J, KeyCode::K, KeyCode::L, KeyCode::Semicolon, KeyCode::Enter } },
+            { { KeyCode::_, Multi(0), KeyCode::Z, KeyCode::X, KeyCode::C, KeyCode::V, KeyCode::B, KeyCode::Delete, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(12), KeyCode::Quote, KeyCode::N, KeyCode::M, KeyCode::Comma, KeyCode::Dot, KeyCode::Slash, Multi(0) } },
+            { { KeyCode::_, KeyCode::LGui, KeyCode::NumLock, KeyCode::CapsLock, KeyCode::ScrollLock, KeyCode::_,
+                KeyCode::LCtrl, Layer(1), KeyCode::LAlt, KeyCode::_,                                    /**/ KeyCode::_ , KeyCode::LAlt, KeyCode::Space, KeyCode::RCtrl, KeyCode::End, KeyCode::Left, KeyCode::Up, KeyCode::Down, KeyCode::Right } }
         } };
     
     layerStack[1].name = "Navigation";
     layerStack[1].mapping = { {
             { },
-            { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                             /**/ 0, 0, Backspace, PageUp, End, Up, 0, 0, 0 } },
-            { { 0, 0, 0, Macro(0), Macro(1), Macro(2), Macro(3), 0, 0, 0, /**/ 0, 0, 0, Home, Left, Down, Right, 0, 0, 0 } },
-            { { 0, 0, 0, LBrace, RBrace, Macro(4), Macro(5), 0, 0, 0,     /**/ 0, 0, 0, PageDown, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,                             /**/ 0, 0, Macro(6), 0, 0, 0, 0, 0, 0, 0 } }
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,                             /**/ KeyCode::_, KeyCode::_, KeyCode::Backspace, KeyCode::PageUp, KeyCode::End, KeyCode::Up, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, Macro(0), Macro(1), Macro(2), Macro(3), KeyCode::_, KeyCode::_, KeyCode::_, /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::Home, KeyCode::Left, KeyCode::Down, KeyCode::Right, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::LBrace, KeyCode::RBrace, Macro(4), Macro(5), KeyCode::_, KeyCode::_, KeyCode::_,     /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::PageDown, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,                             /**/ KeyCode::_, KeyCode::_, Macro(6), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } }
         } };
 
     layerStack[2].name = "Number";
     layerStack[2].mapping = { {
-            { { 0, 0, 0, 0, 0, 0, 0, 0, F20, F21,       /**/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, F1, F2, F3, F4, F5, 0, F22, F23,  /**/ 0, 0, 0, 0, K7, K8, K9, 0, 0, 0 } },
-            { { 0, 0, F6, F7, F8, F9, F10, 0, F24, 0,   /**/ 0, 0, 0, 0, K4, K5, K6, 0, 0, 0 } },
-            { { 0, 0, F11, F12, F13, F14, F15, 0, 0, 0, /**/ 0, 0, 0, 0, K1, K2, K3, 0, 0, 0 } },
-            { { 0, 0, F16, F17, F18, F19, 0, 0, 0, 0,   /**/ 0, 0, 0, 0, K0, 0, 0, 0, 0, 0 } }
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::F20, KeyCode::F21,       /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::F1, KeyCode::F2, KeyCode::F3, KeyCode::F4, KeyCode::F5, KeyCode::_, KeyCode::F22, KeyCode::F23,  /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::K7, KeyCode::K8, KeyCode::K9, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::F6, KeyCode::F7, KeyCode::F8, KeyCode::F9, KeyCode::F10, KeyCode::_, KeyCode::F24, KeyCode::_,   /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::K4, KeyCode::K5, KeyCode::K6, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::F11, KeyCode::F12, KeyCode::F13, KeyCode::F14, KeyCode::F15, KeyCode::_, KeyCode::_, KeyCode::_, /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::K1, KeyCode::K2, KeyCode::K3, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::F16, KeyCode::F17, KeyCode::F18, KeyCode::F19, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,   /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::K0, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } }
         } };
 
     layerStack[3].name = "Edit";
     layerStack[3].mapping = { {
-            { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(10), EditMacro(11),             /**/ EditMacro(21), EditMacro(22), 0, 0, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(12), EditMacro(13),             /**/ EditMacro(23), EditMacro(24), 0, 0, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(14), EditMacro(15),             /**/ EditMacro(25), 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, 0, 0, 0, 0, 0, 0, EditMacro(16), EditMacro(17),             /**/ Bootloader(),  Menu(2), 0, 0, 0, 0, 0, 0, 0, 0 } },
-            { { 0, 0, 0, EditMacro(18), EditMacro(19), EditMacro(20), 0, 0, 0, 0, /**/ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-        } };
-
-    layerStack[4].name = "Game";
-    layerStack[4].mapping = { {
-            { },
-            { { Esc, 0, Q, W, E, R, T, Tab, 0, 0,        /**/ 0, 0, Backspace, Y, U, I, O, P, LBrace, RBrace } },
-            { { 0, Tab, A, S, D, F, G, 0, 0, 0,          /**/ 0, 0, 0, H, J, K, L, Semicolon, Enter } },
-            { { 0, LShift, Z, X, C, V, B, 0, 0, 0,       /**/ 0, 0, Delete, N, M, Comma, Dot, Slash, RShift } },
-            { { 0, 0, 0, 0, 0, 0, LCtrl, Space, LAlt, 0, /**/ 0, LAlt, Space, RCtrl, End, Left, Up, Down, Right } }
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, EditMacro(10), EditMacro(11),             /**/ EditMacro(21), EditMacro(22), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, EditMacro(12), EditMacro(13),             /**/ EditMacro(23), EditMacro(24), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, EditMacro(14), EditMacro(15),             /**/ EditMacro(25), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, EditMacro(16), EditMacro(17),             /**/ Bootloader(),  Menu(2), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+            { { KeyCode::_, KeyCode::_, KeyCode::_, EditMacro(18), EditMacro(19), EditMacro(20), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
         } };
 }
 

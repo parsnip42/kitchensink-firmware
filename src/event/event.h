@@ -1,6 +1,7 @@
 #ifndef INCLUDED_EVENT_H
 #define INCLUDED_EVENT_H
 
+#include "data/keycodes.h"
 #include <cstdint>
 
 class Event
@@ -31,25 +32,15 @@ public:
 
 public:
     constexpr Event();
-    
+
+    constexpr Event(KeyCode value);
+
     constexpr Event(Type    type,
                     uint8_t value);
     
     constexpr Event(Type    type,
                     uint8_t subType,
                     uint8_t value);
-
-    // FIXME: Remove!
-    Event(int value)
-        : mData(static_cast<uint16_t>(Type::kKey) << kTypeOffset |
-                (value & kValueMask))
-    {
-        if (value == 0)
-        {
-            mData = 0;
-        }
-    }
-
 
 public:
     constexpr Type type() const;
@@ -66,7 +57,9 @@ public:
     
     template <typename T>
     constexpr T get() const;
-    
+
+    constexpr bool invertible() const;
+
     constexpr Event invert() const;
 
     constexpr bool isUserEvent() const;
@@ -98,10 +91,14 @@ constexpr Event::Event()
 { }
 
 inline
+constexpr Event::Event(KeyCode value)
+    : Event(Type::kKey, static_cast<uint8_t>(value))
+{ }
+
+inline
 constexpr Event::Event(Type    type,
                        uint8_t value)
-    : mData(static_cast<uint16_t>(type) << kTypeOffset |
-            (value & kValueMask))
+    : Event(type, 0, value)
 { }
 
 inline
@@ -146,15 +143,21 @@ constexpr T Event::get() const
 }
 
 inline
+constexpr bool Event::invertible() const
+{
+    return type() < Type::kTick;
+}
+
+inline
 constexpr bool Event::inverted() const
 {
-    return (type() < Type::kTick) && (subType() != 0);
+    return invertible() && subType() != 0;
 }
 
 inline
 constexpr Event Event::invert() const
 {
-    if (type() < Type::kTick)
+    if (invertible())
     {
         Event e(*this);
         

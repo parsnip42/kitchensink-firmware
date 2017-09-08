@@ -15,11 +15,10 @@
 RecordMacroScreen::RecordMacroScreen(Timer&      timer,
                                      MacroSet&   macroSet,
                                      int         macroId,
-                                     bool        realtime,
                                      EventStage& next)
     : mMacroSet(macroSet)
     , mMacroId(macroId)
-    , mRecorder(realtime)
+    , mRecorder(mMacroSet[macroId].type == Macro::Type::kRealtime)
     , mLabelWidget("Recording",
                    Justify::kCenter)
     , mFlashTimer(timer.createHandle())
