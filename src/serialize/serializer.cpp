@@ -1,4 +1,4 @@
-#include "serializer.h"
+#include "serialize/serializer.h"
 
 #include "layer.h"
 #include "layerstack.h"
@@ -7,13 +7,15 @@
 #include "data/keycode.h"
 #include "types/strutil.h"
 #include "types/strostream.h"
+#include "types/instream.h"
+#include "types/outstream.h"
 #include "config.h"
 
 #include "serialize/iniformat.h"
 
 #include "mbedtls/aes.h"
 
-void Serializer<MacroSet>::serialize(const MacroSet& macroSet, Storage::OStream& os)
+void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
 {
     IniFormat::OStream ini(os);
 
@@ -32,7 +34,7 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, Storage::OStream&
     }    
 }
 
-bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
+bool Serializer<MacroSet>::deserialize(InStream& is, MacroSet& macroSet)
 {
     IniFormat::IStream ini(is);
     
@@ -100,7 +102,7 @@ bool Serializer<MacroSet>::deserialize(Storage::IStream& is, MacroSet& macroSet)
     return false;
 }
 
-void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
+void Serializer<Macro>::serialize(const Macro& macro, OutStream& os)
 {
     IniFormat::OStream ini(os);
 
@@ -129,12 +131,74 @@ void Serializer<Macro>::serialize(const Macro& macro, Storage::OStream& os)
     os.write("\n");
 }
 
-bool Serializer<Macro>::deserialize(Storage::IStream& is, Macro& macro)
+bool Serializer<Macro>::deserialize(InStream& is, Macro& macro)
 {
     return true;
 }
 
-void Serializer<Layer>::serialize(const Layer& layer, Storage::OStream& os)
+void Serializer<LayerStack>::serialize(const LayerStack& layerStack, OutStream& os)
+{
+    Serializer<Layer> s;
+    
+    for (const auto& layer : layerStack)
+    {
+        s.serialize(layer, os);
+    }
+}
+
+bool Serializer<LayerStack>::deserialize(InStream& is, LayerStack& layerStack)
+{
+    IniFormat::IStream ini(is);
+
+    StrRef sectionName;
+
+    while (ini.nextSection(sectionName))
+    {
+        int layerId;
+        StrRef typeStr;
+        StrRef numStr;
+
+        if (StrUtil::cutTrim(sectionName, typeStr, ' ', numStr) &&
+            typeStr == "layer" &&
+            StrUtil::parseUInt(numStr, layerId))
+        {
+            auto& layer(layerStack[layerId]);
+
+            StrRef key;
+            StrRef value;
+
+            std::size_t rowIndex(0);
+            
+            while (ini.nextProperty(key, value))
+            {
+                if (key == "name")
+                {
+                    layer.name = value;
+                }
+                else if (key == "row")
+                {
+                    if (rowIndex < layer.mapping.size())
+                    {
+                        auto& row(layer.mapping[rowIndex++]);
+                        auto token(StrUtil::nextToken(value, " \t"));
+
+                        std::size_t index(0);
+        
+                        while (!token.empty() && index < row.size())
+                        {
+                            EventSerializer::deserialize(token, row[index++]);
+                            token = StrUtil::nextToken(value, " \t", token);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+void Serializer<Layer>::serialize(const Layer& layer, OutStream& os)
 {
     IniFormat::OStream ini(os);
     
@@ -160,28 +224,28 @@ void Serializer<Layer>::serialize(const Layer& layer, Storage::OStream& os)
     os.write("\n");
 }
     
-bool Serializer<Layer>::deserialize(Storage::IStream& is, Layer& layer)
+bool Serializer<Layer>::deserialize(InStream& is, Layer& layer)
 {
-    layer.clear();
+    // layer.clear();
     
-    is.readLine(layer.name);
+    // is.readLine(layer.name);
 
-    for (auto& row : layer.mapping)
-    {
-        StrBuf<240> rowData;
+    // for (auto& row : layer.mapping)
+    // {
+    //     StrBuf<240> rowData;
         
-        is.readLine(rowData);
+    //     is.readLine(rowData);
 
-        StrRef token(StrUtil::nextToken(rowData, " \t"));
+    //     StrRef token(StrUtil::nextToken(rowData, " \t"));
 
-        std::size_t index(0);
+    //     std::size_t index(0);
         
-        while (!token.empty() && index < row.size())
-        {
-            EventSerializer::deserialize(token, row[index++]);
-            token = StrUtil::nextToken(rowData, " \t", token);
-        }
-    }
+    //     while (!token.empty() && index < row.size())
+    //     {
+    //         EventSerializer::deserialize(token, row[index++]);
+    //         token = StrUtil::nextToken(rowData, " \t", token);
+    //     }
+    // }
     
     return true;
 }

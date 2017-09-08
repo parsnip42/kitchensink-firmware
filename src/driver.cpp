@@ -45,6 +45,8 @@ extern "C" void loop()
     DefaultProfile::init(keyboardState);
     KeyboardStateUtil::load(keyboardState);
 
+    KeyboardStateUtil::store(keyboardState.layerStack);
+
     Timer timer;
     
     ToplevelEventStage toplevel(usbKeyboard);

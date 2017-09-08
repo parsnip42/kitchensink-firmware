@@ -27,4 +27,14 @@ void store(const MacroSet& macroSet)
     s.serialize(macroSet, os);
 }
 
+void store(const LayerStack& layerStack)
+{
+    Storage storage;
+    Serializer<LayerStack> s;
+    
+    auto os(storage.write(Storage::Region::kLayer));
+    
+    s.serialize(layerStack, os);
+}
+
 }

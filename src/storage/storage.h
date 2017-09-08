@@ -3,6 +3,8 @@
 
 #include "types/strbuf.h"
 #include "types/strref.h"
+#include "types/instream.h"
+#include "types/outstream.h"
 
 #include <SdFat.h>
 
@@ -13,7 +15,7 @@ class StrOStream;
 class Storage
 {
 public:
-    class OStream
+    class OStream : public OutStream
     {
     private:
         explicit OStream(File file);
@@ -22,7 +24,7 @@ public:
         ~OStream();
         
     public:
-        void write(const StrRef& str);
+        virtual void write(const StrRef& str) override;
 
     private:
         File mFileHandle;
@@ -32,7 +34,7 @@ public:
     };
 
 public:
-    class IStream
+    class IStream : public InStream
     {
     private:
         explicit IStream(File file);
@@ -41,7 +43,7 @@ public:
         ~IStream();
 
     public:
-        bool readLine(const StrOStream& os);
+        virtual bool readLine(const StrOStream& os) override;
         
     private:
         File mFileHandle;
@@ -76,13 +78,4 @@ private:
 };
 
 #endif
-
-
-
-
-
-
-
-
-
 

@@ -1,20 +1,22 @@
 #include "serialize/iniformat.h"
 
-#include "types/strref.h"
+#include "types/instream.h"
+#include "types/outstream.h"
 #include "types/strostream.h"
+#include "types/strref.h"
 #include "types/strutil.h"
 
 namespace IniFormat
 {
 
-IStream::IStream(Storage::IStream& is)
+IStream::IStream(InStream& is)
     : mIs(is)
     , mLineConsumed(true) 
 { }
 
 bool IStream::nextSection(StrRef& sectionName)
 {
-    while (nextLine())
+    while (nextLine() && !mCurrentLine.empty())
     {
         StrRef line(mCurrentLine);
         
@@ -63,13 +65,11 @@ bool IStream::nextLine()
         return true;
     }
         
-    {
-        return mIs.readLine(mCurrentLine);
-    }
+    return mIs.readLine(mCurrentLine);
 }
 
 
-OStream::OStream(Storage::OStream& os)
+OStream::OStream(OutStream& os)
     : mOs(os)
 { }
 

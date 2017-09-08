@@ -86,6 +86,12 @@ void serialize(const SmartEvent& event, const StrOStream& os)
 
 void serialize(const Event& event, const StrOStream& os)
 {
+    if (event == Event())
+    {
+        os.appendChar('_');
+        return;
+    }
+    
     if (event.inverted())
     {
         os.appendChar('!');
@@ -125,7 +131,7 @@ void serialize(const Event& event, const StrOStream& os)
     }
     else
     {
-        os.appendStr("?");
+        os.appendChar('_');
     }
 }
 

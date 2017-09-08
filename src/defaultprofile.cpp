@@ -12,6 +12,11 @@
 #include "event/macroevent.h"
 #include "event/smartevent.h"
 
+#include "layer.h"
+
+#include "serialize/serializer.h"
+#include "types/strinstream.h"
+
 namespace DefaultProfile
 {
 
@@ -22,7 +27,7 @@ constexpr Event Macro(int macroId)
     return MacroEvent::create(macroId);
 }
 
-constexpr Event Layer(int layerId)
+constexpr Event KLayer(int layerId)
 {
     return LayerEvent::create(layerId);
 }
@@ -155,34 +160,51 @@ void init(KeyboardState& keyboardState)
     keyboardState.smartKeySet[0].event = KeyCode::LShift;
 
     keyboardState.multiSet[2].name = "Num Toggle";
-    keyboardState.multiSet[2].events[0] = Layer(2);
+    keyboardState.multiSet[2].events[0] = KLayer(2);
     keyboardState.multiSet[2].events[2] = SmartEvent::create(2);
     
     keyboardState.smartKeySet[2].name = "Num Toggle";
     keyboardState.smartKeySet[2].type = SmartKey::Type::kToggle;
-    keyboardState.smartKeySet[2].event = Layer(2);
+    keyboardState.smartKeySet[2].event = KLayer(2);
 
     auto& layerStack(keyboardState.layerStack);
     
     layerStack[0].name = "Default";
     layerStack[0].mapping = { {
-            { { KeyCode::Grave, KeyCode::NonUsHash, KeyCode::K1, KeyCode::K2, KeyCode::K3, KeyCode::K4, KeyCode::K5, KeyCode::NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21), Macro(22),Layer(3), KeyCode::K6, KeyCode::K7, KeyCode::K8, KeyCode::K9, KeyCode::K0, KeyCode::Minus, KeyCode::Equal } },
+            { { KeyCode::Grave, KeyCode::NonUsHash, KeyCode::K1, KeyCode::K2, KeyCode::K3, KeyCode::K4, KeyCode::K5, KeyCode::NonUsBackslash, Macro(10), Macro(11), /**/ Macro(21), Macro(22),KLayer(3), KeyCode::K6, KeyCode::K7, KeyCode::K8, KeyCode::K9, KeyCode::K0, KeyCode::Minus, KeyCode::Equal } },
             { { KeyCode::Esc, Macro(7), KeyCode::Q, KeyCode::W, KeyCode::E, KeyCode::R, KeyCode::T, KeyCode::Tab, Macro(12), Macro(13),                    /**/ Macro(23), Macro(24), KeyCode::Backspace, KeyCode::Y, KeyCode::U, KeyCode::I, KeyCode::O, KeyCode::P, KeyCode::LBrace, KeyCode::RBrace } },
-            { { KeyCode::_, Layer(2), KeyCode::A, KeyCode::S, KeyCode::D, KeyCode::F, KeyCode::G, KeyCode::_, Macro(14), Macro(15),                       /**/ Macro(25), Menu(3), KeyCode::_, KeyCode::H, KeyCode::J, KeyCode::K, KeyCode::L, KeyCode::Semicolon, KeyCode::Enter } },
+            { { KeyCode::_, KLayer(2), KeyCode::A, KeyCode::S, KeyCode::D, KeyCode::F, KeyCode::G, KeyCode::_, Macro(14), Macro(15),                       /**/ Macro(25), Menu(3), KeyCode::_, KeyCode::H, KeyCode::J, KeyCode::K, KeyCode::L, KeyCode::Semicolon, KeyCode::Enter } },
             { { KeyCode::_, Multi(0), KeyCode::Z, KeyCode::X, KeyCode::C, KeyCode::V, KeyCode::B, KeyCode::Delete, Macro(16), Macro(17),                   /**/ MainMenu(), Menu(12), KeyCode::Quote, KeyCode::N, KeyCode::M, KeyCode::Comma, KeyCode::Dot, KeyCode::Slash, Multi(0) } },
             { { KeyCode::_, KeyCode::LGui, KeyCode::NumLock, KeyCode::CapsLock, KeyCode::ScrollLock, KeyCode::_,
-                KeyCode::LCtrl, Layer(1), KeyCode::LAlt, KeyCode::_,                                    /**/ KeyCode::_ , KeyCode::LAlt, KeyCode::Space, KeyCode::RCtrl, KeyCode::End, KeyCode::Left, KeyCode::Up, KeyCode::Down, KeyCode::Right } }
+                KeyCode::LCtrl, KLayer(1), KeyCode::LAlt, KeyCode::_,                                    /**/ KeyCode::_ , KeyCode::LAlt, KeyCode::Space, KeyCode::RCtrl, KeyCode::End, KeyCode::Left, KeyCode::Up, KeyCode::Down, KeyCode::Right } }
         } };
     
-    layerStack[1].name = "Navigation";
-    layerStack[1].mapping = { {
-            { },
-            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,                             /**/ KeyCode::_, KeyCode::_, KeyCode::Backspace, KeyCode::PageUp, KeyCode::End, KeyCode::Up, KeyCode::_, KeyCode::_, KeyCode::_ } },
-            { { KeyCode::_, KeyCode::_, KeyCode::_, Macro(0), Macro(1), Macro(2), Macro(3), KeyCode::_, KeyCode::_, KeyCode::_, /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::Home, KeyCode::Left, KeyCode::Down, KeyCode::Right, KeyCode::_, KeyCode::_, KeyCode::_ } },
-            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::LBrace, KeyCode::RBrace, Macro(4), Macro(5), KeyCode::_, KeyCode::_, KeyCode::_,     /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::PageDown, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
-            { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,                             /**/ KeyCode::_, KeyCode::_, Macro(6), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } }
-        } };
+    // layerStack[1].name = "Navigation";
+    // layerStack[1].mapping = { {
+    //         { },
+    //         { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,                             /**/ KeyCode::_, KeyCode::_, KeyCode::Backspace, KeyCode::PageUp, KeyCode::End, KeyCode::Up, KeyCode::_, KeyCode::_, KeyCode::_ } },
+    //         { { KeyCode::_, KeyCode::_, KeyCode::_, Macro(0), Macro(1), Macro(2), Macro(3), KeyCode::_, KeyCode::_, KeyCode::_, /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::Home, KeyCode::Left, KeyCode::Down, KeyCode::Right, KeyCode::_, KeyCode::_, KeyCode::_ } },
+    //         { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::LBrace, KeyCode::RBrace, Macro(4), Macro(5), KeyCode::_, KeyCode::_, KeyCode::_,     /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::PageDown, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },
+    //         { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_,                             /**/ KeyCode::_, KeyCode::_, Macro(6), KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } }
+    //     } };
 
+
+    static const char* const L =
+        "[layer 1]\n"
+        "name=Navigation\n"
+        "row=_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n"
+        "row=_ _ _ _ _ _ _ _ _ _ _ _ KBackspace KPageUp KEnd KUp _ _ _ _ \n"
+        "row=_ _ _ M0 M1 M2 M3 _ _ _ _ _ _ KHome KLeft KDown KRight _ _ _ \n"
+        "row=_ _ _ KLBrace KRBrace M4 M5 _ _ _ _ _ _ KPageDown _ _ _ _ _ _ \n"
+        "row=_ _ _ _ _ _ _ _ _ _ _ _ M6 _ _ _ _ _ _ _\n";
+
+    StrInStream is(L);
+    
+    Serializer<LayerStack> s;
+
+    s.deserialize(is, layerStack);
+    
+    
     layerStack[2].name = "Number";
     layerStack[2].mapping = { {
             { { KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::F20, KeyCode::F21,       /**/ KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_, KeyCode::_ } },

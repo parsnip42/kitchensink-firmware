@@ -40,14 +40,5 @@ StrRef StrOStream::str() const
     return StrRef(mData);
 }
 
-#endif /* INCLUDED_STROSTREAM_H */
-
-
-
-
-
-
-
-
-
+#endif
 

@@ -5,6 +5,7 @@
 
 namespace StrUtil
 {
+
 bool parseUInt(const StrRef& input,
                int&          output);
 
@@ -21,6 +22,7 @@ bool cutTrim(const StrRef& input,
              StrRef&       tokenA,
              char          separator,
              StrRef&       tokenB);
+
 };
 
-#endif /* INCLUDED_STRUTIL_H */
+#endif

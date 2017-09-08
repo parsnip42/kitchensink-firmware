@@ -6,13 +6,15 @@
 
 class StrRef;
 class StrOStream;
+class InStream;
+class OutStream;
 
 namespace IniFormat
 {
 class IStream
 {
 public:
-    explicit IStream(Storage::IStream& is);
+    explicit IStream(InStream& is);
 
 public:
     bool nextSection(StrRef& sectionName);
@@ -22,9 +24,9 @@ private:
     bool nextLine();
     
 private:
-    Storage::IStream& mIs;
-    StrBuf<240>       mCurrentLine;
-    bool              mLineConsumed;
+    InStream&   mIs;
+    StrBuf<240> mCurrentLine;
+    bool        mLineConsumed;
     
 private:
     IStream(const IStream&) = delete;
@@ -34,14 +36,14 @@ private:
 class OStream
 {
 public:
-    explicit OStream(Storage::OStream& os);
+    explicit OStream(OutStream& os);
 
 public:
     void writeSection(const StrRef& sectionName);
     void writeProperty(const StrRef& key, const StrRef& value);
 
 private:
-    Storage::OStream& mOs;
+    OutStream& mOs;
 
 private:
     OStream(const OStream&) = delete;
@@ -50,4 +52,5 @@ private:
 
 };
 
-#endif /* INCLUDED_INIFORMAT_H */
+#endif
+
