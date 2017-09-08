@@ -197,6 +197,8 @@ void deserialize(const StrRef& eventStr, Event& event)
                 event = KeyEvent::create(key);
             }
         }
+        
+        break;
     }
     
     case 'L':

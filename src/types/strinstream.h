@@ -17,6 +17,10 @@ public:
 private:
     StrRef mStr;
     StrRef mToken;
+
+private:
+    StrInStream(const StrInStream&) = delete;
+    StrInStream& operator=(const StrInStream&) = delete;
 };
 
 #endif

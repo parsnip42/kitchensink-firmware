@@ -16,7 +16,7 @@ IStream::IStream(InStream& is)
 
 bool IStream::nextSection(StrRef& sectionName)
 {
-    while (nextLine() && !mCurrentLine.empty())
+    while (nextLine())
     {
         StrRef line(mCurrentLine);
         

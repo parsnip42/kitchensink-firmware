@@ -12,8 +12,12 @@ bool StrInStream::readLine(const StrOStream& os)
 {
     os.reset();
     os.appendStr(mToken);
-    
-    mToken = StrUtil::nextToken(mStr, "\r\n", mToken);
 
+    // Don't loop back to start.
+    if (!mToken.empty())
+    {
+        mToken = StrUtil::nextToken(mStr, "\r\n", mToken);
+    }
+    
     return !mToken.empty();
 }
