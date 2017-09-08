@@ -20,45 +20,6 @@
 namespace DefaultProfile
 {
 
-namespace
-{
-constexpr Event Macro(int macroId)
-{
-    return MacroEvent::create(macroId);
-}
-
-constexpr Event KLayer(int layerId)
-{
-    return LayerEvent::create(layerId);
-}
-
-constexpr Event Bootloader()
-{
-    return ActionEvent::create(0);
-}
-
-constexpr Event Multi(int index)
-{
-    return MultiEvent::create(index);
-}
-
-constexpr Event MainMenu()
-{
-    return ScreenEvent::create(ScreenEvent::Type::kHome, 0);
-}
-
-constexpr Event Menu(int index)
-{
-    return ScreenEvent::create(ScreenEvent::Type::kMenu, index);
-}
-
-constexpr Event EditMacro(int macroId)
-{
-    return ScreenEvent::create(ScreenEvent::Type::kEditMacro, macroId);
-}
-
-}
-
 void init(KeyboardState& keyboardState)
 {
     auto& macroSet(keyboardState.macroSet);
@@ -160,37 +121,37 @@ void init(KeyboardState& keyboardState)
     keyboardState.smartKeySet[0].event = KeyCode::LShift;
 
     keyboardState.multiSet[2].name = "Num Toggle";
-    keyboardState.multiSet[2].events[0] = KLayer(2);
+    keyboardState.multiSet[2].events[0] = LayerEvent::create(2);
     keyboardState.multiSet[2].events[2] = SmartEvent::create(2);
     
     keyboardState.smartKeySet[2].name = "Num Toggle";
     keyboardState.smartKeySet[2].type = SmartKey::Type::kToggle;
-    keyboardState.smartKeySet[2].event = KLayer(2);
+    keyboardState.smartKeySet[2].event = LayerEvent::create(2);
 
     static const char* const LayoutConfig =
     "[layer 0]\n"
     "name=Default\n"
-    "row=KGrave KNonUsHash K1 K2 K3 K4 K5 KNonUsBackslash M10 M11 M21 M22 L3 K6 K7 K8 K9 K0 KMinus KEqual \n"
-    "row=KEsc M7 KQ KW KE KR KT KTab M12 M13 M23 M24 KBackspace KY KU KI KO KP KLBrace KRBrace \n"
-    "row=_ L2 KA KS KD KF KG _ M14 M15 M25 U1:3 _ KH KJ KK KL KSemicolon KEnter _ \n"
-    "row=_ N0 KZ KX KC KV KB KDelete M16 M17 U0:0 U1:12 KQuote KN KM KComma KDot KSlash N0 _ \n"
-    "row=_ KLGui KNumLock KCapsLock KScrollLock _ KLCtrl L1 KLAlt _ _ KLAlt KSpace KRCtrl KEnd KLeft KUp KDown KRight _ \n"
+    "row=KGrave KNonUsHash K1 K2 K3 K4 K5 KNonUsBackslash M10 M11 M21 M22 L3 K6 K7 K8 K9 K0 KMinus KEqual\n"
+    "row=KEsc M7 KQ KW KE KR KT KTab M12 M13 M23 M24 KBackspace KY KU KI KO KP KLBrace KRBrace\n"
+    "row=_ L2 KA KS KD KF KG _ M14 M15 M25 U1:3 _ KH KJ KK KL KSemicolon KEnter _\n"
+    "row=_ N0 KZ KX KC KV KB KDelete M16 M17 U0:0 U1:12 KQuote KN KM KComma KDot KSlash N0 _\n"
+    "row=_ KLGui KNumLock KCapsLock KScrollLock _ KLCtrl L1 KLAlt _ _ KLAlt KSpace KRCtrl KEnd KLeft KUp KDown KRight _\n"
     
     "[layer 1]\n"
     "name=Navigation\n"
-    "row=_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n"
-    "row=_ _ _ _ _ _ _ _ _ _ _ _ KBackspace KPageUp KEnd KUp _ _ _ _ \n"
-    "row=_ _ _ M0 M1 M2 M3 _ _ _ _ _ _ KHome KLeft KDown KRight _ _ _ \n"
-    "row=_ _ _ KLBrace KRBrace M4 M5 _ _ _ _ _ _ KPageDown _ _ _ _ _ _ \n"
-    "row=_ _ _ _ _ _ _ _ _ _ _ _ M6 _ _ _ _ _ _ _ \n"
+    "row=_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n"
+    "row=_ _ _ _ _ _ _ _ _ _ _ _ KBackspace KPageUp KEnd KUp _ _ _ _\n"
+    "row=_ _ _ M0 M1 M2 M3 _ _ _ _ _ _ KHome KLeft KDown KRight _ _ _\n"
+    "row=_ _ _ KLBrace KRBrace M4 M5 _ _ _ _ _ _ KPageDown _ _ _ _ _ _\n"
+    "row=_ _ _ _ _ _ _ _ _ _ _ _ M6 _ _ _ _ _ _ _\n"
     
     "[layer 2]\n"
     "name=Number\n"
-    "row=_ _ _ _ _ _ _ _ KF20 KF21 _ _ _ _ _ _ _ _ _ _ \n"
-    "row=_ _ KF1 KF2 KF3 KF4 KF5 _ KF22 KF23 _ _ _ _ K7 K8 K9 _ _ _ \n"
-    "row=_ _ KF6 KF7 KF8 KF9 KF10 _ KF24 _ _ _ _ _ K4 K5 K6 _ _ _ \n"
-    "row=_ _ KF11 KF12 KF13 KF14 KF15 _ _ _ _ _ _ _ K1 K2 K3 _ _ _ \n"
-    "row=_ _ KF16 KF17 KF18 KF19 _ _ _ _ _ _ _ _ K0 _ _ _ _ _ \n"
+    "row=_ _ _ _ _ _ _ _ KF20 KF21 _ _ _ _ _ _ _ _ _ _\n"
+    "row=_ _ KF1 KF2 KF3 KF4 KF5 _ KF22 KF23 _ _ _ _ K7 K8 K9 _ _ _\n"
+    "row=_ _ KF6 KF7 KF8 KF9 KF10 _ KF24 _ _ _ _ _ K4 K5 K6 _ _ _\n"
+    "row=_ _ KF11 KF12 KF13 KF14 KF15 _ _ _ _ _ _ _ K1 K2 K3 _ _ _\n"
+    "row=_ _ KF16 KF17 KF18 KF19 _ _ _ _ _ _ _ _ K0 _ _ _ _ _\n"
 
     "[layer 3]\n"
     "name=Edit"
