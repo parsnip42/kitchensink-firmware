@@ -2,7 +2,6 @@
 
 #include "types/instream.h"
 #include "types/outstream.h"
-#include "types/strostream.h"
 #include "types/strref.h"
 #include "types/strutil.h"
 

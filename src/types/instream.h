@@ -1,7 +1,7 @@
 #ifndef INCLUDED_INSTREAM_H
 #define INCLUDED_INSTREAM_H
 
-class StrOStream;
+class StrOutStream;
 
 class InStream
 {
@@ -10,7 +10,7 @@ public:
     virtual ~InStream() = default;
     
 public:
-    virtual bool readLine(const StrOStream& os) = 0;
+    virtual bool readLine(const StrOutStream& os) = 0;
 };
 
 #endif

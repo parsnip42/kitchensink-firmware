@@ -1,7 +1,7 @@
 #ifndef INCLUDED_STRBUF_H
 #define INCLUDED_STRBUF_H
 
-#include "types/strostream.h"
+#include "types/stroutstream.h"
 #include "types/strref.h"
 
 #include <array>
@@ -42,7 +42,7 @@ public:
 public:
     constexpr StrBuf<Capacity>& operator=(const StrRef& strRef);
     constexpr operator StrRef() const;
-    operator StrOStream();
+    operator StrOutStream();
 
     constexpr const char& operator[](std::size_t n) const;
     char& operator[](std::size_t n);
@@ -167,9 +167,9 @@ constexpr StrBuf<Capacity>::operator StrRef() const
 
 template <std::size_t Capacity>
 inline
-StrBuf<Capacity>::operator StrOStream()
+StrBuf<Capacity>::operator StrOutStream()
 {
-    return StrOStream(mData.begin(), mData.size());
+    return StrOutStream(mData.begin(), mData.size());
 }
 
 template <std::size_t Capacity>

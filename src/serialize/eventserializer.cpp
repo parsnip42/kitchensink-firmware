@@ -21,19 +21,19 @@ namespace EventSerializer
 namespace
 {
 
-void serialize(const ActionEvent& event, const StrOStream& os)
+void serialize(const ActionEvent& event, const StrOutStream& os)
 {
     os.appendChar('A');
     os.appendInt(event.actionId);
 }
 
-void serialize(const DelayEvent& event, const StrOStream& os)
+void serialize(const DelayEvent& event, const StrOutStream& os)
 {
     os.appendChar('D');
     os.appendInt(static_cast<int>(event.delayMs));
 }
 
-void serialize(const KeyEvent& event, const StrOStream& os)
+void serialize(const KeyEvent& event, const StrOutStream& os)
 {
     os.appendChar('K');
 
@@ -50,25 +50,25 @@ void serialize(const KeyEvent& event, const StrOStream& os)
     }
 }
 
-void serialize(const LayerEvent& event, const StrOStream& os)
+void serialize(const LayerEvent& event, const StrOutStream& os)
 {
     os.appendChar('L');
     os.appendInt(event.layer);
 }
 
-void serialize(const MacroEvent& event, const StrOStream& os)
+void serialize(const MacroEvent& event, const StrOutStream& os)
 {
     os.appendChar('M');
     os.appendInt(event.macroId);
 }
 
-void serialize(const MultiEvent& event, const StrOStream& os)
+void serialize(const MultiEvent& event, const StrOutStream& os)
 {
     os.appendChar('N');
     os.appendInt(event.multiId);
 }
 
-void serialize(const ScreenEvent& event, const StrOStream& os)
+void serialize(const ScreenEvent& event, const StrOutStream& os)
 {
     os.appendChar('U');
     os.appendInt(static_cast<int>(event.type));
@@ -76,7 +76,7 @@ void serialize(const ScreenEvent& event, const StrOStream& os)
     os.appendInt(event.index);
 }
 
-void serialize(const SmartEvent& event, const StrOStream& os)
+void serialize(const SmartEvent& event, const StrOutStream& os)
 {
     os.appendChar('S');
     os.appendInt(event.smartId);
@@ -84,7 +84,7 @@ void serialize(const SmartEvent& event, const StrOStream& os)
 
 }
 
-void serialize(const Event& event, const StrOStream& os)
+void serialize(const Event& event, const StrOutStream& os)
 {
     if (event == Event())
     {
@@ -277,19 +277,19 @@ void deserialize(const StrRef& eventStr, Event& event)
 namespace
 {
 
-void serializeReadable(const ActionEvent& event, const StrOStream& os)
+void serializeReadable(const ActionEvent& event, const StrOutStream& os)
 {
     os.appendStr("Action ");
     os.appendInt(event.actionId);
 }
 
-void serializeReadable(const DelayEvent& event, const StrOStream& os)
+void serializeReadable(const DelayEvent& event, const StrOutStream& os)
 {
     os.appendStr("Delay ");
     os.appendInt(event.delayMs);
 }
 
-void serializeReadable(const KeyEvent& event, const StrOStream& os)
+void serializeReadable(const KeyEvent& event, const StrOutStream& os)
 {
     auto keyName(KeyCodeUtil::keyName(event.key));
 
@@ -304,13 +304,13 @@ void serializeReadable(const KeyEvent& event, const StrOStream& os)
     }
 }
 
-void serializeReadable(const LayerEvent& event, const StrOStream& os)
+void serializeReadable(const LayerEvent& event, const StrOutStream& os)
 {
     os.appendStr("Layer ");
     os.appendInt(event.layer);
 }
 
-void serializeReadable(const LedMaskEvent& event, const StrOStream& os)
+void serializeReadable(const LedMaskEvent& event, const StrOutStream& os)
 {
     os.appendStr("LED ");
     os.appendChar(event.numLock() ? 'N' : '-');
@@ -318,19 +318,19 @@ void serializeReadable(const LedMaskEvent& event, const StrOStream& os)
     os.appendChar(event.scrollLock() ? 'S' : '-');
 }
 
-void serializeReadable(const MacroEvent& event, const StrOStream& os)
+void serializeReadable(const MacroEvent& event, const StrOutStream& os)
 {
     os.appendStr("Macro ");
     os.appendInt(event.macroId);
 }
 
-void serializeReadable(const MultiEvent& event, const StrOStream& os)
+void serializeReadable(const MultiEvent& event, const StrOutStream& os)
 {
     os.appendStr("Multi ");
     os.appendInt(event.multiId);
 }
 
-void serializeReadable(const ScreenEvent& event, const StrOStream& os)
+void serializeReadable(const ScreenEvent& event, const StrOutStream& os)
 {
     os.appendStr("Screen ");
     os.appendInt(static_cast<int>(event.type));
@@ -338,13 +338,13 @@ void serializeReadable(const ScreenEvent& event, const StrOStream& os)
     os.appendInt(event.index);
 }
 
-void serializeReadable(const SmartEvent& event, const StrOStream& os)
+void serializeReadable(const SmartEvent& event, const StrOutStream& os)
 {
     os.appendStr("Smart ");
     os.appendInt(event.smartId);
 }
 
-void serializeReadable(const TickEvent& event, const StrOStream& os)
+void serializeReadable(const TickEvent& event, const StrOutStream& os)
 {
     os.appendStr("Tick ");
     os.appendInt(event.tickId);
@@ -352,7 +352,7 @@ void serializeReadable(const TickEvent& event, const StrOStream& os)
 
 }
 
-void serializeReadable(const Event& event, const StrOStream& os)
+void serializeReadable(const Event& event, const StrOutStream& os)
 {
     if (event.inverted())
     {

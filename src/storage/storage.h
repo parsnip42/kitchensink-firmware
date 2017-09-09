@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-class StrOStream;
+class StrOutStream;
 
 class Storage
 {
@@ -43,7 +43,7 @@ public:
         ~IStream();
 
     public:
-        virtual bool readLine(const StrOStream& os) override;
+        virtual bool readLine(const StrOutStream& os) override;
         
     private:
         File mFileHandle;

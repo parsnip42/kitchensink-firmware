@@ -15,7 +15,6 @@
 #include "ui/smartconfigscreen.h"
 #include "ui/keys.h"
 #include "ui/homescreen.h"
-#include "types/strostream.h"
 #include "event/screenevent.h"
 #include "eventmanager.h"
 

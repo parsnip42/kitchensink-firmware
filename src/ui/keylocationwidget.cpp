@@ -5,6 +5,7 @@
 #include "ui/renderutil.h"
 #include "ui/keys.h"
 #include "keysource.h"
+#include "types/stroutstream.h"
 
 KeyLocationWidget::KeyLocationWidget(Timer&     timer,
                                      KeySource& keySource)
@@ -26,7 +27,7 @@ bool KeyLocationWidget::processEvent(const Event& event)
 
         if (mTrigger && mKeySource.readKeyLocation(location))
         {
-            StrOStream os(mLocationStr);
+            StrOutStream os(mLocationStr);
             
             os.reset();
             os.appendChar('(');

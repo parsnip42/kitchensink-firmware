@@ -4,7 +4,7 @@
 #include "types/strref.h"
 #include "types/instream.h"
 
-class StrOStream;
+class StrOutStream;
 
 class StrInStream : public InStream
 {
@@ -12,7 +12,7 @@ public:
     explicit StrInStream(const StrRef& str);
 
 public:
-    virtual bool readLine(const StrOStream& os);
+    virtual bool readLine(const StrOutStream& os);
 
 private:
     StrRef mStr;

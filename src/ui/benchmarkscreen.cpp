@@ -4,6 +4,7 @@
 #include "hardware/ctrlutil.h"
 #include "storage/storage.h"
 #include "keyboardstate.h"
+#include "types/stroutstream.h"
 
 #include <elapsedMillis.h>
 
@@ -38,7 +39,7 @@ bool BenchmarkScreen::processEvent(const Event& event)
 void BenchmarkScreen::screenInit()
 {
     {
-        StrOStream os(mMemoryUsage.value);
+        StrOutStream os(mMemoryUsage.value);
 
         os.appendInt(static_cast<int>(CtrlUtil::freeMemory()));
         os.appendStr(" bytes");
@@ -47,7 +48,7 @@ void BenchmarkScreen::screenInit()
     }
     
     {
-        StrOStream os(mConfigSize.value);
+        StrOutStream os(mConfigSize.value);
 
         os.appendInt(sizeof(KeyboardState));
         os.appendStr(" bytes");
@@ -67,7 +68,7 @@ void BenchmarkScreen::screenInit()
     auto end(millis());
 
     {
-        StrOStream os(mScanRate.value);
+        StrOutStream os(mScanRate.value);
         
         os.appendInt(static_cast<int>((500 * 1000) / (end - start)));
         os.appendStr(" polls/s");

@@ -6,7 +6,7 @@
 #include "serialize/eventserializer.h"
 #include "data/keycode.h"
 #include "types/strutil.h"
-#include "types/strostream.h"
+#include "types/stroutstream.h"
 #include "types/instream.h"
 #include "types/outstream.h"
 #include "config.h"
@@ -24,7 +24,7 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
     for (std::size_t i(0); i < macroSet.size(); ++i)
     {
         StrBuf<20> headerStr;
-        StrOStream ostream(headerStr);
+        StrOutStream ostream(headerStr);
 
         ostream.appendStr("macro ")
                .appendInt(i);
@@ -110,7 +110,7 @@ void Serializer<Macro>::serialize(const Macro& macro, OutStream& os)
     ini.writeProperty("shortcut", macro.shortcut);
 
     StrBuf<12> typeStr;
-    StrOStream oss(typeStr);
+    StrOutStream oss(typeStr);
 
     oss.appendInt(static_cast<int>(macro.type));
     

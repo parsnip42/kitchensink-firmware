@@ -1,6 +1,6 @@
 #include "types/strinstream.h"
 
-#include "types/strostream.h"
+#include "types/stroutstream.h"
 #include "types/strutil.h"
 
 StrInStream::StrInStream(const StrRef& str)
@@ -8,7 +8,7 @@ StrInStream::StrInStream(const StrRef& str)
     , mToken(StrUtil::nextToken(mStr, "\r\n"))
 { }
 
-bool StrInStream::readLine(const StrOStream& os)
+bool StrInStream::readLine(const StrOutStream& os)
 {
     os.reset();
     os.appendStr(mToken);

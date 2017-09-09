@@ -1,5 +1,6 @@
 #include "ui/menudefinitions.h"
 
+#include "types/stroutstream.h"
 #include "keyboardstate.h"
 #include "data/keycode.h"
 #include "data/keycodeutil.h"
@@ -61,7 +62,7 @@ MenuWidget::Item createKeyMenuItem(std::size_t index)
 
     if (index != 0)
     {
-        StrOStream os(item.shortcut);
+        StrOutStream os(item.shortcut);
         
         os.reset();
         os.appendStr("0x");

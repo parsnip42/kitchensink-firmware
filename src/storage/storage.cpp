@@ -1,6 +1,6 @@
 #include "storage.h"
 
-#include "types/strostream.h"
+#include "types/stroutstream.h"
 
 #include <algorithm>
 
@@ -77,7 +77,7 @@ Storage::IStream::~IStream()
     mFileHandle.close();
 }
 
-bool Storage::IStream::readLine(const StrOStream& os)
+bool Storage::IStream::readLine(const StrOutStream& os)
 {
     char ch;
 

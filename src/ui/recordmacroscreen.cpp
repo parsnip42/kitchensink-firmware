@@ -3,7 +3,6 @@
 #include "macro.h"
 #include "macroset.h"
 #include "ui/surface.h"
-#include "types/strostream.h"
 #include "eventrecorder.h"
 #include "eventmanager.h"
 #include "event/event.h"

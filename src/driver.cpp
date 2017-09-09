@@ -21,7 +21,6 @@
 #include "topleveleventstage.h"
 
 #include "types/strbuf.h"
-#include "types/strostream.h"
 
 extern "C" void setup()
 {

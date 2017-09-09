@@ -3,7 +3,7 @@
 #include "event/event.h"
 #include "storage/storage.h"
 #include "types/strbuf.h"
-#include "types/strostream.h"
+#include "types/stroutstream.h"
 #include "serialize/eventserializer.h"
 
 StorageScreen::StorageScreen()
@@ -13,7 +13,7 @@ StorageScreen::StorageScreen()
 
 bool StorageScreen::processEvent(const Event& event)
 {
-    StrOStream out(mLabels[0].text);
+    StrOutStream out(mLabels[0].text);
 
     EventSerializer::serializeReadable(event, out);
 

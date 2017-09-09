@@ -1,4 +1,4 @@
-#include "types/strostream.h"
+#include "types/stroutstream.h"
 
 #include "types/strref.h"
 
@@ -6,12 +6,17 @@
 #include <cstring>
 #include <string.h>
 
-void StrOStream::reset() const
+void StrOutStream::write(const StrRef& str)
+{
+    appendStr(str);
+}
+
+void StrOutStream::reset() const
 {
     mData[0] = '\0';
 }
 
-const StrOStream& StrOStream::appendStr(const StrRef& str) const
+const StrOutStream& StrOutStream::appendStr(const StrRef& str) const
 {
     auto currentLength(strlen(mData));
 
@@ -22,7 +27,7 @@ const StrOStream& StrOStream::appendStr(const StrRef& str) const
     return *this;
 }
 
-const StrOStream& StrOStream::appendChar(char c) const
+const StrOutStream& StrOutStream::appendChar(char c) const
 {
     auto currentLength(strlen(mData));
 
@@ -35,7 +40,7 @@ const StrOStream& StrOStream::appendChar(char c) const
     return *this;    
 }
 
-const StrOStream& StrOStream::appendInt(int n, const char* fmt) const
+const StrOutStream& StrOutStream::appendInt(int n, const char* fmt) const
 {
     auto currentLength(strlen(mData));
 
