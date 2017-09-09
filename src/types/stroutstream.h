@@ -2,6 +2,8 @@
 #define INCLUDED_STROUTSTREAM_H
 
 #include "types/strref.h"
+#include "types/strbuf.h"
+#include "types/stroutstream.h"
 #include "types/outstream.h"
 
 #include <cstdint>
@@ -10,8 +12,11 @@
 class StrOutStream : public OutStream
 {
 public:
+    template <std::size_t Capacity>
+    StrOutStream(StrBuf<Capacity>& buf);
+
     StrOutStream(char*       data,
-               std::size_t dataSize);
+                 std::size_t dataSize);
 
 public:
     virtual void write(const StrRef& str) override;
@@ -31,6 +36,13 @@ private:
 };
 
 
+template <std::size_t Capacity>
+inline
+StrOutStream::StrOutStream(StrBuf<Capacity>& buf)
+    : mData(buf.begin())
+    , mDataSize(buf.capacity() + 1)
+{ }
+
 inline
 StrOutStream::StrOutStream(char*       data,
                            std::size_t dataSize)
@@ -45,4 +57,7 @@ StrRef StrOutStream::str() const
 }
 
 #endif
+
+
+
 
