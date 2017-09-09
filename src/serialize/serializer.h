@@ -7,6 +7,8 @@
 #include "types/range.h"
 #include "macroset.h"
 #include "macro.h"
+#include "multikeyset.h"
+#include "smartkeyset.h"
 
 #include <array>
 
@@ -49,6 +51,20 @@ struct Serializer<Layer>
 {
     void serialize(const Layer& layer, OutStream& os);
     bool deserialize(InStream& is, Layer& layer);
+};
+
+template <>
+struct Serializer<MultiKeySet>
+{
+    void serialize(const MultiKeySet& multiKeySet, OutStream& os);
+    bool deserialize(InStream& is, MultiKeySet& multiKeySet);
+};
+
+template <>
+struct Serializer<SmartKeySet>
+{
+    void serialize(const SmartKeySet& smartKeySet, OutStream& os);
+    bool deserialize(InStream& is, SmartKeySet& smartKeySet);
 };
 
 #endif

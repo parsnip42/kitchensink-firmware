@@ -37,4 +37,24 @@ void store(const LayerStack& layerStack)
     s.serialize(layerStack, os);
 }
 
+void store(const MultiKeySet& multiKeySet)
+{
+    Storage storage;
+    Serializer<MultiKeySet> s;
+    
+    auto os(storage.write(Storage::Region::kMultiKey));
+    
+    s.serialize(multiKeySet, os);
+}
+
+void store(const SmartKeySet& smartKeySet)
+{
+    Storage storage;
+    Serializer<SmartKeySet> s;
+    
+    auto os(storage.write(Storage::Region::kSmartKey));
+    
+    s.serialize(smartKeySet, os);   
+}
+
 }

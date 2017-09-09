@@ -27,6 +27,12 @@ const char* getRegionFile(Storage::Region region)
     case Storage::Region::kSecureMacro:
         return "securemacro.aes";
 
+    case Storage::Region::kMultiKey:
+        return "multi.ini";
+
+    case Storage::Region::kSmartKey:
+        return "smart.ini";
+        
     default:
         return "unknown.ini";
     }

@@ -249,3 +249,156 @@ bool Serializer<Layer>::deserialize(InStream& is, Layer& layer)
     
     return true;
 }
+
+void Serializer<MultiKeySet>::serialize(const MultiKeySet& multiKeySet, OutStream& os)
+{
+    IniFormat::OStream ini(os);
+
+    int index(0);
+    
+    for (const auto& multiKey : multiKeySet)
+    {
+        StrBuf<20> headerStr;
+        StrOutStream ostream(headerStr);
+
+        ostream.appendStr("multi ")
+               .appendInt(index++);
+                                
+        ini.writeSection(headerStr);
+
+        ini.writeProperty("name", multiKey.name);
+
+        for (const auto& event : multiKey.events)
+        {
+            StrBuf<24> str;
+            
+            EventSerializer::serialize(event, str);
+
+            ini.writeProperty("event", str);
+        }
+    }
+}
+
+bool Serializer<MultiKeySet>::deserialize(InStream& is, MultiKeySet& multiKeySet)
+{
+    IniFormat::IStream ini(is);
+
+    StrRef sectionName;
+
+    while (ini.nextSection(sectionName))
+    {
+        int multiId;
+        StrRef typeStr;
+        StrRef numStr;
+
+        if (StrUtil::cutTrim(sectionName, typeStr, ' ', numStr) &&
+            typeStr == "multi" &&
+            StrUtil::parseUInt(numStr, multiId))
+        {
+            auto& multiKey(multiKeySet[multiId]);
+
+            StrRef key;
+            StrRef value;
+
+            std::size_t eventIndex(0);
+            
+            while (ini.nextProperty(key, value))
+            {
+                if (key == "name")
+                {
+                    multiKey.name = value;
+                }
+                else if (key == "event")
+                {
+                    if (eventIndex < multiKey.events.size())
+                    {
+                        EventSerializer::deserialize(value,
+                                                     multiKey.events[eventIndex++]);
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+void Serializer<SmartKeySet>::serialize(const SmartKeySet& smartKeySet, OutStream& os)
+{
+    IniFormat::OStream ini(os);
+
+    int index(0);
+    
+    for (const auto& smartKey : smartKeySet)
+    {
+        StrBuf<20> headerStr;
+        StrOutStream ostream(headerStr);
+
+        ostream.appendStr("smart ")
+               .appendInt(index++);
+                                
+        ini.writeSection(headerStr);
+
+        ini.writeProperty("name", smartKey.name);
+
+        {
+            StrBuf<24> str;
+            
+            EventSerializer::serialize(smartKey.event, str);
+
+            ini.writeProperty("event", str);
+        }
+
+        {
+            StrBuf<24> str;
+            
+            EventSerializer::serialize(smartKey.auxEvent, str);
+
+            ini.writeProperty("auxEvent", str);
+        }
+    }
+}
+
+bool Serializer<SmartKeySet>::deserialize(InStream& is, SmartKeySet& smartKeySet)
+{
+    IniFormat::IStream ini(is);
+
+    StrRef sectionName;
+
+    while (ini.nextSection(sectionName))
+    {
+        int smartId;
+        StrRef typeStr;
+        StrRef numStr;
+
+        if (StrUtil::cutTrim(sectionName, typeStr, ' ', numStr) &&
+            typeStr == "smart" &&
+            StrUtil::parseUInt(numStr, smartId))
+        {
+            auto& smartKey(smartKeySet[smartId]);
+
+            StrRef key;
+            StrRef value;
+
+            while (ini.nextProperty(key, value))
+            {
+                if (key == "name")
+                {
+                    smartKey.name = value;
+                }
+                else if (key == "event")
+                {
+                    EventSerializer::deserialize(value,
+                                                 smartKey.event);
+                }
+                else if (key == "auxEvent")
+                {
+                    EventSerializer::deserialize(value,
+                                                 smartKey.auxEvent);
+                }
+            }
+        }
+    }
+
+    return true;
+}
