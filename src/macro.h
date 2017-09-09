@@ -90,11 +90,11 @@ Macro::Content& Macro::Content::operator=(const std::initializer_list<Event>& da
     return *this;
 }
 
-
 inline
 Macro::Macro(MacroDataPool* dataPool,
              std::size_t    index)
-    : content(dataPool, index)
+    : type(Type::kSync)
+    , content(dataPool, index)
 { }
 
 

@@ -42,9 +42,8 @@ extern "C" void loop()
     KeyboardState keyboardState;
     
     DefaultProfile::init(keyboardState);
-    KeyboardStateUtil::load(keyboardState);
+    //KeyboardStateUtil::load(keyboardState);
 
-    KeyboardStateUtil::store(keyboardState.layerStack);
 
     Timer timer;
     

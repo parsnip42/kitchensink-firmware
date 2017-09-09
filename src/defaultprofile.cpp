@@ -22,96 +22,64 @@ namespace DefaultProfile
 
 void init(KeyboardState& keyboardState)
 {
-    auto& macroSet(keyboardState.macroSet);
+    static const char* const MacroConfig =
+    "[macro 0]\n"
+    "name={\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift KLBrace\n"
+
+    "[macro 1]\n"
+    "name=}\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift KRBrace\n"
+
+    "[macro 2]\n"
+    "name=(\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift K9\n"
+
+    "[macro 3]\n"
+    "name=)\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift K0\n"
+
+    "[macro 4]\n"
+    "name=<\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift KComma\n"
+
+    "[macro 5]\n"
+    "name=>\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift KDot\n"
+
+    "[macro 6]\n"
+    "name=Ctrl+Spc\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLCtrl KSpace\n"
+
+    "[macro 7]\n"
+    "name=_\n"
+    "shortcut=\n"
+    "type=2\n"
+    "content=KLShift KMinus\n";
+
+    {
+    StrInStream is(MacroConfig);
+    Serializer<MacroSet> s;
     
-    {
-        auto& macro(macroSet[0]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = "{";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::LBrace
-        };
+    s.deserialize(is, keyboardState.macroSet);
     }
+
+
     
-    {
-        auto& macro(macroSet[1]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = "}";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::RBrace
-        };
-    }
-    
-    {
-        auto& macro(macroSet[2]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = "(";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::K9
-        };
-    }
-
-  {
-        auto& macro(macroSet[3]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = ")";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::K0
-        };
-    }
-
-    {
-        auto& macro(macroSet[4]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = "<";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::Comma
-        };
-    }
-
-    {
-        auto& macro(macroSet[5]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = ">";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::Dot
-        };
-    }
-
-    {
-        auto& macro(macroSet[6]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = "Ctrl+Spc";
-        macro.content = {
-            KeyCode::LCtrl,
-            KeyCode::Space
-        };
-    }
-
-    {
-        auto& macro(macroSet[7]);
-
-        macro.type = Macro::Type::kInvert;
-        macro.name = "_";
-        macro.content = {
-            KeyCode::LShift,
-            KeyCode::Minus
-        };
-    }
-
     keyboardState.multiSet[0].name = "Shift";
     keyboardState.multiSet[0].events[0] = KeyCode::LShift;
     keyboardState.multiSet[0].events[2] = SmartEvent::create(0);
@@ -128,6 +96,9 @@ void init(KeyboardState& keyboardState)
     keyboardState.smartKeySet[2].type = SmartKey::Type::kToggle;
     keyboardState.smartKeySet[2].event = LayerEvent::create(2);
 
+
+
+    
     static const char* const LayoutConfig =
     "[layer 0]\n"
     "name=Default\n"
@@ -161,11 +132,12 @@ void init(KeyboardState& keyboardState)
     "row=_ _ _ _ _ _ _ _ U3:16 U3:17 A0 U1:2 _ _ _ _ _ _ _ _\n"
     "row=_ _ _ U3:18 U3:19 U3:20 _ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
 
+    {
     StrInStream is(LayoutConfig);
-    
     Serializer<LayerStack> s;
 
     s.deserialize(is, keyboardState.layerStack);
+    }
 }
 
 }
