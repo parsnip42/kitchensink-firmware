@@ -138,11 +138,39 @@ bool Serializer<Macro>::deserialize(InStream& is, Macro& macro)
 
 void Serializer<LayerStack>::serialize(const LayerStack& layerStack, OutStream& os)
 {
-    Serializer<Layer> s;
+    IniFormat::OStream ini(os);
+
+    int layerIndex(0);
     
     for (const auto& layer : layerStack)
     {
-        s.serialize(layer, os);
+        StrBuf<20> headerStr;
+        StrOutStream ostream(headerStr);
+
+        ostream.appendStr("layer ")
+               .appendInt(layerIndex++);
+                                
+        ini.writeSection(headerStr);
+        ini.writeProperty("name", layer.name);
+
+        for (const auto& row : layer.mapping)
+        {
+            os.write("row=");
+        
+            for (const auto& event : row)
+            {
+                StrBuf<24> str;
+            
+                EventSerializer::serialize(event, str);
+            
+                os.write(str);
+                os.write(" ");
+            }
+        
+            os.write("\n");
+        }
+
+        os.write("\n");
     }
 }
 

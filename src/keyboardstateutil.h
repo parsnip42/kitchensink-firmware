@@ -12,9 +12,16 @@ namespace KeyboardStateUtil
 {
 
 void load(KeyboardState& keyboardState);
+
+void load(MacroSet& macroSet);
+void load(LayerStack& layerStack);
+void load(MultiKeySet& multiKeySet);
+void load(SmartKeySet& smartKeySet);
+
+void store(const KeyboardState& keyboardState);
+
 void store(const MacroSet& macroSet);
 void store(const LayerStack& layerStack);
-
 void store(const MultiKeySet& multiKeySet);
 void store(const SmartKeySet& smartKeySet);
 
