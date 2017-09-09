@@ -269,7 +269,7 @@ void ScreenManager::launchEditMultiKey(int                multiKeyId,
                                        const ScreenEvent& sourceEvent)
 {
     MultiConfigScreen screen(mEventManager.timer,
-                             mKeyboardState.multiSet[multiKeyId],
+                             mKeyboardState.multiKeySet[multiKeyId],
                              mEventManager);
 
     displayScreen("Multi Key Configuration",

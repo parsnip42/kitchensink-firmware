@@ -191,13 +191,13 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mLayerDataSource(keyboardState.layerStack, &createLayerMenuItem)
     , mMacroDataSource(keyboardState.macroSet, &createMacroMenuItem)
     , mSMacroDataSource(keyboardState.secureMacroSet, &createSMacroMenuItem)
-    , mMultiKeyDataSource(keyboardState.multiSet, &createMultiKeyMenuItem)
+    , mMultiKeyDataSource(keyboardState.multiKeySet, &createMultiKeyMenuItem)
     , mSmartKeyDataSource(keyboardState.smartKeySet, &createSmartKeyMenuItem)
 
     , mEditLayerDataSource(keyboardState.layerStack, &createEditLayerMenuItem)
     , mEditMacroDataSource(keyboardState.macroSet, &createEditMacroMenuItem)
     , mEditSMacroDataSource(keyboardState.secureMacroSet, &createEditSMacroMenuItem)
-    , mEditMultiKeyDataSource(keyboardState.multiSet, &createEditMultiKeyMenuItem)
+    , mEditMultiKeyDataSource(keyboardState.multiKeySet, &createEditMultiKeyMenuItem)
     , mEditSmartKeyDataSource(keyboardState.smartKeySet, &createEditSmartKeyMenuItem)
 { }
 

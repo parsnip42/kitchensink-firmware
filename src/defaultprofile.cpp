@@ -114,18 +114,18 @@ void init(KeyboardState& keyboardState)
     "event=S0\n"
     "event=_\n"
 
-    "[multi 2]\n"
+    "[multi 1]\n"
     "name=Num Toggle\n"
     "event=L2\n"
     "event=_\n"
-    "event=S2\n"
+    "event=S1\n"
     "event=_\n";
     
     {
         StrInStream is(MultiConfig);
         Serializer<MultiKeySet> s;
     
-        s.deserialize(is, keyboardState.multiSet);
+        s.deserialize(is, keyboardState.multiKeySet);
     }
 
     static const char* const SmartConfig =
@@ -134,7 +134,7 @@ void init(KeyboardState& keyboardState)
     "event=KLShift\n"
     "auxEvent=_\n"
     
-    "[smart 2]\n"
+    "[smart 1]\n"
     "name=Num Toggle\n"
     "event=L2\n"
     "auxEvent=_\n";

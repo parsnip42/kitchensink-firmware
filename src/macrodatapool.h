@@ -11,10 +11,6 @@ class MacroDataPool : public ArrayPool<std::array<Event, Config::kMacroPoolSize>
 {
 public:
     MacroDataPool() = default;
-
-private:
-    MacroDataPool(const MacroDataPool&);
-    MacroDataPool& operator=(const MacroDataPool&);
 };
 
 #endif

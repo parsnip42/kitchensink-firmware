@@ -11,7 +11,7 @@ void load(KeyboardState& keyboardState)
 {
     load(keyboardState.macroSet);
     load(keyboardState.layerStack);
-    load(keyboardState.multiSet);
+    load(keyboardState.multiKeySet);
     load(keyboardState.smartKeySet);
 }
 
@@ -59,7 +59,7 @@ void store(const KeyboardState& keyboardState)
 {
     store(keyboardState.macroSet);
     store(keyboardState.layerStack);
-    store(keyboardState.multiSet);
+    store(keyboardState.multiKeySet);
     store(keyboardState.smartKeySet);
 }
 

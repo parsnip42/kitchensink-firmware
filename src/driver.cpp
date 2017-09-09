@@ -63,7 +63,7 @@ extern "C" void loop()
     SmartKeyProcessor smartKeyProcessor(keyboardState.smartKeySet,
                                         macroProcessor);
 
-    MultiKeyProcessor multiKeyProcessor(keyboardState.multiSet,
+    MultiKeyProcessor multiKeyProcessor(keyboardState.multiKeySet,
                                         timer,
                                         smartKeyProcessor);
 

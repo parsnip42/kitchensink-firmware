@@ -12,10 +12,13 @@ public:
     KeyboardState() = default;
 
 public:
+    void reset();
+    
+public:
     LayerStack  layerStack;
     MacroSet    macroSet;
     MacroSet    secureMacroSet;
-    MultiKeySet multiSet;
+    MultiKeySet multiKeySet;
     SmartKeySet smartKeySet;
     
 private:

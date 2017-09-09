@@ -35,6 +35,8 @@ public:
     Event atIndex(int index,
                   int row,
                   int column) const;
+
+    void reset();
     
 public:
     const Layer& operator[](std::size_t n) const;
@@ -46,7 +48,7 @@ public:
     const_iterator end() const;
     
 private:
-    Layers    mLayers;
+    Layers mLayers;
 
 private:
     LayerStack(const LayerStack&) = delete;

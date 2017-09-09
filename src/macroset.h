@@ -20,7 +20,8 @@ public:
     
 public:
     std::size_t size() const;
-
+    void reset();
+    
 private:
     MacroDataPool mMacroPool;
     MacroData     mMacroData;

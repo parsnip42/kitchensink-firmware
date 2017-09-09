@@ -7,3 +7,10 @@ MacroSet::MacroSet()
         mMacroData[i] = Macro(&mMacroPool, i);
     }
 }
+
+void MacroSet::reset()
+{
+    mMacroPool = MacroDataPool();
+    mMacroData = MacroData();
+}
+

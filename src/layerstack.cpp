@@ -49,3 +49,8 @@ Event LayerStack::atIndex(int index, int row, int column) const
 {
     return mLayers[index].at(row, column);
 }
+
+void LayerStack::reset()
+{
+    mLayers = Layers();
+}
