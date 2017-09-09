@@ -15,9 +15,6 @@ public:
     template <std::size_t Capacity>
     StrOutStream(StrBuf<Capacity>& buf);
 
-    StrOutStream(char*       data,
-                 std::size_t dataSize);
-
 public:
     virtual void write(const StrRef& str) override;
 
@@ -40,14 +37,7 @@ template <std::size_t Capacity>
 inline
 StrOutStream::StrOutStream(StrBuf<Capacity>& buf)
     : mData(buf.begin())
-    , mDataSize(buf.capacity() + 1)
-{ }
-
-inline
-StrOutStream::StrOutStream(char*       data,
-                           std::size_t dataSize)
-    : mData(data)
-    , mDataSize(dataSize)
+    , mDataSize(buf.capacity() + 1) // StrBuf is null-terminated
 { }
 
 inline
