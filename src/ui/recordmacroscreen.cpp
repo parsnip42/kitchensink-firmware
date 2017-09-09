@@ -7,7 +7,6 @@
 #include "eventmanager.h"
 #include "event/event.h"
 #include "event/screenevent.h"
-#include "keyboardstateutil.h"
 
 #include <cstdint>
 
@@ -57,8 +56,6 @@ bool RecordMacroScreen::processEvent(const Event& event)
             
             macro.content.assign(mRecorder.begin(),
                                  mRecorder.end());
-            
-            KeyboardStateUtil::store(mMacroSet);
             
             mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
         }

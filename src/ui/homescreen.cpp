@@ -19,7 +19,10 @@ HomeScreen::HomeScreen(Timer&             timer,
 
     mHomeWidget.entries[2].text    = "Caps Lock";
     mHomeWidget.entries[2].visible = true;
-    
+
+    mHomeWidget.entries[3].text    = "Game Lock";
+    mHomeWidget.entries[3].visible = true;
+
     mHomeWidget.entries[4].text    = "Scroll Lock";
     mHomeWidget.entries[4].visible = true;
 
@@ -46,6 +49,7 @@ bool HomeScreen::processEvent(const Event& event)
     else if (event.is<InvalidateEvent>())
     {
         mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
+        mHomeWidget.entries[3].value = mSmartKeySet[2].enabled;
         update();
     }
     else

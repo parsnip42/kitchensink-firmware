@@ -17,6 +17,7 @@
 #include "ui/homescreen.h"
 #include "event/screenevent.h"
 #include "eventmanager.h"
+#include "keyboardstateutil.h"
 
 namespace
 {
@@ -251,6 +252,8 @@ void ScreenManager::launchRecordMacro(MacroSet&          macroSet,
             break;
         }
     }
+
+    KeyboardStateUtil::store(mKeyboardState.macroSet);
 }
 
 void ScreenManager::launchEditLayer(int                layerId,
@@ -263,6 +266,8 @@ void ScreenManager::launchEditLayer(int                layerId,
     displayScreen("Layer Configuration",
                   screen,
                   sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.layerStack);
 }
 
 void ScreenManager::launchEditMultiKey(int                multiKeyId,
@@ -275,6 +280,8 @@ void ScreenManager::launchEditMultiKey(int                multiKeyId,
     displayScreen("Multi Key Configuration",
                   screen,
                   sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.multiKeySet);
 }
 
 void ScreenManager::launchEditSmartKey(int                smartKeyId,
@@ -287,6 +294,8 @@ void ScreenManager::launchEditSmartKey(int                smartKeyId,
     displayScreen("Smart Key Configuration",
                   screen,
                   sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.smartKeySet);
 }
 
 void ScreenManager::displayScreen(const StrRef&      title,
