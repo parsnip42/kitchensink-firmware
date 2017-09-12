@@ -25,7 +25,7 @@ const char* getRegionFile(Storage::Region region)
         return "macro.ini";
 
     case Storage::Region::kSecureMacro:
-        return "securemacro.aes";
+        return "securemacro.ini.enc";
 
     case Storage::Region::kMultiKey:
         return "multi.ini";

@@ -12,13 +12,15 @@ class EventManager;
 class KeyboardState;
 class StrOStream;
 class ScreenEvent;
+class EntropyPool;
 
 class ScreenManager
 {    
 public:
     ScreenManager(Surface&       surface,
                   EventManager&  eventManager,
-                  KeyboardState& keyboardState);
+                  KeyboardState& keyboardState,
+                  EntropyPool&   entropyPool);
     
 public:
     void poll();
@@ -63,6 +65,7 @@ private:
     Surface&        mSurface;
     EventManager&   mEventManager;
     KeyboardState&  mKeyboardState;
+    EntropyPool&    mEntropyPool;
     MenuDefinitions mMenuDefinitions;
 
 public:

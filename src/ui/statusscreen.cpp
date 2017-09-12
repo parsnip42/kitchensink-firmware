@@ -1,9 +1,10 @@
-#include "ui/benchmarkscreen.h"
+#include "ui/statusscreen.h"
 
+#include "event/eventstage.h"
 #include "eventmanager.h"
 #include "hardware/ctrlutil.h"
-#include "storage/storage.h"
 #include "keyboardstate.h"
+#include "storage/storage.h"
 #include "types/stroutstream.h"
 
 #include <elapsedMillis.h>
@@ -22,21 +23,23 @@ public:
 
 }
 
-BenchmarkScreen::BenchmarkScreen(EventManager& eventManager)
+StatusScreen::StatusScreen(EventManager& eventManager)
     : mEventManager(eventManager)
     , mMemoryUsage("Free Memory", 100)
     , mConfigSize("Config Size", 100)
     , mScanRate("Scan Rate", 100)
-    , mItems({ mMemoryUsage, mConfigSize, mScanRate })
+    , mItems({{ mMemoryUsage,
+                mConfigSize,
+                mScanRate }})
     , mHStackWidget(mItems, true)
 { }
 
-bool BenchmarkScreen::processEvent(const Event& event)
+bool StatusScreen::processEvent(const Event& event)
 {
     return false;
 }
 
-void BenchmarkScreen::screenInit()
+void StatusScreen::screenInit()
 {
     {
         StrOutStream os(mMemoryUsage.value);
@@ -77,7 +80,7 @@ void BenchmarkScreen::screenInit()
     }
 }
 
-Widget& BenchmarkScreen::rootWidget()
+Widget& StatusScreen::rootWidget()
 {
     return mHStackWidget;
 }

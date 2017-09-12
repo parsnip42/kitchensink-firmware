@@ -1,32 +1,31 @@
-#ifndef INCLUDED_BENCHMARKSCREEN_H
-#define INCLUDED_BENCHMARKSCREEN_H
+#ifndef INCLUDED_CRYPTOSCREEN_H
+#define INCLUDED_CRYPTOSCREEN_H
 
 #include "ui/hstackwidget.h"
 #include "ui/propertywidget.h"
-#include "ui/widgetset.h"
 #include "ui/screen.h"
-#include "event/eventstage.h"
+#include "ui/widgetset.h"
 
-class EventManager;
-class Widget;
+class EntropyPool;
 
-class BenchmarkScreen : public Screen
+class CryptoScreen : public Screen
 {
 public:
-    explicit BenchmarkScreen(EventManager& eventManager);
+    explicit CryptoScreen(EntropyPool& entropyPool);
 
 public:
     virtual bool processEvent(const Event& event) override;
     virtual void screenInit() override;
     virtual Widget& rootWidget() override;
-
+        
 private:
-    EventManager&          mEventManager;
-    PropertyWidget         mMemoryUsage;
-    PropertyWidget         mConfigSize;
+    EntropyPool&           mEntropyPool;
+    PropertyWidget         mTestAES;
+    PropertyWidget         mTestSHA256;
     PropertyWidget         mScanRate;
     HStackWidget::Items<3> mItems;
     HStackWidget           mHStackWidget;
+
 };
 
 #endif

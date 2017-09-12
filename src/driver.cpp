@@ -19,6 +19,7 @@
 #include "keyeventbuffer.h"
 #include "eventmanager.h"
 #include "topleveleventstage.h"
+#include "hardware/entropypool.h"
 
 #include "types/strbuf.h"
 
@@ -36,8 +37,10 @@ extern "C" void loop()
     Surface surface(display);
     
     UsbKeyboard usbKeyboard;
+
+    EntropyPool entropyPool;
     
-    KsKeyboard keyboard;
+    KsKeyboard keyboard(entropyPool);
 
     KeyboardState keyboardState;
     
@@ -83,7 +86,8 @@ extern "C" void loop()
     
     ScreenManager screenManager(surface,
                                 eventManager,
-                                keyboardState);
+                                keyboardState,
+                                entropyPool);
 
     screenManager.poll();
 }

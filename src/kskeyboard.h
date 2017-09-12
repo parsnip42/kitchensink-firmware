@@ -4,9 +4,10 @@
 #include "keymatrixevent.h"
 #include "keyboardplate.h"
 #include "layerstack.h"
-#include "hardware/entropypool.h"
 
 #include <cstdint>
+
+class EntropyPool;
 
 class KsKeyboard
 {
@@ -14,7 +15,7 @@ public:
     typedef KeyMatrixEvent Event;
     
 public:
-    KsKeyboard();
+    explicit KsKeyboard(EntropyPool& entropyPool);
 
 public:
     template <typename Callback>
@@ -25,11 +26,10 @@ public:
     void pressed(const Callback& callback);
     
     bool any() const;
-
+    
 private:
     KeyboardPlate mLeft;
     KeyboardPlate mRight;
-    EntropyPool   mEntropyPool;
     
 private:
     KsKeyboard(const KsKeyboard&) = delete;

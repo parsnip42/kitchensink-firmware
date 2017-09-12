@@ -12,8 +12,11 @@ public:
     typedef Data::const_iterator const_iterator;
     
 public:
-    EntropyPool() = default;
+    EntropyPool();
 
+public:
+    std::array<uint8_t, 32> read();
+    
 public:
     void insert(uint8_t value);
     std::size_t size() const;
@@ -24,8 +27,17 @@ public:
 private:
     Data mData;
     int  mCount;
+
+private:
+    EntropyPool(const EntropyPool&) = delete;
+    EntropyPool& operator=(const EntropyPool&) = delete;
 };
 
+
+inline
+EntropyPool::EntropyPool()
+    : mCount(0)
+{ }
 
 inline
 void EntropyPool::insert(uint8_t value)

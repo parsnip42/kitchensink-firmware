@@ -6,10 +6,11 @@
 #include "ui/hsplitwidget.h"
 #include "ui/titlewidget.h"
 #include "ui/menuscreen.h"
+#include "ui/cryptoscreen.h"
 #include "ui/editmacroscreen.h"
 #include "ui/recordmacroscreen.h"
 #include "ui/storagescreen.h"
-#include "ui/benchmarkscreen.h"
+#include "ui/statusscreen.h"
 #include "ui/layerconfigscreen.h"
 #include "ui/multiconfigscreen.h"
 #include "ui/smartconfigscreen.h"
@@ -60,10 +61,12 @@ private:
 
 ScreenManager::ScreenManager(Surface&       surface,
                              EventManager&  eventManager,
-                             KeyboardState& keyboardState)
+                             KeyboardState& keyboardState,
+                             EntropyPool&   entropyPool)
     : mSurface(surface)
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
+    , mEntropyPool(entropyPool)
     , mMenuDefinitions(keyboardState)
 { }
 
@@ -190,9 +193,19 @@ void ScreenManager::launchScreen(int                screenId,
             
     case 1:
     {
-        BenchmarkScreen screen(mEventManager);
+        StatusScreen screen(mEventManager);
 
-        displayScreen("Benchmarking",
+        displayScreen("Status",
+                      screen,
+                      sourceEvent);
+        break;
+    }
+    
+    case 2:
+    {
+        CryptoScreen screen(mEntropyPool);
+
+        displayScreen("Cryptography",
                       screen,
                       sourceEvent);
         break;
