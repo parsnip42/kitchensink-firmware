@@ -2,6 +2,7 @@
 #define INCLUDED_CRYPTOSCREEN_H
 
 #include "ui/hstackwidget.h"
+#include "ui/labelwidget.h"
 #include "ui/propertywidget.h"
 #include "ui/screen.h"
 #include "ui/widgetset.h"
@@ -20,10 +21,11 @@ public:
         
 private:
     EntropyPool&           mEntropyPool;
+    PropertyWidget         mPoolSize;
+    LabelWidget            mPoolContent;
     PropertyWidget         mTestAES;
     PropertyWidget         mTestSHA256;
-    PropertyWidget         mScanRate;
-    HStackWidget::Items<3> mItems;
+    HStackWidget::Items<4> mItems;
     HStackWidget           mHStackWidget;
 
 };

@@ -20,6 +20,7 @@ public:
 public:
     void insert(uint8_t value);
     std::size_t size() const;
+    std::size_t count() const;
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -51,6 +52,12 @@ inline
 std::size_t EntropyPool::size() const
 {
     return mData.size();
+}
+
+inline
+std::size_t EntropyPool::count() const
+{
+    return mCount;
 }
 
 inline
