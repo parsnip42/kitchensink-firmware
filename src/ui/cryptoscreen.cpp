@@ -6,40 +6,56 @@
 #include <mbedtls/aes.h>
 #include <mbedtls/sha256.h>
 
-CryptoScreen::CryptoScreen(EntropyPool& entropyPool)
-    : mEntropyPool(entropyPool)
-    , mPoolSize("Entropy Pool", 100)
-    , mPoolContent()
+CryptoScreen::CryptoScreen(Timer&       timer,
+                           EntropyPool& entropyPool)
+    : mUpdateTimer(timer.createHandle())
+    , mEntropyPool(entropyPool)
     , mTestAES("mbedTLS AES", 100, "Testing")
     , mTestSHA256("mbedTLS SHA256", 100, "Testing")
-    , mItems({{ mPoolSize,
-                mPoolContent,
-                mTestAES,
-                mTestSHA256
+    , mPoolSize("Entropy Pool", 100)
+    , mPoolContent()
+    , mItems({{ mTestAES,
+                mTestSHA256,
+                mPoolSize,
+                mPoolContent
                 }})
     , mHStackWidget(mItems, true)
 {
-    {
-        StrOutStream os(mPoolSize.value);
-        
-        os.appendInt(mEntropyPool.count());
-        os.appendStr(" entries");
-    }
-
-    {
-        StrOutStream os(mPoolContent.text);
-
-        auto value(mEntropyPool.read());
-
-        for (auto octet : value)
-        {
-            os.appendInt(octet, "%2.2x");
-        }
-    }
+    mUpdateTimer.scheduleRepeating(500, 500);
 }
 
 bool CryptoScreen::processEvent(const Event& event)
 {
+    if (mUpdateTimer.matches(event))
+    {
+        {
+            StrOutStream os(mPoolSize.value);
+
+            os.reset();
+            os.appendInt(mEntropyPool.count());
+            os.appendStr(" entries");
+
+            mPoolSize.invalidateWidget();
+        }
+
+        {
+            StrOutStream os(mPoolContent.text);
+
+            auto value(mEntropyPool.read());
+
+            os.reset();
+        
+            for (auto octet : value)
+            {
+                os.appendInt(octet, "%2.2x");
+            }
+
+            mPoolContent.invalidateWidget();
+        }
+
+        return true;
+    }
+
     return false;
 }
 

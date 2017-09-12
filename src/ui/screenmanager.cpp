@@ -203,7 +203,8 @@ void ScreenManager::launchScreen(int                screenId,
     
     case 2:
     {
-        CryptoScreen screen(mEntropyPool);
+        CryptoScreen screen(mEventManager.timer,
+                            mEntropyPool);
 
         displayScreen("Cryptography",
                       screen,

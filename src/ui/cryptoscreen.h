@@ -6,13 +6,15 @@
 #include "ui/propertywidget.h"
 #include "ui/screen.h"
 #include "ui/widgetset.h"
+#include "timer.h"
 
 class EntropyPool;
 
 class CryptoScreen : public Screen
 {
 public:
-    explicit CryptoScreen(EntropyPool& entropyPool);
+    CryptoScreen(Timer&       timer,
+                 EntropyPool& entropyPool);
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -20,11 +22,12 @@ public:
     virtual Widget& rootWidget() override;
         
 private:
+    Timer::Handle          mUpdateTimer;
     EntropyPool&           mEntropyPool;
-    PropertyWidget         mPoolSize;
-    LabelWidget            mPoolContent;
     PropertyWidget         mTestAES;
     PropertyWidget         mTestSHA256;
+    PropertyWidget         mPoolSize;
+    LabelWidget            mPoolContent;
     HStackWidget::Items<4> mItems;
     HStackWidget           mHStackWidget;
 
