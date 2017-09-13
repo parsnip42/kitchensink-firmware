@@ -4,7 +4,7 @@ void EventBuffer::pollEvent(EventStage& next)
 {
     if (!mBuffer.empty())
     {
-        next.processEvent(mBuffer.pop());
+        next.processEvent(mBuffer.popFront());
     }
 }
 

@@ -78,14 +78,14 @@ template <typename Key, typename Value, std::size_t Capacity>
 inline
 auto OrderedCircularBuffer<Key, Value, Capacity>::peek() const
 {
-    return mBuffer.peek();
+    return mBuffer.peekFront();
 }
 
 template <typename Key, typename Value, std::size_t Capacity>
 inline
 auto OrderedCircularBuffer<Key, Value, Capacity>::pop()
 {
-    return mBuffer.pop();
+    return mBuffer.popFront();
 }
 
-#endif /* INCLUDED_ORDEREDCIRCULARBUFFER_H */
+#endif

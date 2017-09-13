@@ -27,18 +27,24 @@ public:
               Element*      dataEnd);
 
 public:
-    constexpr std::size_t size() const;
+    std::size_t size() const;
 
 public:
-    bool insert(int index, const_iterator begin, const_iterator end);
-
-    Content operator[](int index) const;
+    bool insert(std::size_t index, const_iterator begin, const_iterator end);
+    void clear();
+    
+    Content operator[](std::size_t index) const;
     
 private:
     IndexData   mIndexData;
+    std::size_t mIndexCapacity;
     PoolData    mPoolData;
     std::size_t mPoolSize;
     std::size_t mPoolCapacity;
+
+private:
+    ArrayPool(const ArrayPool&) = delete;
+    ArrayPool& operator=(const ArrayPool&) = delete;
 };
 
 
@@ -49,6 +55,7 @@ ArrayPool<Element>::ArrayPool(IndexElement* indexBegin,
                               Element*      dataBegin,
                               Element*      dataEnd)
     : mIndexData(indexBegin, indexEnd)
+    , mIndexCapacity(std::distance(indexBegin, indexEnd))
     , mPoolData(dataBegin, dataEnd)
     , mPoolSize(0)
     , mPoolCapacity(std::distance(dataBegin, dataEnd))
@@ -62,22 +69,27 @@ ArrayPool<Element>::ArrayPool(IndexElement* indexBegin,
 
 template <typename Element>
 inline
-constexpr std::size_t ArrayPool<Element>::size() const
+std::size_t ArrayPool<Element>::size() const
 {
-    return std::distance(mIndexData.begin(), mIndexData.end());
+    return mIndexCapacity;
 }
 
 template <typename Element>
 inline
-bool ArrayPool<Element>::insert(int index, const_iterator begin, const_iterator end)
+bool ArrayPool<Element>::insert(std::size_t index, const_iterator begin, const_iterator end)
 {
+    if (index >= mIndexCapacity)
+    {
+        return false;
+    }
+    
     auto& entry(*(mIndexData.begin() + index));
 
     auto entrySize(std::distance(entry.begin(), entry.end()));
     auto dataSize(std::distance(begin, end));
 
-    // Note that if the size of an entry is bigger than the total used size of
-    // the pool, then we're already in a complete mess.
+    // Note that if the size of an existing entry is bigger than the total used
+    // size of the pool, then we're already in a complete mess.
     if (((mPoolSize - entrySize) + dataSize) >= mPoolCapacity)
     {
         return false;
@@ -113,8 +125,27 @@ bool ArrayPool<Element>::insert(int index, const_iterator begin, const_iterator 
 
 template <typename Element>
 inline
-typename ArrayPool<Element>::Content ArrayPool<Element>::operator[](int index) const
+void ArrayPool<Element>::clear()
 {
+    for (auto& e : mIndexData)
+    {
+        e.begin() = mPoolData.begin();
+        e.end()   = mPoolData.begin();
+    }
+
+    mPoolSize = 0;
+}
+
+template <typename Element>
+inline
+typename ArrayPool<Element>::Content ArrayPool<Element>::operator[](std::size_t index) const
+{
+    if (index >= mIndexCapacity)
+    {
+        return Content(mPoolData.begin(),
+                       mPoolData.begin());
+    }
+
     const auto& entry(*(mIndexData.begin() + index));
 
     return Content(entry.begin(), entry.end());

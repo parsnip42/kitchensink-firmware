@@ -39,7 +39,7 @@ private:
 inline
 std::size_t MacroSet::size() const
 {
-    return mMacroPool.size();
+    return mMacroData.size();
 }
 
 inline

@@ -34,12 +34,12 @@ private:
 inline
 constexpr Event MacroEvent::create(Type type, uint8_t macroId)
 {
-    return Event(kType, static_cast<uint8_t>(type), macroId);
+    return Event(kType, 0, macroId);
 }
 
 inline
 constexpr MacroEvent::MacroEvent(const Event& event)
-    : type(static_cast<Type>(event.subType()))
+    : type(Type::kDefault)
     , macroId(event.value())
     , pressed(!event.inverted())
 { }

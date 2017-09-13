@@ -79,6 +79,8 @@ public:
 
     constexpr bool isUserEvent() const;
 
+    constexpr uint16_t data() const;
+
 private:
     uint16_t mData;
 
@@ -116,20 +118,20 @@ constexpr Event::Event(Type    type,
                        uint8_t subType,
                        uint8_t value)
     : mData(static_cast<uint16_t>(type) << kTypeOffset |
-            (((static_cast<uint16_t>(subType) << invertible()) & kSubTypeMask) << kSubTypeOffset) |
+            (((static_cast<uint16_t>(subType)) & kSubTypeMask) << kSubTypeOffset) |
             (value & kValueMask))
 { }
 
 inline
 constexpr Event::Type Event::type() const
 {
-    return static_cast<Type>(mData >> 12);
+    return static_cast<Type>(mData >> kTypeOffset);
 }
 
 inline
 constexpr uint8_t Event::subType() const
 {
-    return ((mData >> 8) & kSubTypeMask) >> !invertible();
+    return ((mData >> kSubTypeOffset) & kSubTypeMask);
 }
 
 inline
@@ -196,6 +198,13 @@ constexpr bool Event::isUserEvent() const
             t == Type::kSMacro ||
             t == Type::kAction ||
             t == Type::kScreen);
+}
+
+/// Debugging/diagnostics only.
+inline
+constexpr uint16_t Event::data() const
+{
+    return mData;
 }
 
 #endif

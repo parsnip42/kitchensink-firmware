@@ -13,18 +13,10 @@ public:
     typedef ArrayPool<Event> Pool;
 
 public:
-    typedef Pool::const_iterator const_iterator;
-    typedef Pool::Content        Content;
-    
-public:
     MacroDataPool();
 
 public:
-    std::size_t size() const;
-
-public:
-    bool insert(int index, Pool::const_iterator begin, Pool::const_iterator end);
-    Pool::Content operator[](int index) const;
+    void clear();
     
 private:
     std::array<Event, Config::kMacroPoolSize>      poolData;
@@ -42,21 +34,9 @@ MacroDataPool::MacroDataPool()
 { }
 
 inline
-std::size_t MacroDataPool::size() const
+void MacroDataPool::clear()
 {
-    return pool.size();
-}
-
-inline
-bool MacroDataPool::insert(int index, Pool::const_iterator begin, Pool::const_iterator end)
-{
-    return pool.insert(index, begin, end);
-}
-
-inline
-MacroDataPool::Content MacroDataPool::operator[](int index) const
-{
-    return pool[index];
+    pool.clear();
 }
 
 #endif

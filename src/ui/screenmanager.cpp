@@ -9,7 +9,7 @@
 #include "ui/cryptoscreen.h"
 #include "ui/editmacroscreen.h"
 #include "ui/recordmacroscreen.h"
-#include "ui/storagescreen.h"
+#include "ui/eventstreamscreen.h"
 #include "ui/statusscreen.h"
 #include "ui/layerconfigscreen.h"
 #include "ui/multiconfigscreen.h"
@@ -78,7 +78,7 @@ void ScreenManager::poll()
 
         if (!mScreenEventQueue.empty())
         {
-            launch(mScreenEventQueue.pop(),
+            launch(mScreenEventQueue.popFront(),
                    mEventManager);
         }
         else
@@ -183,9 +183,9 @@ void ScreenManager::launchScreen(int                screenId,
     {
     case 0:
     {
-        StorageScreen screen;
+        EventStreamScreen screen;
 
-        displayScreen("Storage",
+        displayScreen("Event Stream",
                       screen,
                       sourceEvent);
         break;
@@ -262,7 +262,7 @@ void ScreenManager::launchRecordMacro(MacroSet&          macroSet,
 
         if (!mScreenEventQueue.empty())
         {
-            mScreenEventQueue.pop();
+            mScreenEventQueue.popFront();
             break;
         }
     }
@@ -339,18 +339,18 @@ void ScreenManager::displayScreen(const StrRef&      title,
 
         if (!mScreenEventQueue.empty())
         {
-            auto event(mScreenEventQueue.peek());
+            auto event(mScreenEventQueue.peekFront());
 
             if (event.type == ScreenEvent::Type::kHome ||
                 event == sourceEvent)
             {
-                mScreenEventQueue.pop();
+                mScreenEventQueue.popFront();
                 break;
             }
             
             if (!transient(sourceEvent) && transient(event))
             {
-                mScreenEventQueue.pop();
+                mScreenEventQueue.popFront();
                 mEventManager.flush(output);
                 launch(event, output);
             }

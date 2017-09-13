@@ -1,7 +1,8 @@
 #ifndef INCLUDED_MACRO_H
 #define INCLUDED_MACRO_H
 
-#include "macrodatapool.h"
+#include "event/event.h"
+#include "types/arraypool.h"
 #include "types/strbuf.h"
 #include "config.h"
 

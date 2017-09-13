@@ -10,7 +10,10 @@ MacroSet::MacroSet()
 
 void MacroSet::reset()
 {
-    mMacroPool = MacroDataPool();
-    mMacroData = MacroData();
-}
+    mMacroPool.clear();
 
+    for (std::size_t i = 0; i < mMacroData.size(); ++i)
+    {
+        mMacroData[i] = Macro(&mMacroPool.pool, i);
+    }
+}

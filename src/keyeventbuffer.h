@@ -33,7 +33,7 @@ bool EventBuffer::empty() const
 inline
 Event EventBuffer::pop()
 {
-    return mBuffer.pop();
+    return mBuffer.popFront();
 }
 
 
