@@ -9,7 +9,7 @@
 
 class MacroDataPool
 {
-private:
+public:
     typedef ArrayPool<Event> Pool;
 
 public:
@@ -29,32 +29,34 @@ public:
 private:
     std::array<Event, Config::kMacroPoolSize>      poolData;
     std::array<Range<Event*>, Config::kMacroCount> indexData;
-    Pool mArrayPool;
+
+public:
+    Pool pool;
 };
 
 
 inline
 MacroDataPool::MacroDataPool()
-    : mArrayPool(indexData.begin(), indexData.end(),
-                 poolData.begin(),  poolData.end())
+    : pool(indexData.begin(), indexData.end(),
+           poolData.begin(),  poolData.end())
 { }
 
 inline
 std::size_t MacroDataPool::size() const
 {
-    return mArrayPool.size();
+    return pool.size();
 }
 
 inline
 bool MacroDataPool::insert(int index, Pool::const_iterator begin, Pool::const_iterator end)
 {
-    return mArrayPool.insert(index, begin, end);
+    return pool.insert(index, begin, end);
 }
 
 inline
 MacroDataPool::Content MacroDataPool::operator[](int index) const
 {
-    return mArrayPool[index];
+    return pool[index];
 }
 
 #endif

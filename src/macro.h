@@ -18,14 +18,14 @@ public:
 public:
     class Content
     {
+    public:
+        typedef ArrayPool<Event>::const_iterator const_iterator;
+
     private:
         Content() = default;
-        Content(MacroDataPool* dataPool,
-                std::size_t    index);
+        Content(ArrayPool<Event>* eventPool,
+                std::size_t       index);
         
-    public:
-        typedef MacroDataPool::const_iterator const_iterator;
-
     public:
         const_iterator begin() const;
         const_iterator end() const;
@@ -34,8 +34,8 @@ public:
                     const_iterator end);
         
     private:
-        MacroDataPool* mDataPool;
-        std::size_t    mIndex;
+        ArrayPool<Event>* mEventPool;
+        std::size_t       mIndex;
 
     private:
         friend class Macro;
@@ -43,8 +43,8 @@ public:
     
 public:
     Macro() = default;
-    Macro(MacroDataPool* dataPool,
-          std::size_t    index);
+    Macro(ArrayPool<Event>* eventPool,
+          std::size_t       index);
 
 public:
     Type                              type;
@@ -55,34 +55,34 @@ public:
 
 
 inline
-Macro::Content::Content(MacroDataPool* dataPool,
-                        std::size_t    index)
-    : mDataPool(dataPool)
+Macro::Content::Content(ArrayPool<Event>* eventPool,
+                        std::size_t       index)
+    : mEventPool(eventPool)
     , mIndex(index)
 { }
         
 inline
 Macro::Content::const_iterator Macro::Content::begin() const
 {
-    return (*mDataPool)[mIndex].begin();            
+    return (*mEventPool)[mIndex].begin();            
 }
 
 inline
 Macro::Content::const_iterator Macro::Content::end() const
 {
-    return (*mDataPool)[mIndex].end();            
+    return (*mEventPool)[mIndex].end();            
 }
 
 inline
 void Macro::Content::assign(Macro::Content::const_iterator begin,
                             Macro::Content::const_iterator end)
 {
-    mDataPool->insert(mIndex, begin, end);
+    mEventPool->insert(mIndex, begin, end);
 }
 
 inline
-Macro::Macro(MacroDataPool* dataPool,
-             std::size_t    index)
+Macro::Macro(ArrayPool<Event>* dataPool,
+             std::size_t       index)
     : type(Type::kSync)
     , content(dataPool, index)
 { }
