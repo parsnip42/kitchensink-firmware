@@ -32,7 +32,7 @@ constexpr Event KeyEvent::create(KeyCode key)
 inline
 constexpr KeyEvent::KeyEvent(const Event& event)
     : key(static_cast<KeyCode>(event.value()))
-    , pressed(event.subType() == 0)
+    , pressed(!event.inverted())
 { }
 
 #endif

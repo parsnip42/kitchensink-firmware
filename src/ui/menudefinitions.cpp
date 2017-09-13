@@ -92,7 +92,7 @@ MenuWidget::Item createMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    item.event    = MacroEvent::create(index);
+    item.event    = MacroEvent::create(MacroEvent::Type::kDefault, index);
         
     return item;
 }
@@ -103,7 +103,7 @@ MenuWidget::Item createSMacroMenuItem(const Macro& macro, std::size_t index)
         
     item.title    = macro.name;
     item.shortcut = macro.shortcut;
-    // item.event    = KeyId::SMacro(index);
+    item.event    = MacroEvent::create(MacroEvent::Type::kSecure, index);
         
     return item;
 }

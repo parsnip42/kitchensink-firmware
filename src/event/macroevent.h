@@ -9,12 +9,20 @@ public:
     static constexpr Event::Type kType = Event::Type::kMacro;
 
 public:
-    static constexpr Event create(uint8_t macroId);
+    enum class Type : uint8_t
+    {
+        kDefault = 0,
+        kSecure  = 1
+    };
+    
+public:
+    static constexpr Event create(Type type, uint8_t macroId);
     
 private:
     explicit constexpr MacroEvent(const Event& event);
     
 public:
+    Type    type;
     uint8_t macroId;
     bool    pressed;
 
@@ -24,15 +32,16 @@ private:
 
 
 inline
-constexpr Event MacroEvent::create(uint8_t macroId)
+constexpr Event MacroEvent::create(Type type, uint8_t macroId)
 {
-    return Event(kType, macroId);
+    return Event(kType, static_cast<uint8_t>(type), macroId);
 }
 
 inline
 constexpr MacroEvent::MacroEvent(const Event& event)
-    : macroId(event.value())
-    , pressed(!event.subType())
+    : type(static_cast<Type>(event.subType()))
+    , macroId(event.value())
+    , pressed(!event.inverted())
 { }
 
 #endif

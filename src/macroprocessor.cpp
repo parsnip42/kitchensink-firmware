@@ -6,9 +6,11 @@
 #include "macro.h"
 
 MacroProcessor::MacroProcessor(const MacroSet& macroSet,
+                               const MacroSet& secureMacroSet,
                                Timer&          timer,
                                EventStage&     next)
     : mMacroSet(macroSet)
+    , mSecureMacroSet(secureMacroSet)
     , mCurrent(nullptr)
     , mPlaybackTimer(timer.createHandle())
     , mNext(next)
@@ -23,33 +25,12 @@ bool MacroProcessor::processEvent(const Event& event)
     else if (event.is<MacroEvent>())
     {
         auto macroEvent(event.get<MacroEvent>());
-        auto macroId(macroEvent.macroId);
 
-        if (macroId < mMacroSet.size())
-        {
-            const auto& macro(mMacroSet[macroId]);
-            const auto& content(macro.content);
-
-            if (!macroEvent.pressed && macro.type == Macro::Type::kInvert)
-            {
-                mCurrent = &macro;
-                mBegin   = content.end() - 1;
-                mEnd     = content.begin() - 1;
-                    
-                playback();
-            }
-            else
-            {
-                if (macroEvent.pressed)
-                {
-                    mCurrent = &macro;
-                    mBegin   = content.begin();
-                    mEnd     = content.end();
-                    
-                    playback();
-                }
-            }
-        }
+        processMacro(((macroEvent.type != MacroEvent::Type::kSecure) ?
+                      mMacroSet : mSecureMacroSet),
+                     macroEvent.macroId,
+                     macroEvent.pressed);
+                     
     }
     else
     {
@@ -57,6 +38,37 @@ bool MacroProcessor::processEvent(const Event& event)
     }
 
     return true;
+}
+
+void MacroProcessor::processMacro(const MacroSet& macroSet,
+                                  uint8_t         macroId,
+                                  bool            pressed)
+{
+    if (macroId < macroSet.size())
+    {
+        const auto& macro(macroSet[macroId]);
+        const auto& content(macro.content);
+
+        if (!pressed && macro.type == Macro::Type::kInvert)
+        {
+            mCurrent = &macro;
+            mBegin   = content.end() - 1;
+            mEnd     = content.begin() - 1;
+                    
+            playback();
+        }
+        else
+        {
+            if (pressed)
+            {
+                mCurrent = &macro;
+                mBegin   = content.begin();
+                mEnd     = content.end();
+                    
+                playback();
+            }
+        }
+    }
 }
 
 void MacroProcessor::playback()

@@ -32,7 +32,7 @@ constexpr Event MultiEvent::create(uint8_t multiId)
 inline
 constexpr MultiEvent::MultiEvent(const Event& event)
     : multiId(event.value())
-    , pressed(!event.subType())
+    , pressed(!event.inverted())
 { }
 
 #endif

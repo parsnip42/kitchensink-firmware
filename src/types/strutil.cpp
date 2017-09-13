@@ -28,6 +28,11 @@ int smPow(int n, int p)
 bool parseUInt(const StrRef& input,
                int&          output)
 {
+    if (input.empty())
+    {
+        return false;
+    }
+    
     Range<StrRef::const_iterator> range(input.begin(), input.end());
     int p(0);
     

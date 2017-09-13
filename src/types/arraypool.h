@@ -7,80 +7,78 @@
 #include <array>
 #include <cstdint>
 #include <iterator>
-#include <initializer_list>
 
-template <typename Pool, std::size_t IndexSize>
+template <typename Element>
 class ArrayPool
 {
 public:
-    typedef typename Pool::const_iterator         const_iterator;
-    typedef typename Pool::const_reverse_iterator const_reverse_iterator;
-    typedef Range<const_iterator>                 Content;
-
+    typedef const Element*        const_iterator;
+    typedef Range<const_iterator> Content;
+    typedef Range<Element*>       IndexElement;
+    
 private:
-    typedef std::array<Range<typename Pool::iterator>, IndexSize> Index;
+    typedef Range<Element*>      PoolData;
+    typedef Range<IndexElement*> IndexData;
     
 public:
-    ArrayPool();
+    ArrayPool(IndexElement* indexBegin,
+              IndexElement* indexEnd,
+              Element*      dataBegin,
+              Element*      dataEnd);
 
 public:
     constexpr std::size_t size() const;
 
 public:
-    bool insert(int index, const std::initializer_list<typename Pool::value_type>& list);
-
-    template <typename Iterator>
-    bool insert(int index, Iterator begin, Iterator end);
+    bool insert(int index, const_iterator begin, const_iterator end);
 
     Content operator[](int index) const;
     
 private:
-    Pool        mPool;
-    Index       mIndex;
+    IndexData   mIndexData;
+    PoolData    mPoolData;
     std::size_t mPoolSize;
+    std::size_t mPoolCapacity;
 };
 
 
-template <typename Pool, std::size_t IndexSize>
+template <typename Element>
 inline
-ArrayPool<Pool, IndexSize>::ArrayPool()
-    : mIndex()
-    , mPoolSize(10)
+ArrayPool<Element>::ArrayPool(IndexElement* indexBegin,
+                              IndexElement* indexEnd,
+                              Element*      dataBegin,
+                              Element*      dataEnd)
+    : mIndexData(indexBegin, indexEnd)
+    , mPoolData(dataBegin, dataEnd)
+    , mPoolSize(0)
+    , mPoolCapacity(std::distance(dataBegin, dataEnd))
 {
-    for (auto& e : mIndex)
+    for (auto& e : mIndexData)
     {
-        e.begin() = mPool.begin();
-        e.end()   = mPool.begin();
+        e.begin() = mPoolData.begin();
+        e.end()   = mPoolData.begin();
     }
 }
 
-template <typename Pool, std::size_t IndexSize>
+template <typename Element>
 inline
-constexpr std::size_t ArrayPool<Pool, IndexSize>::size() const
+constexpr std::size_t ArrayPool<Element>::size() const
 {
-    return mIndex.size();
+    return std::distance(mIndexData.begin(), mIndexData.end());
 }
 
-template <typename Pool, std::size_t IndexSize>
+template <typename Element>
 inline
-bool ArrayPool<Pool, IndexSize>::insert(int index, const std::initializer_list<typename Pool::value_type>& list)
+bool ArrayPool<Element>::insert(int index, const_iterator begin, const_iterator end)
 {
-    return insert(index, list.begin(), list.end());
-}
-
-template <typename Pool, std::size_t IndexSize>
-template <typename Iterator>
-inline
-bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
-{
-    auto& entry(mIndex[index]);
+    auto& entry(*(mIndexData.begin() + index));
 
     auto entrySize(std::distance(entry.begin(), entry.end()));
     auto dataSize(std::distance(begin, end));
 
     // Note that if the size of an entry is bigger than the total used size of
     // the pool, then we're already in a complete mess.
-    if (((mPoolSize - entrySize) + dataSize) >= mPool.size())
+    if (((mPoolSize - entrySize) + dataSize) >= mPoolCapacity)
     {
         return false;
     }
@@ -91,7 +89,7 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
 
     mPoolSize -= entrySize;
 
-    for (auto& e : mIndex)
+    for (auto& e : mIndexData)
     {
         if (e.begin() >= entry.end())
         {
@@ -102,24 +100,24 @@ bool ArrayPool<Pool, IndexSize>::insert(int index, Iterator begin, Iterator end)
         
     std::copy(begin,
               end,
-              mPool.begin() + mPoolSize);
+              mPoolData.begin() + mPoolSize);
 
-    entry.begin() = mPool.begin() + mPoolSize;
+    entry.begin() = mPoolData.begin() + mPoolSize;
         
     mPoolSize += dataSize;
 
-    entry.end() = mPool.begin() + mPoolSize;
+    entry.end() = mPoolData.begin() + mPoolSize;
 
     return true;
 }
 
-template <typename Pool, std::size_t IndexSize>
+template <typename Element>
 inline
-typename ArrayPool<Pool, IndexSize>::Content ArrayPool<Pool, IndexSize>::operator[](int index) const
+typename ArrayPool<Element>::Content ArrayPool<Element>::operator[](int index) const
 {
-    const auto& entry(mIndex[index]);
-    
-    return Range<const_iterator>(entry.begin(), entry.end());
+    const auto& entry(*(mIndexData.begin() + index));
+
+    return Content(entry.begin(), entry.end());
 }
 
 #endif

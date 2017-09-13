@@ -32,8 +32,6 @@ public:
         
         void assign(const_iterator begin,
                     const_iterator end);
-
-        Content& operator=(const std::initializer_list<Event>& data);
         
     private:
         MacroDataPool* mDataPool;
@@ -77,17 +75,9 @@ Macro::Content::const_iterator Macro::Content::end() const
 
 inline
 void Macro::Content::assign(Macro::Content::const_iterator begin,
-            Macro::Content::const_iterator end)
+                            Macro::Content::const_iterator end)
 {
     mDataPool->insert(mIndex, begin, end);
-}
-
-inline
-Macro::Content& Macro::Content::operator=(const std::initializer_list<Event>& data)
-{
-    assign(data.begin(), data.end());
-
-    return *this;
 }
 
 inline

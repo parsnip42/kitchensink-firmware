@@ -1,21 +1,38 @@
 #ifndef INCLUDED_EVENT_H
 #define INCLUDED_EVENT_H
 
-#include "data/keycode.h"
 #include <cstdint>
+
+// Invertible;
+// TTTT SSSI VVVV VVVV
+//
+// T = Type
+// S = SubType
+// I = Inversion bit
+// V = Value
+//
+// Non-Invertible;
+// TTTT SSSS VVVV VVVV
+//
+// T = Type
+// S = SubType
+// V = Value
 
 class Event
 {
 public:
     enum class Type : uint8_t
     {
+
+        // Invertible
         kKey        = 0,
         kLayer      = 1,
         kMulti      = 2,
         kSmart      = 3,
         kMacro      = 4,
         kSMacro     = 5,
-
+        
+        // Non-invertible
         kTick       = 7,
         kAction     = 8,
         kDelay      = 9,
@@ -32,8 +49,6 @@ public:
 
 public:
     constexpr Event();
-
-    constexpr Event(KeyCode value);
 
     constexpr Event(Type    type,
                     uint8_t value);
@@ -87,12 +102,7 @@ constexpr bool operator!=(const Event& lhs, const Event& rhs)
 
 inline
 constexpr Event::Event()
-    : Event(KeyCode::None)
-{ }
-
-inline
-constexpr Event::Event(KeyCode value)
-    : Event(Type::kKey, static_cast<uint8_t>(value))
+    : mData(0)
 { }
 
 inline
@@ -106,7 +116,7 @@ constexpr Event::Event(Type    type,
                        uint8_t subType,
                        uint8_t value)
     : mData(static_cast<uint16_t>(type) << kTypeOffset |
-            ((static_cast<uint16_t>(subType) & kSubTypeMask) << kSubTypeOffset) |
+            (((static_cast<uint16_t>(subType) << invertible()) & kSubTypeMask) << kSubTypeOffset) |
             (value & kValueMask))
 { }
 
@@ -119,7 +129,7 @@ constexpr Event::Type Event::type() const
 inline
 constexpr uint8_t Event::subType() const
 {
-    return (mData >> 8) & kSubTypeMask;
+    return ((mData >> 8) & kSubTypeMask) >> !invertible();
 }
 
 inline
@@ -151,7 +161,7 @@ constexpr bool Event::invertible() const
 inline
 constexpr bool Event::inverted() const
 {
-    return invertible() && subType() != 0;
+    return invertible() && (subType() & 1);
 }
 
 inline
@@ -161,7 +171,7 @@ constexpr Event Event::invert() const
     {
         Event e(*this);
         
-        e.mData ^= (kSubTypeMask << kSubTypeOffset);
+        e.mData ^= (1 << kSubTypeOffset);
 
         return e;
     }

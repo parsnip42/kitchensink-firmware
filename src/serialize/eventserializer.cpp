@@ -59,6 +59,19 @@ void serialize(const LayerEvent& event, const StrOutStream& os)
 void serialize(const MacroEvent& event, const StrOutStream& os)
 {
     os.appendChar('M');
+
+    switch (event.type)
+    {
+    case MacroEvent::Type::kSecure:
+        os.appendChar('S');
+        break;
+        
+    case MacroEvent::Type::kDefault:
+    default:
+        os.appendChar('D');
+        break;
+    }    
+
     os.appendInt(event.macroId);
 }
 
@@ -215,11 +228,21 @@ void deserialize(const StrRef& eventStr, Event& event)
 
     case 'M':
     {
+        auto type(MacroEvent::Type::kDefault);
         int index(0);
 
-        if (StrUtil::parseUInt(eventStr.substr(1), index))
+        switch (eventStr[1])
         {
-            event = MacroEvent::create(index);
+        case 'D':
+            type = MacroEvent::Type::kDefault;
+            
+        case 'S':
+            type = MacroEvent::Type::kSecure;
+        }
+        
+        if (StrUtil::parseUInt(eventStr.substr(2), index))
+        {
+            event = MacroEvent::create(type, index);
         }
         
         break;
@@ -320,7 +343,18 @@ void serializeReadable(const LedMaskEvent& event, const StrOutStream& os)
 
 void serializeReadable(const MacroEvent& event, const StrOutStream& os)
 {
-    os.appendStr("Macro ");
+    switch (event.type)
+    {
+    case MacroEvent::Type::kSecure:
+        os.appendStr("Secure Macro ");
+        break;
+        
+    case MacroEvent::Type::kDefault:
+    default:
+        os.appendStr("Macro ");
+        break;
+    }    
+
     os.appendInt(event.macroId);
 }
 

@@ -32,7 +32,7 @@ constexpr Event LayerEvent::create(int layerId)
 inline
 constexpr LayerEvent::LayerEvent(const Event& event)
     : layer(event.value())
-    , enable(event.subType() == 0)
+    , enable(!event.inverted())
 { }
 
 #endif

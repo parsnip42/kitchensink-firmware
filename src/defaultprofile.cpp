@@ -13,19 +13,19 @@ void init(KeyboardState& keyboardState)
     static const char* const LayoutConfig =
     "[layer 0]\n"
     "name=Default\n"
-    "row=KGrave KNonUsHash K1 K2 K3 K4 K5 KNonUsBackslash M10 M11 M21 M22 L3 K6 K7 K8 K9 K0 KMinus KEqual\n"
-    "row=KEsc M7 KQ KW KE KR KT KTab M12 M13 M23 M24 KBackspace KY KU KI KO KP KLBrace KRBrace\n"
-    "row=_ L2 KA KS KD KF KG _ M14 M15 M25 U1:3 _ KH KJ KK KL KSemicolon KEnter _\n"
-    "row=_ N0 KZ KX KC KV KB KDelete M16 M17 U0:0 U1:12 KQuote KN KM KComma KDot KSlash N0 _\n"
+    "row=KGrave KNonUsHash K1 K2 K3 K4 K5 KNonUsBackslash MD10 MD11 MD21 MD22 L3 K6 K7 K8 K9 K0 KMinus KEqual\n"
+    "row=KEsc MD7 KQ KW KE KR KT KTab MD12 MD13 MD23 MD24 KBackspace KY KU KI KO KP KLBrace KRBrace\n"
+    "row=_ L2 KA KS KD KF KG _ MD14 MD15 MD25 U1:3 _ KH KJ KK KL KSemicolon KEnter _\n"
+    "row=_ N0 KZ KX KC KV KB KDelete MD16 MD17 U0:0 U1:12 KQuote KN KM KComma KDot KSlash N0 _\n"
     "row=_ KLGui KNumLock KCapsLock KScrollLock _ KLCtrl L1 KLAlt _ _ KLAlt KSpace KRCtrl KEnd KLeft KUp KDown KRight _\n"
     
     "[layer 1]\n"
     "name=Navigation\n"
     "row=_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _\n"
     "row=_ _ _ _ _ _ _ _ _ _ _ _ KBackspace KPageUp KEnd KUp _ _ _ _\n"
-    "row=_ _ _ M0 M1 M2 M3 _ _ _ _ _ _ KHome KLeft KDown KRight _ _ _\n"
-    "row=_ _ _ KLBrace KRBrace M4 M5 _ _ _ _ _ _ KPageDown _ _ _ _ _ _\n"
-    "row=_ _ _ _ _ _ _ _ _ _ _ _ M6 _ _ _ _ _ _ _\n"
+    "row=_ _ _ MD0 MD1 MD2 MD3 _ _ _ _ _ _ KHome KLeft KDown KRight _ _ _\n"
+    "row=_ _ _ KLBrace KRBrace MD4 MD5 _ _ _ _ _ _ KPageDown _ _ _ _ _ _\n"
+    "row=_ _ _ _ _ _ _ _ _ _ _ _ MD6 _ _ _ _ _ _ _\n"
     
     "[layer 2]\n"
     "name=Number\n"
@@ -97,8 +97,10 @@ void init(KeyboardState& keyboardState)
     "name=_\n"
     "shortcut=\n"
     "type=2\n"
-    "content=KLShift KMinus\n";
+    "content=KLShift KMinus\n"
 
+    "[macro 8]\n"; // FIXME!
+    
     {
         StrInStream is(MacroConfig);
         Serializer<MacroSet> s;

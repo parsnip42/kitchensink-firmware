@@ -54,12 +54,9 @@ extern "C" void loop()
     ActionProcessor actionProcessor(toplevel);
 
     LayerProcessor layerProcessor(actionProcessor);
-
-    // MacroProcessor secureMacroProcessor(keyboardState.secureMacroSet,
-    //                                     timer,
-    //                                     layerProcessor);
-
+    
     MacroProcessor macroProcessor(keyboardState.macroSet,
+                                  keyboardState.secureMacroSet,
                                   timer,
                                   layerProcessor);
 

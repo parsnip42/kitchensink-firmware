@@ -32,7 +32,7 @@ constexpr Event SmartEvent::create(uint8_t smartId)
 inline
 constexpr SmartEvent::SmartEvent(const Event& event)
     : smartId(event.value())
-    , pressed(!event.subType())
+    , pressed(!event.inverted())
 { }
 
 #endif

@@ -82,7 +82,7 @@ constexpr Range<std::reverse_iterator<T>> Range<T>::reverse() const
         std::reverse_iterator<T>(mBegin));
 }
 
-#endif /* INCLUDED_RANGE_H */
+#endif
 
 
 

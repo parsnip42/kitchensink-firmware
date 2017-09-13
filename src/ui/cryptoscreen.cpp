@@ -21,7 +21,7 @@ CryptoScreen::CryptoScreen(Timer&       timer,
                 }})
     , mHStackWidget(mItems, true)
 {
-    mUpdateTimer.scheduleRepeating(500, 500);
+    mUpdateTimer.scheduleRepeating(0, 3000);
 }
 
 bool CryptoScreen::processEvent(const Event& event)

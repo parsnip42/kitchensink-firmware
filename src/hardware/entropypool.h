@@ -26,8 +26,8 @@ public:
     const_iterator end() const;
     
 private:
-    Data mData;
-    int  mCount;
+    Data        mData;
+    std::size_t mCount;
 
 private:
     EntropyPool(const EntropyPool&) = delete;
