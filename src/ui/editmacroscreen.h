@@ -12,15 +12,15 @@
 class ScreenStack;
 class Timer;
 class Event;
-class MacroSet;
+class Macro;
 class Widget;
 
 class EditMacroScreen : public Screen
 {
 public:
     EditMacroScreen(Timer&      timer,
-                    MacroSet&   macroSet,
-                    int         macroid,
+                    Macro&      macro,
+                    Event       recordEvent,
                     EventStage& next);
     
 public:
@@ -32,14 +32,14 @@ private:
     void onRecord();
     
 private:
-    MacroSet&                       mMacroSet;
-    int                             mMacroId;
+    Macro&                          mMacro;
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
     ButtonWidget                    mRecordButton;
     HStackWidget::Items<4>          mItems;
     HStackWidget                    mHStackWidget;
+    Event                           mRecordEvent;
     EventStage&                     mNext;
 };
 

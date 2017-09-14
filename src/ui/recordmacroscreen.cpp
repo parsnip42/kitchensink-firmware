@@ -11,12 +11,10 @@
 #include <cstdint>
 
 RecordMacroScreen::RecordMacroScreen(Timer&      timer,
-                                     MacroSet&   macroSet,
-                                     int         macroId,
+                                     Macro&      macro,
                                      EventStage& next)
-    : mMacroSet(macroSet)
-    , mMacroId(macroId)
-    , mRecorder(mMacroSet[macroId].type == Macro::Type::kRealtime)
+    : mMacro(macro)
+    , mRecorder(macro.type == Macro::Type::kRealtime)
     , mLabelWidget("Recording",
                    Justify::kCenter)
     , mFlashTimer(timer.createHandle())
@@ -52,9 +50,7 @@ bool RecordMacroScreen::processEvent(const Event& event)
         
         if (mRecorder.complete())
         {
-            auto& macro(mMacroSet[mMacroId]);
-            
-            macro.content.assign(mRecorder.begin(),
+            mMacro.content.assign(mRecorder.begin(),
                                  mRecorder.end());
             
             mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));

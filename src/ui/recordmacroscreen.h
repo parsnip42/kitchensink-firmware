@@ -8,14 +8,13 @@
 #include "timer.h"
 
 class Timer;
-class MacroSet;
+class Macro;
 
 class RecordMacroScreen : public Screen
 {    
 public:
     RecordMacroScreen(Timer&      timer,
-                      MacroSet&   macroSet,
-                      int         macroId,
+                      Macro&      macro,
                       EventStage& next);
 
 public:
@@ -24,7 +23,7 @@ public:
     Widget& rootWidget();
     
 private:
-    MacroSet&     mMacroSet;
+    Macro&        mMacro;
     int           mMacroId;
     EventRecorder mRecorder;
     LabelWidget   mLabelWidget;

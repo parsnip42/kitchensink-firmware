@@ -25,12 +25,11 @@ constexpr int kLabelWidth = Font::width("Shortcut ");
 
 }
 
-EditMacroScreen::EditMacroScreen(Timer&       timer,
-                                 MacroSet&    macroSet,
-                                 int          macroId,
-                                 EventStage&  next)
-    : mMacroSet(macroSet)
-    , mMacroId(macroId)
+EditMacroScreen::EditMacroScreen(Timer&      timer,
+                                 Macro&      macro,
+                                 Event       recordEvent,
+                                 EventStage& next)
+    : mMacro(macro)
     , mTitleEntry("Name",
                   kLabelWidth,
                   TextEntryWidget(timer))
@@ -46,13 +45,12 @@ EditMacroScreen::EditMacroScreen(Timer&       timer,
                 mTypeCombo,
                 mRecordButton }})
     , mHStackWidget(mItems, true)
+    , mRecordEvent(recordEvent)
     , mNext(next)
 {
-    auto& macro(mMacroSet[mMacroId]);
-
-    mTitleEntry.widget.text        = macro.name;
-    mShortcutEntry.widget.text     = macro.shortcut;
-    mTypeCombo.widget.selectedItem = static_cast<int>(macro.type);
+    mTitleEntry.widget.text        = mMacro.name;
+    mShortcutEntry.widget.text     = mMacro.shortcut;
+    mTypeCombo.widget.selectedItem = static_cast<int>(mMacro.type);
     
     mRecordButton.activated = Action::memFn<EditMacroScreen,
                                             &EditMacroScreen::onRecord>(this);
@@ -70,15 +68,13 @@ Widget& EditMacroScreen::rootWidget()
 
 void EditMacroScreen::onRecord()
 {
-    auto& macro(mMacroSet[mMacroId]);
-                
     auto macroType(static_cast<Macro::Type>(mTypeCombo.widget.selectedItem));
                 
-    macro.type     = macroType;
-    macro.name     = mTitleEntry.widget.text;
-    macro.shortcut = mShortcutEntry.widget.text;
+    mMacro.type     = macroType;
+    mMacro.name     = mTitleEntry.widget.text;
+    mMacro.shortcut = mShortcutEntry.widget.text;
                 
-    mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kRecordMacro, mMacroId));
+    mNext.processEvent(mRecordEvent);
 }
 
 

@@ -228,8 +228,8 @@ void ScreenManager::launchEditMacro(MacroSet&          macroSet,
                                     const ScreenEvent& sourceEvent)
 {
     EditMacroScreen screen(mEventManager.timer,
-                           macroSet,
-                           macroId,
+                           macroSet[macroId],
+                           ScreenEvent::create(ScreenEvent::Type::kRecordMacro, macroId),
                            mEventManager);
 
     displayScreen("Edit Macro",
@@ -244,8 +244,7 @@ void ScreenManager::launchRecordMacro(MacroSet&          macroSet,
     // FIXME: Cleanup special case.
     
     RecordMacroScreen screen(mEventManager.timer,
-                             macroSet,
-                             macroId,
+                             macroSet[macroId],
                              mEventManager.defaultOutput);
     
     OutputSink output(*this, screen);
