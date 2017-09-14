@@ -5,10 +5,10 @@
 #include "event/delayevent.h"
 #include "macro.h"
 
-MacroProcessor::MacroProcessor(const MacroSet& macroSet,
-                               const MacroSet& secureMacroSet,
-                               Timer&          timer,
-                               EventStage&     next)
+MacroProcessor::MacroProcessor(const MacroSet&       macroSet,
+                               const SecureMacroSet& secureMacroSet,
+                               Timer&                timer,
+                               EventStage&           next)
     : mMacroSet(macroSet)
     , mSecureMacroSet(secureMacroSet)
     , mCurrent(nullptr)
@@ -25,12 +25,26 @@ bool MacroProcessor::processEvent(const Event& event)
     else if (event.is<MacroEvent>())
     {
         auto macroEvent(event.get<MacroEvent>());
+        auto macroId(macroEvent.macroId);
+        
+        switch (macroEvent.type)
+        {
+        case MacroEvent::Type::kDefault:
+            if (macroId < mMacroSet.size())
+            {
+                processMacro(mMacroSet[macroId],
+                             macroEvent.pressed);
+            }
+            break;
 
-        processMacro(((macroEvent.type != MacroEvent::Type::kSecure) ?
-                      mMacroSet : mSecureMacroSet),
-                     macroEvent.macroId,
-                     macroEvent.pressed);
-                     
+        case MacroEvent::Type::kSecure:
+            if (macroId < mSecureMacroSet.size())
+            {
+                processMacro(mSecureMacroSet[macroId],
+                             macroEvent.pressed);
+            }
+            break;
+        }
     }
     else
     {
@@ -40,33 +54,28 @@ bool MacroProcessor::processEvent(const Event& event)
     return true;
 }
 
-void MacroProcessor::processMacro(const MacroSet& macroSet,
-                                  uint8_t         macroId,
-                                  bool            pressed)
+void MacroProcessor::processMacro(const Macro& macro,
+                                  bool         pressed)
 {
-    if (macroId < macroSet.size())
-    {
-        const auto& macro(macroSet[macroId]);
-        const auto& content(macro.content);
+    const auto& content(macro.content);
 
-        if (!pressed && macro.type == Macro::Type::kInvert)
+    if (!pressed && macro.type == Macro::Type::kInvert)
+    {
+        mCurrent = &macro;
+        mBegin   = content.end() - 1;
+        mEnd     = content.begin() - 1;
+                    
+        playback();
+    }
+    else
+    {
+        if (pressed)
         {
             mCurrent = &macro;
-            mBegin   = content.end() - 1;
-            mEnd     = content.begin() - 1;
+            mBegin   = content.begin();
+            mEnd     = content.end();
                     
             playback();
-        }
-        else
-        {
-            if (pressed)
-            {
-                mCurrent = &macro;
-                mBegin   = content.begin();
-                mEnd     = content.end();
-                    
-                playback();
-            }
         }
     }
 }

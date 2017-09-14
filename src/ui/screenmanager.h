@@ -40,12 +40,11 @@ private:
     void launchScreen(int                screenId,
                       const ScreenEvent& sourceEvent);
 
-    void launchEditMacro(MacroSet&          macroSet,
-                         int                macroId,
+    void launchEditMacro(Macro&             macro,
+                         Event              recordEvent,
                          const ScreenEvent& sourceEvent);
 
-    void launchRecordMacro(MacroSet&          macroSet,
-                           int                macroId,
+    void launchRecordMacro(Macro&             macro,
                            const ScreenEvent& sourceEvent);
 
     void launchEditLayer(int                layerId,

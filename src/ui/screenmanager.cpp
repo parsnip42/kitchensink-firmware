@@ -117,21 +117,30 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
         break;
 
     case ScreenEvent::Type::kEditMacro:
-        launchEditMacro(mKeyboardState.macroSet,
-                        screenEvent.index,
+        launchEditMacro(mKeyboardState.macroSet[screenEvent.index],
+                        ScreenEvent::create(ScreenEvent::Type::kRecordMacro,
+                                            screenEvent.index),
                         screenEvent);
         break;
         
-    case ScreenEvent::Type::kEditSMacro:
+    case ScreenEvent::Type::kRecordMacro:
+        launchRecordMacro(mKeyboardState.macroSet[screenEvent.index],
+                          screenEvent);
+        
+        KeyboardStateUtil::store(mKeyboardState.macroSet);
         break;
 
-    case ScreenEvent::Type::kRecordMacro:
-        launchRecordMacro(mKeyboardState.macroSet,
-                          screenEvent.index,
-                          screenEvent);
+    case ScreenEvent::Type::kEditSMacro:
+        launchEditMacro(mKeyboardState.secureMacroSet[screenEvent.index],
+                        ScreenEvent::create(ScreenEvent::Type::kRecordSMacro,
+                                            screenEvent.index),
+                        screenEvent);
         break;
-        
+
     case ScreenEvent::Type::kRecordSMacro:
+        launchRecordMacro(mKeyboardState.secureMacroSet[screenEvent.index],
+                          screenEvent);
+
         break;
         
     case ScreenEvent::Type::kEditLayer:
@@ -223,13 +232,13 @@ void ScreenManager::launchScreen(int                screenId,
     }
 }
 
-void ScreenManager::launchEditMacro(MacroSet&          macroSet,
-                                    int                macroId,
+void ScreenManager::launchEditMacro(Macro&             macro,
+                                    Event              recordEvent,
                                     const ScreenEvent& sourceEvent)
 {
     EditMacroScreen screen(mEventManager.timer,
-                           macroSet[macroId],
-                           ScreenEvent::create(ScreenEvent::Type::kRecordMacro, macroId),
+                           macro,
+                           recordEvent,
                            mEventManager);
 
     displayScreen("Edit Macro",
@@ -237,14 +246,13 @@ void ScreenManager::launchEditMacro(MacroSet&          macroSet,
                   sourceEvent);
 }
 
-void ScreenManager::launchRecordMacro(MacroSet&          macroSet,
-                                      int                macroId,
+void ScreenManager::launchRecordMacro(Macro&             macro,
                                       const ScreenEvent& sourceEvent)
 {
     // FIXME: Cleanup special case.
     
     RecordMacroScreen screen(mEventManager.timer,
-                             macroSet[macroId],
+                             macro,
                              mEventManager.defaultOutput);
     
     OutputSink output(*this, screen);
@@ -271,8 +279,6 @@ void ScreenManager::launchRecordMacro(MacroSet&          macroSet,
             break;
         }
     }
-
-    KeyboardStateUtil::store(mKeyboardState.macroSet);
 }
 
 void ScreenManager::launchEditLayer(int                layerId,

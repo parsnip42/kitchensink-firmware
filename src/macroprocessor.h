@@ -11,23 +11,22 @@ class MacroSet;
 class MacroProcessor : public EventStage
 {
 public:
-    MacroProcessor(const MacroSet& macroSet,
-                   const MacroSet& secureMacroSet,
-                   Timer&          timer,
-                   EventStage&     next);
+    MacroProcessor(const MacroSet&       macroSet,
+                   const SecureMacroSet& secureMacroSet,
+                   Timer&                timer,
+                   EventStage&           next);
 
 public:
     virtual bool processEvent(const Event& event) override;
                                                                 
 private:
-    void processMacro(const MacroSet& macroSet,
-                      uint8_t         macroId,
-                      bool            pressed);
+    void processMacro(const Macro& macro,
+                      bool         pressed);
     void playback();
     
 private:
     const MacroSet&                mMacroSet;
-    const MacroSet&                mSecureMacroSet;
+    const SecureMacroSet&          mSecureMacroSet;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;

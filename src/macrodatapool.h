@@ -3,10 +3,11 @@
 
 #include "event/event.h"
 #include "types/arraypool.h"
-#include "config.h"
 
 #include <array>
+#include <cstdint>
 
+template <std::size_t Size, std::size_t PoolSize>
 class MacroDataPool
 {
 public:
@@ -19,22 +20,24 @@ public:
     void clear();
     
 private:
-    std::array<Event, Config::kMacroPoolSize>      poolData;
-    std::array<Range<Event*>, Config::kMacroCount> indexData;
+    std::array<Range<Event*>, Size> indexData;
+    std::array<Event, PoolSize>     poolData;
 
 public:
     Pool pool;
 };
 
 
+template <std::size_t Size, std::size_t PoolSize>
 inline
-MacroDataPool::MacroDataPool()
+MacroDataPool<Size, PoolSize>::MacroDataPool()
     : pool(indexData.begin(), indexData.end(),
            poolData.begin(),  poolData.end())
 { }
 
+template <std::size_t Size, std::size_t PoolSize>
 inline
-void MacroDataPool::clear()
+void MacroDataPool<Size, PoolSize>::clear()
 {
     pool.clear();
 }

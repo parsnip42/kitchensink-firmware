@@ -15,7 +15,7 @@ void init(KeyboardState& keyboardState)
     "name=Default\n"
     "row=KGrave KNonUsHash K1 K2 K3 K4 K5 KNonUsBackslash MD10 MD11 MD21 MD22 L3 K6 K7 K8 K9 K0 KMinus KEqual\n"
     "row=KEsc MD7 KQ KW KE KR KT KTab MD12 MD13 MD23 MD24 KBackspace KY KU KI KO KP KLBrace KRBrace\n"
-    "row=_ L2 KA KS KD KF KG _ MD14 MD15 MD25 U1:3 _ KH KJ KK KL KSemicolon KEnter _\n"
+    "row=_ L2 KA KS KD KF KG _ MD14 MD15 U1:3 U1:13 _ KH KJ KK KL KSemicolon KEnter _\n"
     "row=_ N0 KZ KX KC KV KB KDelete MD16 MD17 U0:0 U1:12 KQuote KN KM KComma KDot KSlash N0 _\n"
     "row=_ KLGui KNumLock KCapsLock KScrollLock _ KLCtrl L1 KLAlt _ _ KLAlt KSpace KRCtrl KEnd KLeft KUp KDown KRight _\n"
     
@@ -107,6 +107,22 @@ void init(KeyboardState& keyboardState)
     
         s.deserialize(is, keyboardState.macroSet);
     }
+    
+    // static const char* const SecureMacroConfig =
+    // "[macro 0]\n"
+    // "name=Root\n"
+    // "shortcut=su\n"
+    // "type=0\n"
+    // "content=KS !KS KU !KU KEnter !KEnter\n"
+
+    // "[macro 1]\n";
+        
+    // {
+    //     StrInStream is(SecureMacroConfig);
+    //     Serializer<MacroSet> s;
+    
+    //     s.deserialize(is, keyboardState.secureMacroSet);
+    // }
 
     static const char* const MultiConfig =
     "[multi 0]\n"

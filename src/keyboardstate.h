@@ -15,11 +15,11 @@ public:
     void reset();
     
 public:
-    LayerStack  layerStack;
-    MacroSet    macroSet;
-    MacroSet    secureMacroSet;
-    MultiKeySet multiKeySet;
-    SmartKeySet smartKeySet;
+    LayerStack     layerStack;
+    MacroSet       macroSet;
+    SecureMacroSet secureMacroSet;
+    MultiKeySet    multiKeySet;
+    SmartKeySet    smartKeySet;
     
 private:
     KeyboardState(const KeyboardState&) = delete;
