@@ -22,7 +22,7 @@ public:
     virtual Widget& rootWidget() override;
     
 private:
-    CircularBuffer<Event, 5> mEvents;
+    CircularBuffer<Event, 5> mEvents; // FIXME
     LabelWidget              mLabels[4];
     HStackWidget::Items<4>   mItems;
     HStackWidget             mHStackWidget;

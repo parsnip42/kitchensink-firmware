@@ -121,13 +121,19 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
                         screenEvent.index,
                         screenEvent);
         break;
+        
+    case ScreenEvent::Type::kEditSMacro:
+        break;
 
     case ScreenEvent::Type::kRecordMacro:
         launchRecordMacro(mKeyboardState.macroSet,
                           screenEvent.index,
                           screenEvent);
         break;
-
+        
+    case ScreenEvent::Type::kRecordSMacro:
+        break;
+        
     case ScreenEvent::Type::kEditLayer:
         launchEditLayer(screenEvent.index,
                         screenEvent);

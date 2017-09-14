@@ -233,11 +233,14 @@ void deserialize(const StrRef& eventStr, Event& event)
 
         switch (eventStr[1])
         {
-        case 'D':
-            type = MacroEvent::Type::kDefault;
-            
         case 'S':
             type = MacroEvent::Type::kSecure;
+            break;
+
+        case 'D':
+        default:
+            type = MacroEvent::Type::kDefault;
+            break;
         }
         
         if (StrUtil::parseUInt(eventStr.substr(2), index))

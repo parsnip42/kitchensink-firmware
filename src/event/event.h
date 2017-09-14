@@ -85,6 +85,9 @@ private:
     uint16_t mData;
 
 private:
+    static constexpr bool invertible(Type type);
+    
+private:
     friend constexpr bool operator==(const Event& lhs, const Event& rhs);
 };
 
@@ -118,7 +121,7 @@ constexpr Event::Event(Type    type,
                        uint8_t subType,
                        uint8_t value)
     : mData(static_cast<uint16_t>(type) << kTypeOffset |
-            (((static_cast<uint16_t>(subType)) & kSubTypeMask) << kSubTypeOffset) |
+            ((((static_cast<uint16_t>(subType) << invertible(type))) & kSubTypeMask) << kSubTypeOffset) |
             (value & kValueMask))
 { }
 
@@ -131,7 +134,7 @@ constexpr Event::Type Event::type() const
 inline
 constexpr uint8_t Event::subType() const
 {
-    return ((mData >> kSubTypeOffset) & kSubTypeMask);
+    return ((mData >> kSubTypeOffset) & kSubTypeMask) >> invertible();
 }
 
 inline
@@ -157,13 +160,13 @@ constexpr T Event::get() const
 inline
 constexpr bool Event::invertible() const
 {
-    return type() < Type::kTick;
+    return invertible(type());
 }
 
 inline
 constexpr bool Event::inverted() const
 {
-    return invertible() && (subType() & 1);
+    return invertible() && ((mData >> kSubTypeOffset) & 1);
 }
 
 inline
@@ -206,5 +209,11 @@ constexpr uint16_t Event::data() const
 {
     return mData;
 }
+
+inline
+constexpr bool Event::invertible(Type type)
+{
+    return type < Type::kTick; 
+}    
 
 #endif
