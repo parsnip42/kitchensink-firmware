@@ -1,6 +1,7 @@
 #ifndef INCLUDED_KEYBOARDSTATE_H
 #define INCLUDED_KEYBOARDSTATE_H
 
+#include "globalconfig.h"
 #include "layerstack.h"
 #include "macroset.h"
 #include "multikeyset.h"
@@ -15,6 +16,7 @@ public:
     void reset();
     
 public:
+    GlobalConfig   globalConfig;
     LayerStack     layerStack;
     MacroSet       macroSet;
     SecureMacroSet secureMacroSet;

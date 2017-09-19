@@ -21,6 +21,7 @@ public:
         kEditLayer      = 7,
         kEditMulti      = 8,
         kEditSmart      = 9,
+        kUnlockSMacro   = 10
     };
 
 public:

@@ -1,42 +1,56 @@
 #ifndef INCLUDED_TEXTENTRYWIDGET_H
 #define INCLUDED_TEXTENTRYWIDGET_H
 
-#include "timer.h"
-#include "event/eventstage.h"
-#include "types/strbuf.h"
-#include "types/strref.h"
-#include "ui/dimension.h"
-#include "ui/widget.h"
-#include "ui/virtualkeyboard.h"
-#include "ui/widgetcontainer.h"
+#include "ui/entrywidget.h"
 
-#include <cstdint>
+#include "types/strref.h"
 
 class Event;
 class Timer;
 
 class TextEntryWidget : public Widget
+                      , public WidgetContainer
 {
+public:
+    class TextContent : public EntryWidget::Content
+    {
+    public:
+        TextContent() = default;
+        virtual ~TextContent() = default;
+        
+    public:
+        virtual bool insertChar(char c, int position) override;
+        virtual bool eraseChar(int position) override;
+        virtual StrRef textContent() override;
+
+    public:
+        operator StrRef() const;
+        void operator=(const StrRef& rhs);
+
+    private:
+        StrBuf<30> mText;
+    };
+    
 public:
     explicit TextEntryWidget(Timer& timer);
 
-    TextEntryWidget(TextEntryWidget&&) = default;
+    TextEntryWidget(TextEntryWidget&& rhs);
     
 public:
     virtual bool processEvent(const Event& event) override;
-    virtual void setFocused(bool nFocused) override;
+    virtual void setFocused(bool focused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual Dimension minimumSize() const override;
 
 public:
-    StrBuf<30>  text;
-    std::size_t cursorPosition;
-    bool        focused;
-    
+    virtual void regionInvalidated(const Rectangle& region) override;
+    virtual void parented() override;
+
+public:
+    TextContent text;
+
 private:
-    Timer::Handle   mFlashTimer;
-    bool            mFlash;
-    VirtualKeyboard mVKeyboard;
+    EntryWidget mEntryWidget;
     
 private:
     TextEntryWidget(const TextEntryWidget&) = delete;

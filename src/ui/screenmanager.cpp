@@ -11,6 +11,7 @@
 #include "ui/recordmacroscreen.h"
 #include "ui/eventstreamscreen.h"
 #include "ui/statusscreen.h"
+#include "ui/globalconfigscreen.h"
 #include "ui/layerconfigscreen.h"
 #include "ui/multiconfigscreen.h"
 #include "ui/smartconfigscreen.h"
@@ -198,14 +199,16 @@ void ScreenManager::launchScreen(int                screenId,
     {
     case 0:
     {
-        EventStreamScreen screen;
+        GlobalConfigScreen screen(mEventManager.timer,
+                                  mKeyboardState.globalConfig,
+                                  mEventManager);
 
         displayScreen("Event Stream",
                       screen,
                       sourceEvent);
         break;
     }
-            
+
     case 1:
     {
         StatusScreen screen(mEventManager);
@@ -226,7 +229,17 @@ void ScreenManager::launchScreen(int                screenId,
                       sourceEvent);
         break;
     }
+    
+    case 3:
+    {
+        EventStreamScreen screen;
 
+        displayScreen("Event Stream",
+                      screen,
+                      sourceEvent);
+        break;
+    }
+            
     default:
         break;
     }
