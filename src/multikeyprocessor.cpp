@@ -2,6 +2,7 @@
 
 #include "event/event.h"
 #include "event/multievent.h"
+#include "globalconfig.h"
 
 bool MultiKeyProcessor::processEvent(const Event& event)
 {
@@ -18,7 +19,7 @@ bool MultiKeyProcessor::processEvent(const Event& event)
         {
             if (multiEvent.pressed)
             {
-                mReleaseTimer.schedule(300);
+                mReleaseTimer.schedule(mGlobalConfig.tapDelay);
                 mMultiKeySet[multiId].press();
             }
             else

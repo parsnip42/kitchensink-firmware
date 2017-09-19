@@ -9,6 +9,7 @@ public:
     GlobalConfig();
 
 public:
+    uint32_t tapDelay;
     uint32_t keyRepeatDelay;
     uint32_t keyRepeatRate;
 };

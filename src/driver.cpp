@@ -64,6 +64,7 @@ extern "C" void loop()
                                         macroProcessor);
 
     MultiKeyProcessor multiKeyProcessor(keyboardState.multiKeySet,
+                                        keyboardState.globalConfig,
                                         timer,
                                         smartKeyProcessor);
 

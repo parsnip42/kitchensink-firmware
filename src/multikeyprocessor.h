@@ -8,19 +8,22 @@
 #include <cstdint>
 
 class Event;
+class GlobalConfig;
 
 class MultiKeyProcessor : public EventStage
 {
 public:
-    MultiKeyProcessor(MultiKeySet& multiSet,
-                      Timer&       timer,
-                      EventStage&  next);
+    MultiKeyProcessor(MultiKeySet&  multiSet,
+                      GlobalConfig& globalConfig,
+                      Timer&        timer,
+                      EventStage&   next);
 
 public:
     virtual bool processEvent(const Event& event) override;
 
 private:
     MultiKeySet&  mMultiKeySet;
+    GlobalConfig& mGlobalConfig;
     Timer::Handle mReleaseTimer;
     std::size_t   mLast;
     uint8_t       mTaps;
@@ -28,10 +31,12 @@ private:
 };
 
 inline
-MultiKeyProcessor::MultiKeyProcessor(MultiKeySet& multiSet,
-                                     Timer&       timer,
-                                     EventStage&  next)
+MultiKeyProcessor::MultiKeyProcessor(MultiKeySet&  multiSet,
+                                     GlobalConfig& globalConfig,
+                                     Timer&        timer,
+                                     EventStage&   next)
     : mMultiKeySet(multiSet)
+    , mGlobalConfig(globalConfig)
     , mReleaseTimer(timer.createHandle())
     , mLast(0)
     , mTaps(0)

@@ -27,10 +27,11 @@ private:
 
 private:
     GlobalConfig&                     mGlobalConfig;
+    LabelledWidget<NumberEntryWidget> mTapDelayEntry;
     LabelledWidget<NumberEntryWidget> mRepeatDelayEntry;
     LabelledWidget<NumberEntryWidget> mRepeatRateEntry;
     ButtonWidget                      mSaveButton;
-    HStackWidget::Items<3>            mItems;
+    HStackWidget::Items<4>            mItems;
     HStackWidget                      mHStackWidget;
     EventStage&                       mNext;
 };
