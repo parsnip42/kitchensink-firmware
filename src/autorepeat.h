@@ -4,26 +4,25 @@
 #include "event/event.h"
 #include "event/eventstage.h"
 #include "timer.h"
+#include "globalconfig.h"
 
 #include <cstdint>
 
 class AutoRepeat : public EventStage
 {
 public:
-    explicit AutoRepeat(Timer&         timer,
-                        EventStage& next);
+    explicit AutoRepeat(Timer&        timer,
+                        GlobalConfig& globalConfig,
+                        EventStage&   next);
 
 public:
     virtual bool processEvent(const Event& event) override;
 
     Event activeEvent();
 
-public:
-    uint32_t repeatDelay;
-    uint32_t repeatRate;
-    
 private:
     Timer::Handle mRepeatTimer;
+    GlobalConfig& mGlobalConfig;
     Event         mEvent;
     EventStage&   mNext;
 

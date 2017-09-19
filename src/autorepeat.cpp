@@ -3,12 +3,13 @@
 #include "data/keycode.h"
 #include "data/keycodeutil.h"
 #include "event/keyevent.h"
+#include "globalconfig.h"
 
-AutoRepeat::AutoRepeat(Timer&         timer,
-                       EventStage& next)
-    : repeatDelay(660)
-    , repeatRate(40)
-    , mRepeatTimer(timer.createHandle())
+AutoRepeat::AutoRepeat(Timer&        timer,
+                       GlobalConfig& globalConfig,
+                       EventStage&   next)
+    : mRepeatTimer(timer.createHandle())
+    , mGlobalConfig(globalConfig)
     , mNext(next)
 { }
 
@@ -31,8 +32,8 @@ bool AutoRepeat::processEvent(const Event& event)
             if (!KeyCodeUtil::modifier(keyEvent.key) && keyEvent.pressed)
             {
                 mEvent = event;
-                mRepeatTimer.scheduleRepeating(repeatDelay,
-                                               repeatRate);
+                mRepeatTimer.scheduleRepeating(mGlobalConfig.keyRepeatDelay,
+                                               mGlobalConfig.keyRepeatRate);
             }
             else if (!keyEvent.pressed && event.invert() == mEvent)
             {

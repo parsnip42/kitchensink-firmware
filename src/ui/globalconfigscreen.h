@@ -2,10 +2,11 @@
 #define INCLUDED_GLOBALCONFIGSCREEN_H
 
 #include "ui/labelledwidget.h"
+#include "ui/buttonwidget.h"
 #include "ui/combowidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/screen.h"
-#include "ui/textentrywidget.h"
+#include "ui/numberentrywidget.h"
 
 class GlobalConfig;
 class Timer;
@@ -22,12 +23,16 @@ public:
     virtual Widget& rootWidget() override;
 
 private:
-    GlobalConfig&                   mGlobalConfig;
-    LabelledWidget<TextEntryWidget> mRepeatDelayEntry;
-    LabelledWidget<TextEntryWidget> mRepeatRateEntry;
-    HStackWidget::Items<2>          mItems;
-    HStackWidget                    mHStackWidget;
-    EventStage&                     mNext;
+    void onSave();
+
+private:
+    GlobalConfig&                     mGlobalConfig;
+    LabelledWidget<NumberEntryWidget> mRepeatDelayEntry;
+    LabelledWidget<NumberEntryWidget> mRepeatRateEntry;
+    ButtonWidget                      mSaveButton;
+    HStackWidget::Items<3>            mItems;
+    HStackWidget                      mHStackWidget;
+    EventStage&                       mNext;
 };
 
 #endif

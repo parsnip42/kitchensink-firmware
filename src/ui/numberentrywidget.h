@@ -1,5 +1,5 @@
-#ifndef INCLUDED_TEXTENTRYWIDGET_H
-#define INCLUDED_TEXTENTRYWIDGET_H
+#ifndef INCLUDED_NUMBERENTRYWIDGET_H
+#define INCLUDED_NUMBERENTRYWIDGET_H
 
 #include "ui/entrywidget.h"
 
@@ -7,15 +7,16 @@ class Event;
 class Timer;
 class StrRef;
 
-class TextEntryWidget : public Widget
+class NumberEntryWidget : public Widget
                       , public WidgetContainer
 {
 public:
-    class TextContent : public EntryWidget::Content
+    class NumberContent : public EntryWidget::Content
     {
     public:
-        TextContent() = default;
-        virtual ~TextContent() = default;
+        NumberContent(int min, int max);
+        
+        virtual ~NumberContent() = default;
         
     public:
         virtual bool insertChar(char c, int position) override;
@@ -23,17 +24,24 @@ public:
         virtual StrRef textContent() override;
 
     public:
-        operator StrRef() const;
-        void operator=(const StrRef& rhs);
+        operator int();
+        void operator=(int rhs);
 
     private:
+        int normalize();
+        
+    private:
+        int        mMin;
+        int        mMax;
         StrBuf<30> mText;
     };
     
 public:
-    explicit TextEntryWidget(Timer& timer);
+    explicit NumberEntryWidget(int    min,
+                               int    max,
+                               Timer& timer);
 
-    TextEntryWidget(TextEntryWidget&& rhs);
+    NumberEntryWidget(NumberEntryWidget&& rhs);
     
 public:
     virtual bool processEvent(const Event& event) override;
@@ -46,14 +54,14 @@ public:
     virtual void parented() override;
 
 public:
-    TextContent text;
+    NumberContent value;
 
 private:
     EntryWidget mEntryWidget;
     
 private:
-    TextEntryWidget(const TextEntryWidget&) = delete;
-    TextEntryWidget& operator=(const TextEntryWidget&) = delete;
+    NumberEntryWidget(const NumberEntryWidget&) = delete;
+    NumberEntryWidget& operator=(const NumberEntryWidget&) = delete;
 };
 
 #endif

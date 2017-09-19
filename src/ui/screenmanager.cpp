@@ -341,6 +341,7 @@ void ScreenManager::displayScreen(const StrRef&      title,
                                   const ScreenEvent& sourceEvent)
 {
     AutoRepeat autoRepeat(mEventManager.timer,
+                          mKeyboardState.globalConfig,
                           screen);
     
     OutputSink output(*this, autoRepeat);

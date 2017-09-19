@@ -1,6 +1,6 @@
 #include "globalconfig.h"
 
 GlobalConfig::GlobalConfig()
-    : keyRepeatDelay(600)
-    , keyRepeatRate(400)
+    : keyRepeatDelay(660)
+    , keyRepeatRate(40)
 { }
