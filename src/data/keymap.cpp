@@ -13,7 +13,7 @@ const std::array<Entry, 0xff> tableData{{
         { },
         { },
         { },
-        { 'a', 'a' },
+        { 'a', 'A' },
         { 'b', 'B' },
         { 'c', 'C' },
         { 'd', 'D' },

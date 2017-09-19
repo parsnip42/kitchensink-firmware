@@ -46,9 +46,12 @@ HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
             break;
 
         case HomeLed::Type::kSmartKey:
-            if (homeLed.index < smartKeySet.size())
+            if (homeLed.index < mSmartKeySet.size())
             {
-                entry.text = smartKeySet[homeLed.index].name;
+                const auto& smartKey(mSmartKeySet[homeLed.index]);
+                
+                entry.text  = smartKey.name;
+                entry.value = smartKey.enabled;
             }
             else
             {
@@ -74,19 +77,11 @@ bool HomeScreen::processEvent(const Event& event)
     }
     else if (event.is<LedMaskEvent>())
     {
-        auto ledMaskEvent(event.get<LedMaskEvent>());
-        
-        mHomeWidget.entries[0].value = ledMaskEvent.numLock();
-        mHomeWidget.entries[2].value = ledMaskEvent.capsLock();
-        mHomeWidget.entries[4].value = ledMaskEvent.scrollLock();
-
-        update();
+        updateKeyboardKeys(event.get<LedMaskEvent>());
     }
     else if (event.is<InvalidateEvent>())
     {
-        mHomeWidget.entries[1].value = mSmartKeySet[0].enabled;
-        mHomeWidget.entries[3].value = mSmartKeySet[2].enabled;
-        update();
+        updateSmartKeys();
     }
     else
     {
@@ -101,11 +96,86 @@ Widget& HomeScreen::rootWidget()
     return mHomeWidget;
 }
 
-void HomeScreen::update()
+void HomeScreen::updateKeyboardKeys(const LedMaskEvent& event)
+{
+    bool dirty(false);
+
+    for (std::size_t i(0);
+         i < mHomeWidget.entries.size() && i < mGlobalConfig.homeLedSet.size();
+         ++i)
+    {
+        const auto& homeLed(mGlobalConfig.homeLedSet[i]);
+        auto& entry(mHomeWidget.entries[i]);
+
+        if (entry.visible && homeLed.type == HomeLed::Type::kKeyboard)
+        {
+            bool state(entry.value);
+            
+            switch (homeLed.index)
+            {
+            case HomeLed::kNumLock:
+                state = event.numLock();
+                break;
+                
+            case HomeLed::kCapsLock:
+                state = event.capsLock();
+                break;
+
+            case HomeLed::kScrollLock:
+                state = event.scrollLock();
+                break;
+            }
+
+            if (state != entry.value)
+            {
+                entry.value = state;
+                dirty = true;
+            }
+        }
+    }
+
+    if (dirty)
+    {
+        show();
+    }
+}
+
+void HomeScreen::updateSmartKeys()
+{
+    bool dirty(false);
+
+    for (std::size_t i(0);
+         i < mHomeWidget.entries.size() && i < mGlobalConfig.homeLedSet.size();
+         ++i)
+    {
+        const auto& homeLed(mGlobalConfig.homeLedSet[i]);
+        auto& entry(mHomeWidget.entries[i]);
+
+        if (entry.visible && homeLed.type == HomeLed::Type::kSmartKey)
+        {
+            if (homeLed.index < mSmartKeySet.size())
+            {
+                const auto& smartKey(mSmartKeySet[homeLed.index]);
+
+                if (entry.value != smartKey.enabled)
+                {
+                    entry.value = smartKey.enabled;
+                    dirty = true;
+                }
+            }
+        }
+    }
+
+    if (dirty)
+    {
+        show();
+    }
+}
+
+void HomeScreen::show()
 {
     mHomeWidget.visible = true;
     mHomeWidget.invalidateWidget();
     mDisplayTimeout.schedule(mGlobalConfig.homeScreenTimeout);
 }
-
 

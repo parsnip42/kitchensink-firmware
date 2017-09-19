@@ -4,6 +4,7 @@
 #include "ui/screen.h"
 #include "ui/homewidget.h"
 #include "event/eventstage.h"
+#include "event/ledmaskevent.h"
 #include "timer.h"
 #include "smartkeyset.h"
 
@@ -22,8 +23,12 @@ public:
     virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
 
-    void update();
-    
+
+private:
+    void updateKeyboardKeys(const LedMaskEvent& event);
+    void updateSmartKeys();
+    void show();
+
 private:
     const GlobalConfig& mGlobalConfig;
     const SmartKeySet&  mSmartKeySet;
