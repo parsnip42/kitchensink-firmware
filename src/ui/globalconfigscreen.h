@@ -30,8 +30,9 @@ private:
     LabelledWidget<NumberEntryWidget> mTapDelayEntry;
     LabelledWidget<NumberEntryWidget> mRepeatDelayEntry;
     LabelledWidget<NumberEntryWidget> mRepeatRateEntry;
+    LabelledWidget<NumberEntryWidget> mHomeScreenTimeout;
     ButtonWidget                      mSaveButton;
-    HStackWidget::Items<4>            mItems;
+    HStackWidget::Items<5>            mItems;
     HStackWidget                      mHStackWidget;
     EventStage&                       mNext;
 };

@@ -7,14 +7,16 @@
 #include "timer.h"
 #include "smartkeyset.h"
 
+class GlobalConfig;
 class Widget;
 
 class HomeScreen : public Screen
 {
 public:
-    HomeScreen(Timer&             timer,
-               const SmartKeySet& smartKeySet,
-               EventStage&        next);
+    HomeScreen(const GlobalConfig& globalConfig,
+               const SmartKeySet&  smartKeySet,
+               Timer&              timer,
+               EventStage&         next);
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -23,10 +25,11 @@ public:
     void update();
     
 private:
-    Timer::Handle      mDisplayTimeout;
-    const SmartKeySet& mSmartKeySet;
-    HomeWidget         mHomeWidget;
-    EventStage&        mNext;
+    const GlobalConfig& mGlobalConfig;
+    const SmartKeySet&  mSmartKeySet;
+    Timer::Handle       mDisplayTimeout;
+    HomeWidget          mHomeWidget;
+    EventStage&         mNext;
 };
 
 #endif

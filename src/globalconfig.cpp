@@ -4,4 +4,5 @@ GlobalConfig::GlobalConfig()
     : tapDelay(300)
     , keyRepeatDelay(660)
     , keyRepeatRate(40)
+    , homeScreenTimeout(10000)
 { }

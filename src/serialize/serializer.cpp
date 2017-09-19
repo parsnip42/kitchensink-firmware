@@ -35,6 +35,7 @@ void Serializer<GlobalConfig>::serialize(const GlobalConfig& globalConfig, OutSt
     writeProperty("tapDelay", globalConfig.tapDelay);
     writeProperty("keyRepeatDelay", globalConfig.keyRepeatDelay);
     writeProperty("keyRepeatRate", globalConfig.keyRepeatRate);
+    writeProperty("homeScreenTimeout", globalConfig.homeScreenTimeout);
 }
 
 bool Serializer<GlobalConfig>::deserialize(InStream& is, GlobalConfig& globalConfig)
@@ -69,6 +70,7 @@ bool Serializer<GlobalConfig>::deserialize(InStream& is, GlobalConfig& globalCon
                 readProperty("tapDelay", globalConfig.tapDelay);
                 readProperty("keyRepeatDelay", globalConfig.keyRepeatDelay);
                 readProperty("keyRepeatRate", globalConfig.keyRepeatRate);
+                readProperty("homeScreenTimeout", globalConfig.homeScreenTimeout);
             }
         }
     }

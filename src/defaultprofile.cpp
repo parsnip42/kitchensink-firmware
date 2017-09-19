@@ -10,6 +10,12 @@ namespace DefaultProfile
 
 void init(KeyboardState& keyboardState)
 {
+    keyboardState.globalConfig.homeLedSet[0] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kNumLock);
+    keyboardState.globalConfig.homeLedSet[1] = HomeLed(HomeLed::Type::kSmartKey, 0);
+    keyboardState.globalConfig.homeLedSet[2] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kCapsLock);
+    keyboardState.globalConfig.homeLedSet[3] = HomeLed(HomeLed::Type::kSmartKey, 2);
+    keyboardState.globalConfig.homeLedSet[4] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kScrollLock);
+
     static const char* const LayoutConfig =
     "[layer 0]\n"
     "name=Default\n"

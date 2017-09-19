@@ -166,8 +166,9 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
 
 void ScreenManager::launchHome()
 {
-    HomeScreen screen(mEventManager.timer,
+    HomeScreen screen(mKeyboardState.globalConfig,
                       mKeyboardState.smartKeySet,
+                      mEventManager.timer,
                       mEventManager.defaultOutput);
     
     OutputSink output(*this, screen);

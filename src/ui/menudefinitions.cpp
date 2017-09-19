@@ -25,7 +25,7 @@ const std::array<MenuWidget::Item, 5> mainMenu = { {
     } };
 
 const std::array<MenuWidget::Item, 6> configMenu = { {
-        { StrRef("Settings"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 0) },
+        { StrRef("Global Settings"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 0) },
         { StrRef("Edit Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 20) },
         { StrRef("Edit Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 21) },
         { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 22) },

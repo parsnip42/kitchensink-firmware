@@ -8,6 +8,8 @@ namespace Config
 
 constexpr std::size_t kTimerCount       = 20;
 
+constexpr std::size_t kHomeLedCount     = 8;
+
 constexpr std::size_t kLayerNameLen     = 12;
 
 constexpr std::size_t kMacroNameLen     = 12;

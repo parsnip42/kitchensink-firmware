@@ -3,28 +3,64 @@
 #include "event/event.h"
 #include "event/ledmaskevent.h"
 #include "event/invalidateevent.h"
+#include "globalconfig.h"
 
-HomeScreen::HomeScreen(Timer&             timer,
-                       const SmartKeySet& smartKeySet,
-                       EventStage&        next)
-    : mDisplayTimeout(timer.createHandle())
+HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
+                       const SmartKeySet&  smartKeySet,
+                       Timer&              timer,
+                       EventStage&         next)
+    : mGlobalConfig(globalConfig)
     , mSmartKeySet(smartKeySet)
+    , mDisplayTimeout(timer.createHandle())
     , mNext(next)
 {
-    mHomeWidget.entries[0].text    = "Num Lock";
-    mHomeWidget.entries[0].visible = true;
+    for (std::size_t i(0);
+         i < mHomeWidget.entries.size() && i < mGlobalConfig.homeLedSet.size();
+         ++i)
+    {
+        const auto& homeLed(mGlobalConfig.homeLedSet[i]);
+        auto& entry(mHomeWidget.entries[i]);
 
-    mHomeWidget.entries[1].text    = "Shift Lock";
-    mHomeWidget.entries[1].visible = true;
+        entry.visible = true;
 
-    mHomeWidget.entries[2].text    = "Caps Lock";
-    mHomeWidget.entries[2].visible = true;
+        switch (homeLed.type)
+        {
+        case HomeLed::Type::kKeyboard:
+            switch (homeLed.index)
+            {
+            case HomeLed::kNumLock:
+                entry.text = "Num Lock";
+                break;
+                
+            case HomeLed::kCapsLock:
+                entry.text = "Caps Lock";
+                break;
 
-    mHomeWidget.entries[3].text    = "Game Lock";
-    mHomeWidget.entries[3].visible = true;
+            case HomeLed::kScrollLock:
+                entry.text = "Scroll Lock";
+                break;
 
-    mHomeWidget.entries[4].text    = "Scroll Lock";
-    mHomeWidget.entries[4].visible = true;
+            default:
+                entry.visible = false;
+            }
+            break;
+
+        case HomeLed::Type::kSmartKey:
+            if (homeLed.index < smartKeySet.size())
+            {
+                entry.text = smartKeySet[homeLed.index].name;
+            }
+            else
+            {
+                entry.visible = false;
+            }
+            break;
+
+        default:
+            entry.visible = false;
+            break;
+        }
+    }
 
     mHomeWidget.visible = false;
 }
@@ -69,7 +105,7 @@ void HomeScreen::update()
 {
     mHomeWidget.visible = true;
     mHomeWidget.invalidateWidget();
-    mDisplayTimeout.schedule(10000);
+    mDisplayTimeout.schedule(mGlobalConfig.homeScreenTimeout);
 }
 
 
