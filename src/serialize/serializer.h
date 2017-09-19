@@ -12,6 +12,7 @@
 
 #include <array>
 
+class GlobalConfig;
 class Event;
 class Layer;
 class LayerStack;
@@ -23,6 +24,13 @@ struct Serializer
 {
     void serialize(const T&, OutStream&);
     bool deserialize(InStream&, T&);
+};
+
+template <>
+struct Serializer<GlobalConfig>
+{
+    void serialize(const GlobalConfig& globalConfig, OutStream& os);
+    bool deserialize(InStream& is, GlobalConfig& globalConfig);
 };
 
 template <>

@@ -9,10 +9,21 @@ namespace KeyboardStateUtil
 
 void load(KeyboardState& keyboardState)
 {
+    load(keyboardState.globalConfig);
     load(keyboardState.macroSet);
     load(keyboardState.layerStack);
     load(keyboardState.multiKeySet);
     load(keyboardState.smartKeySet);
+}
+
+void load(GlobalConfig& globalConfig)
+{
+    Storage storage;
+    
+    auto is(storage.read(Storage::Region::kConfig));
+    Serializer<GlobalConfig> s;
+    
+    s.deserialize(is, globalConfig);
 }
 
 void load(MacroSet& macroSet)
@@ -57,10 +68,21 @@ void load(SmartKeySet& smartKeySet)
 
 void store(const KeyboardState& keyboardState)
 {
+    store(keyboardState.globalConfig);
     store(keyboardState.macroSet);
     store(keyboardState.layerStack);
     store(keyboardState.multiKeySet);
     store(keyboardState.smartKeySet);
+}
+
+void store(const GlobalConfig& globalConfig)
+{
+    Storage storage;
+    Serializer<GlobalConfig> s;
+    
+    auto os(storage.write(Storage::Region::kConfig));
+    
+    s.serialize(globalConfig, os);
 }
 
 void store(const MacroSet& macroSet)

@@ -203,9 +203,11 @@ void ScreenManager::launchScreen(int                screenId,
                                   mKeyboardState.globalConfig,
                                   mEventManager);
 
-        displayScreen("Event Stream",
+        displayScreen("Global Settings",
                       screen,
                       sourceEvent);
+
+        KeyboardStateUtil::store(mKeyboardState.globalConfig);
         break;
     }
 

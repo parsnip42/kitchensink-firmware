@@ -9,11 +9,72 @@
 #include "types/stroutstream.h"
 #include "types/instream.h"
 #include "types/outstream.h"
+#include "globalconfig.h"
 #include "config.h"
 
 #include "serialize/iniformat.h"
 
 #include "mbedtls/aes.h"
+
+void Serializer<GlobalConfig>::serialize(const GlobalConfig& globalConfig, OutStream& os)
+{
+    IniFormat::OStream ini(os);
+    
+    ini.writeSection("config");
+
+    auto writeProperty([&](const StrRef& key, int value)
+    {
+        StrBuf<32> valueStr;
+        StrOutStream ostream(valueStr);
+
+        ostream.appendInt(value);
+        
+        ini.writeProperty(key, valueStr);
+    });
+
+    writeProperty("tapDelay", globalConfig.tapDelay);
+    writeProperty("keyRepeatDelay", globalConfig.keyRepeatDelay);
+    writeProperty("keyRepeatRate", globalConfig.keyRepeatRate);
+}
+
+bool Serializer<GlobalConfig>::deserialize(InStream& is, GlobalConfig& globalConfig)
+{
+    IniFormat::IStream ini(is);
+
+    StrRef sectionName;
+    
+    while (ini.nextSection(sectionName))
+    {
+        if (sectionName == "config")
+        {
+            StrRef key;
+            StrRef value;
+            
+            while (ini.nextProperty(key, value))
+            {
+                auto readProperty([&](const StrRef& propertyKey,
+                                      uint32_t&     propertyValue)
+                {
+                    if (key == propertyKey)
+                    {
+                        int intValue(0);
+                        
+                        if (StrUtil::parseUInt(value, intValue))
+                        {
+                            propertyValue = intValue;
+                        }
+                    }
+                });
+
+                readProperty("tapDelay", globalConfig.tapDelay);
+                readProperty("keyRepeatDelay", globalConfig.keyRepeatDelay);
+                readProperty("keyRepeatRate", globalConfig.keyRepeatRate);
+            }
+        }
+    }
+    
+    return true;
+}
 
 void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
 {
