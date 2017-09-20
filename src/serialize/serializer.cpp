@@ -35,7 +35,26 @@ void Serializer<GlobalConfig>::serialize(const GlobalConfig& globalConfig, OutSt
     writeProperty("tapDelay", globalConfig.tapDelay);
     writeProperty("keyRepeatDelay", globalConfig.keyRepeatDelay);
     writeProperty("keyRepeatRate", globalConfig.keyRepeatRate);
+    writeProperty("homeScreenColumns", globalConfig.homeScreenColumns);
     writeProperty("homeScreenTimeout", globalConfig.homeScreenTimeout);
+
+    const auto& homeLedSet(globalConfig.homeLedSet);
+    
+    for (std::size_t i(0); i < homeLedSet.size(); ++i)
+    {
+        StrBuf<20> headerStr;
+        StrOutStream ostream(headerStr);
+
+        ostream.appendStr("home ")
+               .appendInt(i);
+                                
+        ini.writeSection(headerStr);
+
+        const auto& homeLed(homeLedSet[i]);
+        
+        writeProperty("type", static_cast<int>(homeLed.type));
+        writeProperty("index", homeLed.index);
+    }
 }
 
 bool Serializer<GlobalConfig>::deserialize(InStream& is, GlobalConfig& globalConfig)
@@ -43,10 +62,47 @@ bool Serializer<GlobalConfig>::deserialize(InStream& is, GlobalConfig& globalCon
     IniFormat::IStream ini(is);
 
     StrRef sectionName;
-    
+
+    auto& homeLedSet(globalConfig.homeLedSet);
+
     while (ini.nextSection(sectionName))
     {
-        if (sectionName == "config")
+        int homeLedId;
+        StrRef typeStr;
+        StrRef numStr;
+
+        if (StrUtil::cutTrim(sectionName, typeStr, ' ', numStr) &&
+            typeStr == "home" &&
+            StrUtil::parseUInt(numStr, homeLedId))
+        {
+            auto& homeLed(homeLedSet[homeLedId]);
+
+            StrRef key;
+            StrRef value;
+            
+            while (ini.nextProperty(key, value))
+            {
+                if (key == "type")
+                {
+                    int typeValue(0);
+
+                    if (StrUtil::parseUInt(value, typeValue))
+                    {
+                        homeLed.type = static_cast<HomeLed::Type>(typeValue);
+                    }
+                }
+                else if (key == "index")
+                {
+                    int indexValue(0);
+
+                    if (StrUtil::parseUInt(value, indexValue))
+                    {
+                        homeLed.index = indexValue;
+                    }
+                }
+            }
+        }
+        else if (sectionName == "config")
         {
             StrRef key;
             StrRef value;
@@ -70,6 +126,7 @@ bool Serializer<GlobalConfig>::deserialize(InStream& is, GlobalConfig& globalCon
                 readProperty("tapDelay", globalConfig.tapDelay);
                 readProperty("keyRepeatDelay", globalConfig.keyRepeatDelay);
                 readProperty("keyRepeatRate", globalConfig.keyRepeatRate);
+                readProperty("homeScreenColumns", globalConfig.homeScreenColumns);
                 readProperty("homeScreenTimeout", globalConfig.homeScreenTimeout);
             }
         }
@@ -82,8 +139,6 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
 {
     IniFormat::OStream ini(os);
 
-    Serializer<Macro> s;
-    
     for (std::size_t i(0); i < macroSet.size(); ++i)
     {
         StrBuf<20> headerStr;
@@ -93,7 +148,32 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
                .appendInt(i);
                                 
         ini.writeSection(headerStr);
-        s.serialize(macroSet[i], os);
+
+        const auto& macro(macroSet[i]);
+        
+        ini.writeProperty("name", macro.name);
+        ini.writeProperty("shortcut", macro.shortcut);
+
+        StrBuf<12> typeStr;
+        StrOutStream oss(typeStr);
+
+        oss.appendInt(static_cast<int>(macro.type));
+    
+        ini.writeProperty("type", typeStr);
+
+        os.write("content=");
+
+        for (const auto& event : macro.content)
+        {
+            StrBuf<24> str;
+
+            EventSerializer::serialize(event, str);
+        
+            os.write(str);
+            os.write(" ");
+        }
+
+        os.write("\n");
     }    
 }
 
@@ -163,40 +243,6 @@ bool Serializer<MacroSet>::deserialize(InStream& is, MacroSet& macroSet)
     }
     
     return false;
-}
-
-void Serializer<Macro>::serialize(const Macro& macro, OutStream& os)
-{
-    IniFormat::OStream ini(os);
-
-    ini.writeProperty("name", macro.name);
-    ini.writeProperty("shortcut", macro.shortcut);
-
-    StrBuf<12> typeStr;
-    StrOutStream oss(typeStr);
-
-    oss.appendInt(static_cast<int>(macro.type));
-    
-    ini.writeProperty("type", typeStr);
-
-    os.write("content=");
-
-    for (const auto& event : macro.content)
-    {
-        StrBuf<24> str;
-
-        EventSerializer::serialize(event, str);
-        
-        os.write(str);
-        os.write(" ");
-    }
-
-    os.write("\n");
-}
-
-bool Serializer<Macro>::deserialize(InStream& is, Macro& macro)
-{
-    return true;
 }
 
 void Serializer<LayerStack>::serialize(const LayerStack& layerStack, OutStream& os)
@@ -286,58 +332,6 @@ bool Serializer<LayerStack>::deserialize(InStream& is, LayerStack& layerStack)
         }
     }
 
-    return true;
-}
-
-void Serializer<Layer>::serialize(const Layer& layer, OutStream& os)
-{
-    IniFormat::OStream ini(os);
-    
-    ini.writeProperty("name", layer.name);
-
-    for (const auto& row : layer.mapping)
-    {
-        os.write("row=");
-        
-        for (const auto& event : row)
-        {
-            StrBuf<24> str;
-            
-            EventSerializer::serialize(event, str);
-            
-            os.write(str);
-            os.write(" ");
-        }
-        
-        os.write("\n");
-    }
-
-    os.write("\n");
-}
-    
-bool Serializer<Layer>::deserialize(InStream& is, Layer& layer)
-{
-    // layer.clear();
-    
-    // is.readLine(layer.name);
-
-    // for (auto& row : layer.mapping)
-    // {
-    //     StrBuf<240> rowData;
-        
-    //     is.readLine(rowData);
-
-    //     StrRef token(StrUtil::nextToken(rowData, " \t"));
-
-    //     std::size_t index(0);
-        
-    //     while (!token.empty() && index < row.size())
-    //     {
-    //         EventSerializer::deserialize(token, row[index++]);
-    //         token = StrUtil::nextToken(rowData, " \t", token);
-    //     }
-    // }
-    
     return true;
 }
 

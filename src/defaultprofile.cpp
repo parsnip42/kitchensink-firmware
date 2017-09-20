@@ -10,12 +10,40 @@ namespace DefaultProfile
 
 void init(KeyboardState& keyboardState)
 {
-    keyboardState.globalConfig.homeLedSet[0] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kNumLock);
-    keyboardState.globalConfig.homeLedSet[1] = HomeLed(HomeLed::Type::kSmartKey, 0);
-    keyboardState.globalConfig.homeLedSet[2] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kCapsLock);
-    keyboardState.globalConfig.homeLedSet[3] = HomeLed(HomeLed::Type::kSmartKey, 2);
-    keyboardState.globalConfig.homeLedSet[4] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kScrollLock);
+    static const char* const GlobalConfigTxt =
+    "[config]\n"
+    "tapDelay=250\n"
+    "keyRepeatDelay=660\n"
+    "keyRepeatRate=40\n"
+    "homeScreenColumns=2\n"
+    "homeScreenTimeout=10000\n"
 
+    "[home 0]\n"
+    "type=1\n"
+    "index=0\n"
+
+    "[home 1]\n"
+    "type=2\n"
+    "index=0\n"
+
+    "[home 2]\n"
+    "type=1\n"
+    "index=1\n"
+
+    "[home 3]\n"
+    "type=2\n"
+    "index=2\n"
+    
+    "[home 4]\n"
+    "type=1\n"
+    "index=2\n";
+
+    {
+        StrInStream is(GlobalConfigTxt);
+        Serializer<GlobalConfig> s;
+
+        s.deserialize(is, keyboardState.globalConfig);
+    }
 
     static const char* const LayoutConfig =
     "[layer 0]\n"

@@ -41,24 +41,10 @@ struct Serializer<MacroSet>
 };
 
 template <>
-struct Serializer<Macro>
-{
-    void serialize(const Macro& macro, OutStream& os);
-    bool deserialize(InStream& is, Macro& macro);
-};
-
-template <>
 struct Serializer<LayerStack>
 {
     void serialize(const LayerStack& layerStack, OutStream& os);
     bool deserialize(InStream& is, LayerStack& layerStack);
-};
-
-template <>
-struct Serializer<Layer>
-{
-    void serialize(const Layer& layer, OutStream& os);
-    bool deserialize(InStream& is, Layer& layer);
 };
 
 template <>
