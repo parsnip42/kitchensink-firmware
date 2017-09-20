@@ -16,13 +16,13 @@ GlobalConfigScreen::GlobalConfigScreen(Timer&        timer,
     , mRepeatRateEntry("Key Repeat Rate", 140, NumberEntryWidget(0, 9999, timer))
     , mHomeScreenColumns("Home Screen Columns", 140, NumberEntryWidget(1, 9, timer))
     , mHomeScreenTimeout("Home Screen Timeout", 140, NumberEntryWidget(0, 999999, timer))
-    , mHomeScreenLeds(ArrayUtil<HomeLedWidgets>::createArray([&](int i)
+    , mHomeScreenLeds(ArrayUtil<HomeLedWidgets>::createArray([&](std::size_t index)
                       {
                           StrBuf<24> name;
                           StrOutStream out(name);
 
                           out.appendStr("Home Widget ");
-                          out.appendInt(i + 1);
+                          out.appendInt(index + 1);
                           
                           return LabelledWidget<NumberEntryWidget>(name, 140, NumberEntryWidget(0, 999999, timer));
                       }))

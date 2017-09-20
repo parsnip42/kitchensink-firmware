@@ -25,15 +25,19 @@ public:
 
 private:
     void onSave();
-    
+
 private:
-    MultiKey&                                       mMultiKey;
-    LabelledWidget<TextEntryWidget>                 mTitleEntry;
-    std::array<LabelledWidget<EventEntryWidget>, 4> mEventEntry;
-    ButtonWidget                                    mSaveButton;
-    HStackWidget::Items<6>                          mItems;
-    HStackWidget                                    mHStackWidget;
-    EventStage&                                     mNext;
+    typedef std::array<LabelledWidget<EventEntryWidget>,
+                       Config::kMultiKeyTapCount> EventEntryWidgets;
+
+private:
+    MultiKey&                                          mMultiKey;
+    LabelledWidget<TextEntryWidget>                    mTitleEntry;
+    EventEntryWidgets                                  mEventEntry;
+    ButtonWidget                                       mSaveButton;
+    HStackWidget::Items<2 + Config::kMultiKeyTapCount> mItems;
+    HStackWidget                                       mHStackWidget;
+    EventStage&                                        mNext;
 };
 
 #endif

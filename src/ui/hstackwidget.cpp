@@ -99,6 +99,8 @@ void HStackWidget::parented()
     }
     
     mContentHeight = yOffset;
+
+    setFocused(mFocused);
 }
 
 void HStackWidget::render(const RasterLine& rasterLine, int row)

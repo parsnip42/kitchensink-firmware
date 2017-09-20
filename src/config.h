@@ -21,10 +21,11 @@ constexpr std::size_t kSMacroCount      = 30;
 constexpr std::size_t kSMacroPoolSize   = 1024;
 
 constexpr std::size_t kMultiKeyNameLen  = 24;
-constexpr std::size_t kMultiKeyCount    = 5;
+constexpr std::size_t kMultiKeyCount    = 12;
+constexpr std::size_t kMultiKeyTapCount = 4;
 
 constexpr std::size_t kSmartKeyNameLen  = 24;
-constexpr std::size_t kSmartKeyCount    = 10;
+constexpr std::size_t kSmartKeyCount    = 12;
 
 constexpr std::size_t kLayerColumns     = 16;
 constexpr std::size_t kLayerRows        = 5;
