@@ -200,8 +200,9 @@ void ScreenManager::launchScreen(int                screenId,
     {
     case 0:
     {
-        GlobalConfigScreen screen(mEventManager.timer,
+        GlobalConfigScreen screen(mKeyboardState.smartKeySet,
                                   mKeyboardState.globalConfig,
+                                  mEventManager.timer,
                                   mEventManager);
 
         displayScreen("Global Settings",

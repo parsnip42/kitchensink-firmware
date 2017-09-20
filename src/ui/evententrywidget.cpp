@@ -9,7 +9,6 @@
 
 EventEntryWidget::EventEntryWidget(Timer& timer)
     : mFlashTimer(timer.createHandle())
-    , mEventStr("<Unset>")
     , mFocused(true)
     , mFlash(true)
     , mTrigger(false)
@@ -73,11 +72,11 @@ void EventEntryWidget::render(const RasterLine& rasterLine,
         std::swap(fg, bg);
     }
 
-    mEventStr.clear();
-    
-    EventSerializer::serializeReadable(event, mEventStr);
+    StrBuf<24> eventStr;
 
-    RenderUtil::text(mEventStr, 0, row, rasterLine, fg, bg);
+    EventSerializer::serializeReadable(event, eventStr);
+
+    RenderUtil::text(eventStr, 0, row, rasterLine, fg, bg);
 }
 
 Dimension EventEntryWidget::minimumSize() const

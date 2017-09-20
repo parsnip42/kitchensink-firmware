@@ -1,7 +1,12 @@
 #ifndef INCLUDED_HOMELED_H
 #define INCLUDED_HOMELED_H
 
+#include "types/strref.h"
+#include "smartkeyset.h"
+
 #include <cstdint>
+
+class StrOutStream;
 
 class HomeLed
 {
@@ -24,6 +29,9 @@ public:
     HomeLed();
     HomeLed(Type        nType,
             std::size_t nIndex);
+
+public:
+    StrRef text(const SmartKeySet& smartKeySet) const;
     
 public:
     Type        type;

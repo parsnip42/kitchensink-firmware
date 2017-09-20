@@ -3,6 +3,7 @@
 #include "event/event.h"
 #include "event/ledmaskevent.h"
 #include "event/invalidateevent.h"
+#include "types/stroutstream.h"
 #include "globalconfig.h"
 
 HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
@@ -22,47 +23,13 @@ HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
         const auto& homeLed(mGlobalConfig.homeLedSet[i]);
         auto& entry(mHomeWidget.entries[i]);
 
-        entry.visible = true;
-
-        switch (homeLed.type)
+        entry.visible = (homeLed.type != HomeLed::Type::kNone);
+        entry.text    = homeLed.text(mSmartKeySet);
+        
+        if (homeLed.type == HomeLed::Type::kSmartKey &&
+            homeLed.index < mSmartKeySet.size())
         {
-        case HomeLed::Type::kKeyboard:
-            switch (homeLed.index)
-            {
-            case HomeLed::kNumLock:
-                entry.text = "Num Lock";
-                break;
-                
-            case HomeLed::kCapsLock:
-                entry.text = "Caps Lock";
-                break;
-
-            case HomeLed::kScrollLock:
-                entry.text = "Scroll Lock";
-                break;
-
-            default:
-                entry.visible = false;
-            }
-            break;
-
-        case HomeLed::Type::kSmartKey:
-            if (homeLed.index < mSmartKeySet.size())
-            {
-                const auto& smartKey(mSmartKeySet[homeLed.index]);
-                
-                entry.text  = smartKey.name;
-                entry.value = smartKey.enabled;
-            }
-            else
-            {
-                entry.visible = false;
-            }
-            break;
-
-        default:
-            entry.visible = false;
-            break;
+            entry.value = mSmartKeySet[homeLed.index].enabled;
         }
     }
 

@@ -29,7 +29,6 @@ public:
 
 private:
     Timer::Handle mFlashTimer;
-    StrBuf<24>    mEventStr;
     bool          mFocused;
     bool          mFlash;
     bool          mTrigger;

@@ -7,9 +7,10 @@
 #include "types/arrayutil.h"
 
 
-GlobalConfigScreen::GlobalConfigScreen(Timer&        timer,
-                                       GlobalConfig& globalConfig,
-                                       EventStage&   next)
+GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
+                                       GlobalConfig&      globalConfig,
+                                       Timer&             timer,
+                                       EventStage&        next)
     : mGlobalConfig(globalConfig)
     , mTapDelayEntry("Multi Tap Delay", 140, NumberEntryWidget(0, 9999, timer))
     , mRepeatDelayEntry("Key Repeat Delay", 140, NumberEntryWidget(0, 9999, timer))
@@ -24,7 +25,8 @@ GlobalConfigScreen::GlobalConfigScreen(Timer&        timer,
                           out.appendStr("Home Widget ");
                           out.appendInt(index + 1);
                           
-                          return LabelledWidget<NumberEntryWidget>(name, 140, NumberEntryWidget(0, 999999, timer));
+                          return LabelledWidget<HomeLedWidget>(name, 140, HomeLedWidget(smartKeySet,
+                                                                                        timer));
                       }))
     , mSaveButton("Save")
     , mItems({{ mTapDelayEntry,
@@ -37,8 +39,10 @@ GlobalConfigScreen::GlobalConfigScreen(Timer&        timer,
 {
     for (std::size_t i(0); i < Config::kHomeLedCount; ++i)
     {
+        mHomeScreenLeds[i].widget.homeLed = globalConfig.homeLedSet[i];
         mItems[5 + i] = HStackWidget::Element(mHomeScreenLeds[i]);
     }
+    
     mItems[5 + Config::kHomeLedCount] = HStackWidget::Element(mSaveButton);
     
     mTapDelayEntry.widget.value      = mGlobalConfig.tapDelay;
@@ -68,6 +72,11 @@ void GlobalConfigScreen::onSave()
     mGlobalConfig.keyRepeatRate     = mRepeatRateEntry.widget.value;
     mGlobalConfig.homeScreenColumns = mHomeScreenColumns.widget.value;
     mGlobalConfig.homeScreenTimeout = mHomeScreenTimeout.widget.value;
+
+    for (std::size_t i(0); i < Config::kHomeLedCount; ++i)
+    {
+        mGlobalConfig.homeLedSet[i] = mHomeScreenLeds[i].widget.homeLed;
+    }
     
     mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
 }

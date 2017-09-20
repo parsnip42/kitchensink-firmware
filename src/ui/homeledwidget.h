@@ -4,13 +4,14 @@
 #include "timer.h"
 #include "ui/widget.h"
 #include "ui/action.h"
-#include "event/event.h"
 #include "types/strbuf.h"
+#include "homeled.h"
 
 class HomeLedWidget : public Widget
 {
 public:
-    explicit HomeLedWidget(Timer& timer);
+    HomeLedWidget(const SmartKeySet& smartKeySet,
+                  Timer&             timer);
 
     HomeLedWidget(HomeLedWidget&&) = default;
 
@@ -24,15 +25,14 @@ public:
     void update();
     
 public:
-    Event  event;
-    Action eventSelected;
+    HomeLed homeLed;
 
 private:
-    Timer::Handle mFlashTimer;
-    StrBuf<24>    mEventStr;
-    bool          mFocused;
-    bool          mFlash;
-    bool          mTrigger;
+    const SmartKeySet& mSmartKeySet;
+    Timer::Handle      mFlashTimer;
+    bool               mFocused;
+    bool               mFlash;
+    bool               mTrigger;
 
 private:
     HomeLedWidget(const HomeLedWidget&) = delete;
