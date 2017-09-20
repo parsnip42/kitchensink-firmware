@@ -20,6 +20,8 @@ public:
     
 public:
     std::size_t size() const;
+    std::size_t poolUsage() const;
+    std::size_t poolCapacity() const;
     void reset();
     
 private:
@@ -58,6 +60,20 @@ inline
 std::size_t MacroSetImpl<Size, PoolSize>::size() const
 {
     return mMacroData.size();
+}
+
+template <std::size_t Size, std::size_t PoolSize>
+inline
+std::size_t MacroSetImpl<Size, PoolSize>::poolUsage() const
+{
+    return mMacroPool.pool.usage();
+}
+
+template <std::size_t Size, std::size_t PoolSize>
+inline
+std::size_t MacroSetImpl<Size, PoolSize>::poolCapacity() const
+{
+    return mMacroPool.pool.capacity();
 }
 
 template <std::size_t Size, std::size_t PoolSize>

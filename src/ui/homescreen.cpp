@@ -12,6 +12,7 @@ HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
     : mGlobalConfig(globalConfig)
     , mSmartKeySet(smartKeySet)
     , mDisplayTimeout(timer.createHandle())
+    , mHomeWidget(globalConfig.homeScreenColumns)
     , mNext(next)
 {
     for (std::size_t i(0);

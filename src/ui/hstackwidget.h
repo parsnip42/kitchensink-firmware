@@ -4,6 +4,7 @@
 #include "types/range.h"
 #include "ui/widget.h"
 #include "ui/widgetcontainer.h"
+#include "ui/emptywidget.h"
 
 #include <array>
 #include <cstdint>
@@ -15,10 +16,20 @@ public:
     class Element
     {
     public:
-        Element(Widget& nWidget);
-        
+        Element()
+            : widget(&EmptyWidget::Instance)
+            , yOffset(0)
+            , height(0)
+        { }
+
+        Element(Widget& nWidget)
+            : widget(&nWidget)
+            , yOffset(0)
+            , height(0)
+        { }
+
     public:
-        Widget& widget;
+        Widget* widget;
 
     private:
         int yOffset;
@@ -62,11 +73,11 @@ private:
 };
 
 
-inline
-HStackWidget::Element::Element(Widget& nWidget)
-    : widget(nWidget)
-    , yOffset(0)
-{ }
+// inline
+// HStackWidget::Element::Element(Widget& nWidget)
+//     : widget(nWidget)
+//     , yOffset(0)
+// { }
 
 
 template <std::size_t Size>

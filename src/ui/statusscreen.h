@@ -6,13 +6,15 @@
 #include "ui/widgetset.h"
 #include "ui/screen.h"
 
+class KeyboardState;
 class EventManager;
 class Widget;
 
 class StatusScreen : public Screen
 {
 public:
-    explicit StatusScreen(EventManager& eventManager);
+    explicit StatusScreen(KeyboardState& keyboardState,
+                          EventManager&  eventManager);
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -20,11 +22,14 @@ public:
     virtual Widget& rootWidget() override;
 
 private:
+    KeyboardState&         mKeyboardState;
     EventManager&          mEventManager;
     PropertyWidget         mMemoryUsage;
     PropertyWidget         mConfigSize;
     PropertyWidget         mScanRate;
-    HStackWidget::Items<3> mItems;
+    PropertyWidget         mMacroPoolUsage;
+    PropertyWidget         mSMacroPoolUsage;
+    HStackWidget::Items<5> mItems;
     HStackWidget           mHStackWidget;
 };
 

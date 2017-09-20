@@ -16,6 +16,7 @@ void init(KeyboardState& keyboardState)
     keyboardState.globalConfig.homeLedSet[3] = HomeLed(HomeLed::Type::kSmartKey, 2);
     keyboardState.globalConfig.homeLedSet[4] = HomeLed(HomeLed::Type::kKeyboard, HomeLed::kScrollLock);
 
+
     static const char* const LayoutConfig =
     "[layer 0]\n"
     "name=Default\n"

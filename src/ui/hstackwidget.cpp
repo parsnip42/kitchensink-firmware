@@ -8,7 +8,7 @@
 bool HStackWidget::processEvent(const Event& event)
 {
     if (mFocused != mItems.end() &&
-        mFocused->widget.processEvent(event))
+        mFocused->widget->processEvent(event))
     {
         // Skip
     }
@@ -22,9 +22,9 @@ bool HStackWidget::processEvent(const Event& event)
             
             if (next != mItems.end())
             {
-                mFocused->widget.setFocused(false);
+                mFocused->widget->setFocused(false);
                 ++mFocused;
-                mFocused->widget.setFocused(true);
+                mFocused->widget->setFocused(true);
 
                 invalidateWidget();
             }
@@ -34,9 +34,9 @@ bool HStackWidget::processEvent(const Event& event)
     {
         if (mFocused != mItems.begin())
         {
-            mFocused->widget.setFocused(false);
+            mFocused->widget->setFocused(false);
             --mFocused;
-            mFocused->widget.setFocused(true);
+            mFocused->widget->setFocused(true);
 
             invalidateWidget();
         }
@@ -53,7 +53,7 @@ void HStackWidget::setFocused(bool focused)
 {
     for (auto it(mItems.begin()); it != mItems.end(); ++it)
     {
-        it->widget.setFocused(it == mFocused && focused);
+        it->widget->setFocused(it == mFocused && focused);
     }
 }
 
@@ -69,7 +69,7 @@ void HStackWidget::parented()
     {
         for (auto& item : mItems)
         {
-            minimumItemHeight = std::max(item.widget.minimumSize().height,
+            minimumItemHeight = std::max(item.widget->minimumSize().height,
                                          minimumItemHeight);
         }
     }
@@ -83,10 +83,10 @@ void HStackWidget::parented()
 
         if (!mLinear)
         {
-            height = widget.minimumSize().height;
+            height = widget->minimumSize().height;
         }
         
-        widget.setParent(this,
+        widget->setParent(this,
                          Rectangle(0,
                                    yOffset,
                                    size.width,
@@ -110,7 +110,7 @@ void HStackWidget::render(const RasterLine& rasterLine, int row)
     {
         if (row < (item.yOffset + item.height))
         {
-            item.widget.render(rasterLine, row - item.yOffset);
+            item.widget->render(rasterLine, row - item.yOffset);
             return;
         }
     }
@@ -123,21 +123,21 @@ void HStackWidget::regionInvalidated(const Rectangle& region)
 
 Widget& HStackWidget::focused() const
 {
-    return mFocused->widget;
+    return *mFocused->widget;
 }
 
 void HStackWidget::setFocused(const Widget& widget)
 {
     for (auto it(mItems.begin()); it != mItems.end(); ++it)
     {
-        if (&(it->widget) == &widget)
+        if (it->widget == &widget)
         {
-            it->widget.setFocused(true);
+            it->widget->setFocused(true);
             mFocused = it;
         }
         else
         {
-            it->widget.setFocused(false);
+            it->widget->setFocused(false);
         }
     }
 }

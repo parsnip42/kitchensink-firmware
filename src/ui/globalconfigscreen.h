@@ -8,6 +8,8 @@
 #include "ui/screen.h"
 #include "ui/numberentrywidget.h"
 
+// #include <experimental/optional>
+
 class GlobalConfig;
 class Timer;
 
@@ -26,15 +28,22 @@ private:
     void onSave();
 
 private:
+    typedef std::array<LabelledWidget<NumberEntryWidget>, Config::kHomeLedCount> HomeLedWidgets;
+    
+private:
     GlobalConfig&                     mGlobalConfig;
     LabelledWidget<NumberEntryWidget> mTapDelayEntry;
     LabelledWidget<NumberEntryWidget> mRepeatDelayEntry;
     LabelledWidget<NumberEntryWidget> mRepeatRateEntry;
+    LabelledWidget<NumberEntryWidget> mHomeScreenColumns;
     LabelledWidget<NumberEntryWidget> mHomeScreenTimeout;
-    ButtonWidget                      mSaveButton;
-    HStackWidget::Items<5>            mItems;
-    HStackWidget                      mHStackWidget;
-    EventStage&                       mNext;
+
+    HomeLedWidgets  mHomeScreenLeds;
+    
+    ButtonWidget                                   mSaveButton;
+    HStackWidget::Items<6 + Config::kHomeLedCount> mItems;
+    HStackWidget                                   mHStackWidget;
+    EventStage&                                    mNext;
 };
 
 #endif

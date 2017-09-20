@@ -6,6 +6,6 @@
 
 #include <array>
 
-typedef std::array<HomeLed, 12> HomeLedSet;
+typedef std::array<HomeLed, Config::kHomeLedCount> HomeLedSet;
 
 #endif

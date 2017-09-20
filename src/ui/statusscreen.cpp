@@ -23,20 +23,26 @@ public:
 
 }
 
-StatusScreen::StatusScreen(EventManager& eventManager)
-    : mEventManager(eventManager)
-    , mMemoryUsage("Free Memory", 100)
-    , mConfigSize("Config Size", 100)
-    , mScanRate("Scan Rate", 100)
+StatusScreen::StatusScreen(KeyboardState& keyboardState,
+                           EventManager&  eventManager)
+    : mKeyboardState(keyboardState)
+    , mEventManager(eventManager)
+    , mMemoryUsage("Free Memory", 120)
+    , mConfigSize("Config Size", 120)
+    , mScanRate("Scan Rate", 120)
+    , mMacroPoolUsage("Macro Pool", 120)
+    , mSMacroPoolUsage("Secure Macro Pool", 120)
     , mItems({{ mMemoryUsage,
                 mConfigSize,
-                mScanRate }})
+                mScanRate,
+                mMacroPoolUsage,
+                mSMacroPoolUsage }})
     , mHStackWidget(mItems, true)
 { }
 
 bool StatusScreen::processEvent(const Event& event)
 {
-    return false;
+    return mHStackWidget.processEvent(event);
 }
 
 void StatusScreen::screenInit()
@@ -58,12 +64,34 @@ void StatusScreen::screenInit()
         
         mConfigSize.invalidateWidget();
     }
+    
+    {
+        StrOutStream os(mMacroPoolUsage.value);
+
+        os.appendInt(mKeyboardState.macroSet.poolUsage());
+        os.appendStr(" / ");
+        os.appendInt(mKeyboardState.macroSet.poolCapacity());
+
+        mMacroPoolUsage.invalidateWidget();
+    }
+    
+    {
+        StrOutStream os(mSMacroPoolUsage.value);
+
+        os.appendInt(mKeyboardState.secureMacroSet.poolUsage());
+        os.appendStr(" / ");
+        os.appendInt(mKeyboardState.secureMacroSet.poolCapacity());
+
+        mMacroPoolUsage.invalidateWidget();
+    }
+    
+    mScanRate.invalidateWidget();
 
     auto start(millis());
 
     NullKeyStage nullNext;
     
-    for (int i(0); i < 500; ++i)
+    for (int i(0); i < 100; ++i)
     {
         mEventManager.poll(nullNext);
     }
@@ -73,7 +101,7 @@ void StatusScreen::screenInit()
     {
         StrOutStream os(mScanRate.value);
         
-        os.appendInt(static_cast<int>((500 * 1000) / (end - start)));
+        os.appendInt(static_cast<int>((100 * 1000) / (end - start)));
         os.appendStr(" polls/s");
 
         mScanRate.invalidateWidget();

@@ -18,7 +18,7 @@ public:
 
 public:
     void clear();
-    
+
 private:
     std::array<Range<Event*>, Size> indexData;
     std::array<Event, PoolSize>     poolData;

@@ -2,6 +2,7 @@
 #define INCLUDED_HOMEWIDGET_H
 
 #include "ui/widget.h"
+#include "config.h"
 
 class HomeWidget : public Widget
 {
@@ -18,7 +19,7 @@ public:
     };
     
 public:
-    HomeWidget();
+    explicit HomeWidget(int widgetColumns);
 
 public:
     virtual void render(const RasterLine& rasterLine, int row) override;
@@ -30,8 +31,8 @@ private:
                          int               row);
     
 public:
-    std::array<Entry, 9> entries;
-    bool                 visible;
+    std::array<Entry, Config::kHomeLedCount> entries;
+    bool                                     visible;
 
 private:
     int mWidgetWidth;

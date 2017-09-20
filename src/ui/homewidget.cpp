@@ -8,8 +8,11 @@ HomeWidget::Entry::Entry()
 { }
 
 
-HomeWidget::HomeWidget()
+HomeWidget::HomeWidget(int widgetColumns)
     : visible(true)
+    , mWidgetWidth(0)
+    , mWidgetHeight(0)
+    , mWidgetColumns(widgetColumns)
 { }
 
 void HomeWidget::render(const RasterLine& rasterLine, int row)
@@ -51,7 +54,6 @@ void HomeWidget::parented()
 {
     auto size(widgetSize());
 
-    mWidgetColumns = 2;
     mWidgetWidth   = size.width / mWidgetColumns;
     mWidgetHeight  = Font::kHeight;
 }

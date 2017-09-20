@@ -27,7 +27,8 @@ public:
               Element*      dataEnd);
 
 public:
-    std::size_t size() const;
+    std::size_t usage() const;
+    std::size_t capacity() const;
 
 public:
     bool insert(std::size_t index, const_iterator begin, const_iterator end);
@@ -69,9 +70,16 @@ ArrayPool<Element>::ArrayPool(IndexElement* indexBegin,
 
 template <typename Element>
 inline
-std::size_t ArrayPool<Element>::size() const
+std::size_t ArrayPool<Element>::usage() const
 {
-    return mIndexCapacity;
+    return mPoolSize;
+}
+
+template <typename Element>
+inline
+std::size_t ArrayPool<Element>::capacity() const
+{
+    return mPoolCapacity;
 }
 
 template <typename Element>

@@ -214,7 +214,8 @@ void ScreenManager::launchScreen(int                screenId,
 
     case 1:
     {
-        StatusScreen screen(mEventManager);
+        StatusScreen screen(mKeyboardState,
+                            mEventManager);
 
         displayScreen("Status",
                       screen,
