@@ -16,7 +16,8 @@ public:
 
 public:
     std::array<uint8_t, 32> read();
-    
+    std::array<uint8_t, 16> read128();
+
 public:
     void insert(uint8_t value);
     std::size_t size() const;

@@ -142,6 +142,9 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
         launchRecordMacro(mKeyboardState.secureMacroSet[screenEvent.index],
                           screenEvent);
 
+
+        KeyboardStateUtil::store(mKeyboardState.secureMacroSet,
+                                 mEntropyPool);
         break;
         
     case ScreenEvent::Type::kEditLayer:

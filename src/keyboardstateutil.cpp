@@ -2,6 +2,7 @@
 
 #include "keyboardstate.h"
 #include "storage/storage.h"
+#include "storage/securestorage.h"
 #include "serialize/serializer.h"
 
 namespace KeyboardStateUtil
@@ -93,6 +94,20 @@ void store(const MacroSet& macroSet)
     auto os(storage.write(Storage::Region::kMacro));
     
     s.serialize(macroSet, os);
+}
+
+void store(const SecureMacroSet& secureMacroSet,
+           EntropyPool&          entropyPool)
+{
+    Storage storage;
+    SecureStorage secureStorage(storage);
+    Serializer<SecureMacroSet> s;
+    
+    auto os(secureStorage.write("test",
+                                entropyPool,
+                                Storage::Region::kSecureMacro));
+    
+    s.serialize(secureMacroSet, os);
 }
 
 void store(const LayerStack& layerStack)

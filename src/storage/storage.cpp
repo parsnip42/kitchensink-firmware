@@ -25,7 +25,7 @@ const char* getRegionFile(Storage::Region region)
         return "macro.ini";
 
     case Storage::Region::kSecureMacro:
-        return "securemacro.ini.enc";
+        return "securemacro.ini.aes";
 
     case Storage::Region::kMultiKey:
         return "multi.ini";
@@ -114,4 +114,9 @@ Storage::OStream::~OStream()
 void Storage::OStream::write(const StrRef& str)
 {
     mFileHandle.write(str.begin(), str.length());   
+}
+
+void Storage::OStream::write(char c)
+{
+    mFileHandle.write(c);   
 }

@@ -41,6 +41,13 @@ struct Serializer<MacroSet>
 };
 
 template <>
+struct Serializer<SecureMacroSet>
+{
+    void serialize(const SecureMacroSet& macroSet, OutStream& os);
+    bool deserialize(InStream& is, SecureMacroSet& macroSet);
+};
+
+template <>
 struct Serializer<LayerStack>
 {
     void serialize(const LayerStack& layerStack, OutStream& os);

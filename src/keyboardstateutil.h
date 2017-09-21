@@ -4,10 +4,12 @@
 #include "multikeyset.h"
 #include "smartkeyset.h"
 
-class KeyboardState;
+class EntropyPool;
 class GlobalConfig;
-class MacroSet;
+class KeyboardState;
 class LayerStack;
+class MacroSet;
+class SecureMacroSet;
 
 namespace KeyboardStateUtil
 {
@@ -24,6 +26,10 @@ void store(const KeyboardState& keyboardState);
 
 void store(const GlobalConfig& globalConfig);
 void store(const MacroSet& macroSet);
+
+void store(const SecureMacroSet& secureMacroSet,
+           EntropyPool&          entropyPool);
+
 void store(const LayerStack& layerStack);
 void store(const MultiKeySet& multiKeySet);
 void store(const SmartKeySet& smartKeySet);

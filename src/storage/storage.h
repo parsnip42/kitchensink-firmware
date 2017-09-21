@@ -21,10 +21,11 @@ public:
         explicit OStream(File file);
 
     public:
-        ~OStream();
+        virtual ~OStream();
         
     public:
         virtual void write(const StrRef& str) override;
+        void write(char c);
 
     private:
         File mFileHandle;

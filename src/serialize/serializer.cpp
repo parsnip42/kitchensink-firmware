@@ -245,6 +245,116 @@ bool Serializer<MacroSet>::deserialize(InStream& is, MacroSet& macroSet)
     return false;
 }
 
+void Serializer<SecureMacroSet>::serialize(const SecureMacroSet& macroSet, OutStream& os)
+{
+    IniFormat::OStream ini(os);
+
+    for (std::size_t i(0); i < macroSet.size(); ++i)
+    {
+        StrBuf<20> headerStr;
+        StrOutStream ostream(headerStr);
+
+        ostream.appendStr("macro ")
+               .appendInt(i);
+                                
+        ini.writeSection(headerStr);
+
+        const auto& macro(macroSet[i]);
+        
+        ini.writeProperty("name", macro.name);
+        ini.writeProperty("shortcut", macro.shortcut);
+
+        StrBuf<12> typeStr;
+        StrOutStream oss(typeStr);
+
+        oss.appendInt(static_cast<int>(macro.type));
+    
+        ini.writeProperty("type", typeStr);
+
+        os.write("content=");
+
+        for (const auto& event : macro.content)
+        {
+            StrBuf<24> str;
+
+            EventSerializer::serialize(event, str);
+        
+            os.write(str);
+            os.write(" ");
+        }
+
+        os.write("\n");
+    }    
+}
+
+bool Serializer<SecureMacroSet>::deserialize(InStream& is, SecureMacroSet& macroSet)
+{
+    IniFormat::IStream ini(is);
+    
+    StrRef sectionName;
+
+    while (ini.nextSection(sectionName))
+    {
+        int macroId;
+        StrRef typeStr;
+        StrRef numStr;
+
+        if (StrUtil::cutTrim(sectionName, typeStr, ' ', numStr) &&
+            typeStr == "macro" &&
+            StrUtil::parseUInt(numStr, macroId))
+        {
+            auto& macro(macroSet[macroId]);
+            
+            StrRef key;
+            StrRef value;
+
+            std::array<Event, Config::kMacroMaxSize> macroData;
+            std::size_t macroDataSize(0);
+
+            while (ini.nextProperty(key, value))
+            {
+                if (key == "name")
+                {
+                    macro.name = value;
+                }
+
+                if (key == "shortcut")
+                {
+                    macro.shortcut = value;
+                }
+
+                if (key == "type")
+                {
+                    int typeVal;
+                    
+                    StrUtil::parseUInt(value, typeVal);
+
+                    macro.type = static_cast<Macro::Type>(typeVal);
+                }
+
+                if (key == "content")
+                {
+                    StrRef token(StrUtil::nextToken(value, " \t"));
+                    
+                    while (!token.empty() && macroDataSize < macroData.size())
+                    {
+                        auto& event(macroData[macroDataSize++]);
+
+                        EventSerializer::deserialize(token, event);
+                        
+                        token = StrUtil::nextToken(value, " \t", token);
+                    }
+                }
+
+                macro.content.assign(macroData.begin(),
+                                     macroData.begin() + macroDataSize); 
+            }
+        }
+    }
+    
+    return false;
+}
+
 void Serializer<LayerStack>::serialize(const LayerStack& layerStack, OutStream& os)
 {
     IniFormat::OStream ini(os);
