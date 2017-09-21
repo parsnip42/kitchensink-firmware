@@ -1,4 +1,5 @@
-#include "storage/securestorage.h"
+#include "cryptooutstream.h"
+
 #include "hardware/entropypool.h"
 #include "types/stroutstream.h"
 #include "config.h"
@@ -57,101 +58,18 @@ Value256 stretch(const StrRef&   password,
 
 }
 
-SecureStorage::IStream::IStream(InStream&     inStream,
-                                const StrRef& password)
-    : mInStream(inStream)
-    , mPassword(password)
-    , mError(Error::kNone)
-{
-    readHeader();
-}
 
-std::size_t SecureStorage::IStream::read(OutStream& os, std::size_t len)
-{
-    if (mError != Error::kNone)
-    {
-        return 0;
-    }
-    
-    return 0;
-}
-
-void SecureStorage::IStream::readHeader()
-{
-    std::array<uint8_t, 128> buffer;
-    ArrayOutStream out(buffer);
-
-    // Header
-    
-    mInStream.read(out, 3);
-    if (out.data() != "AES")
-    {
-        mError = Error::kBadHeader;
-        return;
-    }
-
-    // File version
-    
-    out.reset();
-    mInStream.read(out, 1);
-    if (out.data() != uint8_t('\x02'))
-    {
-        mError = Error::kBadVersion;
-        return;
-    }
-
-    // Reserved
-    
-    out.reset();
-    mInStream.read(out, 1);
-    if (out.data() != uint8_t('\x00'))
-    {
-        mError = Error::kCorrupted;
-        return;
-    }
-
-    // Extension length
-    
-    out.reset();
-    if (mInStream.read(out, 2) != 2)
-    {
-        mError = Error::kTruncated;
-        return;
-    }
-
-    std::size_t extLen(std::size_t(out.data()[0]) << 8 | std::size_t(out.data()[1]));
-
-    out.reset();
-    if (mInStream.read(out, extLen) != extLen)
-    {
-        mError = Error::kTruncated;
-        return;
-    }
-
-    // IV
-    
-    Value128 iv;
-    ArrayOutStream ivOut(iv);
-    
-    if (mInStream.read(ivOut, iv.size()) != iv.size())
-    {
-        mError = Error::kTruncated;
-        return;
-    }
-
-}
-
-SecureStorage::OStream::OStream(OutStream&    ostream,
+CryptoOutStream::CryptoOutStream(OutStream&   outStream,
                                 const StrRef& password,
                                 EntropyPool&  entropyPool)
-    : mOStream(ostream)
+    : mOutStream(outStream)
     , mPassword(password)
     , mEntropyPool(entropyPool)
     , mData()
     , mDataOut(mData)
 { }
 
-SecureStorage::OStream::~OStream()
+CryptoOutStream::~CryptoOutStream()
 {
     auto iv(mEntropyPool.read128());
 
@@ -202,33 +120,33 @@ SecureStorage::OStream::~OStream()
     }
 
 
-    mOStream.write("AES");
-    mOStream.write(uint8_t('\x02'));
-    mOStream.write(uint8_t('\x00'));
+    mOutStream.write("AES");
+    mOutStream.write(uint8_t('\x02'));
+    mOutStream.write(uint8_t('\x00'));
 
     StrRef createdBy("CREATED_BY");
     StrRef creator("pyAesCrypt 0.3"); // FIXME: Set for testing
 
-    mOStream.write(uint8_t('\x00'));
-    mOStream.write(static_cast<char>(createdBy.length() + creator.length() + 1));
-    mOStream.write(createdBy);
-    mOStream.write(uint8_t('\x00'));
-    mOStream.write(creator);
+    mOutStream.write(uint8_t('\x00'));
+    mOutStream.write(static_cast<char>(createdBy.length() + creator.length() + 1));
+    mOutStream.write(createdBy);
+    mOutStream.write(uint8_t('\x00'));
+    mOutStream.write(creator);
 
-    mOStream.write(uint8_t('\x00'));
-    mOStream.write(uint8_t('\x80'));
+    mOutStream.write(uint8_t('\x00'));
+    mOutStream.write(uint8_t('\x80'));
 
     for (int i(0); i < 128; ++i)
     {
-        mOStream.write(uint8_t('\x00'));
+        mOutStream.write(uint8_t('\x00'));
     }
 
-    mOStream.write(uint8_t('\x00'));
-    mOStream.write(uint8_t('\x00'));
+    mOutStream.write(uint8_t('\x00'));
+    mOutStream.write(uint8_t('\x00'));
     
-    mOStream.write(iv);
-    mOStream.write(dataIvKeyCrypt);
-    mOStream.write(dataIvKeyHmac);
+    mOutStream.write(iv);
+    mOutStream.write(dataIvKeyCrypt);
+    mOutStream.write(dataIvKeyHmac);
 
     auto blockCount((mDataOut.position() + kAesBlockSize - 1) / kAesBlockSize);
     auto blockOffset(mDataOut.position() % kAesBlockSize);
@@ -264,13 +182,13 @@ SecureStorage::OStream::~OStream()
                         cryptDataHmac.begin());
     }
 
-    mOStream.write(DataRef(cryptData.begin(),
+    mOutStream.write(DataRef(cryptData.begin(),
                            cryptData.begin() + cryptSize));
-    mOStream.write(uint8_t(blockOffset));
-    mOStream.write(cryptDataHmac);
+    mOutStream.write(uint8_t(blockOffset));
+    mOutStream.write(cryptDataHmac);
 }
 
-void SecureStorage::OStream::write(const DataRef& data)
+void CryptoOutStream::write(const DataRef& data)
 {
     mDataOut.write(data);
 }

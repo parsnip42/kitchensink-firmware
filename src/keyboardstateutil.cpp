@@ -2,7 +2,7 @@
 
 #include "keyboardstate.h"
 #include "storage/storage.h"
-#include "storage/securestorage.h"
+#include "crypto/cryptooutstream.h"
 #include "serialize/serializer.h"
 
 namespace KeyboardStateUtil
@@ -103,9 +103,9 @@ void store(const SecureMacroSet& secureMacroSet,
 
     auto output(storage.write(Storage::Region::kSecureMacro));
     
-    SecureStorage::OStream os(output,
-                              "test",
-                              entropyPool);
+    CryptoOutStream os(output,
+                       "test",
+                       entropyPool);
     
     Serializer<SecureMacroSet> s;
     

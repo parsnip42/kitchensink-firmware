@@ -111,6 +111,7 @@ $(wildcard src/types/*.cpp) \
 $(wildcard src/data/*.cpp) \
 $(wildcard src/storage/*.cpp) \
 $(wildcard src/serialize/*.cpp) \
+$(wildcard src/crypto/*.cpp) \
 $(wildcard src/hardware/*.cpp)
 
 INO_FILES := $(wildcard src/*.ino)
