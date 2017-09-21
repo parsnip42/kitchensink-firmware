@@ -31,6 +31,7 @@ constexpr std::size_t kLayerColumns     = 16;
 constexpr std::size_t kLayerRows        = 5;
 constexpr std::size_t kLayerCount       = 10;
 
+constexpr std::size_t kEntropyPoolSize = 200;
 constexpr std::size_t kPasswordMin     = 8;
 constexpr std::size_t kPasswordMax     = 100;
 };

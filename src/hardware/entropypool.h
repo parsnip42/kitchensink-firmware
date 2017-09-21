@@ -1,12 +1,14 @@
 #ifndef INCLUDED_ENTROPYPOOL_H
 #define INCLUDED_ENTROPYPOOL_H
 
+#include "config.h"
+
 #include <array>
 
 class EntropyPool
 {
 private:
-    typedef std::array<uint8_t, 1024> Data;
+    typedef std::array<uint8_t, Config::kEntropyPoolSize> Data;
 
 public:
     typedef Data::const_iterator const_iterator;

@@ -15,6 +15,25 @@ class StrOutStream;
 class Storage
 {
 public:
+    class IStream : public InStream
+    {
+    private:
+        explicit IStream(File file);
+
+    public:
+        ~IStream();
+
+    public:
+        virtual bool readLine(const StrOutStream& os) override;
+        
+    private:
+        File mFileHandle;
+
+    private:
+        friend class Storage;
+    };
+
+public:
     class OStream : public OutStream
     {
     private:
@@ -27,25 +46,6 @@ public:
         virtual void write(const StrRef& str) override;
         void write(char c);
 
-    private:
-        File mFileHandle;
-
-    private:
-        friend class Storage;
-    };
-
-public:
-    class IStream : public InStream
-    {
-    private:
-        explicit IStream(File file);
-
-    public:
-        ~IStream();
-
-    public:
-        virtual bool readLine(const StrOutStream& os) override;
-        
     private:
         File mFileHandle;
 

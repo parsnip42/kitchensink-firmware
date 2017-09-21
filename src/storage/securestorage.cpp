@@ -55,6 +55,17 @@ Value256 stretch(const StrRef&   password,
 
 }
 
+SecureStorage::IStream::IStream(Storage::IStream istream,
+                                const StrRef&    password)
+    : mIStream(istream)
+    , mPassword(password)
+{ }
+
+bool SecureStorage::IStream::readLine(const StrOutStream& os)
+{
+    return false;
+}
+
 SecureStorage::OStream::OStream(Storage::OStream ostream,
                                 const StrRef&    password,
                                 EntropyPool&     entropyPool)
@@ -150,7 +161,7 @@ SecureStorage::OStream::~OStream()
     mOStream.write('\x00');
 
     StrRef createdBy("CREATED_BY");
-    StrRef creator("pyAesCrypt 0.3");
+    StrRef creator("pyAesCrypt 0.3"); // FIXME: Set for testing
 
     mOStream.write('\x00');
     mOStream.write(static_cast<char>(createdBy.length() + creator.length() + 1));
@@ -205,6 +216,14 @@ void SecureStorage::OStream::write(const StrRef& str)
 SecureStorage::SecureStorage(Storage& storage)
     : mStorage(storage)
 { }
+
+
+SecureStorage::IStream SecureStorage::read(const StrRef&   password,
+                                           Storage::Region region)
+{
+    return IStream(mStorage.read(region),
+                   password);
+}
 
 SecureStorage::OStream SecureStorage::write(const StrRef&   password,
                                             EntropyPool&    entropyPool,

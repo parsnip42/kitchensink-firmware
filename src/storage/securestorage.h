@@ -11,6 +11,28 @@ class EntropyPool;
 class SecureStorage
 {
 public:
+    class IStream : public InStream
+    {
+    private:
+        IStream(Storage::IStream istream,
+                const StrRef&    password);
+
+    public:
+        virtual ~IStream() = default;
+        
+    public:
+        virtual bool readLine(const StrOutStream& os) override;
+
+    private:
+        Storage::IStream mIStream;
+        StrRef           mPassword;
+        StrBuf<4096>     mData;
+
+    private:
+        friend class SecureStorage;
+    };
+
+public:
     class OStream : public OutStream
     {
     private:
@@ -26,7 +48,7 @@ public:
 
     private:
         Storage::OStream mOStream;
-        const StrRef&    mPassword;
+        StrRef           mPassword;
         EntropyPool&     mEntropyPool;
         StrBuf<4096>     mData;
         StrOutStream     mDataOut;
@@ -39,7 +61,9 @@ public:
     explicit SecureStorage(Storage& storage);
 
 public:
-    // IStream read(Storage::Region region);
+    IStream read(const StrRef&   password,
+                 Storage::Region region);
+    
     OStream write(const StrRef&   password,
                   EntropyPool&    entropyPool,
                   Storage::Region region);
