@@ -1,6 +1,6 @@
-#include "cryptooutstream.h"
+#include "crypto/cryptooutstream.h"
 
-#include "hardware/entropypool.h"
+#include "crypto/entropypool.h"
 #include "types/stroutstream.h"
 #include "config.h"
 

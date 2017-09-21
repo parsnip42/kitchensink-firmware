@@ -1,6 +1,6 @@
 #include "keymatrix.h"
 
-#include "hardware/entropypool.h"
+#include "crypto/entropypool.h"
 
 #include <Wire.h>
 

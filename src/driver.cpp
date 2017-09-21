@@ -19,7 +19,7 @@
 #include "keyeventbuffer.h"
 #include "eventmanager.h"
 #include "topleveleventstage.h"
-#include "hardware/entropypool.h"
+#include "crypto/entropypool.h"
 
 #include "types/strbuf.h"
 

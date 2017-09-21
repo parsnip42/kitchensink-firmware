@@ -1,7 +1,7 @@
 #include "ui/cryptoscreen.h"
 
 #include "types/stroutstream.h"
-#include "hardware/entropypool.h"
+#include "crypto/entropypool.h"
 
 #include <mbedtls/aes.h>
 #include <mbedtls/sha256.h>
