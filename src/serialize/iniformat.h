@@ -3,6 +3,7 @@
 
 #include "storage/storage.h"
 #include "types/strbuf.h"
+#include "types/strinstream.h"
 
 class StrRef;
 class StrOStream;
@@ -24,7 +25,7 @@ private:
     bool nextLine();
     
 private:
-    InStream&   mIs;
+    StrInStream mStrInStream;
     StrBuf<240> mCurrentLine;
     bool        mLineConsumed;
     

@@ -23,7 +23,7 @@ public:
         virtual ~IStream() = default;
         
     public:
-        virtual bool readLine(const StrOutStream& os) override;
+        virtual std::size_t read(OutStream& os, std::size_t len) override;
 
     private:
         Storage::IStream mIStream;
@@ -65,10 +65,6 @@ public:
 public:
     IStream read(const StrRef&   password,
                  Storage::Region region);
-    
-    // OStream write(const StrRef&   password,
-    //               EntropyPool&    entropyPool,
-    //               Storage::Region region);
 
 private:
     Storage& mStorage;

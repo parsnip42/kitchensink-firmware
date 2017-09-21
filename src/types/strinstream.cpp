@@ -3,21 +3,33 @@
 #include "types/stroutstream.h"
 #include "types/strutil.h"
 
-StrInStream::StrInStream(const StrRef& str)
-    : mStr(str)
-    , mToken(StrUtil::nextToken(mStr, "\r\n"))
+#include <algorithm>
+
+StrInStream::StrInStream(InStream& inStream)
+    : mInStream(inStream)
 { }
 
 bool StrInStream::readLine(const StrOutStream& os)
 {
     os.reset();
-    os.appendStr(mToken);
+    
+    std::array<uint8_t, 1> buffer;
+    ArrayOutStream         bufferOut(buffer);
 
-    // Don't loop back to start.
-    if (!mToken.empty())
+    while (mInStream.read(bufferOut, 1) == 1)
     {
-        mToken = StrUtil::nextToken(mStr, "\r\n", mToken);
+        char c(buffer[0]);
+
+        if (c == '\n' || c =='\r')
+        {
+            return true;
+        }
+        else
+        {
+            os.appendChar(c);
+            bufferOut.reset();
+        }
     }
     
-    return !mToken.empty();
+    return !os.str().empty();
 }

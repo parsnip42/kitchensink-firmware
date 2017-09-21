@@ -3,7 +3,7 @@
 #include "keyboardstate.h"
 
 #include "serialize/serializer.h"
-#include "types/strinstream.h"
+#include "types/datarefinstream.h"
 
 namespace DefaultProfile
 {
@@ -39,7 +39,7 @@ void init(KeyboardState& keyboardState)
     "index=2\n";
 
     {
-        StrInStream is(GlobalConfigTxt);
+        DataRefInStream is(GlobalConfigTxt);
         Serializer<GlobalConfig> s;
 
         s.deserialize(is, keyboardState.globalConfig);
@@ -79,7 +79,7 @@ void init(KeyboardState& keyboardState)
     "row=_ _ _ U3:18 U3:19 U3:20 _ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
 
     {
-        StrInStream is(LayoutConfig);
+        DataRefInStream is(LayoutConfig);
         Serializer<LayerStack> s;
 
         s.deserialize(is, keyboardState.layerStack);
@@ -137,28 +137,12 @@ void init(KeyboardState& keyboardState)
     "[macro 8]\n"; // FIXME!
     
     {
-        StrInStream is(MacroConfig);
+        DataRefInStream is(MacroConfig);
         Serializer<MacroSet> s;
     
         s.deserialize(is, keyboardState.macroSet);
     }
     
-    // static const char* const SecureMacroConfig =
-    // "[macro 0]\n"
-    // "name=Root\n"
-    // "shortcut=su\n"
-    // "type=0\n"
-    // "content=KS !KS KU !KU KEnter !KEnter\n"
-
-    // "[macro 1]\n";
-        
-    // {
-    //     StrInStream is(SecureMacroConfig);
-    //     Serializer<MacroSet> s;
-    
-    //     s.deserialize(is, keyboardState.secureMacroSet);
-    // }
-
     static const char* const MultiConfig =
     "[multi 0]\n"
     "name=Shift\n"
@@ -175,7 +159,7 @@ void init(KeyboardState& keyboardState)
     "event=_\n";
     
     {
-        StrInStream is(MultiConfig);
+        DataRefInStream is(MultiConfig);
         Serializer<MultiKeySet> s;
     
         s.deserialize(is, keyboardState.multiKeySet);
@@ -193,7 +177,7 @@ void init(KeyboardState& keyboardState)
     "auxEvent=_\n";
 
     {
-        StrInStream is(SmartConfig);
+        DataRefInStream is(SmartConfig);
         Serializer<SmartKeySet> s;
     
         s.deserialize(is, keyboardState.smartKeySet);

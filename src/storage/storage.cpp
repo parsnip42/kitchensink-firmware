@@ -83,23 +83,18 @@ Storage::IStream::~IStream()
     mFileHandle.close();
 }
 
-bool Storage::IStream::readLine(const StrOutStream& os)
+std::size_t Storage::IStream::read(OutStream& os, std::size_t len)
 {
-    char ch;
+    std::size_t count(0);
+    uint8_t ch;
 
-    os.reset();
-    
-    while (mFileHandle.read(&ch, 1) == 1)
+    while (mFileHandle.read(&ch, 1) == 1 && count < len)
     {
-        if (ch == '\n' || ch == '\r')
-        {
-            return true;
-        }
-        
-        os.appendChar(ch);
+        os.write(ch);
+        ++count;
     }
 
-    return false;
+    return count;
 }
 
 Storage::OStream::OStream(File fileHandle)

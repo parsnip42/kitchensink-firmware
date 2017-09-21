@@ -24,8 +24,8 @@ public:
         ~IStream();
 
     public:
-        virtual bool readLine(const StrOutStream& os) override;
-        
+        virtual std::size_t read(OutStream& os, std::size_t len) override;
+
     private:
         File mFileHandle;
 

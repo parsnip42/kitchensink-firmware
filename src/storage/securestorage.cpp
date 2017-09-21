@@ -63,9 +63,9 @@ SecureStorage::IStream::IStream(Storage::IStream istream,
     , mPassword(password)
 { }
 
-bool SecureStorage::IStream::readLine(const StrOutStream& os)
+std::size_t SecureStorage::IStream::read(OutStream& os, std::size_t len)
 {
-    return false;
+    return 0;
 }
 
 SecureStorage::OStream::OStream(OutStream&    ostream,
@@ -213,21 +213,4 @@ SecureStorage::IStream SecureStorage::read(const StrRef&   password,
     return IStream(mStorage.read(region),
                    password);
 }
-
-// SecureStorage::OStream SecureStorage::write(const StrRef&   password,
-//                                             EntropyPool&    entropyPool,
-//                                             Storage::Region region)
-// {
-//     return OStream(mStorage.write(region),
-//                    password,
-//                    entropyPool);
-// }
-
-
-
-
-
-
-
-
 

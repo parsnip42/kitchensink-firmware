@@ -1,7 +1,9 @@
 #ifndef INCLUDED_INSTREAM_H
 #define INCLUDED_INSTREAM_H
 
-class StrOutStream;
+#include <cstdint>
+
+class OutStream;
 
 class InStream
 {
@@ -10,7 +12,7 @@ public:
     virtual ~InStream() = default;
     
 public:
-    virtual bool readLine(const StrOutStream& os) = 0;
+    virtual std::size_t read(OutStream& os, std::size_t len) = 0;
 };
 
 #endif

@@ -3,21 +3,23 @@
 
 #include "types/strref.h"
 #include "types/instream.h"
+#include "types/arrayoutstream.h"
+
+#include <array>
 
 class StrOutStream;
 
-class StrInStream : public InStream
+class StrInStream
 {
 public:
-    explicit StrInStream(const StrRef& str);
+    explicit StrInStream(InStream& inStream);
 
 public:
     virtual bool readLine(const StrOutStream& os);
 
 private:
-    StrRef mStr;
-    StrRef mToken;
-
+    InStream& mInStream;
+    
 private:
     StrInStream(const StrInStream&) = delete;
     StrInStream& operator=(const StrInStream&) = delete;

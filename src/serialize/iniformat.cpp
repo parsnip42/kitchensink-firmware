@@ -10,7 +10,7 @@ namespace IniFormat
 {
 
 IStream::IStream(InStream& is)
-    : mIs(is)
+    : mStrInStream(is)
     , mLineConsumed(true) 
 { }
 
@@ -65,7 +65,7 @@ bool IStream::nextLine()
         return true;
     }
         
-    return mIs.readLine(mCurrentLine);
+    return mStrInStream.readLine(mCurrentLine);
 }
 
 

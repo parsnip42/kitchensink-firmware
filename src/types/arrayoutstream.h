@@ -19,11 +19,16 @@ public:
 
 public:
     std::size_t position() const;
-
+    void reset();
+    
 private:
     uint8_t*    mData;
     std::size_t mCapacity;
     std::size_t mPosition;
+
+private:
+    ArrayOutStream(const ArrayOutStream&) = delete;
+    ArrayOutStream& operator=(const ArrayOutStream&) = delete;
 };
 
 
@@ -39,6 +44,12 @@ inline
 std::size_t ArrayOutStream::position() const
 {
     return mPosition;
+}
+
+inline
+void ArrayOutStream::reset()
+{
+    mPosition = 0;
 }
 
 #endif
