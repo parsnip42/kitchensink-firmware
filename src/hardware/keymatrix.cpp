@@ -104,7 +104,7 @@ void KeyMatrix::scan()
         row &= mColMask;
 
         // Row changes (ie physical key presses or releases) write a value
-        // derived from the row scan counter and the row of the key into the
+        // derived from the matrix scan counter and the row of the key into the
         // entropy pool. We *could* incorporate the column too, but unless
         // absolutely necessary it's probably best to ensure that this thing
         // doesn't in any conceivable way turn itself into a key logger.
@@ -119,7 +119,8 @@ void KeyMatrix::scan()
         
         if (row != state[index])
         {
-            mEntropyPool.insert((mCounter << index) | (mCounter >> (8 - index)));
+            auto rot(index & 7);
+            mEntropyPool.insert((mCounter << rot) | (mCounter >> (8 - rot)));
             state[index] = row;
         }
 
