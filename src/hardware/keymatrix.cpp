@@ -103,49 +103,30 @@ void KeyMatrix::scan()
         row |= (((~Wire.read()) & 0xff) << 8);
         row &= mColMask;
 
-        // Row changes (ie physical key presses or releases) write the value of
-        // the entropy pool counter into the entropy pool.
+        // Row changes (ie physical key presses or releases) write a value
+        // derived from the row scan counter and the row of the key into the
+        // entropy pool. We *could* incorporate the column too, but unless
+        // absolutely necessary it's probably best to ensure that this thing
+        // doesn't in any conceivable way turn itself into a key logger.
         //
-        // Given that the matrix should scan at approximately 500hz with a row
-        // count of usually 5, this makes the value of the counter completely
-        // unpredictable - it will be derived from both the row location of the
-        // key and the time of the event at a granularity of approximately 2
-        // milliseconds.
+        // The counter is an unsigned octet which is incremented every full
+        // scan, so will range from 0 - 255 as it wraps at approximately every
+        // 0.5s. The final value to be inserted into the entropy pool is the
+        // counter bit rotated by the row index.
         //
         // This will also write any key bounces, seeing as we haven't gone
         // through the debounce filter yet.
         
         if (row != state[index])
         {
-            mEntropyPool.insert(mCounter);
+            mEntropyPool.insert((mCounter << index) | (mCounter >> (8 - index)));
             state[index] = row;
         }
-        
-        // Counter is incremented for every row scan to incorporate the row
-        // location of the key into the entropy pool.
-        //
-        // We wrap the value using a prime number rather than allowing it to
-        // overflow so that a row count divisible by 256 (ie usually 4 or 8)
-        // cannot be exploited to derive the row number of the key from the
-        // entropy pool by examining the lower bits of the counter values.
-        //
-        // It also makes it more difficult for an attacker to advantage of the
-        // higher bits being derived from the time of the event at a higher
-        // granularity.
-        //
-        // These cases are quite unlikely to be exploitable in any meaningful
-        // way, but it's good practice to make things as difficult as possible
-        // for any potential attacks that we haven't thought of.
-        //
-        // This will of course cost us a little bit of entropy (0 - 250 entering
-        // the pool rather than 0 - 255), but we're going to normalise the
-        // random output by using a hash function on a range of input larger
-        // than the resulting hash value.
-        
-        mCounter = (mCounter + 1) % 251;
 
         // Move to the next bit in the row mask and increment.
         rowMask &= ~rowBit;
         ++index;
     }
+
+    ++mCounter;
 }
