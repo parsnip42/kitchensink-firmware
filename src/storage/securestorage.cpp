@@ -57,15 +57,88 @@ Value256 stretch(const StrRef&   password,
 
 }
 
-SecureStorage::IStream::IStream(Storage::IStream istream,
-                                const StrRef&    password)
-    : mIStream(istream)
+SecureStorage::IStream::IStream(InStream&     inStream,
+                                const StrRef& password)
+    : mInStream(inStream)
     , mPassword(password)
-{ }
+    , mError(Error::kNone)
+{
+    readHeader();
+}
 
 std::size_t SecureStorage::IStream::read(OutStream& os, std::size_t len)
 {
+    if (mError != Error::kNone)
+    {
+        return 0;
+    }
+    
     return 0;
+}
+
+void SecureStorage::IStream::readHeader()
+{
+    std::array<uint8_t, 128> buffer;
+    ArrayOutStream out(buffer);
+
+    // Header
+    
+    mInStream.read(out, 3);
+    if (out.data() != "AES")
+    {
+        mError = Error::kBadHeader;
+        return;
+    }
+
+    // File version
+    
+    out.reset();
+    mInStream.read(out, 1);
+    if (out.data() != uint8_t('\x02'))
+    {
+        mError = Error::kBadVersion;
+        return;
+    }
+
+    // Reserved
+    
+    out.reset();
+    mInStream.read(out, 1);
+    if (out.data() != uint8_t('\x00'))
+    {
+        mError = Error::kCorrupted;
+        return;
+    }
+
+    // Extension length
+    
+    out.reset();
+    if (mInStream.read(out, 2) != 2)
+    {
+        mError = Error::kTruncated;
+        return;
+    }
+
+    std::size_t extLen(std::size_t(out.data()[0]) << 8 | std::size_t(out.data()[1]));
+
+    out.reset();
+    if (mInStream.read(out, extLen) != extLen)
+    {
+        mError = Error::kTruncated;
+        return;
+    }
+
+    // IV
+    
+    Value128 iv;
+    ArrayOutStream ivOut(iv);
+    
+    if (mInStream.read(ivOut, iv.size()) != iv.size())
+    {
+        mError = Error::kTruncated;
+        return;
+    }
+
 }
 
 SecureStorage::OStream::OStream(OutStream&    ostream,
@@ -201,16 +274,3 @@ void SecureStorage::OStream::write(const DataRef& data)
 {
     mDataOut.write(data);
 }
-
-SecureStorage::SecureStorage(Storage& storage)
-    : mStorage(storage)
-{ }
-
-
-SecureStorage::IStream SecureStorage::read(const StrRef&   password,
-                                           Storage::Region region)
-{
-    return IStream(mStorage.read(region),
-                   password);
-}
-

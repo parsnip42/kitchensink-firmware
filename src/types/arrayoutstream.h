@@ -2,6 +2,7 @@
 #define INCLUDED_ARRAYOUTSTREAM_H
 
 #include "types/outstream.h"
+#include "types/dataref.h"
 
 #include <array>
 #include <cstdint>
@@ -18,7 +19,9 @@ public:
     virtual void write(const DataRef& data) override;
 
 public:
+    DataRef data() const;
     std::size_t position() const;
+    std::size_t remaining() const;
     void reset();
     
 private:
@@ -41,9 +44,21 @@ ArrayOutStream::ArrayOutStream(std::array<uint8_t, Capacity>& array)
 { }
 
 inline
+DataRef ArrayOutStream::data() const
+{
+    return DataRef(mData, mData + mPosition);
+}
+
+inline
 std::size_t ArrayOutStream::position() const
 {
     return mPosition;
+}
+
+inline
+std::size_t ArrayOutStream::remaining() const
+{
+    return mCapacity - mPosition;
 }
 
 inline

@@ -29,11 +29,18 @@ public:
     constexpr const_iterator begin() const;
     constexpr const_iterator end() const;
     constexpr std::size_t size() const;
-
+    constexpr uint8_t operator[](std::size_t index) const;
+    
 private:
     Range<const_iterator> mRange;
     uint8_t               mInPlace;
+
+private:
+    friend bool operator==(const DataRef& lhs, const DataRef& rhs);
 };
+
+bool operator==(const DataRef& lhs, const DataRef& rhs);
+bool operator!=(const DataRef& lhs, const DataRef& rhs);
 
 
 inline
@@ -83,6 +90,26 @@ inline
 constexpr std::size_t DataRef::size() const
 {
     return mRange.end() - mRange.begin();
+}
+
+inline
+constexpr uint8_t DataRef::operator[](std::size_t index) const
+{
+    return *(mRange.begin() + index);
+}
+
+
+inline
+bool operator==(const DataRef& lhs, const DataRef& rhs)
+{
+    return (lhs.size() == rhs.size()) &&
+        std::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+inline
+bool operator!=(const DataRef& lhs, const DataRef& rhs)
+{
+    return !(lhs == rhs);
 }
 
 #endif
