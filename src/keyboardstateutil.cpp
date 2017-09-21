@@ -100,12 +100,14 @@ void store(const SecureMacroSet& secureMacroSet,
            EntropyPool&          entropyPool)
 {
     Storage storage;
-    SecureStorage secureStorage(storage);
-    Serializer<SecureMacroSet> s;
+
+    auto output(storage.write(Storage::Region::kSecureMacro));
     
-    auto os(secureStorage.write("test",
-                                entropyPool,
-                                Storage::Region::kSecureMacro));
+    SecureStorage::OStream os(output,
+                              "test",
+                              entropyPool);
+    
+    Serializer<SecureMacroSet> s;
     
     s.serialize(secureMacroSet, os);
 }

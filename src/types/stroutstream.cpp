@@ -6,11 +6,6 @@
 #include <cstring>
 #include <string.h>
 
-void StrOutStream::write(const StrRef& str)
-{
-    appendStr(str);
-}
-
 void StrOutStream::reset() const
 {
     mData[0] = '\0';
@@ -37,7 +32,7 @@ const StrOutStream& StrOutStream::appendChar(char c) const
         mData[currentLength + 1] = '\0';
     }
 
-    return *this;    
+    return *this;
 }
 
 const StrOutStream& StrOutStream::appendInt(int n, const char* fmt) const

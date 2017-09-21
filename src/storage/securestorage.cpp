@@ -9,8 +9,10 @@
 
 namespace
 {
+constexpr std::size_t kAesBlockSize = 16;
+
 typedef std::array<uint8_t, 32> Value256;
-typedef std::array<uint8_t, 16> Value128;
+typedef std::array<uint8_t, kAesBlockSize> Value128;
 }
 
 namespace
@@ -66,9 +68,9 @@ bool SecureStorage::IStream::readLine(const StrOutStream& os)
     return false;
 }
 
-SecureStorage::OStream::OStream(Storage::OStream ostream,
-                                const StrRef&    password,
-                                EntropyPool&     entropyPool)
+SecureStorage::OStream::OStream(OutStream&    ostream,
+                                const StrRef& password,
+                                EntropyPool&  entropyPool)
     : mOStream(ostream)
     , mPassword(password)
     , mEntropyPool(entropyPool)
@@ -126,6 +128,39 @@ SecureStorage::OStream::~OStream()
         }
     }
 
+
+    mOStream.write("AES");
+    mOStream.write(uint8_t('\x02'));
+    mOStream.write(uint8_t('\x00'));
+
+    StrRef createdBy("CREATED_BY");
+    StrRef creator("pyAesCrypt 0.3"); // FIXME: Set for testing
+
+    mOStream.write(uint8_t('\x00'));
+    mOStream.write(static_cast<char>(createdBy.length() + creator.length() + 1));
+    mOStream.write(createdBy);
+    mOStream.write(uint8_t('\x00'));
+    mOStream.write(creator);
+
+    mOStream.write(uint8_t('\x00'));
+    mOStream.write(uint8_t('\x80'));
+
+    for (int i(0); i < 128; ++i)
+    {
+        mOStream.write(uint8_t('\x00'));
+    }
+
+    mOStream.write(uint8_t('\x00'));
+    mOStream.write(uint8_t('\x00'));
+    
+    mOStream.write(iv);
+    mOStream.write(dataIvKeyCrypt);
+    mOStream.write(dataIvKeyHmac);
+
+    auto blockCount((mDataOut.position() + kAesBlockSize - 1) / kAesBlockSize);
+    auto blockOffset(mDataOut.position() % kAesBlockSize);
+    auto cryptSize(blockCount * kAesBlockSize);
+    
     std::array<uint8_t, 4096> cryptData;
     
     {
@@ -136,9 +171,9 @@ SecureStorage::OStream::~OStream()
         mbedtls_aes_setkey_enc(&ctx, dataKey.begin(), 256);
         mbedtls_aes_crypt_cbc(&ctx,
                               MBEDTLS_AES_ENCRYPT,
-                              cryptData.size(),
+                              cryptSize,
                               tempDataIv.begin(),
-                              reinterpret_cast<const uint8_t*>(mData.begin()),
+                              mData.begin(),
                               cryptData.begin());
         mbedtls_aes_free(&ctx);
     }
@@ -152,65 +187,19 @@ SecureStorage::OStream::~OStream()
                         dataKey.begin(),
                         dataKey.size(),
                         cryptData.begin(),
-                        cryptData.size(),
+                        cryptSize,
                         cryptDataHmac.begin());
     }
 
-    mOStream.write("AES");
-    mOStream.write('\x02');
-    mOStream.write('\x00');
-
-    StrRef createdBy("CREATED_BY");
-    StrRef creator("pyAesCrypt 0.3"); // FIXME: Set for testing
-
-    mOStream.write('\x00');
-    mOStream.write(static_cast<char>(createdBy.length() + creator.length() + 1));
-    mOStream.write(createdBy);
-    mOStream.write('\x00');
-    mOStream.write(creator);
-
-    mOStream.write('\x00');
-    mOStream.write('\x80');
-
-    for (int i(0); i < 128; ++i)
-    {
-        mOStream.write('\x00');
-    }
-
-    mOStream.write('\x00');
-    mOStream.write('\x00');
-
-    for (auto b : iv)
-    {
-        mOStream.write(b);
-    }
-    
-    for (auto b : dataIvKeyCrypt)
-    {
-        mOStream.write(b);
-    }
-
-    for (auto b : dataIvKeyHmac)
-    {
-        mOStream.write(b);
-    }
-
-    for (auto b : cryptData)
-    {
-        mOStream.write(b);
-    }
-
-    mOStream.write('\x00');
-
-    for (auto b : cryptDataHmac)
-    {
-        mOStream.write(b);
-    }
+    mOStream.write(DataRef(cryptData.begin(),
+                           cryptData.begin() + cryptSize));
+    mOStream.write(uint8_t(blockOffset));
+    mOStream.write(cryptDataHmac);
 }
 
-void SecureStorage::OStream::write(const StrRef& str)
+void SecureStorage::OStream::write(const DataRef& data)
 {
-    mDataOut.appendStr(str);
+    mDataOut.write(data);
 }
 
 SecureStorage::SecureStorage(Storage& storage)
@@ -225,14 +214,14 @@ SecureStorage::IStream SecureStorage::read(const StrRef&   password,
                    password);
 }
 
-SecureStorage::OStream SecureStorage::write(const StrRef&   password,
-                                            EntropyPool&    entropyPool,
-                                            Storage::Region region)
-{
-    return OStream(mStorage.write(region),
-                   password,
-                   entropyPool);
-}
+// SecureStorage::OStream SecureStorage::write(const StrRef&   password,
+//                                             EntropyPool&    entropyPool,
+//                                             Storage::Region region)
+// {
+//     return OStream(mStorage.write(region),
+//                    password,
+//                    entropyPool);
+// }
 
 
 

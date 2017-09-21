@@ -1,7 +1,7 @@
 #ifndef INCLUDED_OUTSTREAM_H
 #define INCLUDED_OUTSTREAM_H
 
-class StrRef;
+class DataRef;
 
 class OutStream
 {
@@ -10,7 +10,7 @@ public:
     virtual ~OutStream() = default;
     
 public:
-    virtual void write(const StrRef& str) = 0;
+    virtual void write(const DataRef& data) = 0;
 };
 
 #endif

@@ -43,7 +43,7 @@ public:
         virtual ~OStream();
         
     public:
-        virtual void write(const StrRef& str) override;
+        virtual void write(const DataRef& data) override;
         void write(char c);
 
     private:

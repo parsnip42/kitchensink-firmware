@@ -5,18 +5,16 @@
 #include "types/strbuf.h"
 #include "types/stroutstream.h"
 #include "types/outstream.h"
+#include "types/dataref.h"
 
 #include <cstdint>
 #include <cstring>
 
-class StrOutStream : public OutStream
+class StrOutStream
 {
 public:
     template <std::size_t Capacity>
     StrOutStream(StrBuf<Capacity>& buf);
-
-public:
-    virtual void write(const StrRef& str) override;
 
 public:
     StrRef str() const;

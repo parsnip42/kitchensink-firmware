@@ -169,7 +169,7 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
 
             EventSerializer::serialize(event, str);
         
-            os.write(str);
+            os.write(StrRef(str));
             os.write(" ");
         }
 
@@ -279,7 +279,7 @@ void Serializer<SecureMacroSet>::serialize(const SecureMacroSet& macroSet, OutSt
 
             EventSerializer::serialize(event, str);
         
-            os.write(str);
+            os.write(StrRef(str));
             os.write(" ");
         }
 
@@ -382,7 +382,7 @@ void Serializer<LayerStack>::serialize(const LayerStack& layerStack, OutStream& 
             
                 EventSerializer::serialize(event, str);
             
-                os.write(str);
+                os.write(StrRef(str));
                 os.write(" ");
             }
         

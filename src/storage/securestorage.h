@@ -5,7 +5,9 @@
 #include "types/outstream.h"
 #include "types/strbuf.h"
 #include "types/stroutstream.h"
+#include "types/arrayoutstream.h"
 
+class DataRef;
 class EntropyPool;
 
 class SecureStorage
@@ -35,23 +37,23 @@ public:
 public:
     class OStream : public OutStream
     {
-    private:
-        explicit OStream(Storage::OStream ostream,
-                         const StrRef&    password,
-                         EntropyPool&     entropyPool);
+    public:
+        OStream(OutStream&    ostream,
+                const StrRef& password,
+                EntropyPool&  entropyPool);
 
     public:
         virtual ~OStream();
         
     public:
-        virtual void write(const StrRef& str) override;
-
+        virtual void write(const DataRef& data) override;
+        
     private:
-        Storage::OStream mOStream;
-        StrRef           mPassword;
-        EntropyPool&     mEntropyPool;
-        StrBuf<4096>     mData;
-        StrOutStream     mDataOut;
+        OutStream&                mOStream;
+        StrRef                    mPassword;
+        EntropyPool&              mEntropyPool;
+        std::array<uint8_t, 4096> mData;
+        ArrayOutStream            mDataOut;
         
     private:
         friend class SecureStorage;
@@ -64,9 +66,9 @@ public:
     IStream read(const StrRef&   password,
                  Storage::Region region);
     
-    OStream write(const StrRef&   password,
-                  EntropyPool&    entropyPool,
-                  Storage::Region region);
+    // OStream write(const StrRef&   password,
+    //               EntropyPool&    entropyPool,
+    //               Storage::Region region);
 
 private:
     Storage& mStorage;
