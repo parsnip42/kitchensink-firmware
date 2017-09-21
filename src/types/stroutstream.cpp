@@ -14,10 +14,13 @@ void StrOutStream::reset() const
 const StrOutStream& StrOutStream::appendStr(const StrRef& str) const
 {
     auto currentLength(strlen(mData));
-
-    strlcpy(mData + currentLength,
+    auto len(std::min(str.length() + 1, mDataSize - currentLength));
+    
+    strncpy(mData + currentLength,
             str.begin(),
-            std::min(str.length() + 1, mDataSize - currentLength));
+            len);
+    
+    *(mData + currentLength + len) = '\0';
     
     return *this;
 }

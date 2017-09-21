@@ -1,7 +1,7 @@
 AR = ar
 CPP = clang++
 CPP_FLAGS = -g -std=gnu++14 -Wall -Werror -I. -I..
-CPP_FILES = $(wildcard *.cpp) ../types/strutil.cpp ../types/strref.cpp
+CPP_FILES = $(wildcard *.cpp) $(wildcard ../types/*.cpp)
 O_FILES = $(CPP_FILES:.cpp=.o)
 TARGET = tests
 GTEST_DIR = /usr/src/gtest

@@ -21,7 +21,7 @@ TEST(CircularBuffer, SimplePushBackPop)
     
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 1);
-    ASSERT_EQ(cb.pop(), 123);
+    ASSERT_EQ(cb.popFront(), 123);
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);    
 }
@@ -39,11 +39,11 @@ TEST(CircularBuffer, SimplePushBackFull)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 5);
 
-    ASSERT_EQ(cb.pop(), 0);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 3);
-    ASSERT_EQ(cb.pop(), 4);
+    ASSERT_EQ(cb.popFront(), 0);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 3);
+    ASSERT_EQ(cb.popFront(), 4);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -61,10 +61,10 @@ TEST(CircularBuffer, OverlapPushBackPop)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 4);
 
-    ASSERT_EQ(cb.pop(), 0);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 3);
+    ASSERT_EQ(cb.popFront(), 0);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 3);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -77,10 +77,10 @@ TEST(CircularBuffer, OverlapPushBackPop)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 4);
 
-    ASSERT_EQ(cb.pop(), 0);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 3);
+    ASSERT_EQ(cb.popFront(), 0);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 3);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -97,9 +97,9 @@ TEST(CircularBuffer, OverlapPushBackFull)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 3);
 
-    ASSERT_EQ(cb.pop(), 0);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 2);
+    ASSERT_EQ(cb.popFront(), 0);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 2);
 
     cb.pushBack(0);
     cb.pushBack(1);
@@ -110,11 +110,11 @@ TEST(CircularBuffer, OverlapPushBackFull)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 5);
 
-    ASSERT_EQ(cb.pop(), 0);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 3);
-    ASSERT_EQ(cb.pop(), 4);
+    ASSERT_EQ(cb.popFront(), 0);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 3);
+    ASSERT_EQ(cb.popFront(), 4);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -128,7 +128,7 @@ TEST(CircularBuffer, SimplePushFrontPop)
     
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 1);
-    ASSERT_EQ(cb.pop(), 123);
+    ASSERT_EQ(cb.popFront(), 123);
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);    
 }
@@ -146,11 +146,11 @@ TEST(CircularBuffer, SimplePushFrontFull)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 5);
 
-    ASSERT_EQ(cb.pop(), 4);
-    ASSERT_EQ(cb.pop(), 3);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 0);
+    ASSERT_EQ(cb.popFront(), 4);
+    ASSERT_EQ(cb.popFront(), 3);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 0);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -168,10 +168,10 @@ TEST(CircularBuffer, OverlapPushFrontPop)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 4);
 
-    ASSERT_EQ(cb.pop(), 3);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 0);
+    ASSERT_EQ(cb.popFront(), 3);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 0);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -184,10 +184,10 @@ TEST(CircularBuffer, OverlapPushFrontPop)
     ASSERT_FALSE(cb.empty());
     ASSERT_EQ(cb.size(), 4);
 
-    ASSERT_EQ(cb.pop(), 3);
-    ASSERT_EQ(cb.pop(), 2);
-    ASSERT_EQ(cb.pop(), 1);
-    ASSERT_EQ(cb.pop(), 0);
+    ASSERT_EQ(cb.popFront(), 3);
+    ASSERT_EQ(cb.popFront(), 2);
+    ASSERT_EQ(cb.popFront(), 1);
+    ASSERT_EQ(cb.popFront(), 0);
 
     ASSERT_TRUE(cb.empty());
     ASSERT_EQ(cb.size(), 0);
@@ -238,9 +238,9 @@ TEST(CircularBuffer, EraseOverflow)
     cb.pushBack(9);
     cb.pushBack(9);
 
-    cb.pop();
-    cb.pop();
-    cb.pop();
+    cb.popFront();
+    cb.popFront();
+    cb.popFront();
 
     cb.pushBack(0);
     cb.pushBack(1);
