@@ -1,5 +1,5 @@
-#ifndef INCLUDED_NUMBERENTRYWIDGET_H
-#define INCLUDED_NUMBERENTRYWIDGET_H
+#ifndef INCLUDED_PASSWORDENTRYWIDGET_H
+#define INCLUDED_PASSWORDENTRYWIDGET_H
 
 #include "ui/entrywidget.h"
 
@@ -7,16 +7,15 @@ class Event;
 class Timer;
 class StrRef;
 
-class NumberEntryWidget : public Widget
-                        , public WidgetContainer
+class PasswordEntryWidget : public Widget
+                      , public WidgetContainer
 {
 public:
-    class NumberContent : public EntryWidget::Content
+    class PasswordContent : public EntryWidget::Content
     {
     public:
-        NumberContent(int min, int max);
-        
-        virtual ~NumberContent() = default;
+        PasswordContent() = default;
+        virtual ~PasswordContent() = default;
         
     public:
         virtual bool insertChar(char c, int position) override;
@@ -24,24 +23,21 @@ public:
         virtual StrRef textContent() override;
 
     public:
-        operator int();
-        void operator=(int rhs);
+        operator StrRef() const;
+        void operator=(const StrRef& rhs);
 
     private:
-        int normalize();
+        void updateMask();
         
     private:
-        int        mMin;
-        int        mMax;
         StrBuf<30> mText;
+        StrBuf<30> mMask;
     };
     
 public:
-    explicit NumberEntryWidget(int    min,
-                               int    max,
-                               Timer& timer);
+    explicit PasswordEntryWidget(Timer& timer);
 
-    NumberEntryWidget(NumberEntryWidget&& rhs);
+    PasswordEntryWidget(PasswordEntryWidget&& rhs);
     
 public:
     virtual bool processEvent(const Event& event) override;
@@ -54,14 +50,14 @@ public:
     virtual void parented() override;
 
 public:
-    NumberContent value;
+    PasswordContent password;
 
 private:
     EntryWidget mEntryWidget;
     
 private:
-    NumberEntryWidget(const NumberEntryWidget&) = delete;
-    NumberEntryWidget& operator=(const NumberEntryWidget&) = delete;
+    PasswordEntryWidget(const PasswordEntryWidget&) = delete;
+    PasswordEntryWidget& operator=(const PasswordEntryWidget&) = delete;
 };
 
 #endif

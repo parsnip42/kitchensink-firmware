@@ -6,7 +6,7 @@
 class Debounce
 {
 private:
-    static constexpr uint32_t kLatencyMs = 5;
+    static constexpr uint32_t kLatencyMs = 7;
     
 public:
     constexpr Debounce();

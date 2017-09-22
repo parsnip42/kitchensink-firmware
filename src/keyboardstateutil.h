@@ -22,7 +22,8 @@ void load(LayerStack& layerStack);
 void load(MultiKeySet& multiKeySet);
 void load(SmartKeySet& smartKeySet);
 
-void load(SecureMacroSet& secureMacroSet);
+bool load(SecureMacroSet& secureMacroSet,
+          const StrRef& password);
 
 void store(const KeyboardState& keyboardState);
 

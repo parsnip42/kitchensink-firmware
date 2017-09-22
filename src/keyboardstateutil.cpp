@@ -68,17 +68,25 @@ void load(SmartKeySet& smartKeySet)
     s.deserialize(is, smartKeySet);
 }
 
-void load(SecureMacroSet& secureMacroSet)
+bool load(SecureMacroSet& secureMacroSet,
+          const StrRef&   password)
 {
     Storage storage;
 
     auto is(storage.read(Storage::Region::kSecureMacro));
     
-    CryptoInStream cryptoIn(is, "test");
+    CryptoInStream cryptoIn(is, password);
+
+    if (cryptoIn.error() != CryptoInStream::Error::kNone)
+    {
+        return false;
+    }
     
     Serializer<SecureMacroSet> s;
     
     s.deserialize(cryptoIn, secureMacroSet);
+
+    return true;
 }
 
 void store(const KeyboardState& keyboardState)

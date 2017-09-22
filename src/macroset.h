@@ -51,7 +51,10 @@ public:
     SecureMacroSet();
 
 public:
-    bool mLocked;
+    bool unlocked();
+    
+public:
+    StrBuf<24> password;
 };
 
 
@@ -114,7 +117,12 @@ void MacroSetImpl<Size, PoolSize>::reset()
 
 inline
 SecureMacroSet::SecureMacroSet()
-    : mLocked(true)
 { }
+
+inline
+bool SecureMacroSet::unlocked()
+{
+    return !password.empty();
+}
 
 #endif

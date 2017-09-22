@@ -15,6 +15,7 @@
 #include "ui/layerconfigscreen.h"
 #include "ui/multiconfigscreen.h"
 #include "ui/smartconfigscreen.h"
+#include "ui/unlockscreen.h"
 #include "ui/keys.h"
 #include "ui/homescreen.h"
 #include "event/screenevent.h"
@@ -247,7 +248,19 @@ void ScreenManager::launchScreen(int                screenId,
                       sourceEvent);
         break;
     }
-            
+
+    case 4:
+    {
+        UnlockScreen screen(mKeyboardState.secureMacroSet,
+                            mEventManager.timer,
+                            mEventManager);
+
+        displayScreen("Unlock Secure Macros",
+                      screen,
+                      sourceEvent);
+        break;
+    }
+
     default:
         break;
     }

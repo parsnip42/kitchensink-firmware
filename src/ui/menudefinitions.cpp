@@ -33,11 +33,11 @@ const std::array<MenuWidget::Item, 6> configMenu = { {
         { StrRef("Edit Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 24) },
     } };
 
-const std::array<MenuWidget::Item, 4> systemMenu = { {
+const std::array<MenuWidget::Item, 5> systemMenu = { {
+        { StrRef("Unlock Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 4) },
         { StrRef("Status"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 1) },
         { StrRef("Cryptography"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 2) },
         { StrRef("Event Stream"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 3) },
-        // { StrRef("Switch Analysis"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 4) },
         { StrRef("Bootloader"), StrRef(), ActionEvent::create(0) } 
     } };
 

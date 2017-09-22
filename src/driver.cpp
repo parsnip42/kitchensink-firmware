@@ -46,10 +46,7 @@ extern "C" void loop()
     
     DefaultProfile::init(keyboardState);
     KeyboardStateUtil::load(keyboardState);
-
-    // Testing this until we have password UI.
-    KeyboardStateUtil::load(keyboardState.secureMacroSet);
-
+    
     Timer timer;
     
     ToplevelEventStage toplevel(usbKeyboard);
