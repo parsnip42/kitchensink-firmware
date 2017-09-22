@@ -27,6 +27,8 @@ public:
 public:
     virtual std::size_t read(OutStream& os, std::size_t len) override;
 
+    Error error() const;
+    
 private:
     void readHeader();
     
@@ -36,5 +38,12 @@ private:
     StrBuf<4096> mData;
     Error        mError;
 };
+
+
+inline
+CryptoInStream::Error CryptoInStream::error() const
+{
+    return mError;
+}
 
 #endif

@@ -5,7 +5,7 @@
 #include "types/strinstream.h"
 #include "types/stroutstream.h"
 
-TEST(StrInStream, Default)
+TEST(StrInStream, Simple)
 {
     const char* TestStr = "ABC\nDEF\n\nGHI";
 

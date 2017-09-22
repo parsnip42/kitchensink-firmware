@@ -11,7 +11,7 @@ typedef std::array<uint8_t, kAesBlockSize> Value128;
 }
 
 CryptoInStream::CryptoInStream(InStream&     inStream,
-                                const StrRef& password)
+                               const StrRef& password)
     : mInStream(inStream)
     , mPassword(password)
     , mError(Error::kNone)
@@ -63,33 +63,87 @@ void CryptoInStream::readHeader()
         return;
     }
 
-    // Extension length
+    // Skip Extensions
+
+    std::size_t extLen(0);
     
-    out.reset();
-    if (mInStream.read(out, 2) != 2)
+    do
     {
-        mError = Error::kTruncated;
-        return;
-    }
+        out.reset();
+        if (mInStream.read(out, 2) != 2)
+        {
+            mError = Error::kTruncated;
+            return;
+        }
 
-    std::size_t extLen(std::size_t(out.data()[0]) << 8 | std::size_t(out.data()[1]));
+        extLen = (std::size_t(out.data()[0]) << 8 | std::size_t(out.data()[1]));
 
-    out.reset();
-    if (mInStream.read(out, extLen) != extLen)
-    {
-        mError = Error::kTruncated;
-        return;
-    }
-
+        out.reset();
+        if (mInStream.read(out, extLen) != extLen)
+        {
+            mError = Error::kTruncated;
+            return;
+        }
+    } while (extLen != 0);
+    
     // IV
     
     Value128 iv;
-    ArrayOutStream ivOut(iv);
     
-    if (mInStream.read(ivOut, iv.size()) != iv.size())
     {
-        mError = Error::kTruncated;
-        return;
+        ArrayOutStream out(iv);
+    
+        if (mInStream.read(out, iv.size()) != iv.size())
+        {
+            mError = Error::kTruncated;
+            return;
+        }
     }
 
+    // Encrypted IV + Key
+    
+    std::array<uint8_t, 16 + 32> dataIvKeyCrypt;
+
+    {
+        ArrayOutStream out(dataIvKeyCrypt);
+        
+        if (mInStream.read(out, dataIvKeyCrypt.size()) != dataIvKeyCrypt.size())
+        {
+            mError = Error::kTruncated;
+            return;
+        }
+    }
+
+    // IV + Key HMAC
+    
+    Value256 dataIvKeyHmac;
+
+    {
+        ArrayOutStream out(dataIvKeyHmac);
+        
+        if (mInStream.read(out, dataIvKeyHmac.size()) != dataIvKeyHmac.size())
+        {
+            mError = Error::kTruncated;
+            return;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
