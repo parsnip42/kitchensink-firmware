@@ -3,15 +3,17 @@
 #include "types/strref.h"
 #include "config.h"
 
+#include <mbedtls/aes.h>
 #include <mbedtls/sha256.h>
+#include <mbedtls/md.h>
 
 namespace CryptoUtil
 {
 
-std::array<uint8_t, 32> stretch(const StrRef&                  password,
-                                const std::array<uint8_t, 16>& iv)
+Crypto::Key stretch(const StrRef&     password,
+                    const Crypto::IV& iv)
 {
-    std::array<uint8_t, 32> digest;
+    Crypto::Key digest;
 
     digest.fill(0);
 
@@ -43,6 +45,44 @@ std::array<uint8_t, 32> stretch(const StrRef&                  password,
     }
 
     return digest;
+}
+
+Crypto::HMAC hmac(const Crypto::Key& key,
+                  const uint8_t*     begin,
+                  const uint8_t*     end)
+{
+    auto mdInfo(mbedtls_md_info_from_type(MBEDTLS_MD_SHA256));
+
+    Crypto::HMAC output;
+    
+    mbedtls_md_hmac(mdInfo,
+                    key.begin(),
+                    key.size(),
+                    begin,
+                    end - begin,
+                    output.begin());
+
+    return output;
+}
+
+void decrypt(const Crypto::Key& key,
+             const Crypto::IV&  iv,
+             std::size_t        size,
+             const uint8_t*     source,
+             uint8_t*           dest)
+{
+    auto tempIv(iv);
+    mbedtls_aes_context ctx;
+    
+    mbedtls_aes_init(&ctx);
+    mbedtls_aes_setkey_dec(&ctx, key.begin(), 256);
+    mbedtls_aes_crypt_cbc(&ctx,
+                          MBEDTLS_AES_DECRYPT,
+                          size,
+                          tempIv.begin(),
+                          source,
+                          dest);
+    mbedtls_aes_free(&ctx);
 }
 
 }

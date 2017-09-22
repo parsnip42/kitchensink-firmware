@@ -1,20 +1,16 @@
 #include "crypto/cryptoinstream.h"
 
+#include "crypto/cryptotypes.h"
+#include "crypto/cryptoutil.h"
+
 #include "types/arrayoutstream.h"
-
-namespace
-{
-constexpr std::size_t kAesBlockSize = 16;
-
-typedef std::array<uint8_t, 32> Value256;
-typedef std::array<uint8_t, kAesBlockSize> Value128;
-}
 
 CryptoInStream::CryptoInStream(InStream&     inStream,
                                const StrRef& password)
     : mInStream(inStream)
     , mPassword(password)
     , mError(Error::kNone)
+    , cipherTextLen(0)
 {
     readHeader();
 }
@@ -76,7 +72,8 @@ void CryptoInStream::readHeader()
             return;
         }
 
-        extLen = (std::size_t(out.data()[0]) << 8 | std::size_t(out.data()[1]));
+        extLen = (std::size_t(out.data()[0]) << 8 |
+                  std::size_t(out.data()[1]));
 
         out.reset();
         if (mInStream.read(out, extLen) != extLen)
@@ -88,7 +85,7 @@ void CryptoInStream::readHeader()
     
     // IV
     
-    Value128 iv;
+    Crypto::IV iv;
     
     {
         ArrayOutStream out(iv);
@@ -102,7 +99,7 @@ void CryptoInStream::readHeader()
 
     // Encrypted IV + Key
     
-    std::array<uint8_t, 16 + 32> dataIvKeyCrypt;
+    std::array<uint8_t, Crypto::kAesBlockSize + Crypto::kAesKeyLen> dataIvKeyCrypt;
 
     {
         ArrayOutStream out(dataIvKeyCrypt);
@@ -116,7 +113,7 @@ void CryptoInStream::readHeader()
 
     // IV + Key HMAC
     
-    Value256 dataIvKeyHmac;
+    Crypto::HMAC dataIvKeyHmac;
 
     {
         ArrayOutStream out(dataIvKeyHmac);
@@ -127,6 +124,72 @@ void CryptoInStream::readHeader()
             return;
         }
     }
+
+    // Verify HMAC
+    
+    auto key(CryptoUtil::stretch(mPassword, iv));
+    
+    if (dataIvKeyHmac != CryptoUtil::hmac(key, dataIvKeyCrypt))
+    {
+        mError = Error::kBadHmac;
+        return;
+    }
+    
+    std::array<uint8_t, Crypto::kAesBlockSize + Crypto::kAesKeyLen> dataIvKey;
+
+    CryptoUtil::decrypt(key,
+                        iv,
+                        dataIvKeyCrypt,
+                        dataIvKey);
+    
+    Crypto::IV  dataIv;
+    Crypto::Key dataKey;
+
+    std::copy(dataIvKey.begin(),
+              dataIvKey.begin() + dataIv.size(),
+              dataIv.begin());
+
+    std::copy(dataIvKey.begin() + dataIv.size(),
+              dataIvKey.begin() + dataKey.size(),
+              dataKey.begin());
+    
+    ArrayOutStream ctOut(mContent);
+
+    auto contentLen(mInStream.read(ctOut, mContent.size()));
+
+    if (contentLen <= 33)
+    {
+        mError = Error::kTruncated;
+        return;
+    }
+    
+    cipherTextLen = contentLen - 33;
+
+    if ((cipherTextLen % Crypto::kAesBlockSize) != 0)
+    {
+        mError = Error::KBadAlignment;
+        return;
+    }
+
+    Crypto::HMAC dataHmac;
+
+    std::copy(mContent.begin() + contentLen - 32,
+              mContent.begin() + contentLen,
+              dataHmac.begin());
+
+    if (dataHmac != CryptoUtil::hmac(dataKey,
+                                     mContent.begin(),
+                                     mContent.begin() + cipherTextLen))
+    {
+        mError = Error::kBadDataHmac;
+        return;
+    }
+
+    CryptoUtil::decrypt(dataKey,
+                        dataIv,
+                        cipherTextLen,
+                        mContent.begin(),
+                        data.begin());
 }
 
 

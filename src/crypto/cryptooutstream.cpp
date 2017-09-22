@@ -1,5 +1,6 @@
 #include "crypto/cryptooutstream.h"
 
+#include "crypto/cryptotypes.h"
 #include "crypto/cryptoutil.h"
 #include "crypto/entropypool.h"
 #include "types/stroutstream.h"
@@ -127,7 +128,7 @@ CryptoOutStream::~CryptoOutStream()
         mbedtls_aes_free(&ctx);
     }
 
-    Value256 cryptDataHmac;
+    Crypto::HMAC cryptDataHmac;
 
     {
         auto mdInfo(mbedtls_md_info_from_type(MBEDTLS_MD_SHA256));
@@ -141,7 +142,7 @@ CryptoOutStream::~CryptoOutStream()
     }
 
     mOutStream.write(DataRef(cryptData.begin(),
-                           cryptData.begin() + cryptSize));
+                             cryptData.begin() + cryptSize));
     mOutStream.write(uint8_t(blockOffset));
     mOutStream.write(cryptDataHmac);
 }

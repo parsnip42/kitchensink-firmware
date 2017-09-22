@@ -1,6 +1,6 @@
 AR = ar
 CPP = clang++
-CPP_FLAGS = -g -std=gnu++14 -Wall -Werror -I. -I..
+CPP_FLAGS = -g -std=gnu++14 -Wall -I. -I..
 CPP_FILES = $(wildcard *.cpp) $(wildcard ../types/*.cpp) $(wildcard ../crypto/*.cpp)
 O_FILES = $(CPP_FILES:.cpp=.o)
 TARGET = tests
