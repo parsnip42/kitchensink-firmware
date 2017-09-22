@@ -75,7 +75,7 @@ void load(SecureMacroSet& secureMacroSet)
     auto is(storage.read(Storage::Region::kSecureMacro));
     
     CryptoInStream cryptoIn(is, "test");
-
+    
     Serializer<SecureMacroSet> s;
     
     s.deserialize(cryptoIn, secureMacroSet);

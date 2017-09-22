@@ -38,7 +38,7 @@ void CryptoInStream::readHeader()
         mError = Error::kBadHeader;
         return;
     }
-
+    
     // File version
     
     out.reset();

@@ -88,7 +88,7 @@ std::size_t Storage::IStream::read(OutStream& os, std::size_t len)
     std::size_t count(0);
     uint8_t ch;
 
-    while (mFileHandle.read(&ch, 1) == 1 && count < len)
+    while (count < len && mFileHandle.read(&ch, 1) == 1)
     {
         os.write(ch);
         ++count;
