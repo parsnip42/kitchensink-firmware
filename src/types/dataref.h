@@ -13,6 +13,8 @@ public:
     typedef const uint8_t* const_iterator;
 
 public:
+    constexpr DataRef();
+    
     DataRef(const StrRef& str);
     
     DataRef(const char* str);
@@ -42,6 +44,12 @@ private:
 bool operator==(const DataRef& lhs, const DataRef& rhs);
 bool operator!=(const DataRef& lhs, const DataRef& rhs);
 
+
+inline
+constexpr DataRef::DataRef()
+    : mRange(nullptr, nullptr)
+    , mInPlace(0)
+{ }
 
 inline
 DataRef::DataRef(const StrRef& str)

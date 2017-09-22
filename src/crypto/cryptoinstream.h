@@ -1,24 +1,25 @@
 #ifndef INCLUDED_CRYPTOINSTREAM_H
 #define INCLUDED_CRYPTOINSTREAM_H
 
+#include "types/datarefinstream.h"
 #include "types/instream.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
-#include "crypto/cryptotypes.h"
 
 class CryptoInStream : public InStream
 {
 public:
     enum class Error
     {
-        kNone         = 0,
-        kCorrupted    = 1,
-        kTruncated    = 2,
-        kBadHeader    = 3,
-        kBadVersion   = 4,
-        kBadHmac      = 5,
-        kBadDataHmac  = 6,
-        KBadAlignment = 7
+        kUninitialized = -1,
+        kNone          = 0,
+        kCorrupted     = 1,
+        kTruncated     = 2,
+        kBadHeader     = 3,
+        kBadVersion    = 4,
+        kBadHmac       = 5,
+        kBadDataHmac   = 6,
+        KBadAlignment  = 7
     };
     
 public:
@@ -41,6 +42,7 @@ private:
     StrRef                    mPassword;
     std::array<uint8_t, 4096> mContent;
     std::array<uint8_t, 4096> mData;
+    DataRefInStream           mDataStream;
     Error                     mError;
 };
 

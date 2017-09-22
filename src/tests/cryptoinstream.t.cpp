@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
 
 #include "types/datarefinstream.h"
+#include "types/arrayoutstream.h"
 #include "crypto/cryptoinstream.h"
 
 #include <array>
-#include <iostream>
 
 TEST(CryptoInStream, Simple)
 {
@@ -36,6 +36,17 @@ TEST(CryptoInStream, Simple)
     CryptoInStream cis(is, "test");
 
     ASSERT_EQ(cis.error(), CryptoInStream::Error::kNone);
+
+    std::array<uint8_t, 100> output;
+
+    output.fill(0);
+    
+    ArrayOutStream out(output);
+
+    DataRef expected("This is a test\n");
+    
+    ASSERT_EQ(cis.read(out, out.remaining()), expected.size());
+    ASSERT_EQ(out.data(), expected);
 }
 
 

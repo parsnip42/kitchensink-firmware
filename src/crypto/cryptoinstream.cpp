@@ -9,7 +9,8 @@ CryptoInStream::CryptoInStream(InStream&     inStream,
                                const StrRef& password)
     : mInStream(inStream)
     , mPassword(password)
-    , mError(Error::kNone)
+    , mDataStream(DataRef())
+    , mError(Error::kUninitialized)
 {
     readHeader();
 }
@@ -21,7 +22,7 @@ std::size_t CryptoInStream::read(OutStream& os, std::size_t len)
         return 0;
     }
     
-    return 0;
+    return mDataStream.read(os, len);
 }
 
 void CryptoInStream::readHeader()
@@ -189,6 +190,13 @@ void CryptoInStream::readHeader()
                         cipherTextLen,
                         mContent.begin(),
                         mData.begin());
+
+    std::size_t cipherTextTrailing(Crypto::kAesBlockSize - *(mContent.begin() + contentLen - 33));
+
+    cipherTextLen -= cipherTextTrailing;
+    
+    mDataStream = DataRefInStream(DataRef(mData.begin(), mData.begin() + cipherTextLen));
+    mError = Error::kNone;
 }
 
 
