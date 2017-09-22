@@ -6,18 +6,6 @@
 #include "types/stroutstream.h"
 #include "config.h"
 
-#include <mbedtls/aes.h>
-#include <mbedtls/sha256.h>
-#include <mbedtls/md.h>
-
-namespace
-{
-constexpr std::size_t kAesBlockSize = 16;
-
-typedef std::array<uint8_t, 32> Value256;
-typedef std::array<uint8_t, kAesBlockSize> Value128;
-}
-
 CryptoOutStream::CryptoOutStream(OutStream&   outStream,
                                 const StrRef& password,
                                 EntropyPool&  entropyPool)
@@ -45,46 +33,19 @@ CryptoOutStream::~CryptoOutStream()
     
     std::array<uint8_t, dataIv.size() + dataKey.size()> dataIvKeyCrypt;
 
-    {
-        auto tempIv(iv);
-        mbedtls_aes_context ctx;
+    CryptoUtil::encrypt(key,
+                        iv,
+                        dataIvKey,
+                        dataIvKeyCrypt);
     
-        mbedtls_aes_init(&ctx);
-        mbedtls_aes_setkey_enc(&ctx, key.begin(), 256);
-        mbedtls_aes_crypt_cbc(&ctx,
-                              MBEDTLS_AES_ENCRYPT,
-                              dataIvKey.size(),
-                              tempIv.begin(),
-                              dataIvKey.begin(),
-                              dataIvKeyCrypt.begin());
-        mbedtls_aes_free(&ctx);
-    }
-
-    Value256 dataIvKeyHmac;
-
-    {
-        auto mdInfo(mbedtls_md_info_from_type(MBEDTLS_MD_SHA256));
-
-        auto rc(mbedtls_md_hmac(mdInfo,
-                                key.begin(),
-                                key.size(),
-                                dataIvKeyCrypt.begin(),
-                                dataIvKeyCrypt.size(),
-                                dataIvKeyHmac.begin()));
-
-        if (rc != 0)
-        {
-            while(1);
-        }
-    }
-
+    Crypto::HMAC dataIvKeyHmac(CryptoUtil::hmac(key, dataIvKeyCrypt));
 
     mOutStream.write("AES");
     mOutStream.write(uint8_t('\x02'));
     mOutStream.write(uint8_t('\x00'));
 
     StrRef createdBy("CREATED_BY");
-    StrRef creator("pyAesCrypt 0.3"); // FIXME: Set for testing
+    StrRef creator("kitchenSink");
 
     mOutStream.write(uint8_t('\x00'));
     mOutStream.write(static_cast<char>(createdBy.length() + creator.length() + 1));
@@ -93,53 +54,27 @@ CryptoOutStream::~CryptoOutStream()
     mOutStream.write(creator);
 
     mOutStream.write(uint8_t('\x00'));
-    mOutStream.write(uint8_t('\x80'));
-
-    for (int i(0); i < 128; ++i)
-    {
-        mOutStream.write(uint8_t('\x00'));
-    }
-
-    mOutStream.write(uint8_t('\x00'));
     mOutStream.write(uint8_t('\x00'));
     
     mOutStream.write(iv);
     mOutStream.write(dataIvKeyCrypt);
     mOutStream.write(dataIvKeyHmac);
 
-    auto blockCount((mDataOut.position() + kAesBlockSize - 1) / kAesBlockSize);
-    auto blockOffset(mDataOut.position() % kAesBlockSize);
-    auto cryptSize(blockCount * kAesBlockSize);
+    auto blockCount((mDataOut.position() + Crypto::kAesBlockSize - 1) / Crypto::kAesBlockSize);
+    auto blockOffset(mDataOut.position() % Crypto::kAesBlockSize);
+    auto cryptSize(blockCount * Crypto::kAesBlockSize);
     
     std::array<uint8_t, 4096> cryptData;
     
-    {
-        auto tempDataIv(dataIv);
-        mbedtls_aes_context ctx;
-    
-        mbedtls_aes_init(&ctx);
-        mbedtls_aes_setkey_enc(&ctx, dataKey.begin(), 256);
-        mbedtls_aes_crypt_cbc(&ctx,
-                              MBEDTLS_AES_ENCRYPT,
-                              cryptSize,
-                              tempDataIv.begin(),
-                              mData.begin(),
-                              cryptData.begin());
-        mbedtls_aes_free(&ctx);
-    }
-
-    Crypto::HMAC cryptDataHmac;
-
-    {
-        auto mdInfo(mbedtls_md_info_from_type(MBEDTLS_MD_SHA256));
-
-        mbedtls_md_hmac(mdInfo,
-                        dataKey.begin(),
-                        dataKey.size(),
-                        cryptData.begin(),
+    CryptoUtil::encrypt(dataKey,
+                        dataIv,
                         cryptSize,
-                        cryptDataHmac.begin());
-    }
+                        mData.begin(),
+                        cryptData.begin());
+
+    Crypto::HMAC cryptDataHmac(CryptoUtil::hmac(dataKey,
+                                                cryptData.begin(),
+                                                cryptData.begin() + cryptSize));
 
     mOutStream.write(DataRef(cryptData.begin(),
                              cryptData.begin() + cryptSize));

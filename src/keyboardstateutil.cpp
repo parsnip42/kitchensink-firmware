@@ -2,6 +2,7 @@
 
 #include "keyboardstate.h"
 #include "storage/storage.h"
+#include "crypto/cryptoinstream.h"
 #include "crypto/cryptooutstream.h"
 #include "serialize/serializer.h"
 
@@ -67,6 +68,19 @@ void load(SmartKeySet& smartKeySet)
     s.deserialize(is, smartKeySet);
 }
 
+void load(SecureMacroSet& secureMacroSet)
+{
+    Storage storage;
+
+    auto is(storage.read(Storage::Region::kSecureMacro));
+    
+    CryptoInStream cryptoIn(is, "test");
+
+    Serializer<SecureMacroSet> s;
+    
+    s.deserialize(cryptoIn, secureMacroSet);
+}
+
 void store(const KeyboardState& keyboardState)
 {
     store(keyboardState.globalConfig);
@@ -94,22 +108,6 @@ void store(const MacroSet& macroSet)
     auto os(storage.write(Storage::Region::kMacro));
     
     s.serialize(macroSet, os);
-}
-
-void store(const SecureMacroSet& secureMacroSet,
-           EntropyPool&          entropyPool)
-{
-    Storage storage;
-
-    auto output(storage.write(Storage::Region::kSecureMacro));
-    
-    CryptoOutStream os(output,
-                       "test",
-                       entropyPool);
-    
-    Serializer<SecureMacroSet> s;
-    
-    s.serialize(secureMacroSet, os);
 }
 
 void store(const LayerStack& layerStack)
@@ -140,6 +138,22 @@ void store(const SmartKeySet& smartKeySet)
     auto os(storage.write(Storage::Region::kSmartKey));
     
     s.serialize(smartKeySet, os);   
+}
+
+void store(const SecureMacroSet& secureMacroSet,
+           EntropyPool&          entropyPool)
+{
+    Storage storage;
+
+    auto output(storage.write(Storage::Region::kSecureMacro));
+    
+    CryptoOutStream os(output,
+                       "test",
+                       entropyPool);
+    
+    Serializer<SecureMacroSet> s;
+    
+    s.serialize(secureMacroSet, os);
 }
 
 }

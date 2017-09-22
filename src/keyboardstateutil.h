@@ -22,17 +22,18 @@ void load(LayerStack& layerStack);
 void load(MultiKeySet& multiKeySet);
 void load(SmartKeySet& smartKeySet);
 
+void load(SecureMacroSet& secureMacroSet);
+
 void store(const KeyboardState& keyboardState);
 
 void store(const GlobalConfig& globalConfig);
 void store(const MacroSet& macroSet);
-
-void store(const SecureMacroSet& secureMacroSet,
-           EntropyPool&          entropyPool);
-
 void store(const LayerStack& layerStack);
 void store(const MultiKeySet& multiKeySet);
 void store(const SmartKeySet& smartKeySet);
+
+void store(const SecureMacroSet& secureMacroSet,
+           EntropyPool&          entropyPool);
 
 }
 

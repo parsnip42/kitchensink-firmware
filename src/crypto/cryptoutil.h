@@ -18,6 +18,12 @@ Crypto::HMAC hmac(const Crypto::Key& key,
                   const uint8_t*     begin,
                   const uint8_t*     end);
 
+void encrypt(const Crypto::Key& key,
+             const Crypto::IV&  iv,
+             std::size_t        size,
+             const uint8_t*     source,
+             uint8_t*           dest);
+
 void decrypt(const Crypto::Key& key,
              const Crypto::IV&  iv,
              std::size_t        size,
@@ -32,6 +38,20 @@ Crypto::HMAC hmac(const Crypto::Key&                   key,
     return hmac(key,
                 data.begin(),
                 data.end());
+}
+
+template <std::size_t Capacity>
+inline
+void encrypt(const Crypto::Key&                   key,
+             const Crypto::IV&                    iv,
+             const std::array<uint8_t, Capacity>& source,
+             std::array<uint8_t, Capacity>&       dest)
+{
+    return encrypt(key,
+                   iv,
+                   Capacity,
+                   source.begin(),
+                   dest.begin());
 }
 
 template <std::size_t Capacity>

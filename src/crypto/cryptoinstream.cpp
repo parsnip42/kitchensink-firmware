@@ -193,7 +193,7 @@ void CryptoInStream::readHeader()
 
     std::size_t cipherTextTrailing(Crypto::kAesBlockSize - *(mContent.begin() + contentLen - 33));
 
-    cipherTextLen -= cipherTextTrailing;
+    cipherTextLen -= cipherTextTrailing % Crypto::kAesBlockSize;
     
     mDataStream = DataRefInStream(DataRef(mData.begin(), mData.begin() + cipherTextLen));
     mError = Error::kNone;

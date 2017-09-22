@@ -65,6 +65,26 @@ Crypto::HMAC hmac(const Crypto::Key& key,
     return output;
 }
 
+void encrypt(const Crypto::Key& key,
+             const Crypto::IV&  iv,
+             std::size_t        size,
+             const uint8_t*     source,
+             uint8_t*           dest)
+{
+    auto tempIv(iv);
+    mbedtls_aes_context ctx;
+    
+    mbedtls_aes_init(&ctx);
+    mbedtls_aes_setkey_enc(&ctx, key.begin(), 256);
+    mbedtls_aes_crypt_cbc(&ctx,
+                          MBEDTLS_AES_ENCRYPT,
+                          size,
+                          tempIv.begin(),
+                          source,
+                          dest);
+    mbedtls_aes_free(&ctx);
+}
+
 void decrypt(const Crypto::Key& key,
              const Crypto::IV&  iv,
              std::size_t        size,
