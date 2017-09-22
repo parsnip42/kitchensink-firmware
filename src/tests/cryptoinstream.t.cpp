@@ -3,6 +3,7 @@
 #include "types/datarefinstream.h"
 #include "crypto/cryptoinstream.h"
 
+#include <array>
 #include <iostream>
 
 TEST(CryptoInStream, Simple)
@@ -34,11 +35,15 @@ TEST(CryptoInStream, Simple)
     DataRefInStream is(DataRef(AesFile, AesFile + sizeof(AesFile)));
     CryptoInStream cis(is, "test");
 
-    char foo[32] = {0};
-
-    memcpy(foo, cis.data.begin(), cis.cipherTextLen);
-    std::cout << ">>" << foo << std::endl;
-    std::cout << ">>" << cis.data[0] << std::endl;
-    
     ASSERT_EQ(cis.error(), CryptoInStream::Error::kNone);
 }
+
+
+
+
+
+
+
+
+
+

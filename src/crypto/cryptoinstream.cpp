@@ -10,7 +10,6 @@ CryptoInStream::CryptoInStream(InStream&     inStream,
     : mInStream(inStream)
     , mPassword(password)
     , mError(Error::kNone)
-    , cipherTextLen(0)
 {
     readHeader();
 }
@@ -150,7 +149,7 @@ void CryptoInStream::readHeader()
               dataIv.begin());
 
     std::copy(dataIvKey.begin() + dataIv.size(),
-              dataIvKey.begin() + dataKey.size(),
+              dataIvKey.begin() + dataIv.size() + dataKey.size(),
               dataKey.begin());
     
     ArrayOutStream ctOut(mContent);
@@ -163,7 +162,7 @@ void CryptoInStream::readHeader()
         return;
     }
     
-    cipherTextLen = contentLen - 33;
+    auto cipherTextLen = contentLen - 33;
 
     if ((cipherTextLen % Crypto::kAesBlockSize) != 0)
     {
@@ -189,7 +188,7 @@ void CryptoInStream::readHeader()
                         dataIv,
                         cipherTextLen,
                         mContent.begin(),
-                        data.begin());
+                        mData.begin());
 }
 
 

@@ -4,6 +4,7 @@
 #include "types/instream.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
+#include "crypto/cryptotypes.h"
 
 class CryptoInStream : public InStream
 {
@@ -39,11 +40,8 @@ private:
     InStream&                 mInStream;
     StrRef                    mPassword;
     std::array<uint8_t, 4096> mContent;
+    std::array<uint8_t, 4096> mData;
     Error                     mError;
-    
-public:
-    std::array<uint8_t, 4096> data;
-    std::size_t               cipherTextLen;
 };
 
 
