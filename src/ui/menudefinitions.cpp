@@ -16,11 +16,12 @@
 namespace
 {
 
-const std::array<MenuWidget::Item, 5> mainMenu = { {
+const std::array<MenuWidget::Item, 6> mainMenu = { {
         { StrRef("Macros"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kMacros) },
         { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSecureMacros) },
-        { StrRef("Keys"),          StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kKeys) },
         { StrRef("Configuration"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kConfiguration) },
+        { StrRef("Utilities"),     StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kUtils) },
+        { StrRef("Events"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEvents) },
         { StrRef("System"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSystem) },
     } };
 
@@ -33,13 +34,18 @@ const std::array<MenuWidget::Item, 6> configMenu = { {
         { StrRef("Edit Smart Keys"),    StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEditSmartKeys) },
     } };
 
-const std::array<MenuWidget::Item, 6> systemMenu = { {
-        { StrRef("Status"),               StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kStatus) },
-        { StrRef("Cryptography"),         StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kCryptography) },
-        { StrRef("Dump Entropy Pool"),    StrRef(), ActionEvent::create(ActionEvent::Type::kDumpEntropyPool) },
-        { StrRef("Event Stream"),         StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream) },
-        { StrRef("Setup Secure Macros"),  StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kInitSecureMacros) },
-        { StrRef("Bootloader"),           StrRef(), ActionEvent::create(ActionEvent::Type::kBootloader) } 
+const std::array<MenuWidget::Item, 3> utilsMenu = { {
+        { StrRef("Lock Secure Macros"),   StrRef(), ActionEvent::create(ActionEvent::Type::kLockSecureMacros) },
+        { StrRef("Unlock Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock) },
+        { StrRef("Setup Secure Macros"),  StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kInitSecureMacros) }
+    } };
+
+const std::array<MenuWidget::Item, 5> systemMenu = { {
+        { StrRef("Status"),            StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kStatus) },
+        { StrRef("Cryptography"),      StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kCryptography) },
+        { StrRef("Dump Entropy Pool"), StrRef(), ActionEvent::create(ActionEvent::Type::kDumpEntropyPool) },
+        { StrRef("Event Stream"),      StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream) },
+        { StrRef("Bootloader"),        StrRef(), ActionEvent::create(ActionEvent::Type::kBootloader) } 
     } };
 
 const std::array<MenuWidget::Item, 6> eventMenu = { {
@@ -187,6 +193,7 @@ MenuWidget::Item createEditSmartKeyMenuItem(const SmartKey& smart, std::size_t i
 MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     : mMainMenuSource(mainMenu.begin(), mainMenu.end())
     , mConfigMenuSource(configMenu.begin(), configMenu.end())
+    , mUtilsMenuSource(utilsMenu.begin(), utilsMenu.end())
     , mSystemMenuSource(systemMenu.begin(), systemMenu.end())
     , mEventMenuSource(eventMenu.begin(), eventMenu.end())
     , mEmptyMenuSource(mainMenu.end(), mainMenu.end())
@@ -214,6 +221,9 @@ const MenuWidget::DataSource& MenuDefinitions::getDataSource(MenuId id) const
 
     case kConfiguration:
         return mConfigMenuSource;
+
+    case kUtils:
+        return mUtilsMenuSource;
 
     case kSystem:
         return mSystemMenuSource;
@@ -270,6 +280,9 @@ StrRef MenuDefinitions::getTitle(MenuId id) const
         
     case kConfiguration:
         return "Configuration";
+
+    case kUtils:
+        return "Utilities";
         
     case kSystem:
         return "System";

@@ -6,20 +6,22 @@
 #include <array>
 
 class EntropyPool;
-class Event;
+class KeyboardState;
 
 class ActionProcessor : public EventStage
 {    
 public:
-    ActionProcessor(EntropyPool& entropyPool,
-                    EventStage&  next);
+    ActionProcessor(KeyboardState& keyboardState,
+                    EntropyPool&   entropyPool,
+                    EventStage&    next);
 
 public:
     virtual bool processEvent(const Event& event) override;
     
 private:
-    EntropyPool& mEntropyPool;
-    EventStage&  mNext;
+    KeyboardState& mKeyboardState;
+    EntropyPool&   mEntropyPool;
+    EventStage&    mNext;
     
 private:
     ActionProcessor(const ActionProcessor&) = delete;

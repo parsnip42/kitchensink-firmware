@@ -19,8 +19,9 @@ public:
     {
         kMainMenu         = 0,
         kConfiguration    = 1,
-        kSystem           = 2,
-        kEvents           = 3,
+        kUtils            = 2,
+        kSystem           = 3,
+        kEvents           = 4,
         
         kKeys             = 10,
         kLayers           = 11,
@@ -48,6 +49,7 @@ public:
 private:
     const ArrayObjectSource<MenuWidget::Item> mMainMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mConfigMenuSource;
+    const ArrayObjectSource<MenuWidget::Item> mUtilsMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mSystemMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mEventMenuSource;
     const ArrayObjectSource<MenuWidget::Item> mEmptyMenuSource;

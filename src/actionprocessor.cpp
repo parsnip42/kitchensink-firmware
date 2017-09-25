@@ -6,10 +6,13 @@
 #include "hardware/ctrlutil.h"
 #include "storage/storage.h"
 #include "types/dataref.h"
+#include "keyboardstate.h"
 
-ActionProcessor::ActionProcessor(EntropyPool& entropyPool,
-                                 EventStage&  next)
-    : mEntropyPool(entropyPool)
+ActionProcessor::ActionProcessor(KeyboardState& keyboardState,
+                                 EntropyPool&   entropyPool,
+                                 EventStage&    next)
+    : mKeyboardState(keyboardState)
+    , mEntropyPool(entropyPool)
     , mNext(next)
 { }
 
@@ -35,6 +38,10 @@ bool ActionProcessor::processEvent(const Event& event)
             mEntropyPool.clear();
             break;
         }
+
+        case ActionEvent::Type::kLockSecureMacros:
+            mKeyboardState.secureMacroSet.lock();
+            break;
         }
     }
     else
