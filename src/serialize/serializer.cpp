@@ -163,10 +163,17 @@ void Serializer<MacroSet>::serialize(const MacroSet& macroSet, OutStream& os)
     
         ini.writeProperty("type", typeStr);
 
+        int count(0);
+        
         os.write("content=");
 
         for (const auto& event : macro.content)
         {
+            if ((++count % 20) == 0) 
+            {
+                os.write("\ncontent=");
+            }
+
             StrBuf<24> str;
 
             EventSerializer::serialize(event, str);

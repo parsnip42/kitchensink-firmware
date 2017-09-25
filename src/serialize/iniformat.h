@@ -26,7 +26,7 @@ private:
     
 private:
     StrInStream mStrInStream;
-    StrBuf<240> mCurrentLine;
+    StrBuf<400> mCurrentLine;
     bool        mLineConsumed;
     
 private:
