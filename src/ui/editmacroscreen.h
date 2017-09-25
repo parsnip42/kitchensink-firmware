@@ -35,8 +35,7 @@ private:
     LabelledWidget<TextEntryWidget> mTitleEntry;
     LabelledWidget<TextEntryWidget> mShortcutEntry;
     LabelledWidget<ComboWidget>     mTypeCombo;
-    ButtonWidget                    mRecordButton;
-    HStackWidget::Items<4>          mItems;
+    HStackWidget::Items<3>          mItems;
     HStackWidget                    mHStackWidget;
     Event                           mRecordEvent;
     EventStage&                     mNext;

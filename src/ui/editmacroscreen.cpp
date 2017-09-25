@@ -39,11 +39,9 @@ EditMacroScreen::EditMacroScreen(Timer&      timer,
     , mTypeCombo("Type",
                  kLabelWidth,
                  ComboWidget(mtds))
-    , mRecordButton("Record")
     , mItems({{ mTitleEntry,
                 mShortcutEntry,
-                mTypeCombo,
-                mRecordButton }})
+                mTypeCombo }})
     , mHStackWidget(mItems, true)
     , mRecordEvent(recordEvent)
     , mNext(next)
@@ -52,8 +50,8 @@ EditMacroScreen::EditMacroScreen(Timer&      timer,
     mShortcutEntry.widget.text     = mMacro.shortcut;
     mTypeCombo.widget.selectedItem = static_cast<int>(mMacro.type);
     
-    mRecordButton.activated = Action::memFn<EditMacroScreen,
-                                            &EditMacroScreen::onRecord>(this);
+    mHStackWidget.applied = Action::memFn<EditMacroScreen,
+                                          &EditMacroScreen::onRecord>(this);
 }
 
 bool EditMacroScreen::processEvent(const Event& event)

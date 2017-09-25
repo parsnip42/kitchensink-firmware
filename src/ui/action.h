@@ -7,16 +7,20 @@ public:
     template <typename T, void (T::*MemFunc)()>
     static Action memFn(T* t);
 
+    static Action action(Action& action);
+
 public:
-    typedef void(*Func)(void* data);
-    
+    typedef bool(*Func)(void* data);
+
 public:
     Action();
+    
+private:
     Action(void*       data,
            const Func& func);
 
 public:
-    void fireAction();
+    bool fireAction();
 
 private:
     void* mData;
@@ -28,30 +32,31 @@ template <typename T, void (T::*MemFunc)()>
 inline
 Action Action::memFn(T* t)
 {
-    return Action(t, [](void* data)
+    return Action(t, [](void* data) -> bool
     {
-        (((T*)data)->*MemFunc)();
+        ((reinterpret_cast<T*>(data))->*MemFunc)();
+
+        return true;
     });
 }
 
-
 inline
-Action::Action()
-    : mData(nullptr)
-    , mFunc([](void*){})
-{ }
-
-inline
-Action::Action(void*       data,
-               const Func& func)
-    : mData(data)
-    , mFunc(func)
-{ }
-
-inline
-void Action::fireAction()
+Action Action::action(Action& action)
 {
-    mFunc(mData);
+    return Action(&action, [](void* data) -> bool
+    {
+        return (reinterpret_cast<Action*>(data))->fireAction();
+    });
 }
 
 #endif
+
+
+
+
+
+
+
+
+
+

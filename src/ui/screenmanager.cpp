@@ -29,35 +29,41 @@ class OutputSink : public EventStage
 {
 public:
     OutputSink(ScreenManager& screenManager,
-               EventStage&    next)
-        : mScreenManager(screenManager)
-        , mNext(next)
-    { }
+               EventStage&    next);
 
 public:
-    virtual bool processEvent(const Event& event) override
-    {
-        if (!mNext.processEvent(event))
-        {
-            if (event.is<ScreenEvent>())
-            {
-                auto screenEvent(event.get<ScreenEvent>());
-            
-                mScreenManager.mScreenEventQueue.pushBack(screenEvent);
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
-        return true;
-    }
+    virtual bool processEvent(const Event& event) override;
 
 private:
     ScreenManager& mScreenManager;
     EventStage&    mNext;
 };
+
+
+OutputSink::OutputSink(ScreenManager& screenManager,
+                       EventStage&    next)
+    : mScreenManager(screenManager)
+    , mNext(next)
+{ }
+
+bool OutputSink::processEvent(const Event& event)
+{
+    if (!mNext.processEvent(event))
+    {
+        if (event.is<ScreenEvent>())
+        {
+            auto screenEvent(event.get<ScreenEvent>());
+            
+            mScreenManager.mScreenEventQueue.pushBack(screenEvent);
+        }
+        else
+        {
+            return false;
+        }
+    }
+        
+    return true;
+}
 
 }
 

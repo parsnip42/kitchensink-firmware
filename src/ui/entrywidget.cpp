@@ -151,6 +151,9 @@ bool EntryWidget::processEvent(const Event& event)
                     }
                 }
                 break;
+
+            case KeyCode::Enter:
+                return applied.fireAction();
                 
             default:
                 if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)

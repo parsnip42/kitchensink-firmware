@@ -5,6 +5,7 @@
 #include "event/eventstage.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
+#include "ui/action.h"
 #include "ui/dimension.h"
 #include "ui/widget.h"
 #include "ui/virtualkeyboard.h"
@@ -44,6 +45,7 @@ public:
 
 public:
     Content* content;
+    Action   applied;
     
 private:
     Timer::Handle   mFlashTimer;

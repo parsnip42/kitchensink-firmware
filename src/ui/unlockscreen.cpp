@@ -10,16 +10,14 @@ UnlockScreen::UnlockScreen(SecureMacroSet& secureMacroSet,
     , mPasswordEntry("Password",
                      70,
                      PasswordEntryWidget(timer))
-    , mUnlockButton("Unlock")
     , mStatusLabel("", Justify::kCenter)
     , mItems({{ mPasswordEntry,
-                mUnlockButton,
                 mStatusLabel }})
     , mHStackWidget(mItems, true)
     , mNext(next)
 {
-    mUnlockButton.activated = Action::memFn<UnlockScreen,
-                                            &UnlockScreen::onUnlock>(this);
+    mPasswordEntry.widget.applied = Action::memFn<UnlockScreen,
+                                                  &UnlockScreen::onUnlock>(this);
 }
 
 bool UnlockScreen::processEvent(const Event& event)

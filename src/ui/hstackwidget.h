@@ -2,9 +2,10 @@
 #define INCLUDED_HSTACKWIDGET_H
 
 #include "types/range.h"
+#include "ui/action.h"
+#include "ui/emptywidget.h"
 #include "ui/widget.h"
 #include "ui/widgetcontainer.h"
-#include "ui/emptywidget.h"
 
 #include <array>
 #include <cstdint>
@@ -61,6 +62,9 @@ public:
 public:
     Widget& focused() const;
     void setFocused(const Widget& widget);
+
+public:
+    Action applied;
     
 private:
     int renderOffset() const;
@@ -71,13 +75,6 @@ private:
     iterator        mFocused;
     int             mContentHeight;
 };
-
-
-// inline
-// HStackWidget::Element::Element(Widget& nWidget)
-//     : widget(nWidget)
-//     , yOffset(0)
-// { }
 
 
 template <std::size_t Size>

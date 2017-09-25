@@ -28,9 +28,8 @@ private:
 private:
     SecureMacroSet&                     mSecureMacroSet;
     LabelledWidget<PasswordEntryWidget> mPasswordEntry;
-    ButtonWidget                        mUnlockButton;
     LabelWidget                         mStatusLabel;
-    HStackWidget::Items<3>              mItems;
+    HStackWidget::Items<2>              mItems;
     HStackWidget                        mHStackWidget;
     EventStage&                         mNext;
 };

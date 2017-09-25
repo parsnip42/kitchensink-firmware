@@ -28,6 +28,10 @@ bool HStackWidget::processEvent(const Event& event)
 
                 invalidateWidget();
             }
+            else if (Keys::ok(event))
+            {
+                return applied.fireAction();
+            }
         }
     }
     else if (Keys::up(event))
