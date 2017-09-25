@@ -34,11 +34,11 @@ const std::array<MenuWidget::Item, 6> configMenu = { {
     } };
 
 const std::array<MenuWidget::Item, 6> systemMenu = { {
-        { StrRef("Unlock Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock) },
         { StrRef("Status"),               StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kStatus) },
         { StrRef("Cryptography"),         StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kCryptography) },
         { StrRef("Dump Entropy Pool"),    StrRef(), ActionEvent::create(ActionEvent::Type::kDumpEntropyPool) },
         { StrRef("Event Stream"),         StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream) },
+        { StrRef("Setup Secure Macros"),  StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kInitSecureMacros) },
         { StrRef("Bootloader"),           StrRef(), ActionEvent::create(ActionEvent::Type::kBootloader) } 
     } };
 

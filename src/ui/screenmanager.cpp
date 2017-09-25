@@ -12,8 +12,10 @@
 #include "ui/eventstreamscreen.h"
 #include "ui/statusscreen.h"
 #include "ui/globalconfigscreen.h"
+#include "ui/initsecuremacroscreen.h"
 #include "ui/layerconfigscreen.h"
 #include "ui/multiconfigscreen.h"
+#include "ui/savesecurescreen.h"
 #include "ui/smartconfigscreen.h"
 #include "ui/unlockscreen.h"
 #include "ui/keys.h"
@@ -149,9 +151,9 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
         launchRecordMacro(mKeyboardState.secureMacroSet[screenEvent.index],
                           screenEvent);
 
-
-        KeyboardStateUtil::store(mKeyboardState.secureMacroSet,
-                                 mEntropyPool);
+        launchScreen(ScreenEvent::kMacroSave,
+                     ScreenEvent(ScreenEvent::Type::kScreen,
+                                 ScreenEvent::kMacroSave));
         break;
         
     case ScreenEvent::Type::kEditLayer:
@@ -279,6 +281,32 @@ void ScreenManager::launchScreen(int                screenId,
         break;
     }
 
+    case ScreenEvent::kMacroSave:
+    {
+        SaveSecureScreen screen(mKeyboardState.secureMacroSet,
+                                mEntropyPool,
+                                mEventManager);
+
+        displayScreen("Saving Secure Macros",
+                      screen,
+                      sourceEvent);
+
+        break;
+    }
+    
+    case ScreenEvent::kInitSecureMacros:
+    {
+        InitSecureMacroScreen screen(mKeyboardState.secureMacroSet,
+                                     mEventManager.timer,
+                                     mEventManager);
+        
+        displayScreen("Setup Secure Macros",
+                      screen,
+                      sourceEvent);
+
+        break;
+    }
+    
     default:
         break;
     }

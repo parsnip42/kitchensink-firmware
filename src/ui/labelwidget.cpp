@@ -13,6 +13,7 @@ LabelWidget::LabelWidget(const StrRef& nText,
     : text(nText)
     , justify(nJustify)
     , canFocus(nCanFocus)
+    , visible(true)
     , mFocused(true)
 { }
 
@@ -23,6 +24,11 @@ void LabelWidget::setFocused(bool focused)
 
 void LabelWidget::render(const RasterLine& rasterLine, int row)
 {
+    if (!visible)
+    {
+        return;
+    }
+    
     auto size(widgetSize());
     
     auto xOffset(0);

@@ -20,7 +20,8 @@ CryptoOutStream::CryptoOutStream(OutStream&   outStream,
 CryptoOutStream::~CryptoOutStream()
 {
     Crypto::SHA256 ivPair;
-    
+
+    // FIXME: Test this in advance - at the moment we're relying on the UI.
     mEntropyPool.read(ivPair);
 
     Crypto::IV iv;

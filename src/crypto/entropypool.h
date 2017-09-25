@@ -23,6 +23,7 @@ public:
 public:
     std::size_t size() const;
     std::size_t count() const;
+    std::size_t entryCount() const;
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -55,6 +56,12 @@ inline
 std::size_t EntropyPool::count() const
 {
     return mCount;
+}
+
+inline
+std::size_t EntropyPool::entryCount() const
+{
+    return mCount / (32 * Config::kEntropySourceFactor);
 }
 
 inline

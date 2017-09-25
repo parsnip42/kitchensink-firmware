@@ -8,10 +8,11 @@ UnlockScreen::UnlockScreen(SecureMacroSet& secureMacroSet,
                            EventStage&     next)
     : mSecureMacroSet(secureMacroSet)
     , mPasswordEntry("Password",
-                     70,
+                     60,
                      PasswordEntryWidget(timer))
     , mStatusLabel("", Justify::kCenter)
     , mItems({{ mPasswordEntry,
+                HStackWidget::Element(),
                 mStatusLabel }})
     , mHStackWidget(mItems, true)
     , mNext(next)
@@ -36,7 +37,7 @@ void UnlockScreen::onUnlock()
     
     if (!password.empty())
     {
-        mStatusLabel.text = "Unlocking..";
+        mStatusLabel.text = "Unlocking";
         mStatusLabel.invalidateWidget();
 
         if (KeyboardStateUtil::load(mSecureMacroSet, password))

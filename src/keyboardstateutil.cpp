@@ -151,17 +151,20 @@ void store(const SmartKeySet& smartKeySet)
 void store(const SecureMacroSet& secureMacroSet,
            EntropyPool&          entropyPool)
 {
-    Storage storage;
-
-    auto output(storage.write(Storage::Region::kSecureMacro));
-    
-    CryptoOutStream os(output,
-                       "test",
-                       entropyPool);
-    
-    Serializer<SecureMacroSet> s;
-    
-    s.serialize(secureMacroSet, os);
+    if (!secureMacroSet.password.empty())
+    {
+        Storage storage;
+        
+        auto output(storage.write(Storage::Region::kSecureMacro));
+        
+        CryptoOutStream os(output,
+                           secureMacroSet.password,
+                           entropyPool);
+        
+        Serializer<SecureMacroSet> s;
+        
+        s.serialize(secureMacroSet, os);
+    }
 }
 
 }

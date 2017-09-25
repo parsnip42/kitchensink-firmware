@@ -1,5 +1,5 @@
-#ifndef INCLUDED_UNLOCKSCREEN_H
-#define INCLUDED_UNLOCKSCREEN_H
+#ifndef INCLUDED_INITSECUREMACROSCREEN_H
+#define INCLUDED_INITSECUREMACROSCREEN_H
 
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
@@ -11,23 +11,25 @@
 
 class Timer;
 
-class UnlockScreen : public Screen
+class InitSecureMacroScreen : public Screen
 {
 public:
-    UnlockScreen(SecureMacroSet& secureMacroSet,
-                 Timer&          timer,
-                 EventStage&     next);
+    InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
+                          Timer&          timer,
+                          EventStage&     next);
     
 public:
     virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
 
 private:
-    void onUnlock();
+    void onApply();
     
 private:
     SecureMacroSet&                     mSecureMacroSet;
+    Timer::Handle                       mFlashTimer;
     LabelledWidget<PasswordEntryWidget> mPasswordEntry;
+    LabelledWidget<PasswordEntryWidget> mConfirmEntry;
     LabelWidget                         mStatusLabel;
     HStackWidget::Items<3>              mItems;
     HStackWidget                        mHStackWidget;

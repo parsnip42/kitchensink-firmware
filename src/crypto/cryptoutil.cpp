@@ -1,6 +1,6 @@
 #include "crypto/cryptoutil.h"
 
-#include "types/strref.h"
+#include "types/strbuf.h"
 #include "config.h"
 
 #include <mbedtls/aes.h>
@@ -28,12 +28,19 @@ Crypto::Key stretch(const StrRef&     password,
     digest.fill(0);
 
     std::copy(iv.begin(), iv.end(), digest.begin());
-
+    
     // Dirty UTF-16LE conversion for 7-bit ASCII.
-    std::array<uint8_t, (Config::kPasswordMax * 2)> pwdUtf16;
+    std::array<uint8_t, (Config::kPasswordMax + Config::kPasswordSuffix.length()) * 2> pwdUtf16;
     std::size_t pwdUtf16Len(0);
     
     for (auto& c : password)
+    {
+        pwdUtf16[pwdUtf16Len++] = c;
+        pwdUtf16[pwdUtf16Len++] = 0;
+    }
+    
+    // Also, concatenate the firmware password suffix onto the end.
+    for (auto& c : Config::kPasswordSuffix)
     {
         pwdUtf16[pwdUtf16Len++] = c;
         pwdUtf16[pwdUtf16Len++] = 0;

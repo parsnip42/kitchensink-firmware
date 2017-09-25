@@ -1,6 +1,8 @@
 #ifndef INCLUDED_CONFIG_H
 #define INCLUDED_CONFIG_H
 
+#include "types/strref.h"
+
 #include <cstdint>
 
 namespace Config
@@ -33,8 +35,12 @@ constexpr std::size_t kLayerCount   = 10;
 
 constexpr int         kEntropySourceFactor = 1;
 constexpr std::size_t kEntropyPoolSize     = 200;
-constexpr std::size_t kPasswordMin         = 8;
-constexpr std::size_t kPasswordMax         = 100;
+constexpr std::size_t kPasswordMin         = 1;
+constexpr std::size_t kPasswordMax         = 48;
+
+// It is HIGHLY recommended to change this.
+constexpr StrRef kPasswordSuffix = "_kitchenSink";
+
 };
 
 #endif

@@ -21,16 +21,17 @@ public:
         kEditLayer      = 7,
         kEditMulti      = 8,
         kEditSmart      = 9,
-        kUnlockSMacro   = 10
     };
     
     enum
     {
-        kGlobalSettings = 0,
-        kStatus         = 1,
-        kCryptography   = 2,
-        kEventStream    = 3,
-        kMacroUnlock    = 4
+        kGlobalSettings   = 0,
+        kStatus           = 1,
+        kCryptography     = 2,
+        kEventStream      = 3,
+        kMacroUnlock      = 4,
+        kMacroSave        = 5,
+        kInitSecureMacros = 6
     };
         
 public:
