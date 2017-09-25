@@ -1,39 +1,28 @@
 #include "crypto/entropypool.h"
 
+#include "crypto/cryptoutil.h"
+
 #include <mbedtls/sha256.h>
 
-std::array<uint8_t, 32> EntropyPool::read()
+bool EntropyPool::read(std::array<uint8_t, 32>& output)
 {
-    std::array<uint8_t, 32> val;
+    // Clip pool back to max size if it's overflowed.
+    mCount = std::min(mCount, mData.size());
 
-    val.fill(0x0);
-    
-    // mCount = std::min(mCount, mData.size());
-    
-    // if (mCount >= val.size())
-    // {
-    //     mCount -= val.size();    
-    // }
-    
-    // mbedtls_sha256(mData.begin() + mCount, val.size(), val.begin(), 0);
-    
-    return val;
-}
+    // Amount of source data to use from the pool relative to the size of the
+    // ouput hash.
+    auto sourceSize(output.size() * Config::kEntropySourceFactor);
 
-std::array<uint8_t, 16> EntropyPool::read128()
-{
-    std::array<uint8_t, 16> val;
+    // Not enough data in pool.
+    if (mCount < sourceSize)
+    {
+        return false;
+    }
 
-    val.fill(0x0);
+    mCount -= sourceSize;
+
+    output = CryptoUtil::sha256(mData.begin() + mCount,
+                                mData.begin() + mCount + sourceSize);    
     
-    // mCount = std::min(mCount, mData.size());
-    
-    // if (mCount >= val.size())
-    // {
-    //     mCount -= val.size();    
-    // }
-    
-    // mbedtls_sha256(mData.begin() + mCount, val.size(), val.begin(), 0);
-    
-    return val;
+    return true;
 }

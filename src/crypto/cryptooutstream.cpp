@@ -3,6 +3,7 @@
 #include "crypto/cryptotypes.h"
 #include "crypto/cryptoutil.h"
 #include "crypto/entropypool.h"
+#include "types/arrayutil.h"
 #include "types/stroutstream.h"
 #include "config.h"
 
@@ -18,18 +19,26 @@ CryptoOutStream::CryptoOutStream(OutStream&   outStream,
 
 CryptoOutStream::~CryptoOutStream()
 {
-    auto iv(mEntropyPool.read128());
+    Crypto::SHA256 ivPair;
+    
+    mEntropyPool.read(ivPair);
+
+    Crypto::IV iv;
+    Crypto::IV dataIv;
+
+    ArrayUtil<Crypto::SHA256>::split(ivPair, iv, dataIv);
 
     auto key(CryptoUtil::stretch(mPassword, iv));
-    
-    auto dataIv(mEntropyPool.read128());
+        
+    Crypto::Key dataKey;
 
-    auto dataKey(mEntropyPool.read());
+    // Note the implicit cast to Key when both types are the same
+    // size.
+    mEntropyPool.read(dataKey);
 
     std::array<uint8_t, dataIv.size() + dataKey.size()> dataIvKey;
 
-    std::copy(dataIv.begin(), dataIv.end(), dataIvKey.begin());
-    std::copy(dataKey.begin(), dataKey.end(), dataIvKey.begin() + dataIv.size());
+    ArrayUtil<decltype(dataIvKey)>::join(dataIv, dataKey, dataIvKey);
     
     std::array<uint8_t, dataIv.size() + dataKey.size()> dataIvKeyCrypt;
 

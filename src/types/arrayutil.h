@@ -1,6 +1,7 @@
 #ifndef INCLUDED_ARRAYUTIL_H
 #define INCLUDED_ARRAYUTIL_H
 
+#include <array>
 #include <cstdint>
 #include <tuple>
 
@@ -54,16 +55,26 @@ public:
     {
         return CreateArray<std::tuple_size<Array>::value - 1>::create(func);
     }
+
+    template <std::size_t SplitSize>
+    static void split(const Array&                                                                       source,
+                      std::array<typename Array::value_type, SplitSize>&                                 first,
+                      std::array<typename Array::value_type, std::tuple_size<Array>::value - SplitSize>& second)
+    {
+        std::copy(source.begin(), source.begin() + first.size(), first.begin());
+        std::copy(source.begin() + first.size(), source.end(), second.begin());
+    }
+
+    template <std::size_t SplitSize>
+    static void join(const std::array<typename Array::value_type, SplitSize>&                                 first,
+                     const std::array<typename Array::value_type, std::tuple_size<Array>::value - SplitSize>& second,
+                     Array&                                                                                   destination)
+    {
+        std::copy(first.begin(), first.end(), destination.begin());
+        std::copy(second.begin(), second.end(), destination.begin() + first.size());
+    }
 };
 
 #endif
-
-
-
-
-
-
-
-
 
 

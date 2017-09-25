@@ -56,12 +56,13 @@ public:
 public:
     enum class Region : int
     {
-        kConfig      = 0,
-        kLayer       = 1,
-        kMacro       = 2,
-        kSecureMacro = 3,
-        kMultiKey    = 4,
-        kSmartKey    = 5,
+        kConfig          = 0,
+        kLayer           = 1,
+        kMacro           = 2,
+        kSecureMacro     = 3,
+        kMultiKey        = 4,
+        kSmartKey        = 5,
+        kEntropyPoolDump = 6
     };
     
 public:

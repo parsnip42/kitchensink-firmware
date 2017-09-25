@@ -6,11 +6,11 @@
 namespace Config
 {
 
-constexpr std::size_t kTimerCount       = 20;
+constexpr std::size_t kTimerCount = 20;
 
-constexpr std::size_t kHomeLedCount     = 12;
+constexpr std::size_t kHomeLedCount = 12;
 
-constexpr std::size_t kLayerNameLen     = 24;
+constexpr std::size_t kLayerNameLen = 24;
 
 constexpr std::size_t kMacroNameLen     = 24;
 constexpr std::size_t kMacroShortcutLen = 24;
@@ -24,16 +24,17 @@ constexpr std::size_t kMultiKeyNameLen  = 24;
 constexpr std::size_t kMultiKeyCount    = 12;
 constexpr std::size_t kMultiKeyTapCount = 4;
 
-constexpr std::size_t kSmartKeyNameLen  = 24;
-constexpr std::size_t kSmartKeyCount    = 12;
+constexpr std::size_t kSmartKeyNameLen = 24;
+constexpr std::size_t kSmartKeyCount   = 12;
 
-constexpr std::size_t kLayerColumns     = 16;
-constexpr std::size_t kLayerRows        = 5;
-constexpr std::size_t kLayerCount       = 10;
+constexpr std::size_t kLayerColumns = 16;
+constexpr std::size_t kLayerRows    = 5;
+constexpr std::size_t kLayerCount   = 10;
 
-constexpr std::size_t kEntropyPoolSize = 200;
-constexpr std::size_t kPasswordMin     = 8;
-constexpr std::size_t kPasswordMax     = 100;
+constexpr int         kEntropySourceFactor = 1;
+constexpr std::size_t kEntropyPoolSize     = 200;
+constexpr std::size_t kPasswordMin         = 8;
+constexpr std::size_t kPasswordMax         = 100;
 };
 
 #endif

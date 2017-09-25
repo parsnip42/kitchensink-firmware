@@ -51,7 +51,8 @@ extern "C" void loop()
     
     ToplevelEventStage toplevel(usbKeyboard);
     
-    ActionProcessor actionProcessor(toplevel);
+    ActionProcessor actionProcessor(entropyPool,
+                                    toplevel);
 
     LayerProcessor layerProcessor(actionProcessor);
     

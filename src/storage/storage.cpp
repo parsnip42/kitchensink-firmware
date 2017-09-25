@@ -1,4 +1,4 @@
-#include "storage.h"
+#include "storage/storage.h"
 
 #include "types/stroutstream.h"
 
@@ -32,7 +32,10 @@ const char* getRegionFile(Storage::Region region)
 
     case Storage::Region::kSmartKey:
         return "smart.ini";
-        
+
+    case Storage::Region::kEntropyPoolDump:
+        return "entropy.dat";
+
     default:
         return "unknown.ini";
     }

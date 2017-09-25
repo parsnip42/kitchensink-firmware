@@ -1,6 +1,7 @@
 #ifndef INCLUDED_ENTROPYPOOL_H
 #define INCLUDED_ENTROPYPOOL_H
 
+#include "crypto/cryptotypes.h"
 #include "config.h"
 
 #include <array>
@@ -17,17 +18,18 @@ public:
     EntropyPool();
 
 public:
-    std::array<uint8_t, 32> read();
-    std::array<uint8_t, 16> read128();
+    bool read(std::array<uint8_t, 32>& output);
 
 public:
-    void insert(uint8_t value);
     std::size_t size() const;
     std::size_t count() const;
 
     const_iterator begin() const;
     const_iterator end() const;
-    
+
+    void insert(uint8_t value);
+    void clear();
+
 private:
     Data        mData;
     std::size_t mCount;
@@ -42,14 +44,6 @@ inline
 EntropyPool::EntropyPool()
     : mCount(0)
 { }
-
-inline
-void EntropyPool::insert(uint8_t value)
-{
-    mData[mCount % mData.size()] = value;
-
-    ++mCount;
-}
 
 inline
 std::size_t EntropyPool::size() const
@@ -72,7 +66,21 @@ EntropyPool::const_iterator EntropyPool::begin() const
 inline
 EntropyPool::const_iterator EntropyPool::end() const
 {
-    return mData.end();
+    return mData.begin() + std::min(mCount, mData.size());
+}
+
+inline
+void EntropyPool::insert(uint8_t value)
+{
+    mData[mCount % mData.size()] ^= value;
+
+    ++mCount;
+}
+
+inline
+void EntropyPool::clear()
+{
+    mCount = 0;
 }
 
 #endif

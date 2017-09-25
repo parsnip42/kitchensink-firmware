@@ -10,6 +10,16 @@
 namespace CryptoUtil
 {
 
+Crypto::SHA256 sha256(const uint8_t* begin,
+                      const uint8_t* end)
+{
+    Crypto::SHA256 output;
+
+    mbedtls_sha256(begin, end - begin, output.begin(), 0);
+
+    return output;
+}
+
 Crypto::Key stretch(const StrRef&     password,
                     const Crypto::IV& iv)
 {

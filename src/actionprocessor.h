@@ -5,18 +5,21 @@
 
 #include <array>
 
+class EntropyPool;
 class Event;
 
 class ActionProcessor : public EventStage
 {    
 public:
-    explicit ActionProcessor(EventStage& next);
+    ActionProcessor(EntropyPool& entropyPool,
+                    EventStage&  next);
 
 public:
     virtual bool processEvent(const Event& event) override;
     
 private:
-    EventStage& mNext;
+    EntropyPool& mEntropyPool;
+    EventStage&  mNext;
     
 private:
     ActionProcessor(const ActionProcessor&) = delete;

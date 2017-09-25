@@ -2,7 +2,7 @@
 
 #include "crypto/cryptotypes.h"
 #include "crypto/cryptoutil.h"
-
+#include "types/arrayutil.h"
 #include "types/arrayoutstream.h"
 
 CryptoInStream::CryptoInStream(InStream&     inStream,
@@ -144,15 +144,9 @@ void CryptoInStream::readHeader()
     
     Crypto::IV  dataIv;
     Crypto::Key dataKey;
+        
+    ArrayUtil<decltype(dataIvKey)>::split(dataIvKey, dataIv, dataKey);
 
-    std::copy(dataIvKey.begin(),
-              dataIvKey.begin() + dataIv.size(),
-              dataIv.begin());
-
-    std::copy(dataIvKey.begin() + dataIv.size(),
-              dataIvKey.begin() + dataIv.size() + dataKey.size(),
-              dataKey.begin());
-    
     ArrayOutStream ctOut(mContent);
 
     auto contentLen(mInStream.read(ctOut, mContent.size()));

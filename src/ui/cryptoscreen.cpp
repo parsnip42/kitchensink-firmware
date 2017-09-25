@@ -39,17 +39,24 @@ bool CryptoScreen::processEvent(const Event& event)
         }
 
         {
-            StrOutStream os(mPoolContent.text);
-
-            auto value(mEntropyPool.read());
-
-            os.reset();
-        
-            for (auto octet : value)
+            Crypto::SHA256 value;
+            
+            if (mEntropyPool.read(value))
             {
-                os.appendInt(octet, "%2.2x");
+                StrOutStream os(mPoolContent.text);
+                
+                os.reset();
+                
+                for (auto octet : value)
+                {
+                    os.appendInt(octet, "%2.2x");
+                }
             }
-
+            else
+            {
+                mPoolContent.text = "Pool depleted";
+            }
+            
             mPoolContent.invalidateWidget();
         }
 

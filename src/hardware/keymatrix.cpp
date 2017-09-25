@@ -112,15 +112,14 @@ void KeyMatrix::scan()
         // The counter is an unsigned octet which is incremented every full
         // scan, so will range from 0 - 255 as it wraps at approximately every
         // 0.5s. The final value to be inserted into the entropy pool is the
-        // counter bit rotated by the row index.
+        // counter value + row index.
         //
         // This will also write any key bounces, seeing as we haven't gone
         // through the debounce filter yet.
         
         if (row != state[index])
         {
-            auto rot(index & 7);
-            mEntropyPool.insert((mCounter << rot) | (mCounter >> (8 - rot)));
+            mEntropyPool.insert(mCounter + index);
             state[index] = row;
         }
 
