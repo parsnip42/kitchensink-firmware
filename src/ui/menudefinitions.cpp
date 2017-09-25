@@ -21,7 +21,7 @@ const std::array<MenuWidget::Item, 6> mainMenu = { {
         { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSecureMacros) },
         { StrRef("Configuration"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kConfiguration) },
         { StrRef("Utilities"),     StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kUtils) },
-        { StrRef("Events"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEvents) },
+        { StrRef("Actions"),       StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEvents) },
         { StrRef("System"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSystem) },
     } };
 

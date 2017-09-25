@@ -76,12 +76,19 @@ void StatusScreen::screenInit()
     }
     
     {
-        StrOutStream os(mSMacroPoolUsage.value);
-
-        os.appendInt(mKeyboardState.secureMacroSet.poolUsage());
-        os.appendStr(" / ");
-        os.appendInt(mKeyboardState.secureMacroSet.poolCapacity());
-
+        if (mKeyboardState.secureMacroSet.unlocked())
+        {
+            StrOutStream os(mSMacroPoolUsage.value);
+            
+            os.appendInt(mKeyboardState.secureMacroSet.poolUsage());
+            os.appendStr(" / ");
+            os.appendInt(mKeyboardState.secureMacroSet.poolCapacity());
+        }
+        else
+        {
+            mSMacroPoolUsage.value = "Locked";
+        }
+        
         mMacroPoolUsage.invalidateWidget();
     }
     
