@@ -59,6 +59,7 @@ extern "C" void loop()
     
     MacroProcessor macroProcessor(keyboardState.macroSet,
                                   keyboardState.secureMacroSet,
+                                  keyboardState.globalConfig,
                                   timer,
                                   layerProcessor);
 

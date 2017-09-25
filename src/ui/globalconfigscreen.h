@@ -31,12 +31,13 @@ private:
 private:
     GlobalConfig&                                  mGlobalConfig;
     LabelledWidget<NumberEntryWidget>              mTapDelayEntry;
+    LabelledWidget<NumberEntryWidget>              mMacroPlaybackEntry;
     LabelledWidget<NumberEntryWidget>              mRepeatDelayEntry;
     LabelledWidget<NumberEntryWidget>              mRepeatRateEntry;
     LabelledWidget<NumberEntryWidget>              mHomeScreenColumns;
     LabelledWidget<NumberEntryWidget>              mHomeScreenTimeout;
     HomeLedWidgets                                 mHomeScreenLeds;
-    HStackWidget::Items<5 + Config::kHomeLedCount> mItems;
+    HStackWidget::Items<6 + Config::kHomeLedCount> mItems;
     HStackWidget                                   mHStackWidget;
     EventStage&                                    mNext;
 };

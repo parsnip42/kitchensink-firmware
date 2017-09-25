@@ -12,6 +12,7 @@ public:
 
 public:
     uint32_t   tapDelay;
+    uint32_t   macroPlaybackDelay;
     uint32_t   keyRepeatDelay;
     uint32_t   keyRepeatRate;
     uint32_t   homeScreenColumns;

@@ -2,17 +2,20 @@
 #define INCLUDED_MACROPROCESSOR_H
 
 #include "event/eventstage.h"
-#include "macroset.h"
+#include "macro.h"
 #include "timer.h"
 
 class Event;
 class MacroSet;
+class SecureMacroSet;
+class GlobalConfig;
 
 class MacroProcessor : public EventStage
 {
 public:
     MacroProcessor(const MacroSet&       macroSet,
                    const SecureMacroSet& secureMacroSet,
+                   const GlobalConfig&   globalConfig,
                    Timer&                timer,
                    EventStage&           next);
 
@@ -27,6 +30,7 @@ private:
 private:
     const MacroSet&                mMacroSet;
     const SecureMacroSet&          mSecureMacroSet;
+    const GlobalConfig&            mGlobalConfig;
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;

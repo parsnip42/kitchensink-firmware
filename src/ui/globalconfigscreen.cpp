@@ -13,6 +13,7 @@ GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
                                        EventStage&        next)
     : mGlobalConfig(globalConfig)
     , mTapDelayEntry("Multi Tap Delay", 140, NumberEntryWidget(0, 9999, timer))
+    , mMacroPlaybackEntry("Macro Playback Delay", 140, NumberEntryWidget(0, 999, timer))
     , mRepeatDelayEntry("Key Repeat Delay", 140, NumberEntryWidget(0, 9999, timer))
     , mRepeatRateEntry("Key Repeat Rate", 140, NumberEntryWidget(0, 9999, timer))
     , mHomeScreenColumns("Home Screen Columns", 140, NumberEntryWidget(1, 9, timer))
@@ -29,6 +30,7 @@ GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
                                                                                         timer));
                       }))
     , mItems({{ mTapDelayEntry,
+                mMacroPlaybackEntry,
                 mRepeatDelayEntry,
                 mRepeatRateEntry,
                 mHomeScreenColumns,
@@ -43,6 +45,7 @@ GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
     }
     
     mTapDelayEntry.widget.value      = mGlobalConfig.tapDelay;
+    mMacroPlaybackEntry.widget.value = mGlobalConfig.macroPlaybackDelay;
     mRepeatDelayEntry.widget.value   = mGlobalConfig.keyRepeatDelay;
     mRepeatRateEntry.widget.value    = mGlobalConfig.keyRepeatRate;
     mHomeScreenColumns.widget.value  = mGlobalConfig.homeScreenColumns;
@@ -61,11 +64,12 @@ Widget& GlobalConfigScreen::rootWidget()
 
 void GlobalConfigScreen::screenExit()
 {
-    mGlobalConfig.tapDelay          = mTapDelayEntry.widget.value;
-    mGlobalConfig.keyRepeatDelay    = mRepeatDelayEntry.widget.value;
-    mGlobalConfig.keyRepeatRate     = mRepeatRateEntry.widget.value;
-    mGlobalConfig.homeScreenColumns = mHomeScreenColumns.widget.value;
-    mGlobalConfig.homeScreenTimeout = mHomeScreenTimeout.widget.value;
+    mGlobalConfig.tapDelay           = mTapDelayEntry.widget.value;
+    mGlobalConfig.macroPlaybackDelay = mMacroPlaybackEntry.widget.value;
+    mGlobalConfig.keyRepeatDelay     = mRepeatDelayEntry.widget.value;
+    mGlobalConfig.keyRepeatRate      = mRepeatRateEntry.widget.value;
+    mGlobalConfig.homeScreenColumns  = mHomeScreenColumns.widget.value;
+    mGlobalConfig.homeScreenTimeout  = mHomeScreenTimeout.widget.value;
 
     for (std::size_t i(0); i < Config::kHomeLedCount; ++i)
     {

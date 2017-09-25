@@ -5,13 +5,17 @@
 #include "event/delayevent.h"
 #include "event/screenevent.h"
 #include "macro.h"
+#include "macroset.h"
+#include "globalconfig.h"
 
 MacroProcessor::MacroProcessor(const MacroSet&       macroSet,
                                const SecureMacroSet& secureMacroSet,
+                               const GlobalConfig&   globalConfig,
                                Timer&                timer,
                                EventStage&           next)
     : mMacroSet(macroSet)
     , mSecureMacroSet(secureMacroSet)
+    , mGlobalConfig(globalConfig)
     , mCurrent(nullptr)
     , mPlaybackTimer(timer.createHandle())
     , mNext(next)
@@ -112,8 +116,16 @@ void MacroProcessor::playback()
                 return;
             }
             else
-            {
+            {   
                 mNext.processEvent(forward ? event : event.invert());
+
+                auto macroPlaybackDelay(mGlobalConfig.macroPlaybackDelay);
+                
+                if (mCurrent->type != Macro::Type::kRealtime && macroPlaybackDelay > 0)
+                {
+                    mPlaybackTimer.schedule(macroPlaybackDelay);
+                    return;
+                }
             }
         }
         
