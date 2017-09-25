@@ -36,7 +36,7 @@ inline
 LabelledWidget<TWidget>::LabelledWidget(const StrRef& text,
                                         int           nSeparation,
                                         TWidget&&     nWidget)
-    : label(text, Justify::kLeft)
+    : label(text, Justify::kLeft, true)
     , widget(std::move(nWidget))
     , separation(nSeparation)
 { }

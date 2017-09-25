@@ -26,7 +26,7 @@ public:
         operator StrRef() const;
         void operator=(const StrRef& rhs);
 
-    private:
+    public:
         void updateMask();
         
     private:

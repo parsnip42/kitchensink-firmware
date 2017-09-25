@@ -35,13 +35,16 @@ void PasswordEntryWidget::PasswordContent::operator=(const StrRef& rhs)
 
 void PasswordEntryWidget::PasswordContent::updateMask()
 {
-    StrOutStream os(mMask);
-
-    os.reset();
-    
-    for (std::size_t i(0); i < mText.length(); ++i)
+    if (mMask.length() != mText.length())
     {
-        os.appendChar('*');
+        StrOutStream os(mMask);
+        
+        os.reset();
+        
+        for (std::size_t i(0); i < mText.length(); ++i)
+        {
+            os.appendChar('*');
+        }
     }
 }
 
@@ -72,6 +75,8 @@ void PasswordEntryWidget::render(const RasterLine& rasterLine, int row)
 
 bool PasswordEntryWidget::processEvent(const Event& event)
 {
+    password.updateMask();
+
     return mEntryWidget.processEvent(event);
 }
 

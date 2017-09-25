@@ -9,13 +9,20 @@ public:
     static constexpr Event::Type kType = Event::Type::kAction;
 
 public:
-    static constexpr Event create(uint8_t actionId);
+    enum class Type : uint8_t
+    {
+        Bootloader      = 0,
+        DumpEntropyPool = 1
+    };
+    
+public:
+    static constexpr Event create(Type actionId);
     
 private:
     explicit constexpr ActionEvent(const Event& event);
     
 public:
-    uint8_t actionId;
+    Type type;
 
 private:
     friend class Event;
@@ -23,14 +30,14 @@ private:
 
 
 inline
-constexpr Event ActionEvent::create(uint8_t actionId)
+constexpr Event ActionEvent::create(Type actionId)
 {
-    return Event(kType, actionId);
+    return Event(kType, static_cast<uint8_t>(actionId));
 }
 
 inline
 constexpr ActionEvent::ActionEvent(const Event& event)
-    : actionId(event.value())
+    : type(static_cast<Type>(event.value()))
 { }
 
 #endif

@@ -17,15 +17,15 @@ bool ActionProcessor::processEvent(const Event& event)
 {
     if (event.is<ActionEvent>())
     {
-        auto actionId(event.get<ActionEvent>().actionId);
+        auto type(event.get<ActionEvent>().type);
         
-        switch (actionId)
+        switch (type)
         {
-        case 0:
+        case ActionEvent::Type::Bootloader:
             CtrlUtil::bootloader();
             break;
             
-        case 10:
+        case ActionEvent::Type::DumpEntropyPool:
         {
             Storage storage;
 
@@ -33,11 +33,8 @@ bool ActionProcessor::processEvent(const Event& event)
 
             os.write(DataRef(mEntropyPool.begin(), mEntropyPool.end()));
             mEntropyPool.clear();
-        }
-        break;
-            
-        default:
             break;
+        }
         }
     }
     else

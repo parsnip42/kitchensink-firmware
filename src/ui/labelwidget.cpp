@@ -8,9 +8,11 @@
 #include "ui/colors.h"
 
 LabelWidget::LabelWidget(const StrRef& nText,
-                         Justify       nJustify)
+                         Justify       nJustify,
+                         bool          nCanFocus)
     : text(nText)
     , justify(nJustify)
+    , canFocus(nCanFocus)
     , mFocused(true)
 { }
 
@@ -46,7 +48,7 @@ void LabelWidget::render(const RasterLine& rasterLine, int row)
         yOffset = (size.height - Font::kHeight) / 2;
     }
 
-    uint8_t fg(mFocused ? Colors::kFocused : Colors::kUnfocused);
+    uint8_t fg((mFocused || !canFocus) ? Colors::kFocused : Colors::kUnfocused);
 
     RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, Colors::kBackground);
 }

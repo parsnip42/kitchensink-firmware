@@ -32,17 +32,23 @@ Widget& UnlockScreen::rootWidget()
 
 void UnlockScreen::onUnlock()
 {
-    mStatusLabel.text = "Unlocking..";
-    mStatusLabel.invalidateWidget();
-
-    if (KeyboardStateUtil::load(mSecureMacroSet,
-                                mPasswordEntry.widget.password))
+    StrRef password(mPasswordEntry.widget.password);
+    
+    if (!password.empty())
     {
-        mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
-    }
-    else
-    {
-        mStatusLabel.text = "Failed to unlock";
+        mStatusLabel.text = "Unlocking..";
         mStatusLabel.invalidateWidget();
+
+        if (KeyboardStateUtil::load(mSecureMacroSet, password))
+        {
+            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
+        }
+        else
+        {
+            mPasswordEntry.widget.password = "";
+            mStatusLabel.text = "Failed to unlock";
+            mPasswordEntry.invalidateWidget();
+            mStatusLabel.invalidateWidget();
+        }
     }
 }

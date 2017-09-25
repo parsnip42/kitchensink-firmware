@@ -24,7 +24,7 @@ namespace
 void serialize(const ActionEvent& event, const StrOutStream& os)
 {
     os.appendChar('A');
-    os.appendInt(event.actionId);
+    os.appendInt(static_cast<int>(event.type));
 }
 
 void serialize(const DelayEvent& event, const StrOutStream& os)
@@ -170,7 +170,7 @@ void deserialize(const StrRef& eventStr, Event& event)
 
         if (StrUtil::parseUInt(eventStr.substr(1), index))
         {
-            event = ActionEvent::create(index);
+            event = ActionEvent::create(static_cast<ActionEvent::Type>(index));
         }
 
         break;
@@ -306,7 +306,7 @@ namespace
 void serializeReadable(const ActionEvent& event, const StrOutStream& os)
 {
     os.appendStr("Action ");
-    os.appendInt(event.actionId);
+    os.appendInt(static_cast<int>(event.type));
 }
 
 void serializeReadable(const DelayEvent& event, const StrOutStream& os)
