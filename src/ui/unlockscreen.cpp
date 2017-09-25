@@ -41,6 +41,7 @@ void UnlockScreen::onUnlock()
 
         if (KeyboardStateUtil::load(mSecureMacroSet, password))
         {
+            mSecureMacroSet.password = password;
             screenCompleted.fireAction();
         }
         else

@@ -26,8 +26,10 @@ public:
 public:
     virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
+    virtual void screenExit() override;
 
 private:
+    void apply();
     void onRecord();
     
 private:

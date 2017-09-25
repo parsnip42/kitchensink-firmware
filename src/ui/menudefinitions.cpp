@@ -17,38 +17,38 @@ namespace
 {
 
 const std::array<MenuWidget::Item, 5> mainMenu = { {
-        { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 12) },
-        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 13) },
-        { StrRef("Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 10) },
-        { StrRef("Configuration"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 1) },
-        { StrRef("System"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 2) },
+        { StrRef("Macros"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kMacros) },
+        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSecureMacros) },
+        { StrRef("Keys"),          StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kKeys) },
+        { StrRef("Configuration"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kConfiguration) },
+        { StrRef("System"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSystem) },
     } };
 
 const std::array<MenuWidget::Item, 6> configMenu = { {
-        { StrRef("Global Settings"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 0) },
-        { StrRef("Edit Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 20) },
-        { StrRef("Edit Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 21) },
-        { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 22) },
-        { StrRef("Edit Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 23) },
-        { StrRef("Edit Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 24) },
+        { StrRef("Global Settings"),    StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kGlobalSettings) },
+        { StrRef("Edit Layers"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEditLayers) },
+        { StrRef("Edit Macros"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEditMacros) },
+        { StrRef("Edit Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEditSecureMacros) },
+        { StrRef("Edit Multi Keys"),    StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEditMultiKeys) },
+        { StrRef("Edit Smart Keys"),    StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kEditSmartKeys) },
     } };
 
 const std::array<MenuWidget::Item, 6> systemMenu = { {
         { StrRef("Unlock Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock) },
-        { StrRef("Status"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kStatus) },
-        { StrRef("Cryptography"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kCryptography) },
-        { StrRef("Dump Entropy Pool"), StrRef(), ActionEvent::create(ActionEvent::Type::DumpEntropyPool) },
-        { StrRef("Event Stream"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream) },
-        { StrRef("Bootloader"), StrRef(), ActionEvent::create(ActionEvent::Type::Bootloader) } 
+        { StrRef("Status"),               StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kStatus) },
+        { StrRef("Cryptography"),         StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kCryptography) },
+        { StrRef("Dump Entropy Pool"),    StrRef(), ActionEvent::create(ActionEvent::Type::kDumpEntropyPool) },
+        { StrRef("Event Stream"),         StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream) },
+        { StrRef("Bootloader"),           StrRef(), ActionEvent::create(ActionEvent::Type::kBootloader) } 
     } };
 
 const std::array<MenuWidget::Item, 6> eventMenu = { {
-        { StrRef("Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 10) },
-        { StrRef("Layers"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 11) },
-        { StrRef("Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 12) },
-        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 13) },
-        { StrRef("Multi Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 14) },
-        { StrRef("Smart Keys"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, 15) }
+        { StrRef("Keys"),          StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kKeys) },
+        { StrRef("Layers"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kLayers) },
+        { StrRef("Macros"),        StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kMacros) },
+        { StrRef("Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSecureMacros) },
+        { StrRef("Multi Keys"),    StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kMultiKeys) },
+        { StrRef("Smart Keys"),    StrRef(), ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kSmartKeys) }
     } };
 
 MenuWidget::Item createKeyMenuItem(std::size_t index)
@@ -205,55 +205,55 @@ MenuDefinitions::MenuDefinitions(const KeyboardState& keyboardState)
     , mEditSmartKeyDataSource(keyboardState.smartKeySet, &createEditSmartKeyMenuItem)
 { }
 
-const MenuWidget::DataSource& MenuDefinitions::getDataSource(int id) const
+const MenuWidget::DataSource& MenuDefinitions::getDataSource(MenuId id) const
 {
     switch (id)
     {
-    case 0:
+    case kMainMenu:
         return mMainMenuSource;
 
-    case 1:
+    case kConfiguration:
         return mConfigMenuSource;
 
-    case 2:
+    case kSystem:
         return mSystemMenuSource;
 
-    case 3:
+    case kEvents:
         return mEventMenuSource;
 
 
-    case 10:
+    case kKeys:
         return mKeyDataSource;
 
-    case 11:
+    case kLayers:
         return mLayerDataSource;
 
-    case 12:
+    case kMacros:
         return mMacroDataSource;
 
-    case 13:
+    case kSecureMacros:
         return mSMacroDataSource;
         
-    case 14:
+    case kMultiKeys:
         return mMultiKeyDataSource;
         
-    case 15:
+    case kSmartKeys:
         return mSmartKeyDataSource;
 
 
-    case 20:
+    case kEditLayers:
         return mEditLayerDataSource;
 
-    case 21:
+    case kEditMacros:
         return mEditMacroDataSource;
 
-    case 22:
+    case kEditSecureMacros:
         return mEditSMacroDataSource;
 
-    case 23:
+    case kEditMultiKeys:
         return mEditMultiKeyDataSource;
         
-    case 24:
+    case kEditSmartKeys:
         return mEditSmartKeyDataSource;
 
     default:
@@ -261,54 +261,54 @@ const MenuWidget::DataSource& MenuDefinitions::getDataSource(int id) const
     }
 }
 
-StrRef MenuDefinitions::getTitle(int id) const
+StrRef MenuDefinitions::getTitle(MenuId id) const
 {
     switch (id)
     {
-    case 0:
+    case kMainMenu:
         return "Main Menu";
         
-    case 1:
+    case kConfiguration:
         return "Configuration";
         
-    case 2:
+    case kSystem:
         return "System";
 
-    case 3:
+    case kEvents:
         return "Events";
 
 
-    case 10:
+    case kKeys:
         return "Keys";
         
-    case 11:
+    case kLayers:
         return "Layers";
 
-    case 12:
+    case kMacros:
         return "Macros";
         
-    case 13:
+    case kSecureMacros:
         return "Secure Macros";
                 
-    case 14:
+    case kMultiKeys:
         return "Multi Keys";
         
-    case 15:
+    case kSmartKeys:
         return "Smart Keys";
 
-    case 20:
+    case kEditLayers:
         return "Edit Layers";
 
-    case 21:
+    case kEditMacros:
         return "Edit Macros";
         
-    case 22:
+    case kEditSecureMacros:
         return "Edit Secure Macros";
                                
-    case 23:
+    case kEditMultiKeys:
         return "Edit Multi Keys";
         
-    case 24:
+    case kEditSmartKeys:
         return "Edit Smart Keys";
 
         

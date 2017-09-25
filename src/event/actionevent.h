@@ -11,8 +11,8 @@ public:
 public:
     enum class Type : uint8_t
     {
-        Bootloader      = 0,
-        DumpEntropyPool = 1
+        kBootloader      = 0,
+        kDumpEntropyPool = 1
     };
     
 public:

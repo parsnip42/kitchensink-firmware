@@ -64,14 +64,23 @@ Widget& EditMacroScreen::rootWidget()
     return mHStackWidget;
 }
 
-void EditMacroScreen::onRecord()
+void EditMacroScreen::screenExit()
+{
+    apply();
+}
+
+void EditMacroScreen::apply()
 {
     auto macroType(static_cast<Macro::Type>(mTypeCombo.widget.selectedItem));
                 
     mMacro.type     = macroType;
     mMacro.name     = mTitleEntry.widget.text;
-    mMacro.shortcut = mShortcutEntry.widget.text;
-                
+    mMacro.shortcut = mShortcutEntry.widget.text;   
+}
+
+void EditMacroScreen::onRecord()
+{
+    apply();
     mNext.processEvent(mRecordEvent);
 }
 

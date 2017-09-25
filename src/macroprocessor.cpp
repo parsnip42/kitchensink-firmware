@@ -47,7 +47,7 @@ bool MacroProcessor::processEvent(const Event& event)
                                  macroEvent.pressed);
                 }
             }
-            else
+            else if (macroEvent.pressed)
             {
                 mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock));
             }

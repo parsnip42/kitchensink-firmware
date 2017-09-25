@@ -15,11 +15,35 @@ class KeyboardState;
 class MenuDefinitions
 {
 public:
+    enum
+    {
+        kMainMenu         = 0,
+        kConfiguration    = 1,
+        kSystem           = 2,
+        kEvents           = 3,
+        
+        kKeys             = 10,
+        kLayers           = 11,
+        kMacros           = 12,
+        kSecureMacros     = 13,
+        kMultiKeys        = 14,
+        kSmartKeys        = 15,
+        
+        kEditLayers       = 20,
+        kEditMacros       = 21,
+        kEditSecureMacros = 22,
+        kEditMultiKeys    = 23,
+        kEditSmartKeys    = 24
+    };
+
+    typedef uint8_t MenuId;
+    
+public:
     explicit MenuDefinitions(const KeyboardState& keyboardState);
 
 public:
-    StrRef getTitle(int id) const;
-    const MenuWidget::DataSource& getDataSource(int id) const;
+    StrRef getTitle(MenuId id) const;
+    const MenuWidget::DataSource& getDataSource(MenuId id) const;
 
 private:
     const ArrayObjectSource<MenuWidget::Item> mMainMenuSource;

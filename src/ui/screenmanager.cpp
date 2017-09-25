@@ -195,12 +195,24 @@ void ScreenManager::launchMenu(int                menuId,
                                const ScreenEvent& sourceEvent,
                                EventStage&        next)
 {
-    MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
-                      next);
-    
-    displayScreen(mMenuDefinitions.getTitle(menuId),
-                  screen,
-                  sourceEvent);
+    if ((menuId == MenuDefinitions::kSecureMacros ||
+         menuId == MenuDefinitions::kEditSecureMacros) &&
+        !mKeyboardState.secureMacroSet.unlocked())
+    {
+        auto unlockEvent(ScreenEvent(ScreenEvent::Type::kScreen,
+                                     ScreenEvent::kMacroUnlock));
+
+        launchScreen(ScreenEvent::kMacroUnlock, unlockEvent);
+    }
+    else
+    {
+        MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
+                          next);
+        
+        displayScreen(mMenuDefinitions.getTitle(menuId),
+                      screen,
+                      sourceEvent);
+    }
 }
 
 void ScreenManager::launchScreen(int                screenId,
@@ -319,6 +331,8 @@ void ScreenManager::launchRecordMacro(Macro&             macro,
             break;
         }
     }
+
+    screen.screenExit();
 }
 
 void ScreenManager::launchEditLayer(int                layerId,
@@ -399,19 +413,23 @@ void ScreenManager::displayScreen(const StrRef&      title,
             if (event.type == ScreenEvent::Type::kHome ||
                 event == sourceEvent)
             {
+                // Consume event and fall through.
                 mScreenEventQueue.popFront();
-                break;
+                completed = true;
             }
             
             if (!transient(sourceEvent) && transient(event))
             {
+                // Consume event and push new screen on top of this screen.
                 mScreenEventQueue.popFront();
                 mEventManager.flush(output);
                 launch(event, output);
             }
             else
             {
-                break;
+                // Don't push onto this screen - fall through and let the next
+                // appear.
+                completed = true;
             }
         }
     }

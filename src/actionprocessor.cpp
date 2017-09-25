@@ -21,11 +21,11 @@ bool ActionProcessor::processEvent(const Event& event)
         
         switch (type)
         {
-        case ActionEvent::Type::Bootloader:
+        case ActionEvent::Type::kBootloader:
             CtrlUtil::bootloader();
             break;
             
-        case ActionEvent::Type::DumpEntropyPool:
+        case ActionEvent::Type::kDumpEntropyPool:
         {
             Storage storage;
 
