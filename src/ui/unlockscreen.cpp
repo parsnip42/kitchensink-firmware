@@ -41,7 +41,7 @@ void UnlockScreen::onUnlock()
 
         if (KeyboardStateUtil::load(mSecureMacroSet, password))
         {
-            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
+            screenCompleted.fireAction();
         }
         else
         {

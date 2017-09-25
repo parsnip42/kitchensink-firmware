@@ -1,17 +1,17 @@
 #include "ui/menudefinitions.h"
 
-#include "types/stroutstream.h"
-#include "keyboardstate.h"
 #include "data/keycode.h"
 #include "data/keycodeutil.h"
-#include "event/event.h"
 #include "event/actionevent.h"
+#include "event/event.h"
 #include "event/keyevent.h"
-#include "event/screenevent.h"
+#include "event/layerevent.h"
 #include "event/macroevent.h"
 #include "event/multievent.h"
+#include "event/screenevent.h"
 #include "event/smartevent.h"
-#include "event/layerevent.h"
+#include "keyboardstate.h"
+#include "types/stroutstream.h"
 
 namespace
 {
@@ -34,11 +34,11 @@ const std::array<MenuWidget::Item, 6> configMenu = { {
     } };
 
 const std::array<MenuWidget::Item, 6> systemMenu = { {
-        { StrRef("Unlock Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 4) },
-        { StrRef("Status"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 1) },
-        { StrRef("Cryptography"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 2) },
+        { StrRef("Unlock Secure Macros"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock) },
+        { StrRef("Status"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kStatus) },
+        { StrRef("Cryptography"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kCryptography) },
         { StrRef("Dump Entropy Pool"), StrRef(), ActionEvent::create(ActionEvent::Type::DumpEntropyPool) },
-        { StrRef("Event Stream"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, 3) },
+        { StrRef("Event Stream"), StrRef(), ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream) },
         { StrRef("Bootloader"), StrRef(), ActionEvent::create(ActionEvent::Type::Bootloader) } 
     } };
 

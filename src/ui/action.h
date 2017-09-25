@@ -9,6 +9,8 @@ public:
 
     static Action action(Action& action);
 
+    static Action trigger(bool& value);
+
 public:
     typedef bool(*Func)(void* data);
 

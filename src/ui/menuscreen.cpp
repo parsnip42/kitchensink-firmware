@@ -17,11 +17,6 @@ bool MenuScreen::processEvent(const Event& event)
     {
         auto event(mMenuWidget.selectedItem().event);
 
-        if (!event.is<ScreenEvent>())
-        {
-            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
-        }
-        
         mNext.processEvent(event);
 
         auto inverted(event.invert());
@@ -29,6 +24,11 @@ bool MenuScreen::processEvent(const Event& event)
         if (inverted != Event())
         {
             mNext.processEvent(inverted);
+        }
+
+        if (!event.is<ScreenEvent>())
+        {
+            screenCompleted.fireAction();
         }
     }
     else 

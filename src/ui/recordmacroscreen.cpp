@@ -51,9 +51,9 @@ bool RecordMacroScreen::processEvent(const Event& event)
         if (mRecorder.complete())
         {
             mMacro.content.assign(mRecorder.begin(),
-                                 mRecorder.end());
-            
-            mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome, 0));
+                                  mRecorder.end());
+
+            screenCompleted.fireAction();
         }
 
         return processed;

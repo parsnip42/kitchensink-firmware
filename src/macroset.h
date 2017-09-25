@@ -51,7 +51,7 @@ public:
     SecureMacroSet();
 
 public:
-    bool unlocked();
+    bool unlocked() const;
     
 public:
     StrBuf<24> password;
@@ -120,7 +120,7 @@ SecureMacroSet::SecureMacroSet()
 { }
 
 inline
-bool SecureMacroSet::unlocked()
+bool SecureMacroSet::unlocked() const
 {
     return !password.empty();
 }

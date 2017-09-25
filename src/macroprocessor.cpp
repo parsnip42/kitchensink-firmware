@@ -3,6 +3,7 @@
 #include "event/event.h"
 #include "event/macroevent.h"
 #include "event/delayevent.h"
+#include "event/screenevent.h"
 #include "macro.h"
 
 MacroProcessor::MacroProcessor(const MacroSet&       macroSet,
@@ -38,10 +39,17 @@ bool MacroProcessor::processEvent(const Event& event)
             break;
 
         case MacroEvent::Type::kSecure:
-            if (macroId < mSecureMacroSet.size())
+            if (mSecureMacroSet.unlocked())
             {
-                processMacro(mSecureMacroSet[macroId],
-                             macroEvent.pressed);
+                if (macroId < mSecureMacroSet.size())
+                {
+                    processMacro(mSecureMacroSet[macroId],
+                                 macroEvent.pressed);
+                }
+            }
+            else
+            {
+                mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock));
             }
             break;
         }

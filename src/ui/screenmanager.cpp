@@ -208,7 +208,7 @@ void ScreenManager::launchScreen(int                screenId,
 {
     switch (screenId)
     {
-    case 0:
+    case ScreenEvent::kGlobalSettings:
     {
         GlobalConfigScreen screen(mKeyboardState.smartKeySet,
                                   mKeyboardState.globalConfig,
@@ -223,7 +223,7 @@ void ScreenManager::launchScreen(int                screenId,
         break;
     }
 
-    case 1:
+    case ScreenEvent::kStatus:
     {
         StatusScreen screen(mKeyboardState,
                             mEventManager);
@@ -234,7 +234,7 @@ void ScreenManager::launchScreen(int                screenId,
         break;
     }
     
-    case 2:
+    case ScreenEvent::kCryptography:
     {
         CryptoScreen screen(mEventManager.timer,
                             mEntropyPool);
@@ -245,7 +245,7 @@ void ScreenManager::launchScreen(int                screenId,
         break;
     }
     
-    case 3:
+    case ScreenEvent::kEventStream:
     {
         EventStreamScreen screen;
 
@@ -255,7 +255,7 @@ void ScreenManager::launchScreen(int                screenId,
         break;
     }
 
-    case 4:
+    case ScreenEvent::kMacroUnlock:
     {
         UnlockScreen screen(mKeyboardState.secureMacroSet,
                             mEventManager.timer,
@@ -383,9 +383,12 @@ void ScreenManager::displayScreen(const StrRef&      title,
 
     Surface::WidgetGuard guard(mSurface, hSplit);
 
+    bool completed(false);
+    
+    screen.screenCompleted = Action::trigger(completed);
     screen.screenInit();
-
-    while (true)
+    
+    while (!completed)
     {
         mEventManager.poll(output);
 
@@ -412,5 +415,8 @@ void ScreenManager::displayScreen(const StrRef&      title,
             }
         }
     }
+
+    screen.screenExit();
+    screen.screenCompleted = Action();
 }
 

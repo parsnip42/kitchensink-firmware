@@ -1,6 +1,5 @@
 #include "ui/multiconfigscreen.h"
 
-#include "event/screenevent.h"
 #include "multikey.h"
 #include "types/arrayutil.h"
 #include "types/stroutstream.h"
@@ -20,7 +19,6 @@ MultiConfigScreen::MultiConfigScreen(Timer&      timer,
                       
                       return LabelledWidget<EventEntryWidget>(name, 140, EventEntryWidget(timer));
                   }))
-    , mSaveButton("Save")
     , mItems({{ mTitleEntry }})
     , mHStackWidget(mItems, true)
     , mNext(next)
@@ -34,11 +32,6 @@ MultiConfigScreen::MultiConfigScreen(Timer&      timer,
         entry.widget.event = multiKey.events[i];
         mItems[i + 1] = entry;
     }
-
-    mItems[mEventEntry.size() + 1] = mSaveButton;
-    
-    mSaveButton.activated = Action::memFn<MultiConfigScreen,
-                                          &MultiConfigScreen::onSave>(this);
 }
 
 bool MultiConfigScreen::processEvent(const Event& event)
@@ -51,7 +44,7 @@ Widget& MultiConfigScreen::rootWidget()
     return mHStackWidget;
 }
 
-void MultiConfigScreen::onSave()
+void MultiConfigScreen::screenExit()
 {
     mMultiKey.name = mTitleEntry.widget.text;
 
@@ -59,6 +52,4 @@ void MultiConfigScreen::onSave()
     {
         mMultiKey.events[i] = mEventEntry[i].widget.event;
     }
-
-    mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
 }

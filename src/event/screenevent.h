@@ -23,7 +23,16 @@ public:
         kEditSmart      = 9,
         kUnlockSMacro   = 10
     };
-
+    
+    enum
+    {
+        kGlobalSettings = 0,
+        kStatus         = 1,
+        kCryptography   = 2,
+        kEventStream    = 3,
+        kMacroUnlock    = 4
+    };
+        
 public:
     static constexpr Event create(Type    type,
                                   uint8_t index = 0);

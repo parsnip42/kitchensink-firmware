@@ -28,7 +28,6 @@ GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
                           return LabelledWidget<HomeLedWidget>(name, 140, HomeLedWidget(smartKeySet,
                                                                                         timer));
                       }))
-    , mSaveButton("Save")
     , mItems({{ mTapDelayEntry,
                 mRepeatDelayEntry,
                 mRepeatRateEntry,
@@ -43,16 +42,11 @@ GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
         mItems[5 + i] = HStackWidget::Element(mHomeScreenLeds[i]);
     }
     
-    mItems[5 + Config::kHomeLedCount] = HStackWidget::Element(mSaveButton);
-    
     mTapDelayEntry.widget.value      = mGlobalConfig.tapDelay;
     mRepeatDelayEntry.widget.value   = mGlobalConfig.keyRepeatDelay;
     mRepeatRateEntry.widget.value    = mGlobalConfig.keyRepeatRate;
     mHomeScreenColumns.widget.value  = mGlobalConfig.homeScreenColumns;
     mHomeScreenTimeout.widget.value  = mGlobalConfig.homeScreenTimeout;
-
-    mSaveButton.activated = Action::memFn<GlobalConfigScreen,
-                                          &GlobalConfigScreen::onSave>(this);
 }
 
 bool GlobalConfigScreen::processEvent(const Event& event)
@@ -65,7 +59,7 @@ Widget& GlobalConfigScreen::rootWidget()
     return mHStackWidget;
 }
 
-void GlobalConfigScreen::onSave()
+void GlobalConfigScreen::screenExit()
 {
     mGlobalConfig.tapDelay          = mTapDelayEntry.widget.value;
     mGlobalConfig.keyRepeatDelay    = mRepeatDelayEntry.widget.value;
@@ -77,7 +71,5 @@ void GlobalConfigScreen::onSave()
     {
         mGlobalConfig.homeLedSet[i] = mHomeScreenLeds[i].widget.homeLed;
     }
-    
-    mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kHome));
 }
 

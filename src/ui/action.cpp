@@ -10,6 +10,16 @@ auto nullFunc([](void*) -> bool
 
 }
 
+Action Action::trigger(bool& value)
+{
+    return Action(&value, [](void* data) -> bool
+    {
+        (*reinterpret_cast<bool*>(data)) = true;
+        
+        return true;
+    });
+}
+
 Action::Action()
     : mData(nullptr)
     , mFunc(nullFunc)

@@ -1,7 +1,6 @@
 #ifndef INCLUDED_GLOBALCONFIGSCREEN_H
 #define INCLUDED_GLOBALCONFIGSCREEN_H
 
-#include "ui/buttonwidget.h"
 #include "ui/combowidget.h"
 #include "ui/homeledwidget.h"
 #include "ui/hstackwidget.h"
@@ -23,9 +22,7 @@ public:
 public:
     virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
-
-private:
-    void onSave();
+    virtual void screenExit() override;
 
 private:
     typedef std::array<LabelledWidget<HomeLedWidget>,
@@ -39,8 +36,7 @@ private:
     LabelledWidget<NumberEntryWidget>              mHomeScreenColumns;
     LabelledWidget<NumberEntryWidget>              mHomeScreenTimeout;
     HomeLedWidgets                                 mHomeScreenLeds;
-    ButtonWidget                                   mSaveButton;
-    HStackWidget::Items<6 + Config::kHomeLedCount> mItems;
+    HStackWidget::Items<5 + Config::kHomeLedCount> mItems;
     HStackWidget                                   mHStackWidget;
     EventStage&                                    mNext;
 };

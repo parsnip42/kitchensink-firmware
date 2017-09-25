@@ -2,7 +2,6 @@
 #define INCLUDED_MULTICONFIGSCREEN_H
 
 #include "event/eventstage.h"
-#include "ui/buttonwidget.h"
 #include "ui/evententrywidget.h"
 #include "ui/hstackwidget.h"
 #include "ui/labelledwidget.h"
@@ -22,9 +21,7 @@ public:
 public:
     virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
-
-private:
-    void onSave();
+    virtual void screenExit() override;
 
 private:
     typedef std::array<LabelledWidget<EventEntryWidget>,
@@ -34,8 +31,7 @@ private:
     MultiKey&                                          mMultiKey;
     LabelledWidget<TextEntryWidget>                    mTitleEntry;
     EventEntryWidgets                                  mEventEntry;
-    ButtonWidget                                       mSaveButton;
-    HStackWidget::Items<2 + Config::kMultiKeyTapCount> mItems;
+    HStackWidget::Items<1 + Config::kMultiKeyTapCount> mItems;
     HStackWidget                                       mHStackWidget;
     EventStage&                                        mNext;
 };

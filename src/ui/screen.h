@@ -3,6 +3,7 @@
 
 #include "event/eventstage.h"
 #include "types/strref.h"
+#include "ui/action.h"
 
 class Widget;
 
@@ -14,12 +15,21 @@ public:
     
 public:
     virtual void screenInit();
+    virtual void screenExit();
     virtual Widget& rootWidget() = 0;
+
+public:
+    Action screenCompleted;
 };
 
 
 inline
 void Screen::screenInit()
+{
+}
+
+inline
+void Screen::screenExit()
 {
 }
 
