@@ -16,7 +16,13 @@ MenuWidget::MenuWidget(const DataSource& dataSource)
 
 bool MenuWidget::processEvent(const Event& event)
 {
-    if (Keys::pageUp(event))
+    if (Keys::ok(event))
+    {
+        itemSelected.fireAction();
+        
+        return true;
+    }
+    else if (Keys::pageUp(event))
     {
         moveSelection(-5);
     }
@@ -159,15 +165,33 @@ MenuWidget::Item MenuWidget::selectedItem() const
 
 void MenuWidget::applyFilter()
 {
+    bool fireShortcut(false);
+    
     filterIndex.filter(
         mDataSource.size(),
         [&](std::size_t index)
         {
             const auto& item(mDataSource[index]);
 
+            // Typing a shortcut instantly activates the item, however defer
+            // this until we've finished processing and default to the first
+            // match.
+            if (!filterStr.empty() &&
+                item.shortcut == filterStr &&
+                !fireShortcut)
+            {
+                mSelectedIndex = index;
+                fireShortcut = true;
+            }
+            
             return (StrRef(item.title).beginsWithCase(filterStr) ||
                     StrRef(item.shortcut).beginsWithCase(filterStr));
         });
+
+    if (fireShortcut)
+    {
+        itemSelected.fireAction();
+    }
 }
 
 void MenuWidget::update()

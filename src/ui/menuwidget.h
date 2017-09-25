@@ -1,6 +1,7 @@
 #ifndef INCLUDED_MENUWIDGET_H
 #define INCLUDED_MENUWIDGET_H
 
+#include "ui/action.h"
 #include "ui/dimension.h"
 #include "ui/menuitemwidget.h"
 #include "ui/surface.h"
@@ -43,6 +44,9 @@ public:
 public:
     Item selectedItem() const;
     void update();
+
+public:
+    Action itemSelected;
     
 private:
     void moveSelection(int direction);
