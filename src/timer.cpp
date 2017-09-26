@@ -58,7 +58,7 @@ Timer::Handle Timer::createHandle()
         }
     }
 
-    return Handle(this, 0);
+    return Handle(nullptr, 0);
 }
     
 void Timer::releaseHandle(Timer::Handle& handle)
