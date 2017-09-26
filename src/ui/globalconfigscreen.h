@@ -37,7 +37,7 @@ private:
     LabelledWidget<NumberEntryWidget>              mHomeScreenColumns;
     LabelledWidget<NumberEntryWidget>              mHomeScreenTimeout;
     HomeLedWidgets                                 mHomeScreenLeds;
-    HStackWidget::Items<6 + Config::kHomeLedCount> mItems;
+    HStackWidget::Items<5 + Config::kHomeLedCount> mItems;
     HStackWidget                                   mHStackWidget;
     EventStage&                                    mNext;
 };

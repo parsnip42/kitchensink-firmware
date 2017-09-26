@@ -130,6 +130,21 @@ void Timer::cancel(const Timer::Handle& handle)
     timerEntry.repeatDelayMs = 0;
 }
 
+std::size_t Timer::allocatedTimers() const
+{
+    std::size_t allocated(0);
+    
+    for (const auto& timerEntry : mTimerMap)
+    {
+        if (timerEntry.assigned)
+        {
+            ++allocated;
+        }
+    }
+
+    return allocated;
+}
+
 std::size_t Timer::activeTimers() const
 {
     return mTimerQueue.size();

@@ -18,8 +18,6 @@ public:
 public:
     virtual bool processEvent(const Event& event) override;
 
-    Event activeEvent();
-
 private:
     Timer::Handle mRepeatTimer;
     GlobalConfig& mGlobalConfig;

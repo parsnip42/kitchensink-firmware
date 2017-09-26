@@ -27,10 +27,11 @@ private:
     PropertyWidget         mMemoryUsage;
     PropertyWidget         mConfigSize;
     PropertyWidget         mScanRate;
+    PropertyWidget         mAllocatedTimers;
     PropertyWidget         mActiveTimers;
     PropertyWidget         mMacroPoolUsage;
     PropertyWidget         mSMacroPoolUsage;
-    HStackWidget::Items<6> mItems;
+    HStackWidget::Items<7> mItems;
     HStackWidget           mHStackWidget;
 };
 

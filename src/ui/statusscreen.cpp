@@ -31,12 +31,14 @@ StatusScreen::StatusScreen(KeyboardState& keyboardState,
     , mMemoryUsage("Free Memory", 120)
     , mConfigSize("Config Size", 120)
     , mScanRate("Scan Rate", 120)
+    , mAllocatedTimers("Allocated Timers", 120)
     , mActiveTimers("Active Timers", 120)
     , mMacroPoolUsage("Macro Pool", 120)
     , mSMacroPoolUsage("Secure Macro Pool", 120)
     , mItems({{ mMemoryUsage,
                 mConfigSize,
                 mScanRate,
+                mAllocatedTimers,
                 mActiveTimers,
                 mMacroPoolUsage,
                 mSMacroPoolUsage }})
@@ -66,6 +68,16 @@ void StatusScreen::screenInit()
         os.appendStr(" bytes");
         
         mConfigSize.invalidateWidget();
+    }
+    
+    {
+        StrOutStream os(mAllocatedTimers.value);
+
+        os.appendInt(mEventManager.timer.allocatedTimers());
+        os.appendStr(" / ");
+        os.appendInt(Config::kTimerCount);
+        
+        mAllocatedTimers.invalidateWidget();
     }
     
     {

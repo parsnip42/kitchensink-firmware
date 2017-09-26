@@ -86,6 +86,8 @@ public:
 
     void cancel(const Handle& handle);
 
+    std::size_t allocatedTimers() const;
+
     std::size_t activeTimers() const;
 
 private:
