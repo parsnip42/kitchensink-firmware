@@ -29,10 +29,6 @@ void init(KeyboardState& keyboardState)
     "[home 2]\n"
     "type=1\n"
     "index=1\n"
-
-    "[home 3]\n"
-    "type=2\n"
-    "index=2\n"
     
     "[home 4]\n"
     "type=1\n"
