@@ -6,6 +6,7 @@
 #include "keyboardstate.h"
 #include "storage/storage.h"
 #include "types/stroutstream.h"
+#include "config.h"
 
 #include <elapsedMillis.h>
 
@@ -30,11 +31,13 @@ StatusScreen::StatusScreen(KeyboardState& keyboardState,
     , mMemoryUsage("Free Memory", 120)
     , mConfigSize("Config Size", 120)
     , mScanRate("Scan Rate", 120)
+    , mActiveTimers("Active Timers", 120)
     , mMacroPoolUsage("Macro Pool", 120)
     , mSMacroPoolUsage("Secure Macro Pool", 120)
     , mItems({{ mMemoryUsage,
                 mConfigSize,
                 mScanRate,
+                mActiveTimers,
                 mMacroPoolUsage,
                 mSMacroPoolUsage }})
     , mHStackWidget(mItems, true)
@@ -65,6 +68,16 @@ void StatusScreen::screenInit()
         mConfigSize.invalidateWidget();
     }
     
+    {
+        StrOutStream os(mActiveTimers.value);
+
+        os.appendInt(mEventManager.timer.activeTimers());
+        os.appendStr(" / ");
+        os.appendInt(Config::kTimerCount);
+        
+        mActiveTimers.invalidateWidget();
+    }
+
     {
         StrOutStream os(mMacroPoolUsage.value);
 
