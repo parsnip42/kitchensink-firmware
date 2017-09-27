@@ -15,7 +15,7 @@ InitSecureMacroScreen::InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
     , mConfirmEntry("Confirm",
                     60,
                     PasswordEntryWidget(timer))
-    , mStatusLabel("Existing data will be erased", Justify::kCenter)
+    , mStatusLabel(" Existing data will be erased ", Justify::kCenter)
     , mItems({{ mPasswordEntry,
                 mConfirmEntry,
                 mStatusLabel }})
@@ -32,7 +32,7 @@ bool InitSecureMacroScreen::processEvent(const Event& event)
 {
     if (mFlashTimer.matches(event))
     {
-        mStatusLabel.visible = !mStatusLabel.visible;
+        mStatusLabel.invert = !mStatusLabel.invert;
         mStatusLabel.invalidateWidget();
         return true;
     }
@@ -53,7 +53,7 @@ void InitSecureMacroScreen::onApply()
     if (!passwordA.empty() && !passwordB.empty())
     {
         mFlashTimer.cancel();
-        mStatusLabel.visible = true;
+        mStatusLabel.invert = false;
         
         if (passwordA != passwordB)
         {

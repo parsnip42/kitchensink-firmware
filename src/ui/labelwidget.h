@@ -27,7 +27,7 @@ public:
 public:
     StrBuf<48> text;
     Justify    justify;
-    bool       visible;
+    bool       invert;
     
 private:
     bool mCanFocus;
