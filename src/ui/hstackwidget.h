@@ -67,6 +67,9 @@ public:
     Action applied;
     
 private:
+    bool focusPrev();
+    bool focusNext();
+    void switchFocus(iterator next);
     int renderOffset() const;
     
 private:

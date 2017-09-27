@@ -12,10 +12,15 @@ LabelWidget::LabelWidget(const StrRef& nText,
                          bool          nCanFocus)
     : text(nText)
     , justify(nJustify)
-    , canFocus(nCanFocus)
     , visible(true)
+    , mCanFocus(nCanFocus)
     , mFocused(true)
 { }
+
+bool LabelWidget::canFocus() const
+{
+    return mCanFocus;
+}
 
 void LabelWidget::setFocused(bool focused)
 {
@@ -54,7 +59,7 @@ void LabelWidget::render(const RasterLine& rasterLine, int row)
         yOffset = (size.height - Font::kHeight) / 2;
     }
 
-    uint8_t fg((mFocused || !canFocus) ? Colors::kFocused : Colors::kUnfocused);
+    uint8_t fg((mFocused || !mCanFocus) ? Colors::kFocused : Colors::kUnfocused);
 
     RenderUtil::text(text, xOffset, row - yOffset, rasterLine, fg, Colors::kBackground);
 }

@@ -22,14 +22,15 @@ public:
     virtual void setFocused(bool focused) override;
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual Dimension minimumSize() const override;
+    virtual bool canFocus() const override;
     
 public:
     StrBuf<48> text;
     Justify    justify;
-    bool       canFocus;
     bool       visible;
     
 private:
+    bool mCanFocus;
     bool mFocused;
 };
 

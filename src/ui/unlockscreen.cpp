@@ -17,8 +17,8 @@ UnlockScreen::UnlockScreen(SecureMacroSet& secureMacroSet,
     , mHStackWidget(mItems, true)
     , mNext(next)
 {
-    mPasswordEntry.widget.applied = Action::memFn<UnlockScreen,
-                                                  &UnlockScreen::onUnlock>(this);
+    mHStackWidget.applied = Action::memFn<UnlockScreen,
+                                          &UnlockScreen::onUnlock>(this);
 }
 
 bool UnlockScreen::processEvent(const Event& event)

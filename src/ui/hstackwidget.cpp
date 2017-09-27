@@ -14,36 +14,14 @@ bool HStackWidget::processEvent(const Event& event)
     }
     else if (Keys::down(event) || Keys::ok(event))
     {
-        if (mFocused != mItems.end())
+        if (!focusNext() && Keys::ok(event))
         {
-            auto next(mFocused);
-                
-            ++next;
-            
-            if (next != mItems.end())
-            {
-                mFocused->widget->setFocused(false);
-                ++mFocused;
-                mFocused->widget->setFocused(true);
-
-                invalidateWidget();
-            }
-            else if (Keys::ok(event))
-            {
-                return applied.fireAction();
-            }
+            return applied.fireAction();
         }
     }
     else if (Keys::up(event))
     {
-        if (mFocused != mItems.begin())
-        {
-            mFocused->widget->setFocused(false);
-            --mFocused;
-            mFocused->widget->setFocused(true);
-
-            invalidateWidget();
-        }
+        focusPrev();
     }
     else
     {
@@ -146,6 +124,59 @@ void HStackWidget::setFocused(const Widget& widget)
             it->widget->setFocused(false);
         }
     }
+}
+
+bool HStackWidget::focusPrev()
+{
+    auto next(mFocused);
+    
+    while (next != mItems.begin())
+    {
+        --next;
+            
+        if (next->widget->canFocus())
+        {
+            switchFocus(next);
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool HStackWidget::focusNext()
+{
+    auto end(mItems.end());
+
+    --end;
+    
+    auto next(mFocused);
+
+    while (next != end)
+    {
+        ++next;
+        
+        if (next->widget->canFocus())
+        {
+            switchFocus(next);
+            
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void HStackWidget::switchFocus(HStackWidget::iterator next)
+{
+    mFocused->widget->setFocused(false);
+    mFocused = next;
+    mFocused->widget->setFocused(true);
+
+    // We could optimise this down to just the affected child widgets if the
+    // focus change doesn't make this widget scroll.
+    invalidateWidget();
 }
 
 int HStackWidget::renderOffset() const

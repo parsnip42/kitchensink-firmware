@@ -15,6 +15,7 @@ private:
     EmptyWidget(EmptyWidget&&) = default;
     
 public:
+    virtual bool canFocus() const override;
     virtual void render(const RasterLine&, int) override;
 
 private:
@@ -22,6 +23,11 @@ private:
     EmptyWidget& operator=(const EmptyWidget&) = delete;
 };
 
+inline
+bool EmptyWidget::canFocus() const
+{
+    return false;
+}
 
 inline
 void EmptyWidget::render(const RasterLine&, int)

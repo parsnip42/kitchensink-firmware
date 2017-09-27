@@ -16,6 +16,7 @@ public:
     
 public:
     virtual bool processEvent(const Event&) override;
+    virtual bool canFocus() const;
     virtual void setFocused(bool focused);
     virtual void render(const RasterLine& rasterLine, int row) = 0;
     virtual void parented();
@@ -42,6 +43,12 @@ inline
 bool Widget::processEvent(const Event&)
 {
     return false;
+}
+
+inline
+bool Widget::canFocus() const
+{
+    return true;
 }
 
 inline

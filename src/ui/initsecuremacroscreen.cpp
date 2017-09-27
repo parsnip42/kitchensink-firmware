@@ -24,8 +24,8 @@ InitSecureMacroScreen::InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
 {
     mFlashTimer.scheduleRepeating(250, 250);
 
-    mConfirmEntry.widget.applied = Action::memFn<InitSecureMacroScreen,
-                                                 &InitSecureMacroScreen::onApply>(this);
+    mHStackWidget.applied = Action::memFn<InitSecureMacroScreen,
+                                          &InitSecureMacroScreen::onApply>(this);
 }
 
 bool InitSecureMacroScreen::processEvent(const Event& event)
