@@ -8,9 +8,6 @@
 #include <array>
 #include <initializer_list>
 
-class KeyMatrix;
-class KeyMatrixEvent;
-
 class KeyMatrixDispatcher
 {
 public:

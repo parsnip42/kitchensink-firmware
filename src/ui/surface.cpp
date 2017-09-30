@@ -91,6 +91,5 @@ void Surface::render(const RowBuf& row, int y)
 void Surface::clear()
 {
     mDisplay.clear();
-    mDisplay.scroll(0);
 }
 

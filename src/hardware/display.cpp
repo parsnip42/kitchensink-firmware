@@ -129,12 +129,10 @@ void Display::clear()
     
     writeInst(0x5C);
 
-    for (int i=0;i<240*64*2;i++)
+    for (int i = 0;i < 240 * 64 * 2; ++i)
     {
         writeData(0x0);
     }
-
-    scroll(0);
 }
 
 void Display::writeInst(uint8_t data)
@@ -161,10 +159,4 @@ void Display::initRegion(int x, int y, int w, int h)
     writeData(y + h - 1);
 
     writeInst(0x5c);
-}
-
-void Display::scroll(uint8_t value)
-{
-    writeInst(0xa1);
-    writeData(value);
 }
