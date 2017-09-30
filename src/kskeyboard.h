@@ -2,6 +2,7 @@
 #define INCLUDED_KSKEYBOARD_H
 
 #include "keymatrixevent.h"
+#include "keymatrixeventhandler.h"
 #include "keyboardplate.h"
 #include "layerstack.h"
 
@@ -12,18 +13,17 @@ class EntropyPool;
 class KsKeyboard
 {
 public:
-    typedef KeyMatrixEvent Event;
-    
+    typedef KeyMatrixEvent        Event;
+    typedef KeyMatrixEventHandler EventHandler;
+
 public:
     explicit KsKeyboard(EntropyPool& entropyPool);
 
 public:
-    template <typename Callback>
-    void poll(uint32_t        timeMs,
-              const Callback& callback); 
+    void poll(uint32_t            timeMs,
+              const EventHandler& callback); 
 
-    template <typename Callback>
-    void pressed(const Callback& callback);
+    void pressed(const EventHandler& callback);
     
     bool any() const;
     
@@ -37,21 +37,19 @@ private:
 };
 
 
-template <typename Callback>
 inline
-void KsKeyboard::poll(uint32_t        timeMs,
-                      const Callback& callback)
+void KsKeyboard::poll(uint32_t            timeMs,
+                      const EventHandler& eventHandler)
 {
-    mLeft.poll(timeMs, callback);
-    mRight.poll(timeMs, callback);
+    mLeft.poll(timeMs, eventHandler);
+    mRight.poll(timeMs, eventHandler);
 }
 
-template <typename Callback>
 inline
-void KsKeyboard::pressed(const Callback& callback)
+void KsKeyboard::pressed(const EventHandler& eventHandler)
 {
-    mLeft.pressed(callback);
-    mRight.pressed(callback);
+    mLeft.pressed(eventHandler);
+    mRight.pressed(eventHandler);
 }
 
 inline
@@ -61,3 +59,4 @@ bool KsKeyboard::any() const
 }
 
 #endif
+

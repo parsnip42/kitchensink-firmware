@@ -9,6 +9,7 @@
 #include <cstdint>
 
 class EntropyPool;
+class KeyMatrixEventHandler;
 
 class KeyboardPlate
 {
@@ -21,12 +22,10 @@ public:
                   EntropyPool&                                  entropyPool);
 
 public:
-    template <typename Callback>
-    void poll(uint32_t        timeMs,
-              const Callback& callback);
+    void poll(uint32_t                     timeMs,
+              const KeyMatrixEventHandler& eventHandler);
 
-    template <typename Callback>
-    void pressed(const Callback& callback);
+    void pressed(const KeyMatrixEventHandler& eventHandler);
     
     bool any() const;
 
@@ -41,10 +40,9 @@ private:
 };
 
 
-template <typename Callback>
 inline
-void KeyboardPlate::poll(uint32_t        timeMs,
-                         const Callback& callback)
+void KeyboardPlate::poll(uint32_t                     timeMs,
+                         const KeyMatrixEventHandler& eventHandler)
 {
     mMatrix.scan();
 
@@ -52,18 +50,16 @@ void KeyboardPlate::poll(uint32_t        timeMs,
     {
         mDispatcher.dispatch(mDebounce.state(),
                              mDebounce.delta(),
-                             callback);
+                             eventHandler);
     }
 }
 
-template <typename Callback>
 inline
-void KeyboardPlate::pressed(const Callback& callback)
+void KeyboardPlate::pressed(const KeyMatrixEventHandler& eventHandler)
 {
     mDispatcher.dispatch(KeyMask(),
                          mDebounce.state(),
-                         callback);
-
+                         eventHandler);
 }
 
 inline

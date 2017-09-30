@@ -45,7 +45,7 @@ void KeySource::pollEvent(EventStage& next)
     // take a copy of the mask.
     auto currentLayerMask(mLayerMask);
 
-    mKeyboard.poll(timeMs, [&](const KsKeyboard::Event& keyboardEvent)
+    mKeyboard.poll(timeMs, KsKeyboard::EventHandler::create([&](const KsKeyboard::Event& keyboardEvent)
     {
         auto event(layerStack.at(currentLayerMask,
                                   keyboardEvent.row,
@@ -60,8 +60,8 @@ void KeySource::pollEvent(EventStage& next)
         {
             next.processEvent(event);
         }
-    });
-
+    }));
+    
     if (currentLayerMask != mLayerMask)
     {
         processLayerChange(currentLayerMask,
@@ -74,10 +74,10 @@ bool KeySource::anyPressed()
 {
     bool pressed(false);
     
-    mKeyboard.pressed([&](const KsKeyboard::Event&)
+    mKeyboard.pressed(KsKeyboard::EventHandler::create([&](const KsKeyboard::Event&)
     {
         pressed = true;
-    });
+    }));
 
     return pressed;
 }
@@ -86,12 +86,12 @@ bool KeySource::readKeyLocation(KeyLocation& location)
 {
     bool locationSet(false);
     
-    mKeyboard.pressed([&](const KsKeyboard::Event& keyboardEvent)
+    mKeyboard.pressed(KsKeyboard::EventHandler::create([&](const KsKeyboard::Event& keyboardEvent)
     {
         location.row    = keyboardEvent.row;
         location.column = keyboardEvent.column;
-        locationSet = true;
-    }); 
+        locationSet     = true;
+    }));
     
     return locationSet;
 }
@@ -100,7 +100,7 @@ void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
                                    const LayerStack::Mask& nextMask,
                                    EventStage&             next)
 {
-    mKeyboard.pressed([&](const KsKeyboard::Event& event)
+    mKeyboard.pressed(KsKeyboard::EventHandler::create([&](const KsKeyboard::Event& event)
     {
         auto currentEvent(layerStack.at(currentMask,
                                         event.row,
@@ -115,5 +115,5 @@ void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
             next.processEvent(currentEvent.invert());
             next.processEvent(nextEvent);
         }
-    });
+    }));
 }
