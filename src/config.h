@@ -33,7 +33,12 @@ constexpr std::size_t kLayerColumns = 16;
 constexpr std::size_t kLayerRows    = 5;
 constexpr std::size_t kLayerCount   = 10;
 
-constexpr int         kEntropySourceFactor = 1;
+// Doubling the sample size allows for an actual entropy of 4 bits for every 8
+// bits of raw data in the entropy pool. During testing, this is the worst
+// possible scenario in a completely artificial case, so this should be good
+// enough to give us a completely random output. But feel free to bump it up a
+// bit if you like.
+constexpr int         kEntropySourceFactor = 2;
 constexpr std::size_t kEntropyPoolSize     = 200;
 constexpr std::size_t kPasswordMin         = 1;
 constexpr std::size_t kPasswordMax         = 48;

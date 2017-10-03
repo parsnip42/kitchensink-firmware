@@ -19,10 +19,19 @@ bool EntropyPool::read(std::array<uint8_t, 32>& output)
         return false;
     }
 
-    mCount -= sourceSize;
+    // Hash from the beginning of the entropy pool - this is the most likely to
+    // be composed of multiple entries of random data.
+    output = CryptoUtil::sha256(mData.begin(),
+                                mData.begin() + sourceSize);
 
-    output = CryptoUtil::sha256(mData.begin() + mCount,
-                                mData.begin() + mCount + sourceSize);    
+    // Move the following block of data to the beginning of the entropy pool
+    // (it's perfectly fine to leave the trailing remaining data as is).
+    std::move(mData.begin() + sourceSize, 
+              mData.begin() + mCount,
+              mData.begin());
+
+    // And finally reduce the size of the pool to match.
+    mCount -= sourceSize;
     
     return true;
 }
