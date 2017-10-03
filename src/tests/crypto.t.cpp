@@ -10,7 +10,7 @@
 
 #include <ostream>
 
-void PrintTo(const DataRef& dataRef,
+static void PrintTo(const DataRef& dataRef,
              std::ostream*  os)
 {
     *os << "Size=" << dataRef.size() << " ";
