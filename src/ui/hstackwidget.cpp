@@ -12,14 +12,14 @@ bool HStackWidget::processEvent(const Event& event)
     {
         // Skip
     }
-    else if (Keys::down(event) || Keys::ok(event))
+    else if (Keys::next(event) || Keys::ok(event))
     {
         if (!focusNext() && Keys::ok(event))
         {
             return applied.fireAction();
         }
     }
-    else if (Keys::up(event))
+    else if (Keys::prev(event))
     {
         focusPrev();
     }

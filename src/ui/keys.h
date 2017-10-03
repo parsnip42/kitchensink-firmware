@@ -10,15 +10,16 @@ namespace Keys
 {
 
 inline
-constexpr bool up(const Event& event)
+constexpr bool prev(const Event& event)
 {
     return event == KeyEvent::create(KeyCode::Up);
 }
 
 inline
-constexpr bool down(const Event& event)
+constexpr bool next(const Event& event)
 {
-    return event == KeyEvent::create(KeyCode::Down);
+    return (event == KeyEvent::create(KeyCode::Down) ||
+            event == KeyEvent::create(KeyCode::Tab));
 }
 
 inline

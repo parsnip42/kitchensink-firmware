@@ -44,7 +44,10 @@ private:
 inline
 EntropyPool::EntropyPool()
     : mCount(0)
-{ }
+{
+    // Leaving mData uninitialised is deliberate - it's harmless and in fact can
+    // add a little bit more entropy.
+}
 
 inline
 std::size_t EntropyPool::size() const

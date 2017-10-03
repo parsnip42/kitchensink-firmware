@@ -30,11 +30,11 @@ bool MenuWidget::processEvent(const Event& event)
     {
         moveSelection(5);
     }
-    else if (Keys::up(event))
+    else if (Keys::prev(event))
     {
         moveSelection(-1);
     }
-    else if (Keys::down(event))
+    else if (Keys::next(event))
     {
         moveSelection(1);
     }
