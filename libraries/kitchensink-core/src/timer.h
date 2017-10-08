@@ -29,7 +29,7 @@ public:
 public:
     Timer& operator=(Timer&& lhs);
 
-public:
+private:
     TimerManager* mTimerManager;
     uint16_t      mTickId;
         

@@ -7,9 +7,9 @@
 #include "hardware/ctrlutil.h"
 
 KeySource::KeySource(KsKeyboard& keyboard,
-                     LayerStack& nLayerStack)
-    : layerStack(nLayerStack)
-    , mKeyboard(keyboard)
+                     LayerStack& layerStack)
+    : mKeyboard(keyboard)
+    , mLayerStack(layerStack)
     , mLayerMask()
 {
     mLayerMask[0] = true;
@@ -46,7 +46,7 @@ void KeySource::pollEvent(EventStage& next)
 
     mKeyboard.poll(timeMs, KeyMatrixEventHandler::create([&](const KeyMatrixEvent& keyboardEvent)
     {
-        auto event(layerStack.at(currentLayerMask,
+        auto event(mLayerStack.at(currentLayerMask,
                                   keyboardEvent.row,
                                   keyboardEvent.column));
 
@@ -101,11 +101,11 @@ void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
 {
     mKeyboard.pressed(KeyMatrixEventHandler::create([&](const KeyMatrixEvent& event)
     {
-        auto currentEvent(layerStack.at(currentMask,
+        auto currentEvent(mLayerStack.at(currentMask,
                                         event.row,
                                         event.column));
         
-        auto nextEvent(layerStack.at(nextMask,
+        auto nextEvent(mLayerStack.at(nextMask,
                                      event.row,
                                      event.column));
 

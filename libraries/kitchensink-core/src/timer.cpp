@@ -2,6 +2,10 @@
 
 #include "timermanager.h"
 
+// Technically there's a cyclic dependency between TimerManager and Timer here,
+// but given that they're both part of the same system and fundamentally
+// inseparable, that should be fine.
+
 Timer::Timer(TimerManager* timerManager,
              uint16_t      tickId)
     : mTimerManager(timerManager)

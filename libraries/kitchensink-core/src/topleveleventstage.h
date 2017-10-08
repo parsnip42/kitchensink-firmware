@@ -12,7 +12,7 @@ public:
     {
     public:
         OutputGuard(ToplevelEventStage& mTopLevel,
-                    EventStage&      next);
+                    EventStage&         next);
         
         ~OutputGuard();
         

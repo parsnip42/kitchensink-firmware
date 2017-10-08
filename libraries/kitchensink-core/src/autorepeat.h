@@ -11,7 +11,7 @@
 class AutoRepeat : public EventStage
 {
 public:
-    explicit AutoRepeat(TimerManager&        timer,
+    explicit AutoRepeat(TimerManager& timer,
                         GlobalConfig& globalConfig,
                         EventStage&   next);
 
@@ -19,7 +19,7 @@ public:
     virtual bool processEvent(const Event& event) override;
 
 private:
-    Timer mRepeatTimer;
+    Timer         mRepeatTimer;
     GlobalConfig& mGlobalConfig;
     Event         mEvent;
     EventStage&   mNext;

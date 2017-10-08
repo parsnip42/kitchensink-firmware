@@ -14,7 +14,7 @@ class KeySource
 {
 public:
     KeySource(KsKeyboard& keyboard,
-              LayerStack& nLayerStack);
+              LayerStack& layerStack);
 
 public:
     void setLayer(int layer, bool enabled);
@@ -32,11 +32,9 @@ private:
                             const LayerStack::Mask& nextMask,
                             EventStage&             next);
 
-public:
-    LayerStack& layerStack;
-    
 private:
     KsKeyboard&      mKeyboard;
+    LayerStack&      mLayerStack;
     LayerStack::Mask mLayerMask;
     
 private:

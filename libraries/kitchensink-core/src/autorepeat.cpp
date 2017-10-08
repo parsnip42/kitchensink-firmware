@@ -5,7 +5,7 @@
 #include "event/keyevent.h"
 #include "globalconfig.h"
 
-AutoRepeat::AutoRepeat(TimerManager&        timer,
+AutoRepeat::AutoRepeat(TimerManager& timer,
                        GlobalConfig& globalConfig,
                        EventStage&   next)
     : mRepeatTimer(timer.createTimer())
