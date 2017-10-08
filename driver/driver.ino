@@ -10,7 +10,7 @@
 #include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keysource.h"
-#include "usbkeyboard.h"
+#include "hardware/teensyusbkeyboard.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
@@ -40,7 +40,7 @@ void loop()
 
     Surface surface(display);
     
-    UsbKeyboard usbKeyboard;
+    TeensyUsbKeyboard usbKeyboard;
 
     EntropyPool entropyPool;
     
@@ -95,4 +95,9 @@ void loop()
                                 entropyPool);
 
     screenManager.poll();
+
+    // while (true)
+    // {
+    //     eventManager.poll(usbKeyboard);
+    // }
 }

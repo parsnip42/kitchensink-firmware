@@ -1,5 +1,5 @@
-#ifndef INCLUDED_USBKEYBOARD_H
-#define INCLUDED_USBKEYBOARD_H
+#ifndef INCLUDED_TEENSYUSBKEYBOARD_H
+#define INCLUDED_TEENSYUSBKEYBOARD_H
 
 #include "event/eventstage.h"
 #include "data/keycode.h"
@@ -8,10 +8,10 @@
 
 class Event;
 
-class UsbKeyboard : public EventStage
+class TeensyUsbKeyboard : public EventStage
 {
 public:
-    UsbKeyboard();
+    TeensyUsbKeyboard();
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -26,8 +26,8 @@ private:
     bool    mDirty;
     
 private:
-    UsbKeyboard(const UsbKeyboard&) = delete;
-    UsbKeyboard& operator=(const UsbKeyboard&) = delete;
+    TeensyUsbKeyboard(const TeensyUsbKeyboard&) = delete;
+    TeensyUsbKeyboard& operator=(const TeensyUsbKeyboard&) = delete;
 };
 
 #endif

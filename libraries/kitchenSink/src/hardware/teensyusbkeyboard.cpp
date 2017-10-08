@@ -1,24 +1,20 @@
-#include "usbkeyboard.h"
+#include "hardware/teensyusbkeyboard.h"
 
 #include "event/keyevent.h"
 #include "data/keycodeutil.h"
 
-#ifdef TEENSYDUINO
 #include <usb_keyboard.h>
-#else
-#include <Keyboard.h>
-#endif
 
 #include <cstring>
 
-UsbKeyboard::UsbKeyboard()
+TeensyUsbKeyboard::TeensyUsbKeyboard()
     : mKeyNum(0)
     , mDirty(false)
 {
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
-bool UsbKeyboard::processEvent(const Event& event)
+bool TeensyUsbKeyboard::processEvent(const Event& event)
 {
     if (event.is<KeyEvent>())
     {
@@ -38,9 +34,7 @@ bool UsbKeyboard::processEvent(const Event& event)
             
             if (mDirty)
             {
-#ifdef TEENSYDUINO
                 usb_keyboard_send();
-#endif
                 mDirty = false;
             }
         }
@@ -51,10 +45,8 @@ bool UsbKeyboard::processEvent(const Event& event)
     return false;
 }
 
-void UsbKeyboard::pressKey(KeyCode key)
+void TeensyUsbKeyboard::pressKey(KeyCode key)
 {
-#ifdef TEENSYDUINO
-
     auto keyCode(static_cast<size_t>(key));
     
     if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7))))
@@ -72,14 +64,10 @@ void UsbKeyboard::pressKey(KeyCode key)
         
         mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
     }
-
-#endif
 }
 
-void UsbKeyboard::releaseKey(KeyCode key)
+void TeensyUsbKeyboard::releaseKey(KeyCode key)
 {
-#ifdef TEENSYDUINO
-
     auto keyCode(static_cast<size_t>(key));
 
     if (mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
@@ -105,6 +93,4 @@ void UsbKeyboard::releaseKey(KeyCode key)
         
         mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
     }
-
-#endif TEENSYDUINO
 }
