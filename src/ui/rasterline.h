@@ -1,9 +1,8 @@
 #ifndef INCLUDED_RASTERLINE_H
 #define INCLUDED_RASTERLINE_H
 
-#include "ui/surface.h"
-#include "types/arrayref.h"
+#include "types/mutabledataref.h"
 
-typedef ArrayRef<Surface::RowBuf> RasterLine;
+typedef MutableDataRef RasterLine;
 
 #endif

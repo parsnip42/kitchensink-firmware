@@ -35,11 +35,11 @@ void Surface::regionInvalidated(const Rectangle& region)
     {
         for (auto y(region.y); y < (region.y + region.height); ++y)
         {
-            RowBuf row;
-            RasterLine rasterLine(row);
+            RasterLine rasterLine(mDisplay.rasterLine());
             
             mRootWidget->render(rasterLine, y);
-            render(row, y);
+
+            mDisplay.rasterize(y);
         }
     }
 }
@@ -48,7 +48,10 @@ void Surface::redraw()
 {
     if (mRootWidget)
     {
-        regionInvalidated(Rectangle(0, 0, kWidth, kHeight));
+        regionInvalidated(Rectangle(0,
+                                    0,
+                                    mDisplay.width(),
+                                    mDisplay.height()));
     }
     else
     {
@@ -68,23 +71,10 @@ void Surface::setRootWidget(Widget* rootWidget)
     if (mRootWidget)
     {
         mRootWidget->setParent(this,
-                               Rectangle(0, 0, kWidth, kHeight));
-
-    }
-}
-
-void Surface::initRegion(int x, int y, int w, int h)
-{
-    mDisplay.initRegion(x, y, w, h);
-}
-
-void Surface::render(const RowBuf& row, int y)
-{
-    initRegion(0, y, kWidth, 1);
-
-    for (auto data : row.rawData())
-    {
-        mDisplay.writeData(data);
+                               Rectangle(0,
+                                         0,
+                                         mDisplay.width(),
+                                         mDisplay.height()));
     }
 }
 

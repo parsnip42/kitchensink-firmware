@@ -28,7 +28,7 @@ bool HomeLedWidget::processEvent(const Event& inEvent)
 
         return true;
     }
-    if (Keys::ok(inEvent))
+    else if (Keys::ok(inEvent))
     {
         if (mTrigger)
         {
@@ -36,6 +36,13 @@ bool HomeLedWidget::processEvent(const Event& inEvent)
         }
         
         mTrigger = !mTrigger;
+        invalidateWidget();
+
+        return true;
+    }
+    else if (Keys::cancel(inEvent) && mTrigger)
+    {
+        mTrigger = false;
         invalidateWidget();
 
         return true;

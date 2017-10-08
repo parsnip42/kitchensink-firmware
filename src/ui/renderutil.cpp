@@ -2,16 +2,14 @@
 
 #include "types/strref.h"
 
+#include <algorithm>
+
 namespace RenderUtil
 {
 
 int fill(const RasterLine& row, uint8_t color)
 {
-    // TODO: Optimise to std::memset()
-    for (std::size_t i(0); i < row.size(); ++i)
-    {
-        row[i] = color;
-    }
+    std::fill(row.begin(), row.end(), color);
 
     return row.size();
 }

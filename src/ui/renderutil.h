@@ -2,6 +2,7 @@
 #define INCLUDED_RENDERUTIL_H
 
 #include "ui/rasterline.h"
+#include "ui/font.h"
 
 class StrRef;
 

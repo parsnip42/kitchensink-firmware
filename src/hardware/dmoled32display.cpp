@@ -1,4 +1,4 @@
-#include "hardware/display.h"
+#include "hardware/dmoled32display.h"
 
 #include <Wire.h>
 #include <core_pins.h>
@@ -52,10 +52,10 @@ inline void writeByte(uint8_t data, int type)
 
 }
 
-Display::Display()
+DMOLED32Display::DMOLED32Display()
 { }
 
-void Display::init()
+void DMOLED32Display::init()
 {
     for (size_t i = 0; i < db_count; i++)
     {
@@ -117,7 +117,7 @@ void Display::init()
     writeInst(0xAF); /*display ON*/
 }
 
-void Display::clear()
+void DMOLED32Display::clear()
 {
     writeInst(0x15);
     writeData(0);
@@ -135,17 +135,17 @@ void Display::clear()
     }
 }
 
-void Display::writeInst(uint8_t data)
+void DMOLED32Display::writeInst(uint8_t data)
 {
     writeByte(data, 0);
 }
 
-void Display::writeData(uint8_t data)
+void DMOLED32Display::writeData(uint8_t data)
 {
     writeByte(data, 1);
 }
 
-void Display::initRegion(int x, int y, int w, int h)
+void DMOLED32Display::initRegion(int x, int y, int w, int h)
 {
     // Physical display region starts at 120.
     x += 120;
@@ -159,24 +159,4 @@ void Display::initRegion(int x, int y, int w, int h)
     writeData(y + h - 1);
 
     writeInst(0x5c);
-}
-
-MutableDataRef Display::rasterLine()
-{
-    mRasterBuf.fill(0);
-
-    return mRasterBuf;
-}
-
-void Display::rasterize(int row)
-{
-    initRegion(0, row, kWidth, 1);
-
-    for (std::size_t i(0); i < mRasterBuf.size(); i+=2)
-    {
-        auto a(mRasterBuf[i]);
-        auto b(mRasterBuf[i + 1]);
-        
-        writeData(((a & 0xf) << 4) | (b & 0xf));
-    }
 }

@@ -4,9 +4,8 @@
 #include "ui/dimension.h"
 #include "ui/font.h"
 #include "ui/widgetcontainer.h"
-#include "types/ui4array.h"
+#include "ui/rasterline.h"
 #include "types/range.h"
-#include "types/arrayref.h"
 
 #include <array>
 #include <cstdint>
@@ -16,13 +15,6 @@ class Widget;
 
 class Surface : public WidgetContainer
 {
-private:
-    static constexpr int kWidth  = 240;
-    static constexpr int kHeight = 64;
-    
-public:
-    typedef UI4Array<kWidth> RowBuf;
-
 public:
     class WidgetGuard
     {
@@ -52,8 +44,6 @@ public:
     void setRootWidget(Widget* rootWidget);
 
 public:
-    void initRegion(int x, int y, int w, int h);
-    void render(const RowBuf& row, int y);
     void clear();
 
 private:
