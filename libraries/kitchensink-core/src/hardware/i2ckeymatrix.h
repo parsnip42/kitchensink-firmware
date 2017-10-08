@@ -1,5 +1,5 @@
-#ifndef INCLUDED_KEYMATRIX_H
-#define INCLUDED_KEYMATRIX_H
+#ifndef INCLUDED_I2CKEYMATRIX_H
+#define INCLUDED_I2CKEYMATRIX_H
 
 #include "hardware/keymask.h"
 
@@ -9,19 +9,19 @@
 
 class EntropyPool;
 
-class KeyMatrix
+class I2CKeyMatrix
 {
 public:
     static void setup();
     
 public:
-    KeyMatrix(const int      addr,
+    I2CKeyMatrix(const int      addr,
               const uint16_t rowMask,
               const uint16_t colMask,
               EntropyPool&   entropyPool);
 
 public:
-    void scan();
+    const KeyMask& scan();
 
 private:
     void init();
@@ -33,19 +33,14 @@ private:
 
     EntropyPool& mEntropyPool;
     uint8_t      mCounter;
-    
-public:
-    KeyMask state;
+    KeyMask      mState;
     
 private:
-    KeyMatrix(const KeyMatrix&) = delete;
-    KeyMatrix& operator=(const KeyMatrix&) = delete;
+    I2CKeyMatrix(const I2CKeyMatrix&) = delete;
+    I2CKeyMatrix& operator=(const I2CKeyMatrix&) = delete;
 };
 
-
-
 #endif
-
 
 
 

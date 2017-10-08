@@ -1,20 +1,20 @@
-#include "hardware/keymatrix.h"
+#include "hardware/i2ckeymatrix.h"
 
 #include "hardware/mcp23017.h"
 #include "crypto/entropypool.h"
 
 #include <Wire.h>
 
-void KeyMatrix::setup()
+void I2CKeyMatrix::setup()
 {
     Wire.begin();
     Wire.setClock(1000000L);
 }
 
-KeyMatrix::KeyMatrix(const int      addr,
-                     const uint16_t rowMask,
-                     const uint16_t colMask,
-                     EntropyPool&   entropyPool)
+I2CKeyMatrix::I2CKeyMatrix(const int      addr,
+                           const uint16_t rowMask,
+                           const uint16_t colMask,
+                           EntropyPool&   entropyPool)
     : mAddr(addr)
     , mRowMask(rowMask)
     , mColMask(colMask)
@@ -24,7 +24,7 @@ KeyMatrix::KeyMatrix(const int      addr,
     init();
 }
 
-void KeyMatrix::init()
+void I2CKeyMatrix::init()
 {
     Wire.beginTransmission(mAddr);
     Wire.write(MCP23017::IODIRA);
@@ -47,7 +47,7 @@ void KeyMatrix::init()
     Wire.endTransmission();
 }
 
-void KeyMatrix::scan()
+const KeyMask& I2CKeyMatrix::scan()
 {
     std::size_t index(0);
     int rowMask(mRowMask);
@@ -102,10 +102,10 @@ void KeyMatrix::scan()
         // This will also write any key bounces, seeing as we haven't gone
         // through the debounce filter yet.
         
-        if (row != state[index])
+        if (row != mState[index])
         {
             mEntropyPool.insert(mCounter + index);
-            state[index] = row;
+            mState[index] = row;
         }
 
         // Move to the next bit in the row mask and increment.
@@ -114,4 +114,6 @@ void KeyMatrix::scan()
     }
 
     ++mCounter;
+
+    return mState;
 }

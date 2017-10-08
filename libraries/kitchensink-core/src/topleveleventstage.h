@@ -18,7 +18,7 @@ public:
         
     private:
         ToplevelEventStage& mTopLevel;
-        EventStage*      mNext;
+        EventStage*         mNext;
 
     private:
         OutputGuard(const OutputGuard&) = delete;
@@ -29,7 +29,7 @@ public:
     };
 
 public:
-    explicit ToplevelEventStage(EventStage& next);
+    ToplevelEventStage();
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -41,7 +41,7 @@ private:
 
 inline
 ToplevelEventStage::OutputGuard::OutputGuard(ToplevelEventStage& topLevel,
-                                             EventStage&      next)
+                                             EventStage&         next)
     : mTopLevel(topLevel)
     , mNext(&next)
 {
@@ -56,14 +56,19 @@ ToplevelEventStage::OutputGuard::~OutputGuard()
 
 
 inline
-ToplevelEventStage::ToplevelEventStage(EventStage& next)
-    : mNext(&next)
+ToplevelEventStage::ToplevelEventStage()
+    : mNext(nullptr)
 { }
 
 inline
 bool ToplevelEventStage::processEvent(const Event& event)
 {
-    return mNext->processEvent(event);
+    if (mNext)
+    {
+        return mNext->processEvent(event);
+    }
+
+    return true;
 }
 
 #endif

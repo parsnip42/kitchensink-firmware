@@ -3,8 +3,8 @@
 #include "types/stroutstream.h"
 #include "crypto/entropypool.h"
 
-#include "../../mbedTLS/src/mbedtls/aes.h"
-#include "../../mbedTLS/src/mbedtls/sha256.h"
+#include <mbedTLS_AES.h>
+#include <mbedTLS_SHA256.h>
 
 CryptoScreen::CryptoScreen(Timer&       timer,
                            EntropyPool& entropyPool)

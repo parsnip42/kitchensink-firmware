@@ -13,17 +13,13 @@ class EntropyPool;
 class KsKeyboard
 {
 public:
-    typedef KeyMatrixEvent        Event;
-    typedef KeyMatrixEventHandler EventHandler;
-
-public:
     explicit KsKeyboard(EntropyPool& entropyPool);
 
 public:
-    void poll(uint32_t            timeMs,
-              const EventHandler& callback); 
+    void poll(uint32_t                     timeMs,
+              const KeyMatrixEventHandler& callback); 
 
-    void pressed(const EventHandler& callback);
+    void pressed(const KeyMatrixEventHandler& callback);
     
     bool any() const;
     
@@ -38,15 +34,15 @@ private:
 
 
 inline
-void KsKeyboard::poll(uint32_t            timeMs,
-                      const EventHandler& eventHandler)
+void KsKeyboard::poll(uint32_t                     timeMs,
+                      const KeyMatrixEventHandler& eventHandler)
 {
     mLeft.poll(timeMs, eventHandler);
     mRight.poll(timeMs, eventHandler);
 }
 
 inline
-void KsKeyboard::pressed(const EventHandler& eventHandler)
+void KsKeyboard::pressed(const KeyMatrixEventHandler& eventHandler)
 {
     mLeft.pressed(eventHandler);
     mRight.pressed(eventHandler);

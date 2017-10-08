@@ -1,7 +1,5 @@
 #include "hardware/dmoled32display.h"
 
-#include <Wire.h>
-
 #ifdef TEENSYDUINO
 #include <core_pins.h>
 #else

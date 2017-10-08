@@ -2,7 +2,7 @@
 #define INCLUDED_KEYBOARDPLATE_H
 
 #include "hardware/keymask.h"
-#include "hardware/keymatrix.h"
+#include "hardware/i2ckeymatrix.h"
 #include "hardware/debounce.h"
 #include "keymatrixdispatcher.h"
 
@@ -30,7 +30,7 @@ public:
     bool any() const;
 
 private:
-    KeyMatrix           mMatrix;
+    I2CKeyMatrix        mMatrix;
     Debounce            mDebounce;
     KeyMatrixDispatcher mDispatcher;
 
@@ -44,9 +44,7 @@ inline
 void KeyboardPlate::poll(uint32_t                     timeMs,
                          const KeyMatrixEventHandler& eventHandler)
 {
-    mMatrix.scan();
-
-    if (mDebounce.process(timeMs, mMatrix.state))
+    if (mDebounce.process(timeMs, mMatrix.scan()))
     {
         mDispatcher.dispatch(mDebounce.state(),
                              mDebounce.delta(),

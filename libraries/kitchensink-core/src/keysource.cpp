@@ -44,7 +44,7 @@ void KeySource::pollEvent(EventStage& next)
     // take a copy of the mask.
     auto currentLayerMask(mLayerMask);
 
-    mKeyboard.poll(timeMs, KsKeyboard::EventHandler::create([&](const KsKeyboard::Event& keyboardEvent)
+    mKeyboard.poll(timeMs, KeyMatrixEventHandler::create([&](const KeyMatrixEvent& keyboardEvent)
     {
         auto event(layerStack.at(currentLayerMask,
                                   keyboardEvent.row,
@@ -73,7 +73,7 @@ bool KeySource::anyPressed()
 {
     bool pressed(false);
     
-    mKeyboard.pressed(KsKeyboard::EventHandler::create([&](const KsKeyboard::Event&)
+    mKeyboard.pressed(KeyMatrixEventHandler::create([&](const KeyMatrixEvent&)
     {
         pressed = true;
     }));
@@ -85,7 +85,7 @@ bool KeySource::readKeyLocation(KeyLocation& location)
 {
     bool locationSet(false);
     
-    mKeyboard.pressed(KsKeyboard::EventHandler::create([&](const KsKeyboard::Event& keyboardEvent)
+    mKeyboard.pressed(KeyMatrixEventHandler::create([&](const KeyMatrixEvent& keyboardEvent)
     {
         location.row    = keyboardEvent.row;
         location.column = keyboardEvent.column;
@@ -99,7 +99,7 @@ void KeySource::processLayerChange(const LayerStack::Mask& currentMask,
                                    const LayerStack::Mask& nextMask,
                                    EventStage&             next)
 {
-    mKeyboard.pressed(KsKeyboard::EventHandler::create([&](const KsKeyboard::Event& event)
+    mKeyboard.pressed(KeyMatrixEventHandler::create([&](const KeyMatrixEvent& event)
     {
         auto currentEvent(layerStack.at(currentMask,
                                         event.row,
