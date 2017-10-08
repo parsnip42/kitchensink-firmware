@@ -1,3 +1,8 @@
+#ifdef TEENSYDUINO
+
+
+
+
 #include "hardware/teensyusbkeyboard.h"
 
 #include "event/keyevent.h"
@@ -11,6 +16,14 @@ TeensyUsbKeyboard::TeensyUsbKeyboard()
     : mKeyNum(0)
     , mDirty(false)
 {
+    keyboard_keys[0] = 0;
+    keyboard_keys[1] = 0;
+    keyboard_keys[2] = 0;
+    keyboard_keys[3] = 0;
+    keyboard_keys[4] = 0;
+    keyboard_keys[5] = 0;
+    keyboard_modifier_keys = 0;
+    
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
@@ -94,3 +107,6 @@ void TeensyUsbKeyboard::releaseKey(KeyCode key)
         mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
     }
 }
+
+
+#endif

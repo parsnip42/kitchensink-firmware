@@ -1,3 +1,7 @@
+#ifdef TEENSYDUINO
+
+
+
 #ifndef INCLUDED_TEENSYUSBKEYBOARD_H
 #define INCLUDED_TEENSYUSBKEYBOARD_H
 
@@ -32,3 +36,5 @@ private:
 
 #endif
     
+
+#endif

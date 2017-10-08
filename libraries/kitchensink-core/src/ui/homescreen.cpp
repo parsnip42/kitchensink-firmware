@@ -33,7 +33,7 @@ HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
         }
     }
 
-    mHomeWidget.visible = false;
+    mHomeWidget.visible = true;
 }
 
 bool HomeScreen::processEvent(const Event& event)
