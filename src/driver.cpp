@@ -1,6 +1,7 @@
 #include "actionprocessor.h"
 #include "defaultprofile.h"
 #include "hardware/display.h"
+#include "hardware/dmoled32display.h"
 #include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keysource.h"
@@ -30,7 +31,7 @@ extern "C" void setup()
 
 extern "C" void loop()
 {
-    Display display;
+    DMOLED32Display display;
 
     display.init();
 

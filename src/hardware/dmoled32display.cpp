@@ -160,3 +160,23 @@ void DMOLED32Display::initRegion(int x, int y, int w, int h)
 
     writeInst(0x5c);
 }
+
+MutableDataRef DMOLED32Display::rasterLine()
+{
+    mRasterBuf.fill(0);
+
+    return mRasterBuf;
+}
+
+void DMOLED32Display::rasterize(int row)
+{
+    initRegion(0, row, kWidth, 1);
+
+    for (std::size_t i(0); i < mRasterBuf.size(); i+=2)
+    {
+        auto a(mRasterBuf[i]);
+        auto b(mRasterBuf[i + 1]);
+        
+        writeData(((a & 0xf) << 4) | (b & 0xf));
+    }
+}
