@@ -69,11 +69,11 @@ bool OutputSink::processEvent(const Event& event)
 
 }
 
-ScreenManager::ScreenManager(Surface&       surface,
+ScreenManager::ScreenManager(Display&       display,
                              EventManager&  eventManager,
                              KeyboardState& keyboardState,
                              EntropyPool&   entropyPool)
-    : mSurface(surface)
+    : mSurface(display)
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
     , mEntropyPool(entropyPool)

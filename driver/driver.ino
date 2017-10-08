@@ -5,7 +5,6 @@
 
 #include "actionprocessor.h"
 #include "defaultprofile.h"
-#include "hardware/display.h"
 #include "hardware/dmoled32display.h"
 #include "kskeyboard.h"
 #include "keyboardstate.h"
@@ -16,18 +15,11 @@
 #include "multikeyprocessor.h"
 #include "layerprocessor.h"
 #include "ledsource.h"
-#include "types/strutil.h"
 #include "keyboardstateutil.h"
-
-#include "ui/surface.h"
 #include "ui/screenmanager.h"
-
-#include "keyeventbuffer.h"
 #include "eventmanager.h"
 #include "topleveleventstage.h"
 #include "crypto/entropypool.h"
-
-#include "types/strbuf.h"
 
 void setup()
 {
@@ -38,8 +30,6 @@ void loop()
 {
     DMOLED32Display display;
 
-    Surface surface(display);
-    
     TeensyUsbKeyboard usbKeyboard;
 
     EntropyPool entropyPool;
@@ -89,15 +79,10 @@ void loop()
                               toplevel,
                               usbKeyboard);
     
-    ScreenManager screenManager(surface,
+    ScreenManager screenManager(display,
                                 eventManager,
                                 keyboardState,
                                 entropyPool);
 
     screenManager.poll();
-
-    // while (true)
-    // {
-    //     eventManager.poll(usbKeyboard);
-    // }
 }

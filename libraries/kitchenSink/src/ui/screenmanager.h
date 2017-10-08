@@ -3,11 +3,12 @@
 
 #include "ui/menudefinitions.h"
 #include "ui/screen.h"
+#include "ui/surface.h"
 #include "event/screenevent.h"
 #include "event/eventstage.h"
 #include "types/circularbuffer.h"
 
-class Surface;
+class Display;
 class EventManager;
 class KeyboardState;
 class StrOStream;
@@ -17,7 +18,7 @@ class EntropyPool;
 class ScreenManager
 {    
 public:
-    ScreenManager(Surface&       surface,
+    ScreenManager(Display&       display,
                   EventManager&  eventManager,
                   KeyboardState& keyboardState,
                   EntropyPool&   entropyPool);
@@ -61,7 +62,7 @@ private:
                        const ScreenEvent& sourceEvent);
     
 private:
-    Surface&        mSurface;
+    Surface         mSurface;
     EventManager&   mEventManager;
     KeyboardState&  mKeyboardState;
     EntropyPool&    mEntropyPool;

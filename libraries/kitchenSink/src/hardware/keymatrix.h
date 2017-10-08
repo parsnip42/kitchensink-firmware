@@ -1,7 +1,7 @@
 #ifndef INCLUDED_KEYMATRIX_H
 #define INCLUDED_KEYMATRIX_H
 
-#include "keymask.h"
+#include "hardware/keymask.h"
 
 #include <array>
 #include <cstddef>
