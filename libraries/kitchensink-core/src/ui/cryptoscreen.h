@@ -6,14 +6,14 @@
 #include "ui/propertywidget.h"
 #include "ui/screen.h"
 #include "ui/widgetset.h"
-#include "timer.h"
+#include "timermanager.h"
 
 class EntropyPool;
 
 class CryptoScreen : public Screen
 {
 public:
-    CryptoScreen(Timer&       timer,
+    CryptoScreen(TimerManager&       timer,
                  EntropyPool& entropyPool);
 
 public:
@@ -22,7 +22,7 @@ public:
     virtual Widget& rootWidget() override;
         
 private:
-    Timer::Handle          mUpdateTimer;
+    Timer          mUpdateTimer;
     EntropyPool&           mEntropyPool;
     PropertyWidget         mTestAES;
     PropertyWidget         mTestSHA256;

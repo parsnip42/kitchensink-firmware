@@ -6,7 +6,7 @@
 #include "event/event.h"
 #include "keysource.h"
 #include "ledsource.h"
-#include "timer.h"
+#include "timermanager.h"
 #include "topleveleventstage.h"
 
 #include <cstdint>
@@ -14,7 +14,7 @@
 class EventManager : public EventStage
 {
 public:
-    EventManager(Timer&              nTimer,
+    EventManager(TimerManager&              nTimer,
                  KeySource&          nKeySource,
                  LedSource&          ledSource,
                  EventStage&         input,
@@ -28,7 +28,7 @@ public:
     void flush(EventStage& output);
     
 public:
-    Timer&      timer;
+    TimerManager&      timer;
     KeySource&  keySource;
     EventStage& defaultOutput;
     

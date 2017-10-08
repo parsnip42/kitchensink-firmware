@@ -31,7 +31,7 @@ public:
     };
     
 public:
-    explicit TextEntryWidget(Timer& timer);
+    explicit TextEntryWidget(TimerManager& timer);
 
     TextEntryWidget(TextEntryWidget&& rhs);
     

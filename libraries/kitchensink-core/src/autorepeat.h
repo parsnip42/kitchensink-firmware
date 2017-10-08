@@ -3,7 +3,7 @@
 
 #include "event/event.h"
 #include "event/eventstage.h"
-#include "timer.h"
+#include "timermanager.h"
 #include "globalconfig.h"
 
 #include <cstdint>
@@ -11,7 +11,7 @@
 class AutoRepeat : public EventStage
 {
 public:
-    explicit AutoRepeat(Timer&        timer,
+    explicit AutoRepeat(TimerManager&        timer,
                         GlobalConfig& globalConfig,
                         EventStage&   next);
 
@@ -19,7 +19,7 @@ public:
     virtual bool processEvent(const Event& event) override;
 
 private:
-    Timer::Handle mRepeatTimer;
+    Timer mRepeatTimer;
     GlobalConfig& mGlobalConfig;
     Event         mEvent;
     EventStage&   mNext;

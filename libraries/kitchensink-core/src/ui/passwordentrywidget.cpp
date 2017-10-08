@@ -49,7 +49,7 @@ void PasswordEntryWidget::PasswordContent::updateMask()
 }
 
 
-PasswordEntryWidget::PasswordEntryWidget(Timer& timer)
+PasswordEntryWidget::PasswordEntryWidget(TimerManager& timer)
     : mEntryWidget(timer, &password)
 {
     mEntryWidget.applied = Action::action(applied);

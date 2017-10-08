@@ -39,7 +39,7 @@ public:
 public:
     explicit NumberEntryWidget(int    min,
                                int    max,
-                               Timer& timer);
+                               TimerManager& timer);
 
     NumberEntryWidget(NumberEntryWidget&& rhs);
     

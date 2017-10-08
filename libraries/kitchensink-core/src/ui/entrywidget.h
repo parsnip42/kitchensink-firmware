@@ -1,7 +1,7 @@
 #ifndef INCLUDED_ENTRYWIDGET_H
 #define INCLUDED_ENTRYWIDGET_H
 
-#include "timer.h"
+#include "timermanager.h"
 #include "event/eventstage.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
@@ -32,7 +32,7 @@ public:
     };
     
 public:
-    EntryWidget(Timer&   timer,
+    EntryWidget(TimerManager&   timer,
                 Content* nContent);
 
     EntryWidget(EntryWidget&&) = default;
@@ -48,7 +48,7 @@ public:
     Action   applied;
     
 private:
-    Timer::Handle   mFlashTimer;
+    Timer   mFlashTimer;
     bool            mFocused;
     bool            mFlash;
     std::size_t     mCursorPosition;

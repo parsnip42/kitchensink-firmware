@@ -15,7 +15,7 @@ class UnlockScreen : public Screen
 {
 public:
     UnlockScreen(SecureMacroSet& secureMacroSet,
-                 Timer&          timer,
+                 TimerManager&          timer,
                  EventStage&     next);
     
 public:

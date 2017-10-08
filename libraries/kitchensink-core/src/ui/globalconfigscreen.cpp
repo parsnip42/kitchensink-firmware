@@ -9,7 +9,7 @@
 
 GlobalConfigScreen::GlobalConfigScreen(const SmartKeySet& smartKeySet,
                                        GlobalConfig&      globalConfig,
-                                       Timer&             timer,
+                                       TimerManager&             timer,
                                        EventStage&        next)
     : mGlobalConfig(globalConfig)
     , mTapDelayEntry("Multi Tap Delay", 140, NumberEntryWidget(0, 9999, timer))

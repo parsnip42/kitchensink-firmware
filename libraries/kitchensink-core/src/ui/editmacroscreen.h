@@ -18,7 +18,7 @@ class Widget;
 class EditMacroScreen : public Screen
 {
 public:
-    EditMacroScreen(Timer&      timer,
+    EditMacroScreen(TimerManager&      timer,
                     Macro&      macro,
                     Event       recordEvent,
                     EventStage& next);

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_EVENTENTRYWIDGET_H
 #define INCLUDED_EVENTENTRYWIDGET_H
 
-#include "timer.h"
+#include "timermanager.h"
 #include "ui/widget.h"
 #include "ui/action.h"
 #include "event/event.h"
@@ -10,7 +10,7 @@
 class EventEntryWidget : public Widget
 {
 public:
-    explicit EventEntryWidget(Timer& timer);
+    explicit EventEntryWidget(TimerManager& timer);
 
     EventEntryWidget(EventEntryWidget&&) = default;
 
@@ -28,7 +28,7 @@ public:
     Action eventSelected;
 
 private:
-    Timer::Handle mFlashTimer;
+    Timer mFlashTimer;
     bool          mFocused;
     bool          mFlash;
     bool          mTrigger;

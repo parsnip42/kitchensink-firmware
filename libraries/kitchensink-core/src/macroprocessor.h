@@ -3,7 +3,7 @@
 
 #include "event/eventstage.h"
 #include "macro.h"
-#include "timer.h"
+#include "timermanager.h"
 
 class Event;
 class MacroSet;
@@ -16,7 +16,7 @@ public:
     MacroProcessor(const MacroSet&       macroSet,
                    const SecureMacroSet& secureMacroSet,
                    const GlobalConfig&   globalConfig,
-                   Timer&                timer,
+                   TimerManager&                timer,
                    EventStage&           next);
 
 public:
@@ -34,7 +34,7 @@ private:
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;
-    Timer::Handle                  mPlaybackTimer;
+    Timer                  mPlaybackTimer;
     EventStage&                    mNext;
     
 private:

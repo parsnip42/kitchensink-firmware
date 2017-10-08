@@ -8,11 +8,11 @@
 
 HomeScreen::HomeScreen(const GlobalConfig& globalConfig,
                        const SmartKeySet&  smartKeySet,
-                       Timer&              timer,
+                       TimerManager&              timer,
                        EventStage&         next)
     : mGlobalConfig(globalConfig)
     , mSmartKeySet(smartKeySet)
-    , mDisplayTimeout(timer.createHandle())
+    , mDisplayTimeout(timer.createTimer())
     , mHomeWidget(globalConfig.homeScreenColumns)
     , mNext(next)
 {

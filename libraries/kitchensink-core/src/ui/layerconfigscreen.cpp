@@ -4,7 +4,7 @@
 #include "event/keyevent.h"
 #include "serialize/eventserializer.h"
 
-LayerConfigScreen::LayerConfigScreen(Timer&     timer,
+LayerConfigScreen::LayerConfigScreen(TimerManager&     timer,
                                      KeySource& keySource,
                                      Layer&     layer)
     : mKeySource(keySource)

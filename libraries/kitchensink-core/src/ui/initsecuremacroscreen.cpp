@@ -5,10 +5,10 @@
 #include "config.h"
 
 InitSecureMacroScreen::InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
-                                             Timer&          timer,
+                                             TimerManager&          timer,
                                              EventStage&     next)
     : mSecureMacroSet(secureMacroSet)
-    , mFlashTimer(timer.createHandle())
+    , mFlashTimer(timer.createTimer())
     , mPasswordEntry("Password",
                      60,
                      PasswordEntryWidget(timer))

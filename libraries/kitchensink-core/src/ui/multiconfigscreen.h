@@ -14,7 +14,7 @@ class MultiKey;
 class MultiConfigScreen : public Screen
 {
 public:
-    MultiConfigScreen(Timer&      timer,
+    MultiConfigScreen(TimerManager&      timer,
                       MultiKey&   multiKey,
                       EventStage& next);
 

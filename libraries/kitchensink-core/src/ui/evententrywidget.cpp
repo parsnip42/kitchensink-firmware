@@ -7,8 +7,8 @@
 #include "serialize/eventserializer.h"
 #include "event/tickevent.h"
 
-EventEntryWidget::EventEntryWidget(Timer& timer)
-    : mFlashTimer(timer.createHandle())
+EventEntryWidget::EventEntryWidget(TimerManager& timer)
+    : mFlashTimer(timer.createTimer())
     , mFocused(true)
     , mFlash(true)
     , mTrigger(false)

@@ -3,7 +3,7 @@
 
 #include "multikeyset.h"
 #include "event/eventstage.h"
-#include "timer.h"
+#include "timermanager.h"
 
 #include <cstdint>
 
@@ -15,7 +15,7 @@ class MultiKeyProcessor : public EventStage
 public:
     MultiKeyProcessor(MultiKeySet&  multiSet,
                       GlobalConfig& globalConfig,
-                      Timer&        timer,
+                      TimerManager&        timer,
                       EventStage&   next);
 
 public:
@@ -24,7 +24,7 @@ public:
 private:
     MultiKeySet&  mMultiKeySet;
     GlobalConfig& mGlobalConfig;
-    Timer::Handle mReleaseTimer;
+    Timer mReleaseTimer;
     std::size_t   mLast;
     uint8_t       mTaps;
     EventStage&   mNext;
@@ -33,11 +33,11 @@ private:
 inline
 MultiKeyProcessor::MultiKeyProcessor(MultiKeySet&  multiSet,
                                      GlobalConfig& globalConfig,
-                                     Timer&        timer,
+                                     TimerManager&        timer,
                                      EventStage&   next)
     : mMultiKeySet(multiSet)
     , mGlobalConfig(globalConfig)
-    , mReleaseTimer(timer.createHandle())
+    , mReleaseTimer(timer.createTimer())
     , mLast(0)
     , mTaps(0)
     , mNext(next)

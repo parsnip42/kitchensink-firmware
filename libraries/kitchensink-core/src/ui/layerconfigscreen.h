@@ -18,7 +18,7 @@ class Layer;
 class LayerConfigScreen : public Screen
 {
 public:
-    LayerConfigScreen(Timer&     timer,
+    LayerConfigScreen(TimerManager&     timer,
                       KeySource& keySource,
                       Layer&     layer);
 

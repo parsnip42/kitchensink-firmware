@@ -9,10 +9,10 @@
 #include "ui/surface.h"
 #include "ui/colors.h"
 
-EntryWidget::EntryWidget(Timer&   timer,
+EntryWidget::EntryWidget(TimerManager&   timer,
                          Content* nContent)
     : content(nContent)
-    , mFlashTimer(timer.createHandle())
+    , mFlashTimer(timer.createTimer())
     , mFocused(true)
     , mFlash(false)
     , mCursorPosition(1000)

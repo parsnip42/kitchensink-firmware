@@ -60,7 +60,7 @@ int NumberEntryWidget::NumberContent::normalize()
 
 NumberEntryWidget::NumberEntryWidget(int    min,
                                      int    max,
-                                     Timer& timer)
+                                     TimerManager& timer)
     : value(min, max)
     , mEntryWidget(timer, &value)
 { }

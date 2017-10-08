@@ -11,13 +11,13 @@
 MacroProcessor::MacroProcessor(const MacroSet&       macroSet,
                                const SecureMacroSet& secureMacroSet,
                                const GlobalConfig&   globalConfig,
-                               Timer&                timer,
+                               TimerManager&                timer,
                                EventStage&           next)
     : mMacroSet(macroSet)
     , mSecureMacroSet(secureMacroSet)
     , mGlobalConfig(globalConfig)
     , mCurrent(nullptr)
-    , mPlaybackTimer(timer.createHandle())
+    , mPlaybackTimer(timer.createTimer())
     , mNext(next)
 { }
 

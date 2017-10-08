@@ -35,7 +35,7 @@ public:
     };
     
 public:
-    explicit PasswordEntryWidget(Timer& timer);
+    explicit PasswordEntryWidget(TimerManager& timer);
 
     PasswordEntryWidget(PasswordEntryWidget&& rhs);
     

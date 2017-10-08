@@ -4,7 +4,7 @@
 #include "types/arrayutil.h"
 #include "types/stroutstream.h"
 
-MultiConfigScreen::MultiConfigScreen(Timer&      timer,
+MultiConfigScreen::MultiConfigScreen(TimerManager&      timer,
                                      MultiKey&   multiKey,
                                      EventStage& next)
     : mMultiKey(multiKey)

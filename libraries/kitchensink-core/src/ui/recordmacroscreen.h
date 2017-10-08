@@ -5,7 +5,7 @@
 #include "event/eventstage.h"
 #include "ui/labelwidget.h"
 #include "ui/screen.h"
-#include "timer.h"
+#include "timermanager.h"
 
 class Timer;
 class Macro;
@@ -13,7 +13,7 @@ class Macro;
 class RecordMacroScreen : public Screen
 {    
 public:
-    RecordMacroScreen(Timer&      timer,
+    RecordMacroScreen(TimerManager&      timer,
                       Macro&      macro,
                       EventStage& next);
 
@@ -27,7 +27,7 @@ private:
     int           mMacroId;
     EventRecorder mRecorder;
     LabelWidget   mLabelWidget;
-    Timer::Handle mFlashTimer;
+    Timer mFlashTimer;
     bool          mFlash;
     EventStage&   mNext;
     

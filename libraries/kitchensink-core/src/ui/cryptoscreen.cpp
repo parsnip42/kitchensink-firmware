@@ -6,9 +6,9 @@
 #include <mbedTLS_AES.h>
 #include <mbedTLS_SHA256.h>
 
-CryptoScreen::CryptoScreen(Timer&       timer,
+CryptoScreen::CryptoScreen(TimerManager&       timer,
                            EntropyPool& entropyPool)
-    : mUpdateTimer(timer.createHandle())
+    : mUpdateTimer(timer.createTimer())
     , mEntropyPool(entropyPool)
     , mTestAES("mbedTLS AES", 100, "Testing")
     , mTestSHA256("mbedTLS SHA256", 100, "Testing")

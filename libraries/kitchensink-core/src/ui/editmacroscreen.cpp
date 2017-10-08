@@ -25,7 +25,7 @@ constexpr int kLabelWidth = Font::width("Shortcut ");
 
 }
 
-EditMacroScreen::EditMacroScreen(Timer&      timer,
+EditMacroScreen::EditMacroScreen(TimerManager&      timer,
                                  Macro&      macro,
                                  Event       recordEvent,
                                  EventStage& next)

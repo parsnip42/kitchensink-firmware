@@ -15,7 +15,7 @@ class SmartKey;
 class SmartConfigScreen : public Screen
 {
 public:
-    SmartConfigScreen(Timer&      timer,
+    SmartConfigScreen(TimerManager&      timer,
                       SmartKey&   smartKey,
                       EventStage& next);
 

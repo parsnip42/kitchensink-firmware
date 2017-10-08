@@ -5,7 +5,7 @@
 #include "ui/homewidget.h"
 #include "event/eventstage.h"
 #include "event/ledmaskevent.h"
-#include "timer.h"
+#include "timermanager.h"
 #include "smartkeyset.h"
 
 class GlobalConfig;
@@ -16,7 +16,7 @@ class HomeScreen : public Screen
 public:
     HomeScreen(const GlobalConfig& globalConfig,
                const SmartKeySet&  smartKeySet,
-               Timer&              timer,
+               TimerManager&              timer,
                EventStage&         next);
 
 public:
@@ -32,7 +32,7 @@ private:
 private:
     const GlobalConfig& mGlobalConfig;
     const SmartKeySet&  mSmartKeySet;
-    Timer::Handle       mDisplayTimeout;
+    Timer       mDisplayTimeout;
     HomeWidget          mHomeWidget;
     EventStage&         mNext;
 };

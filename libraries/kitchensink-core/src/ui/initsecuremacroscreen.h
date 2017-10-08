@@ -15,7 +15,7 @@ class InitSecureMacroScreen : public Screen
 {
 public:
     InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
-                          Timer&          timer,
+                          TimerManager&          timer,
                           EventStage&     next);
     
 public:
@@ -27,7 +27,7 @@ private:
     
 private:
     SecureMacroSet&                     mSecureMacroSet;
-    Timer::Handle                       mFlashTimer;
+    Timer                       mFlashTimer;
     LabelledWidget<PasswordEntryWidget> mPasswordEntry;
     LabelledWidget<PasswordEntryWidget> mConfirmEntry;
     LabelWidget                         mStatusLabel;

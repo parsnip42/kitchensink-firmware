@@ -1,7 +1,7 @@
 #ifndef INCLUDED_HOMELEDWIDGET_H
 #define INCLUDED_HOMELEDWIDGET_H
 
-#include "timer.h"
+#include "timermanager.h"
 #include "ui/widget.h"
 #include "ui/action.h"
 #include "types/strbuf.h"
@@ -11,7 +11,7 @@ class HomeLedWidget : public Widget
 {
 public:
     HomeLedWidget(const SmartKeySet& smartKeySet,
-                  Timer&             timer);
+                  TimerManager&             timer);
 
     HomeLedWidget(HomeLedWidget&&) = default;
 
@@ -29,7 +29,7 @@ public:
 
 private:
     const SmartKeySet& mSmartKeySet;
-    Timer::Handle      mFlashTimer;
+    Timer      mFlashTimer;
     bool               mFocused;
     bool               mFlash;
     bool               mTrigger;

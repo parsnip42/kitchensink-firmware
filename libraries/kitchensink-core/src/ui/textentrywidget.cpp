@@ -30,7 +30,7 @@ void TextEntryWidget::TextContent::operator=(const StrRef& rhs)
 }
 
 
-TextEntryWidget::TextEntryWidget(Timer& timer)
+TextEntryWidget::TextEntryWidget(TimerManager& timer)
     : mEntryWidget(timer, &text)
 { }
 

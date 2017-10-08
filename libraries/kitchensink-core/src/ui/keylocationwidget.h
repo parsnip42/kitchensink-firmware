@@ -5,7 +5,7 @@
 #include "ui/action.h"
 #include "types/strbuf.h"
 #include "keylocation.h"
-#include "timer.h"
+#include "timermanager.h"
 
 class KeySource;
 class Timer;
@@ -13,7 +13,7 @@ class Timer;
 class KeyLocationWidget : public Widget
 {
 public:
-    KeyLocationWidget(Timer&     timer,
+    KeyLocationWidget(TimerManager&     timer,
                       KeySource& keySource);
 
 public:
@@ -31,7 +31,7 @@ public:
     
 private:
     KeySource&    mKeySource;
-    Timer::Handle mFlashTimer;
+    Timer mFlashTimer;
     StrBuf<24>    mLocationStr;
     bool          mLocationSet;
     bool          mFocused;

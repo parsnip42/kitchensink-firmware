@@ -1,6 +1,6 @@
 #include "eventmanager.h"
 
-EventManager::EventManager(Timer&              nTimer,
+EventManager::EventManager(TimerManager&              nTimer,
                            KeySource&          nKeySource,
                            LedSource&          ledSource,
                            EventStage&         input,

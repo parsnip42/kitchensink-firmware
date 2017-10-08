@@ -16,7 +16,7 @@ class GlobalConfigScreen : public Screen
 public:
     GlobalConfigScreen(const SmartKeySet& smartKeySet,
                        GlobalConfig&      globalConfig,
-                       Timer&             timer,
+                       TimerManager&             timer,
                        EventStage&        next);
     
 public:

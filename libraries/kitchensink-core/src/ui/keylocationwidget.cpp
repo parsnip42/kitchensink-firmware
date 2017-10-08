@@ -7,10 +7,10 @@
 #include "keysource.h"
 #include "types/stroutstream.h"
 
-KeyLocationWidget::KeyLocationWidget(Timer&     timer,
+KeyLocationWidget::KeyLocationWidget(TimerManager&     timer,
                                      KeySource& keySource)
     : mKeySource(keySource)
-    , mFlashTimer(timer.createHandle())
+    , mFlashTimer(timer.createTimer())
     , mLocationStr("Waiting")
     , mFocused(true)
     , mFlash(true)

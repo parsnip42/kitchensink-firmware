@@ -18,7 +18,7 @@ ArrayObjectSource<ComboWidget::Item> stds(typeCombo.begin(), typeCombo.end());
 
 }
 
-SmartConfigScreen::SmartConfigScreen(Timer&      timer,
+SmartConfigScreen::SmartConfigScreen(TimerManager&      timer,
                                      SmartKey&   smartKey,
                                      EventStage& next)
     : mSmartKey(smartKey)

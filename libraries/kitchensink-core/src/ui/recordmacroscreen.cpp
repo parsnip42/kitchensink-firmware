@@ -10,14 +10,14 @@
 
 #include <cstdint>
 
-RecordMacroScreen::RecordMacroScreen(Timer&      timer,
+RecordMacroScreen::RecordMacroScreen(TimerManager&      timer,
                                      Macro&      macro,
                                      EventStage& next)
     : mMacro(macro)
     , mRecorder(macro.type == Macro::Type::kRealtime)
     , mLabelWidget("Recording",
                    Justify::kCenter)
-    , mFlashTimer(timer.createHandle())
+    , mFlashTimer(timer.createTimer())
     , mFlash(true)
     , mNext(next)
 {

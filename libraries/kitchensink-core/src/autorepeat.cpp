@@ -5,10 +5,10 @@
 #include "event/keyevent.h"
 #include "globalconfig.h"
 
-AutoRepeat::AutoRepeat(Timer&        timer,
+AutoRepeat::AutoRepeat(TimerManager&        timer,
                        GlobalConfig& globalConfig,
                        EventStage&   next)
-    : mRepeatTimer(timer.createHandle())
+    : mRepeatTimer(timer.createTimer())
     , mGlobalConfig(globalConfig)
     , mNext(next)
 { }

@@ -9,9 +9,9 @@
 #include "event/smartevent.h"
 
 HomeLedWidget::HomeLedWidget(const SmartKeySet& smartKeySet,
-                             Timer&             timer)
+                             TimerManager&             timer)
     : mSmartKeySet(smartKeySet)
-    , mFlashTimer(timer.createHandle())
+    , mFlashTimer(timer.createTimer())
     , mFocused(true)
     , mFlash(true)
     , mTrigger(false)
