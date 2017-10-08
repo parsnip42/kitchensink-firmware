@@ -7,6 +7,8 @@
 #include "types/outstream.h"
 
 #include <SdFat.h>
+#undef min
+#undef max
 
 #include <cstdint>
 

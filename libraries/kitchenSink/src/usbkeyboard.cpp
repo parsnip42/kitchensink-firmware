@@ -15,14 +15,6 @@ UsbKeyboard::UsbKeyboard()
     : mKeyNum(0)
     , mDirty(false)
 {
-    keyboard_keys[0] = 0;
-    keyboard_keys[1] = 0;
-    keyboard_keys[2] = 0;
-    keyboard_keys[3] = 0;
-    keyboard_keys[4] = 0;
-    keyboard_keys[5] = 0;
-    keyboard_modifier_keys = 0;
-
     std::memset(mKeyMask, 0, sizeof(mKeyMask));
 }
 
@@ -46,7 +38,9 @@ bool UsbKeyboard::processEvent(const Event& event)
             
             if (mDirty)
             {
+#ifdef TEENSYDUINO
                 usb_keyboard_send();
+#endif
                 mDirty = false;
             }
         }
@@ -59,6 +53,8 @@ bool UsbKeyboard::processEvent(const Event& event)
 
 void UsbKeyboard::pressKey(KeyCode key)
 {
+#ifdef TEENSYDUINO
+
     auto keyCode(static_cast<size_t>(key));
     
     if (!(mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7))))
@@ -76,10 +72,14 @@ void UsbKeyboard::pressKey(KeyCode key)
         
         mKeyMask[keyCode >> 3] |= (1 << (keyCode & 0x7));
     }
+
+#endif
 }
 
 void UsbKeyboard::releaseKey(KeyCode key)
 {
+#ifdef TEENSYDUINO
+
     auto keyCode(static_cast<size_t>(key));
 
     if (mKeyMask[keyCode >> 3] & (1 << (keyCode & 0x7)))
@@ -105,4 +105,6 @@ void UsbKeyboard::releaseKey(KeyCode key)
         
         mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
     }
+
+#endif TEENSYDUINO
 }

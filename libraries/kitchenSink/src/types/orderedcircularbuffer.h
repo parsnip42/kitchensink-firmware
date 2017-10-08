@@ -23,35 +23,16 @@ public:
     OrderedCircularBuffer() = default;
 
 public:
-    const value_type& peek() const
-    {
-        return mBuffer.peekFront();
-    }
-    
-    value_type pop()
-    {
-        return mBuffer.popFront();
-    }
-
+    const value_type& peek() const;
+    value_type pop();
     std::size_t size() const;
     bool empty() const;
-    
-    iterator insert(const value_type& value)
-    {
-        iterator position(std::lower_bound(mBuffer.begin(),
-                                           mBuffer.end(),
-                                           value));
-        
-        mBuffer.insert(position, value);
-        
-        return position;
-    }
-    
+    iterator insert(const value_type& value);
     void erase(iterator position);
     
 public:
-    iterator begin() { return mBuffer.begin(); }
-    iterator end() { return mBuffer.end(); }
+    iterator begin();
+    iterator end();
     
 private:
      Buffer mBuffer;
@@ -72,18 +53,18 @@ bool OrderedCircularBuffer<Key, Value, Capacity>::empty() const
     return mBuffer.empty();
 }
 
-// template <typename Key, typename Value, std::size_t Capacity>
-// inline
-// auto OrderedCircularBuffer<Key, Value, Capacity>::insert(const value_type& value)
-// {
-//     auto position(std::lower_bound(mBuffer.begin(),
-//                                    mBuffer.end(),
-//                                    value));
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+typename OrderedCircularBuffer<Key, Value, Capacity>::iterator OrderedCircularBuffer<Key, Value, Capacity>::insert(const value_type& value)
+{
+    auto position(std::lower_bound(mBuffer.begin(),
+                                   mBuffer.end(),
+                                   value));
         
-//     mBuffer.insert(position, value);
+    mBuffer.insert(position, value);
 
-//     return position;
-// }
+    return position;
+}
 
 template <typename Key, typename Value, std::size_t Capacity>
 inline
@@ -92,18 +73,32 @@ void OrderedCircularBuffer<Key, Value, Capacity>::erase(iterator position)
     mBuffer.erase(position);
 }
 
-// template <typename Key, typename Value, std::size_t Capacity>
-// inline
-// auto OrderedCircularBuffer<Key, Value, Capacity>::peek() const
-// {
-//     return mBuffer.peekFront();
-// }
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+const typename OrderedCircularBuffer<Key, Value, Capacity>::value_type& OrderedCircularBuffer<Key, Value, Capacity>::peek() const
+{
+    return mBuffer.peekFront();
+}
 
-// template <typename Key, typename Value, std::size_t Capacity>
-// inline
-// auto OrderedCircularBuffer<Key, Value, Capacity>::pop()
-// {
-//     return mBuffer.popFront();
-// }
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+typename OrderedCircularBuffer<Key, Value, Capacity>::value_type OrderedCircularBuffer<Key, Value, Capacity>::pop()
+{
+    return mBuffer.popFront();
+}
+
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+typename OrderedCircularBuffer<Key, Value, Capacity>::iterator OrderedCircularBuffer<Key, Value, Capacity>::begin()
+{
+    return mBuffer.begin();
+}
+
+template <typename Key, typename Value, std::size_t Capacity>
+inline
+typename OrderedCircularBuffer<Key, Value, Capacity>::iterator OrderedCircularBuffer<Key, Value, Capacity>::end()
+{
+    return mBuffer.end();
+}
 
 #endif

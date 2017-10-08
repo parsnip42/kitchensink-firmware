@@ -2,8 +2,12 @@
 
 #include <Wire.h>
 
-#if defined(__MK20DX128__) || defined(__MK20DX256__)
+#ifdef TEENSYDUINO
 #include <core_pins.h>
+#else
+#include <Arduino.h>
+#undef min
+#undef max
 #endif
 
 namespace
@@ -19,26 +23,10 @@ const int csrw = 23;
 inline void writeByte(uint8_t data, int type) __attribute__((always_inline, unused));
 inline void writeByte(uint8_t data, int type)
 {
+#ifdef TEENSYDUINO
     digitalWriteFast(21, type);
     digitalWriteFast(23, 0);
 
-#if defined(__MK20DX128__) || defined(__MK20DX256__)
-
-    static uint8_t lastData(0);
-    
-    uint8_t toggle(data ^ lastData);
-
-    GPIOA_PTOR = ((toggle >> 3) & 0x3) << 12;
-    GPIOB_PTOR = (toggle & 0x3) << 16;
-    GPIOD_PTOR = (((toggle >> 2) & 1) |
-                  (((toggle >> 5) & 1) << 7) |
-                  (((toggle >> 6) & 1) << 4) |
-                  (((toggle >> 7) & 1) << 2));
-
-    lastData = data;
-    
-#else
-        
     digitalWriteFast(0, data & 1);
     digitalWriteFast(1, (data >> 1) & 1);
     digitalWriteFast(2, (data >> 2) & 1);
@@ -48,9 +36,22 @@ inline void writeByte(uint8_t data, int type)
     digitalWriteFast(6, (data >> 6) & 1);
     digitalWriteFast(7, (data >> 7) & 1);
     
-#endif
-    
     digitalWriteFast(23, 1);
+#else
+    digitalWrite(21, type);
+    digitalWrite(23, 0);
+
+    digitalWrite(0, data & 1);
+    digitalWrite(1, (data >> 1) & 1);
+    digitalWrite(2, (data >> 2) & 1);
+    digitalWrite(3, (data >> 3) & 1);
+    digitalWrite(4, (data >> 4) & 1);
+    digitalWrite(5, (data >> 5) & 1);
+    digitalWrite(6, (data >> 6) & 1);
+    digitalWrite(7, (data >> 7) & 1);
+    
+    digitalWrite(23, 1);
+#endif
 }
 
 }
@@ -71,12 +72,20 @@ void DMOLED32Display::init()
     pinMode(reset, OUTPUT);
     pinMode(csrw, OUTPUT);
 
+#ifdef TEENSYDUINO
     digitalWriteFast(reset, HIGH);
     delay(200);
     digitalWriteFast(reset, LOW);
     delay(200);
     digitalWriteFast(reset, HIGH);
-
+#else
+    digitalWrite(reset, HIGH);
+    delay(200);
+    digitalWrite(reset, LOW);
+    delay(200);
+    digitalWrite(reset, HIGH);
+#endif
+    
     writeInst(0xFD); /*SET COMMAND LOCK */
     writeData(0x12); /* UNLOCK */
     writeInst(0xAE); /*DISPLAY OFF*/
