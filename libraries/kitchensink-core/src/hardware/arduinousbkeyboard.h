@@ -1,3 +1,6 @@
+#ifndef TEENSYDUINO
+
+
 #ifndef INCLUDED_ARDUINOUSBKEYBOARD_H
 #define INCLUDED_ARDUINOUSBKEYBOARD_H
 
@@ -38,5 +41,8 @@ private:
     ArduinoUsbKeyboard(const ArduinoUsbKeyboard&) = delete;
     ArduinoUsbKeyboard& operator=(const ArduinoUsbKeyboard&) = delete;
 };
+
+#endif
+
 
 #endif

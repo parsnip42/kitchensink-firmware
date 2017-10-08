@@ -1,3 +1,8 @@
+#ifndef TEENSYDUINO
+
+
+
+
 #include "hardware/arduinousbkeyboard.h"
 
 #include "event/keyevent.h"
@@ -138,3 +143,6 @@ void ArduinoUsbKeyboard::releaseKey(KeyCode key)
         mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
     }
 }
+
+
+#endif

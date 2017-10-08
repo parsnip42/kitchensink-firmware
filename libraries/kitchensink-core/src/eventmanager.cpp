@@ -25,8 +25,8 @@ void EventManager::poll(EventStage& output)
         
     mBuffer.pollEvent(mInput);
     timer.pollEvent(mInput);
-    // keySource.pollEvent(mInput);
-    // mLedSource.pollEvent(mInput);
+    keySource.pollEvent(mInput);
+    mLedSource.pollEvent(mInput);
 }
 
 void EventManager::flush(EventStage& output)
@@ -36,7 +36,7 @@ void EventManager::flush(EventStage& output)
     while (keySource.anyPressed())
     {
         timer.pollEvent(mInput);
-        // keySource.pollEvent(mInput);
-        // mLedSource.pollEvent(mInput);
+        keySource.pollEvent(mInput);
+        mLedSource.pollEvent(mInput);
     }
 }
