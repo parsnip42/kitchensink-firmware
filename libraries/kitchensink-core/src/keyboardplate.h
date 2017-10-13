@@ -8,7 +8,7 @@
 
 #include "hardware/debounce.h"
 #include "hardware/keyhardware.h"
-#include "keymatrixdispatcher.h"
+#include "hardware/keyhardwareeventdispatcher.h"
 
 #include <cstdint>
 
@@ -34,10 +34,10 @@ public:
     virtual bool any() const override;
 
 private:
-    KeyMask             mState;
-    I2CKeyMatrix        mMatrix;
-    Debounce            mDebounce;
-    KeyMatrixDispatcher mDispatcher;
+    KeyMask                    mState;
+    I2CKeyMatrix               mMatrix;
+    Debounce                   mDebounce;
+    KeyHardwareEventDispatcher mDispatcher;
 
 private:
     KeyboardPlate(const KeyboardPlate&) = delete;

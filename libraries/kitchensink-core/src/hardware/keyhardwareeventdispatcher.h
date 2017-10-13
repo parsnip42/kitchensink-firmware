@@ -1,18 +1,17 @@
-#ifndef INCLUDED_KEYMATRIXDISPATCHER_H
-#define INCLUDED_KEYMATRIXDISPATCHER_H
+#ifndef INCLUDED_KEYHARDWAREEVENTDISPATCHER_H
+#define INCLUDED_KEYHARDWAREEVENTDISPATCHER_H
 
 #include "hardware/keymask.h"
 #include "hardware/keyhardwareevent.h"
 #include "hardware/keyhardwareeventhandler.h"
 
 #include <array>
-#include <initializer_list>
 
-class KeyMatrixDispatcher
+class KeyHardwareEventDispatcher
 {
 public:
-    KeyMatrixDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                        const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
+    KeyHardwareEventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                               const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
     
 public:
     void dispatch(const KeyMask&                 stateMask,
@@ -24,8 +23,8 @@ private:
     const std::array<uint8_t, KeyMask::kColumns> mColumnMapping;
 
 private:
-    KeyMatrixDispatcher(const KeyMatrixDispatcher&) = delete;
-    KeyMatrixDispatcher& operator=(const KeyMatrixDispatcher&) = delete;
+    KeyHardwareEventDispatcher(const KeyHardwareEventDispatcher&) = delete;
+    KeyHardwareEventDispatcher& operator=(const KeyHardwareEventDispatcher&) = delete;
 };
 
 #endif

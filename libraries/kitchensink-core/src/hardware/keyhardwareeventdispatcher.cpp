@@ -1,14 +1,14 @@
-#include "keymatrixdispatcher.h"
+#include "hardware/keyhardwareeventdispatcher.h"
 
-KeyMatrixDispatcher::KeyMatrixDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
-                                         const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
+KeyHardwareEventDispatcher::KeyHardwareEventDispatcher(const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
+                                                       const std::array<uint8_t, KeyMask::kColumns>& columnMapping)
     : mRowMapping(rowMapping)
     , mColumnMapping(columnMapping)
 { }
 
-void KeyMatrixDispatcher::dispatch(const KeyMask&                 stateMask,
-                                   const KeyMask&                 deltaMask,
-                                   const KeyHardwareEventHandler& eventHandler)
+void KeyHardwareEventDispatcher::dispatch(const KeyMask&                 stateMask,
+                                          const KeyMask&                 deltaMask,
+                                          const KeyHardwareEventHandler& eventHandler)
 {
     for (std::size_t row(0); row < KeyMask::kRows; ++row)
     {
