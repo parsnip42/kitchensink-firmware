@@ -1,10 +1,7 @@
 #ifndef INCLUDED_KSKEYBOARD_H
 #define INCLUDED_KSKEYBOARD_H
 
-#include "keymatrixevent.h"
-#include "keymatrixeventhandler.h"
 #include "keyboardplate.h"
-#include "layerstack.h"
 #include "hardware/keyhardware.h"
 
 #include <cstdint>
@@ -17,10 +14,10 @@ public:
     explicit KsKeyboard(EntropyPool& entropyPool);
 
 public:
-    virtual void poll(uint32_t                     timeMs,
-                      const KeyMatrixEventHandler& callback) override;
+    virtual void poll(uint32_t                       timeMs,
+                      const KeyHardwareEventHandler& handler) override;
 
-    virtual void pressed(const KeyMatrixEventHandler& callback) override;
+    virtual void pressed(const KeyHardwareEventHandler& callback) override;
     
     virtual bool any() const override;
     
@@ -35,18 +32,18 @@ private:
 
 
 inline
-void KsKeyboard::poll(uint32_t                     timeMs,
-                      const KeyMatrixEventHandler& eventHandler)
+void KsKeyboard::poll(uint32_t                       timeMs,
+                      const KeyHardwareEventHandler& handler)
 {
-    mLeft.poll(timeMs, eventHandler);
-    mRight.poll(timeMs, eventHandler);
+    mLeft.poll(timeMs, handler);
+    mRight.poll(timeMs, handler);
 }
 
 inline
-void KsKeyboard::pressed(const KeyMatrixEventHandler& eventHandler)
+void KsKeyboard::pressed(const KeyHardwareEventHandler& handler)
 {
-    mLeft.pressed(eventHandler);
-    mRight.pressed(eventHandler);
+    mLeft.pressed(handler);
+    mRight.pressed(handler);
 }
 
 inline

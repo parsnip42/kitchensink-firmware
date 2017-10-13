@@ -1,7 +1,7 @@
 #ifndef INCLUDED_EVENTMANAGER_H
 #define INCLUDED_EVENTMANAGER_H
 
-#include "keyeventbuffer.h"
+#include "event/eventbuffer.h"
 #include "event/eventstage.h"
 #include "event/event.h"
 #include "keysource.h"

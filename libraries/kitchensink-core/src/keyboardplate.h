@@ -9,7 +9,7 @@
 #include <cstdint>
 
 class EntropyPool;
-class KeyMatrixEventHandler;
+class KeyHardwareEventHandler;
 
 class KeyboardPlate
 {
@@ -23,9 +23,9 @@ public:
 
 public:
     void poll(uint32_t                     timeMs,
-              const KeyMatrixEventHandler& eventHandler);
+              const KeyHardwareEventHandler& eventHandler);
 
-    void pressed(const KeyMatrixEventHandler& eventHandler);
+    void pressed(const KeyHardwareEventHandler& eventHandler);
     
     bool any() const;
 
@@ -42,8 +42,8 @@ private:
 
 
 inline
-void KeyboardPlate::poll(uint32_t                     timeMs,
-                         const KeyMatrixEventHandler& eventHandler)
+void KeyboardPlate::poll(uint32_t                       timeMs,
+                         const KeyHardwareEventHandler& eventHandler)
 {
     mMatrix.scan(mState);
     
@@ -56,7 +56,7 @@ void KeyboardPlate::poll(uint32_t                     timeMs,
 }
 
 inline
-void KeyboardPlate::pressed(const KeyMatrixEventHandler& eventHandler)
+void KeyboardPlate::pressed(const KeyHardwareEventHandler& eventHandler)
 {
     mDispatcher.dispatch(KeyMask(),
                          mDebounce.state(),

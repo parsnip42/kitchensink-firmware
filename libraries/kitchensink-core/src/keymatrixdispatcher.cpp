@@ -6,9 +6,9 @@ KeyMatrixDispatcher::KeyMatrixDispatcher(const std::array<uint8_t, KeyMask::kRow
     , mColumnMapping(columnMapping)
 { }
 
-void KeyMatrixDispatcher::dispatch(const KeyMask&               stateMask,
-                                   const KeyMask&               deltaMask,
-                                   const KeyMatrixEventHandler& eventHandler)
+void KeyMatrixDispatcher::dispatch(const KeyMask&                 stateMask,
+                                   const KeyMask&                 deltaMask,
+                                   const KeyHardwareEventHandler& eventHandler)
 {
     for (std::size_t row(0); row < KeyMask::kRows; ++row)
     {
@@ -23,9 +23,9 @@ void KeyMatrixDispatcher::dispatch(const KeyMask&               stateMask,
 
             if (column < KeyMask::kColumns)
             {
-                eventHandler.processKeyMatrixEvent(KeyMatrixEvent(mRowMapping[row],
-                                                                  mColumnMapping[column],
-                                                                  state[column]));
+                eventHandler.processKeyHardwareEvent(KeyHardwareEvent(mRowMapping[row],
+                                                                      mColumnMapping[column],
+                                                                      state[column]));
             }
         }
     }

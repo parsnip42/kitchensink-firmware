@@ -2,8 +2,8 @@
 #define INCLUDED_KEYMATRIXDISPATCHER_H
 
 #include "hardware/keymask.h"
-#include "keymatrixevent.h"
-#include "keymatrixeventhandler.h"
+#include "hardware/keyhardwareevent.h"
+#include "hardware/keyhardwareeventhandler.h"
 
 #include <array>
 #include <initializer_list>
@@ -15,9 +15,9 @@ public:
                         const std::array<uint8_t, KeyMask::kColumns>& columnMapping);
     
 public:
-    void dispatch(const KeyMask&               stateMask,
-                  const KeyMask&               deltaMask,
-                  const KeyMatrixEventHandler& eventHandler);
+    void dispatch(const KeyMask&                 stateMask,
+                  const KeyMask&                 deltaMask,
+                  const KeyHardwareEventHandler& eventHandler);
 
 private:
     const std::array<uint8_t, KeyMask::kRows>    mRowMapping;
