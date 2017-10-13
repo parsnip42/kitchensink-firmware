@@ -3,7 +3,7 @@
 
 #include "event/eventstage.h"
 #include "macro.h"
-#include "timermanager.h"
+#include "timer/timermanager.h"
 
 class Event;
 class MacroSet;

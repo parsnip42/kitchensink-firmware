@@ -5,7 +5,7 @@
 #include "event/eventstage.h"
 #include "ui/labelwidget.h"
 #include "ui/screen.h"
-#include "timermanager.h"
+#include "timer/timermanager.h"
 
 class Timer;
 class Macro;

@@ -6,7 +6,7 @@
 #include "event/event.h"
 #include "keysource.h"
 #include "ledsource.h"
-#include "timermanager.h"
+#include "timer/timermanager.h"
 #include "topleveleventstage.h"
 
 #include <cstdint>

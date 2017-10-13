@@ -5,7 +5,7 @@
 #include "ui/action.h"
 #include "types/strbuf.h"
 #include "keylocation.h"
-#include "timermanager.h"
+#include "timer/timermanager.h"
 
 class KeySource;
 class Timer;

@@ -1,7 +1,7 @@
 #ifndef INCLUDED_EVENTENTRYWIDGET_H
 #define INCLUDED_EVENTENTRYWIDGET_H
 
-#include "timermanager.h"
+#include "timer/timermanager.h"
 #include "ui/widget.h"
 #include "ui/action.h"
 #include "event/event.h"

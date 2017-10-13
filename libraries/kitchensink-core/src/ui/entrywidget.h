@@ -1,7 +1,7 @@
 #ifndef INCLUDED_ENTRYWIDGET_H
 #define INCLUDED_ENTRYWIDGET_H
 
-#include "timermanager.h"
+#include "timer/timermanager.h"
 #include "event/eventstage.h"
 #include "types/strbuf.h"
 #include "types/strref.h"

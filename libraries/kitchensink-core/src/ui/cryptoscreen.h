@@ -6,7 +6,7 @@
 #include "ui/propertywidget.h"
 #include "ui/screen.h"
 #include "ui/widgetset.h"
-#include "timermanager.h"
+#include "timer/timermanager.h"
 
 class EntropyPool;
 

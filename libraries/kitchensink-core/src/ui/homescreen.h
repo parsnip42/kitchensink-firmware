@@ -5,7 +5,7 @@
 #include "ui/homewidget.h"
 #include "event/eventstage.h"
 #include "event/ledmaskevent.h"
-#include "timermanager.h"
+#include "timer/timermanager.h"
 #include "smartkeyset.h"
 
 class GlobalConfig;

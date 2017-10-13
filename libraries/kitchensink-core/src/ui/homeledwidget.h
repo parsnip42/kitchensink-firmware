@@ -1,7 +1,7 @@
 #ifndef INCLUDED_HOMELEDWIDGET_H
 #define INCLUDED_HOMELEDWIDGET_H
 
-#include "timermanager.h"
+#include "timer/timermanager.h"
 #include "ui/widget.h"
 #include "ui/action.h"
 #include "types/strbuf.h"
