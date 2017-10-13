@@ -53,6 +53,12 @@ constexpr bool ok(const Event& event)
 }
 
 inline
+bool okReleased(const Event& event)
+{
+    return ok(event.invert());
+}
+
+inline
 constexpr bool cancel(const Event& event)
 {
     return (event == KeyEvent::create(KeyCode::Esc) ||

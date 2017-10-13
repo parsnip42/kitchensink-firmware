@@ -10,7 +10,7 @@
 #include "ui/screen.h"
 #include "ui/textentrywidget.h"
 
-class KeySource;
+class KeyHardware;
 class Widget;
 class Timer;
 class Layer;
@@ -18,9 +18,9 @@ class Layer;
 class LayerConfigScreen : public Screen
 {
 public:
-    LayerConfigScreen(TimerManager&     timer,
-                      KeySource& keySource,
-                      Layer&     layer);
+    LayerConfigScreen(TimerManager& timer,
+                      KeyHardware&  keyHardware,
+                      Layer&        layer);
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -32,7 +32,7 @@ private:
     void onUpdate();
     
 private:
-    KeySource&                        mKeySource;
+    KeyHardware&                      mKeyHardware;
     Layer&                            mLayer;
     LabelledWidget<TextEntryWidget>   mTitleEntry;
     LabelledWidget<KeyLocationWidget> mKeyLocation;

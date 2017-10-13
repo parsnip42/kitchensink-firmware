@@ -72,10 +72,12 @@ bool OutputSink::processEvent(const Event& event)
 ScreenManager::ScreenManager(Display&       display,
                              EventManager&  eventManager,
                              KeyboardState& keyboardState,
+                             KeyHardware&   keyHardware,
                              EntropyPool&   entropyPool)
     : mSurface(display)
     , mEventManager(eventManager)
     , mKeyboardState(keyboardState)
+    , mKeyHardware(keyHardware)
     , mEntropyPool(entropyPool)
     , mMenuDefinitions(keyboardState)
 { }
@@ -367,7 +369,7 @@ void ScreenManager::launchEditLayer(int                layerId,
                                     const ScreenEvent& sourceEvent)
 {
     LayerConfigScreen screen(mEventManager.timer,
-                             mEventManager.keySource,
+                             mKeyHardware,
                              mKeyboardState.layerStack[layerId]);
     
     displayScreen("Layer Configuration",

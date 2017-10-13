@@ -13,6 +13,7 @@ class EventManager;
 class KeyboardState;
 class StrOStream;
 class ScreenEvent;
+class KeyHardware;
 class EntropyPool;
 
 class ScreenManager
@@ -21,6 +22,7 @@ public:
     ScreenManager(Display&       display,
                   EventManager&  eventManager,
                   KeyboardState& keyboardState,
+                  KeyHardware&   keyHardware,
                   EntropyPool&   entropyPool);
     
 public:
@@ -65,6 +67,7 @@ private:
     Surface         mSurface;
     EventManager&   mEventManager;
     KeyboardState&  mKeyboardState;
+    KeyHardware&    mKeyHardware;
     EntropyPool&    mEntropyPool;
     MenuDefinitions mMenuDefinitions;
 

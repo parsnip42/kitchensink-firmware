@@ -7,14 +7,14 @@
 #include "keylocation.h"
 #include "timer/timermanager.h"
 
-class KeySource;
+class KeyHardware;
 class Timer;
 
 class KeyLocationWidget : public Widget
 {
 public:
-    KeyLocationWidget(TimerManager&     timer,
-                      KeySource& keySource);
+    KeyLocationWidget(TimerManager& timerManager,
+                      KeyHardware&  keyHardware);
 
 public:
     virtual bool processEvent(const Event& inEvent) override;
@@ -24,19 +24,21 @@ public:
 
 public:
     void clear();
-    
+
+private:
+    void readNextKeyPress();
+
 public:
     KeyLocation location;
     Action      locationSelected;
-    
+
 private:
-    KeySource&    mKeySource;
-    Timer mFlashTimer;
-    StrBuf<24>    mLocationStr;
-    bool          mLocationSet;
-    bool          mFocused;
-    bool          mFlash;
-    bool          mTrigger;
+    KeyHardware& mKeyHardware;
+    StrBuf<24>   mLocationStr;
+    bool         mLocationSet;
+    bool         mFocused;
+    bool         mFlash;
+    bool         mTrigger;
 };
 
 #endif

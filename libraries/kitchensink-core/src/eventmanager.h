@@ -11,11 +11,13 @@
 
 #include <cstdint>
 
+class EventSource;
+
 class EventManager : public EventStage
 {
 public:
-    EventManager(TimerManager&              nTimer,
-                 KeySource&          nKeySource,
+    EventManager(TimerManager&       nTimer,
+                 EventSource&        nKeySource,
                  LedSource&          ledSource,
                  EventStage&         input,
                  ToplevelEventStage& toplevel,
@@ -28,9 +30,9 @@ public:
     void flush(EventStage& output);
     
 public:
-    TimerManager&      timer;
-    KeySource&  keySource;
-    EventStage& defaultOutput;
+    TimerManager& timer;
+    EventSource&  keySource;
+    EventStage&   defaultOutput;
     
 private:
     EventBuffer         mBuffer;

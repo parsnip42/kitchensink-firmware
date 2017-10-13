@@ -78,6 +78,7 @@ void loop()
     ScreenManager screenManager(display,
                                 eventManager,
                                 keyboardState,
+                                keyboard,
                                 entropyPool);
 
     screenManager.poll();

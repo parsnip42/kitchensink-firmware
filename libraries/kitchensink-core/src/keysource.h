@@ -2,6 +2,7 @@
 #define INCLUDED_KEYSOURCE_H
 
 #include "event/eventstage.h"
+#include "eventsource.h"
 #include "layerstack.h"
 #include "keylocation.h"
 #include "hardware/keyhardware.h"
@@ -10,7 +11,7 @@
 
 class KeyLocation;
 
-class KeySource
+class KeySource : public EventSource
 {
 public:
     KeySource(KeyHardware& keyHardware,
