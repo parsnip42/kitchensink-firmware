@@ -3,30 +3,37 @@
 #include "event/eventstage.h"
 #include "eventmanager.h"
 #include "hardware/ctrlutil.h"
+#include "hardware/ctrlutil.h"
 #include "keyboardstate.h"
 #include "storage/storage.h"
+#include "timer/timermanager.h"
 #include "types/stroutstream.h"
-#include "hardware/ctrlutil.h"
 #include "config.h"
 
 namespace
 {
 
-class NullKeyStage : public EventStage
+class NullEventStage : public EventStage
 {
 public:
-    virtual bool processEvent(const Event& event) override
-    {
-        return true;
-    }
+    virtual bool processEvent(const Event& event) override;
 };
+
+
+inline
+bool NullEventStage::processEvent(const Event& event)
+{
+    return true;
+}
 
 }
 
 StatusScreen::StatusScreen(KeyboardState& keyboardState,
-                           EventManager&  eventManager)
+                           EventManager&  eventManager,
+                           TimerManager&  timerManager)
     : mKeyboardState(keyboardState)
     , mEventManager(eventManager)
+    , mTimerManager(timerManager)
     , mMemoryUsage("Free Memory", 120)
     , mConfigSize("Config Size", 120)
     , mScanRate("Scan Rate", 120)
@@ -72,7 +79,7 @@ void StatusScreen::screenInit()
     {
         StrOutStream os(mAllocatedTimers.value);
 
-        os.appendInt(mEventManager.timerManager.allocatedTimers());
+        os.appendInt(mTimerManager.allocatedTimers());
         os.appendStr(" / ");
         os.appendInt(Config::kTimerCount);
         
@@ -82,7 +89,7 @@ void StatusScreen::screenInit()
     {
         StrOutStream os(mActiveTimers.value);
 
-        os.appendInt(mEventManager.timerManager.activeTimers());
+        os.appendInt(mTimerManager.activeTimers());
         os.appendStr(" / ");
         os.appendInt(Config::kTimerCount);
         
@@ -120,7 +127,7 @@ void StatusScreen::screenInit()
 
     auto start(CtrlUtil::nowMs());
 
-    NullKeyStage nullNext;
+    NullEventStage nullNext;
     
     for (int i(0); i < 100; ++i)
     {

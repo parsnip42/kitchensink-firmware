@@ -6,8 +6,8 @@
 #include "event/tickevent.h"
 #include "event/eventstage.h"
 #include "types/orderedcircularbuffer.h"
+#include "timer/timer.h"
 #include "config.h"
-#include "timer.h"
 
 #include <cstdint>
 
