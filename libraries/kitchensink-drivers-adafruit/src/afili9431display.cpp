@@ -1,4 +1,4 @@
-#include "hardware/afili9431display.h"
+#include "afili9431display.h"
 
 AFILI9431Display::AFILI9431Display()
     : mDisplay(9, 10)

@@ -3,26 +3,23 @@
 
 #include "actionprocessor.h"
 #include "defaultprofile.h"
-#include "hardware/afili9431display.h"
-#include "kskeyboard.h"
+#include "afili9431display.h"
 #include "keyboardstate.h"
 #include "keysource.h"
-#include "hardware/i2ckeymatrix.h"
 #include "hardware/arduinousbkeyboard.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
 #include "layerprocessor.h"
-#include "ledsource.h"
 #include "keyboardstateutil.h"
 #include "ui/screenmanager.h"
 #include "eventmanager.h"
 #include "topleveleventstage.h"
 #include "crypto/entropypool.h"
+#include "hardware/compositekeyhardware.h"
 
 void setup()
 {
-    I2CKeyMatrix::setup();
 }
 
 void loop()
@@ -31,8 +28,8 @@ void loop()
 
     EntropyPool entropyPool;
     
-    KsKeyboard keyboard(entropyPool);
-
+    CompositeKeyHardware<0> keyboard({});
+    
     KeyboardState keyboardState;
     
     DefaultProfile::init(keyboardState);
@@ -67,11 +64,7 @@ void loop()
 
     layerProcessor.keySource = &keySource;
 
-    LedSource ledSource;
-    
-    EventManager eventManager(timerManager,
-                              keySource,
-                              ledSource,
+    EventManager eventManager(keySource,
                               multiKeyProcessor,
                               toplevel,
                               usbKeyboard);
@@ -82,7 +75,9 @@ void loop()
 
     ScreenManager screenManager(display,
                                 eventManager,
+                                timerManager,
                                 keyboardState,
+                                keyboard,
                                 entropyPool);
 
     screenManager.poll();
