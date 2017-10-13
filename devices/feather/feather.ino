@@ -6,7 +6,6 @@
 #include "afili9431display.h"
 #include "keyboardstate.h"
 #include "keysource.h"
-#include "hardware/arduinousbkeyboard.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
@@ -17,6 +16,10 @@
 #include "topleveleventstage.h"
 #include "crypto/entropypool.h"
 #include "hardware/compositekeyhardware.h"
+#include "hardware/keyboardplate.h"
+
+#include <bluefruitkeyboard.h>
+#include <gpiokeyset.h>
 
 void setup()
 {
@@ -24,12 +27,18 @@ void setup()
 
 void loop()
 {
-    ArduinoUsbKeyboard usbKeyboard;
+    BluefruitKeyboard usbKeyboard;
 
     EntropyPool entropyPool;
-    
-    CompositeKeyHardware<0> keyboard({});
-    
+
+    std::array<uint8_t, 1> pins({ 0 });
+
+    GPIOKeySet gpioKeys(pins.begin(), pins.end());
+
+    KeyboardPlate<GPIOKeySet, 10, 1> keyboard(gpioKeys,
+                                              {{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }},
+                                              {{ 0 }});
+
     KeyboardState keyboardState;
     
     DefaultProfile::init(keyboardState);
@@ -71,8 +80,9 @@ void loop()
 
     AFILI9431Display display;
 
-    eventManager.processEvent(ScreenEvent::create(ScreenEvent::Type::kMenu, 0));
-
+//    eventManager.processEvent(ScreenEvent::create(ScreenEvent::Type::kMenu, 0));
+    // eventManager.processEvent(ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream));
+                              
     ScreenManager screenManager(display,
                                 eventManager,
                                 timerManager,
