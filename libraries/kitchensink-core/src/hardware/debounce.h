@@ -1,7 +1,7 @@
 #ifndef INCLUDED_DEBOUNCE_H
 #define INCLUDED_DEBOUNCE_H
 
-#include "keymask.h"
+#include "hardware/keymask.h"
 
 class Debounce
 {

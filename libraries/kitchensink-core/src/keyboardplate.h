@@ -30,6 +30,7 @@ public:
     bool any() const;
 
 private:
+    KeyMask             mState;
     I2CKeyMatrix        mMatrix;
     Debounce            mDebounce;
     KeyMatrixDispatcher mDispatcher;
@@ -44,7 +45,9 @@ inline
 void KeyboardPlate::poll(uint32_t                     timeMs,
                          const KeyMatrixEventHandler& eventHandler)
 {
-    if (mDebounce.process(timeMs, mMatrix.scan()))
+    mMatrix.scan(mState);
+    
+    if (mDebounce.process(timeMs, mState))
     {
         mDispatcher.dispatch(mDebounce.state(),
                              mDebounce.delta(),

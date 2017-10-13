@@ -1,8 +1,8 @@
 #ifndef INCLUDED_BITMASK_H
 #define INCLUDED_BITMASK_H
 
-#include "bitmaskattributes.h"
-#include "bititerator.h"
+#include "types/bitmaskattributes.h"
+#include "types/bititerator.h"
 
 #include <cstddef>
 #include <cstdint>
@@ -61,20 +61,43 @@ private:
 
 private:
     template <std::size_t Size_>
-    friend bool operator==(const Bitmask<Size_>& lhs, const Bitmask<Size_>& rhs);
+    friend bool operator==(const Bitmask<Size_>& lhs,
+                           const Bitmask<Size_>& rhs);
+
+    template <std::size_t Size_>
+    friend bool operator==(const Bitmask<Size_>&                lhs,
+                           const typename Bitmask<Size_>::Data& rhs);
 };
 
 
 template <std::size_t Size>
 inline
-bool operator==(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
+bool operator==(const Bitmask<Size>& lhs,
+                const Bitmask<Size>& rhs)
 {
     return (lhs.mData == rhs.mData);
 }
 
 template <std::size_t Size>
 inline
-bool operator!=(const Bitmask<Size>& lhs, const Bitmask<Size>& rhs)
+bool operator!=(const Bitmask<Size>& lhs,
+                const Bitmask<Size>& rhs)
+{
+    return !(lhs == rhs);
+}
+
+template <std::size_t Size>
+inline
+bool operator==(const Bitmask<Size>&                lhs,
+                const typename Bitmask<Size>::Data& rhs)
+{
+    return (lhs.mData == rhs);
+}
+
+template <std::size_t Size>
+inline
+bool operator!=(const Bitmask<Size>&                lhs,
+                const typename Bitmask<Size>::Data& rhs)
 {
     return !(lhs == rhs);
 }
