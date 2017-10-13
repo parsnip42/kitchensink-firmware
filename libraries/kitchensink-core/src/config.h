@@ -29,7 +29,7 @@ constexpr std::size_t kMultiKeyTapCount = 4;
 constexpr std::size_t kSmartKeyNameLen = 24;
 constexpr std::size_t kSmartKeyCount   = 12;
 
-constexpr std::size_t kLayerColumns = 16;
+constexpr std::size_t kLayerColumns = 20;
 constexpr std::size_t kLayerRows    = 5;
 constexpr std::size_t kLayerCount   = 10;
 

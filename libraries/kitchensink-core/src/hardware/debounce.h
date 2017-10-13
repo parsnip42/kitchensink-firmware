@@ -1,8 +1,9 @@
 #ifndef INCLUDED_DEBOUNCE_H
 #define INCLUDED_DEBOUNCE_H
 
-#include "hardware/keymask.h"
+#include <cstdint>
 
+template <typename KeyMask>
 class Debounce
 {
 private:
@@ -15,35 +16,46 @@ public:
     bool process(uint32_t       timeMs,
                  const KeyMask& next);
     
-    const KeyMask& state() const;
-    const KeyMask& delta() const;
-    
+public:
+    KeyMask state;
+    KeyMask delta;
+
 private:
     uint32_t mLastMs;
-    KeyMask  mCurrent;
-    KeyMask  mState;
-    KeyMask  mDelta;
+    KeyMask mCurrent;
     
 private:
     Debounce(const Debounce&) = delete;
     Debounce& operator=(const Debounce&) = delete;
 };
 
+
+template <typename KeyMask>
 inline
-constexpr Debounce::Debounce()
+constexpr Debounce<KeyMask>::Debounce()
     : mLastMs(0)
 { }
 
+template <typename KeyMask>
 inline
-const KeyMask& Debounce::state() const
+bool Debounce<KeyMask>::process(uint32_t        timeMs,
+                                 const KeyMask& next)
 {
-    return mState;
-}
-
-inline
-const KeyMask& Debounce::delta() const
-{
-    return mDelta;
+    mCurrent &= next;
+    
+    if (timeMs >= (mLastMs + kLatencyMs))
+    {
+        delta = state;
+        delta ^= mCurrent;
+        state = mCurrent;
+        
+        mCurrent = next;
+        mLastMs = timeMs;
+        
+        return !delta.empty();
+    }
+    
+    return false;
 }
 
 #endif

@@ -9,10 +9,10 @@
 
 class Layer
 {
-public:
-    static constexpr int kRows    = 5;
-    static constexpr int kColumns = 20;
-
+private:
+    static const std::size_t kColumns = Config::kLayerColumns;
+    static const std::size_t kRows    = Config::kLayerRows;
+    
 public:
     typedef std::array<Event, kColumns> Row;
     typedef std::array<Row, kRows>      Mapping;

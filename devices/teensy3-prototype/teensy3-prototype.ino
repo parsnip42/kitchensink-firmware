@@ -13,13 +13,12 @@
 #include "crypto/entropypool.h"
 #include "event/compositeeventsource.h"
 #include "hardware/compositekeyhardware.h"
+#include "hardware/keyboardplate.h"
 
 #include <teensyusbkeyboard.h>
 #include <teensyledsource.h>
 #include <dmoled32display.h>
 #include <i2ckeymatrix.h>
-
-#include "keyboardplate.h"
 
 void setup()
 {
@@ -32,15 +31,17 @@ void loop()
 
     EntropyPool entropyPool;
 
-    KeyboardPlate leftPlate(0x20, 0x7c00, 0x3ff,
-                            {{ 4, 3, 2, 1, 0 }},
-                            {{ 0, 1, 2, 3, 4, 5, 6, 7, 9, 8, 10, 11, 12, 13, 14, 15 }},
-                            entropyPool);
+    I2CKeyMatrix leftMatrix(0x20, 0x7c00, 0x3ff, entropyPool);
 
-    KeyboardPlate rightPlate(0x21, 0x3e00, 0xc0ff,
-                             {{ 0, 1, 2, 3, 4}},
-                             {{ 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 11, 10 }},
-                             entropyPool);
+    KeyboardPlate<I2CKeyMatrix, 16, 5> leftPlate(leftMatrix,
+                                                 {{ 0, 1, 2, 3, 4, 5, 6, 7, 9, 8, 0,0,0,0,0,0 }},
+                                                 {{ 4, 3, 2, 1, 0 }});
+
+    I2CKeyMatrix rightMatrix(0x21, 0x3e00, 0xc0ff, entropyPool);
+    
+    KeyboardPlate<I2CKeyMatrix, 16, 5> rightPlate(rightMatrix,
+                                                  {{ 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 0,0,0,0, 11, 10 }},
+                                                  {{ 0, 1, 2, 3, 4 }});
     
     CompositeKeyHardware<2> keyboard({ &leftPlate, &rightPlate });
 
