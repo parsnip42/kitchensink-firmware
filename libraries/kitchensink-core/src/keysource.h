@@ -2,7 +2,7 @@
 #define INCLUDED_KEYSOURCE_H
 
 #include "event/eventstage.h"
-#include "eventsource.h"
+#include "event/eventsource.h"
 #include "layerstack.h"
 #include "keylocation.h"
 #include "hardware/keyhardware.h"
@@ -18,12 +18,12 @@ public:
               LayerStack&  layerStack);
 
 public:
+    virtual void pollEvent(EventStage& next) override;
+    virtual bool flushEvents(EventStage& next) override;
+    
+public:
     void setLayer(int layer, bool enabled);
     int topLayer();
-
-    void pollEvent(EventStage& next);
-
-    bool anyPressed();
 
 public:
     bool readKeyLocation(KeyLocation& location);

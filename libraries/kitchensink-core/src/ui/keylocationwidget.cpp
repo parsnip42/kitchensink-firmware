@@ -52,7 +52,7 @@ void KeyLocationWidget::render(const RasterLine& rasterLine,
     auto fg(mFocused ? Colors::kFocused : Colors::kUnfocused);
     auto bg(Colors::kBlack);
 
-    if (mFocused && !mFlash)
+    if (mFocused && mFlash)
     {
         std::swap(fg, bg);
     }

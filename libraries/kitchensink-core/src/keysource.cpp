@@ -69,16 +69,18 @@ void KeySource::pollEvent(EventStage& next)
     }
 }
 
-bool KeySource::anyPressed()
+bool KeySource::flushEvents(EventStage& next)
 {
-    bool pressed(false);
+    bool more(false);
+
+    pollEvent(next);
     
     mKeyHardware.pressed(KeyHardwareEventHandler::create([&](const KeyHardwareEvent&)
     {
-        pressed = true;
+        more = true;
     }));
 
-    return pressed;
+    return more;
 }
 
 bool KeySource::readKeyLocation(KeyLocation& location)

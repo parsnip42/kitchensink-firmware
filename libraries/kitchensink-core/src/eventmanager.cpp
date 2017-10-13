@@ -1,16 +1,16 @@
 #include "eventmanager.h"
 
-#include "eventsource.h"
+#include "event/eventsource.h"
 
 EventManager::EventManager(TimerManager&       nTimer,
-                           EventSource&        nKeySource,
+                           EventSource&        eventSource,
                            LedSource&          ledSource,
                            EventStage&         input,
                            ToplevelEventStage& toplevel,
                            EventStage&         nDefaultOutput)
     : timer(nTimer)
-    , keySource(nKeySource)
     , defaultOutput(nDefaultOutput)
+    , mEventSource(eventSource)
     , mLedSource(ledSource)
     , mInput(input)
     , mToplevel(toplevel)
@@ -27,18 +27,17 @@ void EventManager::poll(EventStage& output)
         
     mBuffer.pollEvent(mInput);
     timer.pollEvent(mInput);
-    keySource.pollEvent(mInput);
+    mEventSource.pollEvent(mInput);
     mLedSource.pollEvent(mInput);
 }
 
 void EventManager::flush(EventStage& output)
 {
-    // ToplevelEventStage::OutputGuard guard(mToplevel, output);
+    ToplevelEventStage::OutputGuard guard(mToplevel, output);
     
-    // while (keySource.anyPressed())
-    // {
-    //     timer.pollEvent(mInput);
-    //     keySource.pollEvent(mInput);
-    //     mLedSource.pollEvent(mInput);
-    // }
+    while (mEventSource.flushEvents(mInput))
+    {
+        timer.pollEvent(mInput);
+        mLedSource.pollEvent(mInput);
+    }
 }

@@ -7,6 +7,7 @@ class EventSource
 {
 public:
     virtual void pollEvent(EventStage& next) = 0;
+    virtual bool flushEvents(EventStage& next) = 0;
 };
 
 #endif
