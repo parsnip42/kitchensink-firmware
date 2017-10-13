@@ -16,10 +16,10 @@ public:
     static void setup();
     
 public:
-    I2CKeyMatrix(const int      addr,
-                 const uint16_t rowMask,
-                 const uint16_t colMask,
-                 EntropyPool&   entropyPool);
+    I2CKeyMatrix(uint8_t      addr,
+                 uint16_t     rowMask,
+                 uint16_t     colMask,
+                 EntropyPool& entropyPool);
 
 public:
     template <std::size_t Columns, std::size_t Rows>
@@ -30,7 +30,7 @@ private:
     uint16_t scan(uint16_t& rowMask);
     
 private:
-    const int      mAddr;
+    const uint8_t  mAddr;
     const uint16_t mRowMask;
     const uint16_t mColMask;
 

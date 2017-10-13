@@ -7,6 +7,7 @@
 #include "i2ckeymatrix.h"
 
 #include "hardware/debounce.h"
+#include "hardware/keyhardware.h"
 #include "keymatrixdispatcher.h"
 
 #include <cstdint>
@@ -14,23 +15,23 @@
 class EntropyPool;
 class KeyHardwareEventHandler;
 
-class KeyboardPlate
+class KeyboardPlate : public KeyHardware
 {
 public:
-    KeyboardPlate(const int                                     matrixAddr,
-                  const uint16_t                                matrixRowMask,
-                  const uint16_t                                matrixColMask,
+    KeyboardPlate(uint8_t                                       matrixAddr,
+                  uint16_t                                      matrixRowMask,
+                  uint16_t                                      matrixColMask,
                   const std::array<uint8_t, KeyMask::kRows>&    rowMapping,
                   const std::array<uint8_t, KeyMask::kColumns>& columnMapping,
                   EntropyPool&                                  entropyPool);
 
 public:
-    void poll(uint32_t                     timeMs,
-              const KeyHardwareEventHandler& eventHandler);
+    virtual void poll(uint32_t                       timeMs,
+                      const KeyHardwareEventHandler& eventHandler) override;
 
-    void pressed(const KeyHardwareEventHandler& eventHandler);
+    virtual void pressed(const KeyHardwareEventHandler& eventHandler) override;
     
-    bool any() const;
+    virtual bool any() const override;
 
 private:
     KeyMask             mState;
@@ -42,34 +43,5 @@ private:
     KeyboardPlate(const KeyboardPlate&) = delete;
     KeyboardPlate& operator=(const KeyboardPlate&) = delete;
 };
-
-
-inline
-void KeyboardPlate::poll(uint32_t                       timeMs,
-                         const KeyHardwareEventHandler& eventHandler)
-{
-    mMatrix.scan(mState);
-    
-    if (mDebounce.process(timeMs, mState))
-    {
-        mDispatcher.dispatch(mDebounce.state(),
-                             mDebounce.delta(),
-                             eventHandler);
-    }
-}
-
-inline
-void KeyboardPlate::pressed(const KeyHardwareEventHandler& eventHandler)
-{
-    mDispatcher.dispatch(KeyMask(),
-                         mDebounce.state(),
-                         eventHandler);
-}
-
-inline
-bool KeyboardPlate::any() const
-{
-    return !mDebounce.state().empty() || !mDebounce.delta().empty();
-}
 
 #endif

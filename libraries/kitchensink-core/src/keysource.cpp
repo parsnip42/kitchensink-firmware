@@ -1,10 +1,11 @@
 #include "keysource.h"
 
 #include "event/keyevent.h"
-#include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keylocation.h"
 #include "hardware/ctrlutil.h"
+#include "hardware/keyhardwareevent.h"
+#include "hardware/keyhardwareeventhandler.h"
 
 KeySource::KeySource(KeyHardware& keyHardware,
                      LayerStack&  layerStack)

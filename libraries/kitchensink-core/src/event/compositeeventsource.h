@@ -11,17 +11,17 @@ template <std::size_t Size>
 class CompositeEventSource : public EventSource
 {
 public:
-    typedef std::array<EventSource*, Size> EventSources;
+    typedef std::array<EventSource*, Size> Entries;
     
 public:
-    explicit CompositeEventSource(const EventSources& sources);
+    explicit CompositeEventSource(const Entries& entries);
 
 public:
     virtual void pollEvent(EventStage& next) override;
     virtual bool flushEvents(EventStage& next) override;
     
 private:
-    EventSources mSources;
+    Entries mEntries;
 
 private:
     CompositeEventSource(const CompositeEventSource&) = delete;
@@ -31,17 +31,17 @@ private:
 
 template <std::size_t Size>
 inline
-CompositeEventSource<Size>::CompositeEventSource(const EventSources& sources)
-    : mSources(sources)
+CompositeEventSource<Size>::CompositeEventSource(const Entries& entries)
+    : mEntries(entries)
 { }
 
 template <std::size_t Size>
 inline
 void CompositeEventSource<Size>::pollEvent(EventStage& next)
 {
-    for (auto source : mSources)
+    for (auto entry : mEntries)
     {
-        source->pollEvent(next);
+        entry->pollEvent(next);
     }
 }
 
@@ -51,9 +51,9 @@ bool CompositeEventSource<Size>::flushEvents(EventStage& next)
 {
     bool more(false);
         
-    for (auto source : mSources)
+    for (auto entry : mEntries)
     {
-        more |= source->flushEvents(next);
+        more |= entry->flushEvents(next);
     }
 
     return more;

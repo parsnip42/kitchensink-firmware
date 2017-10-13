@@ -11,10 +11,10 @@ void I2CKeyMatrix::setup()
     Wire.setClock(1000000L);
 }
 
-I2CKeyMatrix::I2CKeyMatrix(const int      addr,
-                           const uint16_t rowMask,
-                           const uint16_t colMask,
-                           EntropyPool&   entropyPool)
+I2CKeyMatrix::I2CKeyMatrix(uint8_t      addr,
+                           uint16_t     rowMask,
+                           uint16_t     colMask,
+                           EntropyPool& entropyPool)
     : mAddr(addr)
     , mRowMask(rowMask)
     , mColMask(colMask)
