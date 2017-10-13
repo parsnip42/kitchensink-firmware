@@ -1,9 +1,4 @@
-#ifdef TEENSYDUINO
-
-
-
-
-#include "hardware/teensyusbkeyboard.h"
+#include "teensyusbkeyboard.h"
 
 #include "event/keyevent.h"
 #include "data/keycodeutil.h"
@@ -107,6 +102,3 @@ void TeensyUsbKeyboard::releaseKey(KeyCode key)
         mKeyMask[keyCode >> 3] &= ~(1 << (keyCode & 0x7));
     }
 }
-
-
-#endif

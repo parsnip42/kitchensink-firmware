@@ -1,5 +1,5 @@
-#ifndef INCLUDED_LEDSOURCE_H
-#define INCLUDED_LEDSOURCE_H
+#ifndef INCLUDED_TEENSYLEDSOURCE_H
+#define INCLUDED_TEENSYLEDSOURCE_H
 
 #include "event/eventsource.h"
 
@@ -7,10 +7,10 @@
 
 class EventStage;
 
-class LedSource : public EventSource
+class TeensyLedSource : public EventSource
 {
 public:
-    LedSource();
+    TeensyLedSource();
     
 public:
     virtual void pollEvent(EventStage& next) override;

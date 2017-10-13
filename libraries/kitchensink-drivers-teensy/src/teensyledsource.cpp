@@ -1,26 +1,15 @@
-#include "ledsource.h"
+#include "teensyledsource.h"
 
 #include "event/ledmaskevent.h"
 #include "event/eventstage.h"
 
-#ifdef TEENSYDUINO
 #include <usb_keyboard.h>
-#else
 
-// Nop for now.
-namespace
-{
-const uint8_t keyboard_leds = 0;
-}
-
-#endif
-
-
-LedSource::LedSource()
+TeensyLedSource::TeensyLedSource()
     : mMaskValue(0)
 { }
 
-void LedSource::pollEvent(EventStage& next)
+void TeensyLedSource::pollEvent(EventStage& next)
 {
     if (keyboard_leds != mMaskValue)
     {

@@ -5,18 +5,19 @@
 #include "keyboardstate.h"
 #include "keysource.h"
 #include "hardware/i2ckeymatrix.h"
-#include "hardware/teensyusbkeyboard.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
 #include "layerprocessor.h"
-#include "ledsource.h"
 #include "keyboardstateutil.h"
 #include "ui/screenmanager.h"
 #include "eventmanager.h"
 #include "topleveleventstage.h"
 #include "crypto/entropypool.h"
 #include "event/compositeeventsource.h"
+
+#include <teensyusbkeyboard.h>
+#include <teensyledsource.h>
 
 void setup()
 {
@@ -67,7 +68,7 @@ void loop()
 
     layerProcessor.keySource = &keySource;
 
-    LedSource ledSource;
+    TeensyLedSource ledSource;
 
     CompositeEventSource<3> eventSource({ &keySource, &ledSource, &timerManager });
     

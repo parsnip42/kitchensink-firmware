@@ -1,7 +1,3 @@
-#ifdef TEENSYDUINO
-
-
-
 #ifndef INCLUDED_TEENSYUSBKEYBOARD_H
 #define INCLUDED_TEENSYUSBKEYBOARD_H
 
@@ -33,8 +29,5 @@ private:
     TeensyUsbKeyboard(const TeensyUsbKeyboard&) = delete;
     TeensyUsbKeyboard& operator=(const TeensyUsbKeyboard&) = delete;
 };
-
-#endif
-    
 
 #endif
