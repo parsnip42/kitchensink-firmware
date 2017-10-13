@@ -1,6 +1,6 @@
-#include "hardware/i2ckeymatrix.h"
+#include "i2ckeymatrix.h"
 
-#include "hardware/mcp23017.h"
+#include "mcp23017.h"
 #include "crypto/entropypool.h"
 
 #include <Wire.h>

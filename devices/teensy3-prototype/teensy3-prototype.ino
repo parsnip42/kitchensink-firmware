@@ -1,10 +1,8 @@
 #include "actionprocessor.h"
 #include "defaultprofile.h"
-#include "hardware/dmoled32display.h"
 #include "kskeyboard.h"
 #include "keyboardstate.h"
 #include "keysource.h"
-#include "hardware/i2ckeymatrix.h"
 #include "smartkeyprocessor.h"
 #include "macroprocessor.h"
 #include "multikeyprocessor.h"
@@ -18,6 +16,8 @@
 
 #include <teensyusbkeyboard.h>
 #include <teensyledsource.h>
+#include <dmoled32display.h>
+#include <i2ckeymatrix.h>
 
 void setup()
 {

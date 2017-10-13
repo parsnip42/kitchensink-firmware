@@ -1,4 +1,4 @@
-#include "hardware/dmoled32display.h"
+#include "dmoled32display.h"
 
 #ifdef TEENSYDUINO
 #include <core_pins.h>
@@ -11,6 +11,7 @@
 namespace
 {
 
+// TODO: Put all these in the constructor
 const int ledPin = 13;
 const int db[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 const size_t db_count = sizeof(db)/sizeof(*db);

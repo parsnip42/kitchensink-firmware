@@ -2,7 +2,10 @@
 #define INCLUDED_KEYBOARDPLATE_H
 
 #include "hardware/keymask.h"
-#include "hardware/i2ckeymatrix.h"
+
+// FIXME: Eventually refactor this thing elsewhere.
+#include "i2ckeymatrix.h"
+
 #include "hardware/debounce.h"
 #include "keymatrixdispatcher.h"
 
