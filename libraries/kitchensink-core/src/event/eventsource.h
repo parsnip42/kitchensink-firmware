@@ -7,7 +7,14 @@ class EventSource
 {
 public:
     virtual void pollEvent(EventStage& next) = 0;
-    virtual bool flushEvents(EventStage& next) = 0;
+    virtual bool flushEvents(EventStage&);
 };
+
+
+inline
+bool EventSource::flushEvents(EventStage&)
+{
+    return false;
+}
 
 #endif

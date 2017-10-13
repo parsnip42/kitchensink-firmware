@@ -2,6 +2,7 @@
 #define INCLUDED_TIMERMANAGER_H
 
 #include "event/event.h"
+#include "event/eventsource.h"
 #include "event/tickevent.h"
 #include "event/eventstage.h"
 #include "types/orderedcircularbuffer.h"
@@ -10,7 +11,7 @@
 
 #include <cstdint>
 
-class TimerManager
+class TimerManager : public EventSource
 {
 private:
     class Entry
@@ -36,8 +37,8 @@ public:
     TimerManager() = default;
     
 public:
-    void pollEvent(EventStage& next);
-
+    virtual void pollEvent(EventStage& next) override;
+    
     Timer createTimer();
     
     void releaseTimer(Timer& timer);

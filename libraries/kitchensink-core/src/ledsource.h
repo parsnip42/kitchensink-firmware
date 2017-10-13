@@ -14,7 +14,6 @@ public:
     
 public:
     virtual void pollEvent(EventStage& next) override;
-    virtual bool flushEvents(EventStage&) override;
 
 private:
     uint8_t mMaskValue;

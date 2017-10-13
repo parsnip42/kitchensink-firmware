@@ -9,18 +9,20 @@
 #include "types/circularbuffer.h"
 
 class Display;
-class EventManager;
-class KeyboardState;
-class StrOStream;
-class ScreenEvent;
-class KeyHardware;
 class EntropyPool;
+class EventManager;
+class KeyHardware;
+class KeyboardState;
+class ScreenEvent;
+class StrOStream;
+class TimerManager;
 
 class ScreenManager
 {    
 public:
     ScreenManager(Display&       display,
                   EventManager&  eventManager,
+                  TimerManager&  timerManager,
                   KeyboardState& keyboardState,
                   KeyHardware&   keyHardware,
                   EntropyPool&   entropyPool);
@@ -66,6 +68,7 @@ private:
 private:
     Surface         mSurface;
     EventManager&   mEventManager;
+    TimerManager&   mTimerManager;
     KeyboardState&  mKeyboardState;
     KeyHardware&    mKeyHardware;
     EntropyPool&    mEntropyPool;

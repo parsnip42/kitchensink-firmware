@@ -4,7 +4,6 @@
 #include "event/eventbuffer.h"
 #include "event/eventstage.h"
 #include "event/event.h"
-#include "timer/timermanager.h"
 #include "topleveleventstage.h"
 
 #include <cstdint>
@@ -14,8 +13,7 @@ class EventSource;
 class EventManager : public EventStage
 {
 public:
-    EventManager(TimerManager&       nTimerManager,
-                 EventSource&        nEventSource,
+    EventManager(EventSource&        nEventSource,
                  EventStage&         input,
                  ToplevelEventStage& toplevel,
                  EventStage&         nDefaultOutput);
@@ -27,8 +25,7 @@ public:
     void flush(EventStage& output);
     
 public:
-    TimerManager& timerManager;
-    EventStage&   defaultOutput;
+    EventStage& defaultOutput;
     
 private:
     EventSource&        mEventSource;

@@ -8,13 +8,15 @@
 
 class KeyboardState;
 class EventManager;
+class TimerManager;
 class Widget;
 
 class StatusScreen : public Screen
 {
 public:
     explicit StatusScreen(KeyboardState& keyboardState,
-                          EventManager&  eventManager);
+                          EventManager&  eventManager,
+                          TimerManager&  timerManager);
 
 public:
     virtual bool processEvent(const Event& event) override;
@@ -24,6 +26,7 @@ public:
 private:
     KeyboardState&         mKeyboardState;
     EventManager&          mEventManager;
+    TimerManager&          mTimerManager;
     PropertyWidget         mMemoryUsage;
     PropertyWidget         mConfigSize;
     PropertyWidget         mScanRate;

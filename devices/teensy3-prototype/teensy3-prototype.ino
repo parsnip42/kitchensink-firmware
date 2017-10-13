@@ -69,16 +69,16 @@ void loop()
 
     LedSource ledSource;
 
-    CompositeEventSource<2> eventSource({ &keySource, &ledSource });
+    CompositeEventSource<3> eventSource({ &keySource, &ledSource, &timerManager });
     
-    EventManager eventManager(timerManager,
-                              eventSource,
+    EventManager eventManager(eventSource,
                               multiKeyProcessor,
                               toplevel,
                               usbKeyboard);
     
     ScreenManager screenManager(display,
                                 eventManager,
+                                timerManager,
                                 keyboardState,
                                 keyboard,
                                 entropyPool);
