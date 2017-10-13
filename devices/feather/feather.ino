@@ -19,6 +19,7 @@
 #include "hardware/keyboardplate.h"
 
 #include <bluefruitkeyboard.h>
+#include "hardware/arduinousbkeyboard.h"
 #include <gpiokeyset.h>
 
 void setup()
@@ -27,7 +28,7 @@ void setup()
 
 void loop()
 {
-    BluefruitKeyboard usbKeyboard;
+    ArduinoUsbKeyboard usbKeyboard;
 
     EntropyPool entropyPool;
 
@@ -82,7 +83,9 @@ void loop()
 
 //    eventManager.processEvent(ScreenEvent::create(ScreenEvent::Type::kMenu, 0));
     // eventManager.processEvent(ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kEventStream));
-                              
+    
+    eventManager.processEvent(ScreenEvent::create(ScreenEvent::Type::kMenu, MenuDefinitions::kKeys));
+
     ScreenManager screenManager(display,
                                 eventManager,
                                 timerManager,

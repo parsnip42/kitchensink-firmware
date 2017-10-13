@@ -18,13 +18,12 @@ MutableDataRef AFILI9431Display::rasterLine()
 
 void AFILI9431Display::rasterize(int row)
 {
-    int x(0);
-    
     mDisplay.startWrite();
-    
+    mDisplay.setAddrWindow(0, row, kWidth, 1);
+
     for (auto pixel : mRasterBuf)
     {
-        mDisplay.writePixel(x++, row + 1, pixel ? ILI9341_WHITE : ILI9341_BLACK);
+        mDisplay.writePixel(pixel ? ILI9341_WHITE : ILI9341_BLACK);
     }
 
     mDisplay.endWrite();
