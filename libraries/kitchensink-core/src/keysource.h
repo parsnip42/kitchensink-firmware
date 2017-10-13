@@ -4,17 +4,17 @@
 #include "event/eventstage.h"
 #include "layerstack.h"
 #include "keylocation.h"
+#include "hardware/keyhardware.h"
 
 #include <cstdint>
 
-class KsKeyboard;
 class KeyLocation;
 
 class KeySource
 {
 public:
-    KeySource(KsKeyboard& keyboard,
-              LayerStack& layerStack);
+    KeySource(KeyHardware& keyHardware,
+              LayerStack&  layerStack);
 
 public:
     void setLayer(int layer, bool enabled);
@@ -33,7 +33,7 @@ private:
                             EventStage&             next);
 
 private:
-    KsKeyboard&      mKeyboard;
+    KeyHardware&     mKeyHardware;
     LayerStack&      mLayerStack;
     LayerStack::Mask mLayerMask;
     

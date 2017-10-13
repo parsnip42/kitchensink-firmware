@@ -7,52 +7,54 @@
 #include <cstddef>
 #include <cstdint>
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 class Bitmask2d
 {
 public:
-    static constexpr std::size_t kRows    = Height;
-    static constexpr std::size_t kColumns = Width;
+    static constexpr std::size_t kColumns = Columns;
+    static constexpr std::size_t kRows    = Rows;
 
 public:
-    typedef Bitmask<Width> Row;
+    typedef Bitmask<Columns> Row;
     
+private:
+    typedef std::array<Row, Rows> RowData;
+    
+public:
+    typedef typename RowData::const_iterator const_iterator;
+    typedef typename RowData::iterator       iterator;
+
 public:
     constexpr Bitmask2d() = default;
 
 public:
     bool empty() const;
     void clear();
+
+public:
+    const_iterator begin() const;
+    const_iterator end() const;
+    iterator begin();
+    iterator end();
     
 public:
     const Row& operator[](const std::size_t n) const;
     Row& operator[](const std::size_t n);
 
-    void operator|=(const Bitmask2d<Width, Height>& rhs);
-    void operator&=(const Bitmask2d<Width, Height>& rhs);
-    void operator^=(const Bitmask2d<Width, Height>& rhs);
+    void operator|=(const Bitmask2d<Columns, Rows>& rhs);
+    void operator&=(const Bitmask2d<Columns, Rows>& rhs);
+    void operator^=(const Bitmask2d<Columns, Rows>& rhs);
 
 private:
-    typedef std::array<Row, Height> Rows;
-
-    Rows mRows;
-
-public:
-    typedef typename Rows::const_iterator const_iterator;
-    typedef typename Rows::iterator       iterator;
-
-    const_iterator begin() const;
-    const_iterator end() const;
-    iterator begin();
-    iterator end();
+    RowData mRowData;
 };
 
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-bool Bitmask2d<Width, Height>::empty() const
+bool Bitmask2d<Columns, Rows>::empty() const
 {
-    for (const auto& row : mRows)
+    for (const auto& row : mRowData)
     {
         if (!row.empty())
         {
@@ -63,86 +65,86 @@ bool Bitmask2d<Width, Height>::empty() const
     return true;
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-void Bitmask2d<Width, Height>::clear()
+void Bitmask2d<Columns, Rows>::clear()
 {
-    for (auto& row : mRows)
+    for (auto& row : mRowData)
     {
         row.clear();
     }
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-const typename Bitmask2d<Width, Height>::Row& Bitmask2d<Width, Height>::operator[](const std::size_t n) const
+const typename Bitmask2d<Columns, Rows>::Row& Bitmask2d<Columns, Rows>::operator[](const std::size_t n) const
 {
-    return mRows[n];
+    return mRowData[n];
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-typename Bitmask2d<Width, Height>::Row& Bitmask2d<Width, Height>::operator[](const std::size_t n)
+typename Bitmask2d<Columns, Rows>::Row& Bitmask2d<Columns, Rows>::operator[](const std::size_t n)
 {
-    return mRows[n];
+    return mRowData[n];
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-void Bitmask2d<Width, Height>::operator|=(const Bitmask2d<Width, Height>& rhs)
+void Bitmask2d<Columns, Rows>::operator|=(const Bitmask2d<Columns, Rows>& rhs)
 {
-    for (size_t i(0); i < Height; ++i)
+    for (size_t i(0); i < Rows; ++i)
     {
-        mRows[i] |= rhs.mRows[i];
+        mRowData[i] |= rhs.mRowData[i];
     }
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-void Bitmask2d<Width, Height>::operator&=(const Bitmask2d<Width, Height>& rhs)
+void Bitmask2d<Columns, Rows>::operator&=(const Bitmask2d<Columns, Rows>& rhs)
 {
-    for (size_t i(0); i < Height; ++i)
+    for (size_t i(0); i < Rows; ++i)
     {
-        mRows[i] &= rhs.mRows[i];
+        mRowData[i] &= rhs.mRowData[i];
     }
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-void Bitmask2d<Width, Height>::operator^=(const Bitmask2d<Width, Height>& rhs)
+void Bitmask2d<Columns, Rows>::operator^=(const Bitmask2d<Columns, Rows>& rhs)
 {
-    for (size_t i(0); i < Height; ++i)
+    for (size_t i(0); i < Rows; ++i)
     {
-        mRows[i] ^= rhs.mRows[i];
+        mRowData[i] ^= rhs.mRowData[i];
     }
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-typename Bitmask2d<Width, Height>::const_iterator Bitmask2d<Width, Height>::begin() const
+typename Bitmask2d<Columns, Rows>::const_iterator Bitmask2d<Columns, Rows>::begin() const
 {
-    return mRows.begin();
+    return mRowData.begin();
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-typename Bitmask2d<Width, Height>::const_iterator Bitmask2d<Width, Height>::end() const
+typename Bitmask2d<Columns, Rows>::const_iterator Bitmask2d<Columns, Rows>::end() const
 {
-    return mRows.end();
+    return mRowData.end();
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-typename Bitmask2d<Width, Height>::iterator Bitmask2d<Width, Height>::begin()
+typename Bitmask2d<Columns, Rows>::iterator Bitmask2d<Columns, Rows>::begin()
 {
-    return mRows.begin();
+    return mRowData.begin();
 }
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-typename Bitmask2d<Width, Height>::iterator Bitmask2d<Width, Height>::end()
+typename Bitmask2d<Columns, Rows>::iterator Bitmask2d<Columns, Rows>::end()
 {
-    return mRows.end();
+    return mRowData.end();
 }
 
 #endif

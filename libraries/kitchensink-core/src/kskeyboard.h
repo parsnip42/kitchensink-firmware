@@ -5,23 +5,24 @@
 #include "keymatrixeventhandler.h"
 #include "keyboardplate.h"
 #include "layerstack.h"
+#include "hardware/keyhardware.h"
 
 #include <cstdint>
 
 class EntropyPool;
 
-class KsKeyboard
+class KsKeyboard : public KeyHardware
 {
 public:
     explicit KsKeyboard(EntropyPool& entropyPool);
 
 public:
-    void poll(uint32_t                     timeMs,
-              const KeyMatrixEventHandler& callback); 
+    virtual void poll(uint32_t                     timeMs,
+                      const KeyMatrixEventHandler& callback) override;
 
-    void pressed(const KeyMatrixEventHandler& callback);
+    virtual void pressed(const KeyMatrixEventHandler& callback) override;
     
-    bool any() const;
+    virtual bool any() const override;
     
 private:
     KeyboardPlate mLeft;

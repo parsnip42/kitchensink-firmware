@@ -22,8 +22,8 @@ public:
                  EntropyPool&   entropyPool);
 
 public:
-    template <std::size_t Width, std::size_t Height>
-    void scan(Bitmask2d<Width, Height>& keyMask);
+    template <std::size_t Columns, std::size_t Rows>
+    void scan(Bitmask2d<Columns, Rows>& keyMask);
 
 private:
     void init();
@@ -43,14 +43,14 @@ private:
 };
 
 
-template <std::size_t Width, std::size_t Height>
+template <std::size_t Columns, std::size_t Rows>
 inline
-void I2CKeyMatrix::scan(Bitmask2d<Width, Height>& keyMask)
+void I2CKeyMatrix::scan(Bitmask2d<Columns, Rows>& keyMask)
 {
     std::size_t index(0);
     uint16_t rowMask(mRowMask);
 
-    while (index < Height && rowMask)
+    while (index < Rows && rowMask)
     {
         auto row(scan(rowMask));
 
