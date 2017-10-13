@@ -29,3 +29,8 @@ void LedSource::pollEvent(EventStage& next)
         next.processEvent(LedMaskEvent::create(mMaskValue));
     }
 }
+
+bool LedSource::flushEvents(EventStage&)
+{
+    return false;
+}

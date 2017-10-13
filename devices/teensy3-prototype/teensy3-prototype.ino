@@ -16,6 +16,7 @@
 #include "eventmanager.h"
 #include "topleveleventstage.h"
 #include "crypto/entropypool.h"
+#include "event/compositeeventsource.h"
 
 void setup()
 {
@@ -67,10 +68,11 @@ void loop()
     layerProcessor.keySource = &keySource;
 
     LedSource ledSource;
+
+    CompositeEventSource<2> eventSource({ &keySource, &ledSource });
     
     EventManager eventManager(timerManager,
-                              keySource,
-                              ledSource,
+                              eventSource,
                               multiKeyProcessor,
                               toplevel,
                               usbKeyboard);

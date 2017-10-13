@@ -72,7 +72,7 @@ void StatusScreen::screenInit()
     {
         StrOutStream os(mAllocatedTimers.value);
 
-        os.appendInt(mEventManager.timer.allocatedTimers());
+        os.appendInt(mEventManager.timerManager.allocatedTimers());
         os.appendStr(" / ");
         os.appendInt(Config::kTimerCount);
         
@@ -82,7 +82,7 @@ void StatusScreen::screenInit()
     {
         StrOutStream os(mActiveTimers.value);
 
-        os.appendInt(mEventManager.timer.activeTimers());
+        os.appendInt(mEventManager.timerManager.activeTimers());
         os.appendStr(" / ");
         os.appendInt(Config::kTimerCount);
         

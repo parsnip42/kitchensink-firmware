@@ -2,16 +2,14 @@
 
 #include "event/eventsource.h"
 
-EventManager::EventManager(TimerManager&       nTimer,
+EventManager::EventManager(TimerManager&       nTimerManager,
                            EventSource&        eventSource,
-                           LedSource&          ledSource,
                            EventStage&         input,
                            ToplevelEventStage& toplevel,
                            EventStage&         nDefaultOutput)
-    : timer(nTimer)
+    : timerManager(nTimerManager)
     , defaultOutput(nDefaultOutput)
     , mEventSource(eventSource)
-    , mLedSource(ledSource)
     , mInput(input)
     , mToplevel(toplevel)
 { }
@@ -26,9 +24,8 @@ void EventManager::poll(EventStage& output)
     ToplevelEventStage::OutputGuard guard(mToplevel, output);
         
     mBuffer.pollEvent(mInput);
-    timer.pollEvent(mInput);
+    timerManager.pollEvent(mInput);
     mEventSource.pollEvent(mInput);
-    mLedSource.pollEvent(mInput);
 }
 
 void EventManager::flush(EventStage& output)
@@ -37,7 +34,6 @@ void EventManager::flush(EventStage& output)
     
     while (mEventSource.flushEvents(mInput))
     {
-        timer.pollEvent(mInput);
-        mLedSource.pollEvent(mInput);
+        timerManager.pollEvent(mInput);
     }
 }

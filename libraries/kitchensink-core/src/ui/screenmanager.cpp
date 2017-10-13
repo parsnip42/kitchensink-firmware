@@ -182,7 +182,7 @@ void ScreenManager::launchHome()
 {
     HomeScreen screen(mKeyboardState.globalConfig,
                       mKeyboardState.smartKeySet,
-                      mEventManager.timer,
+                      mEventManager.timerManager,
                       mEventManager.defaultOutput);
     
     OutputSink output(*this, screen);
@@ -228,7 +228,7 @@ void ScreenManager::launchScreen(int                screenId,
     {
         GlobalConfigScreen screen(mKeyboardState.smartKeySet,
                                   mKeyboardState.globalConfig,
-                                  mEventManager.timer,
+                                  mEventManager.timerManager,
                                   mEventManager);
 
         displayScreen("Global Settings",
@@ -252,7 +252,7 @@ void ScreenManager::launchScreen(int                screenId,
     
     case ScreenEvent::kCryptography:
     {
-        CryptoScreen screen(mEventManager.timer,
+        CryptoScreen screen(mEventManager.timerManager,
                             mEntropyPool);
 
         displayScreen("Cryptography",
@@ -274,7 +274,7 @@ void ScreenManager::launchScreen(int                screenId,
     case ScreenEvent::kMacroUnlock:
     {
         UnlockScreen screen(mKeyboardState.secureMacroSet,
-                            mEventManager.timer,
+                            mEventManager.timerManager,
                             mEventManager);
 
         displayScreen("Unlock Secure Macros",
@@ -299,7 +299,7 @@ void ScreenManager::launchScreen(int                screenId,
     case ScreenEvent::kInitSecureMacros:
     {
         InitSecureMacroScreen screen(mKeyboardState.secureMacroSet,
-                                     mEventManager.timer,
+                                     mEventManager.timerManager,
                                      mEventManager);
         
         displayScreen("Setup Secure Macros",
@@ -318,7 +318,7 @@ void ScreenManager::launchEditMacro(Macro&             macro,
                                     Event              recordEvent,
                                     const ScreenEvent& sourceEvent)
 {
-    EditMacroScreen screen(mEventManager.timer,
+    EditMacroScreen screen(mEventManager.timerManager,
                            macro,
                            recordEvent,
                            mEventManager);
@@ -333,7 +333,7 @@ void ScreenManager::launchRecordMacro(Macro&             macro,
 {
     // FIXME: Cleanup special case.
     
-    RecordMacroScreen screen(mEventManager.timer,
+    RecordMacroScreen screen(mEventManager.timerManager,
                              macro,
                              mEventManager.defaultOutput);
     
@@ -368,7 +368,7 @@ void ScreenManager::launchRecordMacro(Macro&             macro,
 void ScreenManager::launchEditLayer(int                layerId,
                                     const ScreenEvent& sourceEvent)
 {
-    LayerConfigScreen screen(mEventManager.timer,
+    LayerConfigScreen screen(mEventManager.timerManager,
                              mKeyHardware,
                              mKeyboardState.layerStack[layerId]);
     
@@ -382,7 +382,7 @@ void ScreenManager::launchEditLayer(int                layerId,
 void ScreenManager::launchEditMultiKey(int                multiKeyId,
                                        const ScreenEvent& sourceEvent)
 {
-    MultiConfigScreen screen(mEventManager.timer,
+    MultiConfigScreen screen(mEventManager.timerManager,
                              mKeyboardState.multiKeySet[multiKeyId],
                              mEventManager);
 
@@ -396,7 +396,7 @@ void ScreenManager::launchEditMultiKey(int                multiKeyId,
 void ScreenManager::launchEditSmartKey(int                smartKeyId,
                                        const ScreenEvent& sourceEvent)
 {
-    SmartConfigScreen screen(mEventManager.timer,
+    SmartConfigScreen screen(mEventManager.timerManager,
                              mKeyboardState.smartKeySet[smartKeyId],
                              mEventManager);
 
@@ -411,7 +411,7 @@ void ScreenManager::displayScreen(const StrRef&      title,
                                   Screen&            screen,
                                   const ScreenEvent& sourceEvent)
 {
-    AutoRepeat autoRepeat(mEventManager.timer,
+    AutoRepeat autoRepeat(mEventManager.timerManager,
                           mKeyboardState.globalConfig,
                           screen);
     

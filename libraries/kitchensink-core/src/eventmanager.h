@@ -4,7 +4,6 @@
 #include "event/eventbuffer.h"
 #include "event/eventstage.h"
 #include "event/event.h"
-#include "ledsource.h"
 #include "timer/timermanager.h"
 #include "topleveleventstage.h"
 
@@ -15,9 +14,8 @@ class EventSource;
 class EventManager : public EventStage
 {
 public:
-    EventManager(TimerManager&       nTimer,
+    EventManager(TimerManager&       nTimerManager,
                  EventSource&        nEventSource,
-                 LedSource&          ledSource,
                  EventStage&         input,
                  ToplevelEventStage& toplevel,
                  EventStage&         nDefaultOutput);
@@ -29,13 +27,12 @@ public:
     void flush(EventStage& output);
     
 public:
-    TimerManager& timer;
+    TimerManager& timerManager;
     EventStage&   defaultOutput;
     
 private:
     EventSource&        mEventSource;
     EventBuffer         mBuffer;
-    LedSource&          mLedSource;
     EventStage&         mInput;
     ToplevelEventStage& mToplevel;
 
