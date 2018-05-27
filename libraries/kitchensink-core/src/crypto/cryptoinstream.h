@@ -40,8 +40,11 @@ private:
 private:
     InStream&                 mInStream;
     StrRef                    mPassword;
-    std::array<uint8_t, 4096> mContent;
-    std::array<uint8_t, 4096> mData;
+
+    // FIXME
+    std::array<uint8_t, 8192> mContent;
+    std::array<uint8_t, 8192> mData;
+    
     DataRefInStream           mDataStream;
     Error                     mError;
 };

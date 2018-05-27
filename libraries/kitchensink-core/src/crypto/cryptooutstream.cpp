@@ -73,8 +73,9 @@ CryptoOutStream::~CryptoOutStream()
     auto blockCount((mDataOut.position() + Crypto::kAesBlockSize - 1) / Crypto::kAesBlockSize);
     auto blockOffset(mDataOut.position() % Crypto::kAesBlockSize);
     auto cryptSize(blockCount * Crypto::kAesBlockSize);
-    
-    std::array<uint8_t, 4096> cryptData;
+
+    // FIXME
+    std::array<uint8_t, 8192> cryptData;
     
     CryptoUtil::encrypt(dataKey,
                         dataIv,
