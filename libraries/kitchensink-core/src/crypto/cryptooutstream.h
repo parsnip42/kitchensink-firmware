@@ -26,7 +26,7 @@ private:
     OutStream&                mOutStream;
     StrRef                    mPassword;
     EntropyPool&              mEntropyPool;
-    std::array<uint8_t, 4096> mData;
+    std::array<uint8_t, 8192> mData;
     ArrayOutStream            mDataOut;
         
 private:
