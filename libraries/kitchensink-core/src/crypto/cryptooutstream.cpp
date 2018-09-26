@@ -129,7 +129,10 @@ void CryptoOutStream::flush()
     }
     
     mOutStream.write(uint8_t(blockOffset));
-    mOutStream.write(mHMAC.finish());
+
+    auto hmac(mHMAC.finish());
+    
+    mOutStream.write(hmac);
 }
 
 

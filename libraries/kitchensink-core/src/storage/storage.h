@@ -45,7 +45,7 @@ public:
         virtual ~OStream();
         
     public:
-        virtual void write(const DataRef& data) override;
+        virtual std::size_t write(const DataRef& data) override;
         void write(char c);
 
     private:

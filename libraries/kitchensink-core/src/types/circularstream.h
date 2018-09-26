@@ -6,7 +6,7 @@
 #include "types/outstream.h"
 
 template <std::size_t Capacity>
-class CircularStream
+class CircularStream : public InStream, public OutStream
 {
 public:
     typedef std::array<uint8_t, Capacity> Data;
@@ -19,6 +19,7 @@ public:
     virtual std::size_t write(const DataRef& data);
 
     constexpr std::size_t size() const;
+    constexpr std::size_t remaining() const;
     constexpr bool empty() const;
     
 private:
@@ -91,4 +92,10 @@ constexpr bool CircularStream<Capacity>::empty() const
     return !mFull && (mStart == mEnd);   
 }
 
+template <std::size_t Capacity>
+inline
+constexpr std::size_t CircularStream<Capacity>::remaining() const
+{
+    return Capacity - size();
+}
 #endif

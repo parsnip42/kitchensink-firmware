@@ -53,8 +53,6 @@ void sanityCheck(const DataRef& testData,
     
     CryptoInStream cryptIn(encryptedIn, password);
     
-    ASSERT_EQ(cryptIn.error(), CryptoInStream::Error::kNone);
-    
     std::array<uint8_t, 1024 * 1024> decryptedData;
     ArrayOutStream decryptedOut(decryptedData);
 
@@ -74,6 +72,8 @@ void sanityCheck(const DataRef& testData,
 
     ASSERT_EQ(testData.size(), size);
     ASSERT_EQ(decryptedOut.data(), testData);
+
+    ASSERT_EQ(cryptIn.error(), CryptoInStream::Error::kNone);
 }
 
 }

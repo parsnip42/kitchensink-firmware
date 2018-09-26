@@ -109,9 +109,11 @@ Storage::OStream::~OStream()
     mFileHandle.close();
 }
         
-void Storage::OStream::write(const DataRef& data)
+std::size_t Storage::OStream::write(const DataRef& data)
 {
-    mFileHandle.write(data.begin(), data.size());   
+    mFileHandle.write(data.begin(), data.size());
+
+    return data.size();
 }
 
 void Storage::OStream::write(char c)

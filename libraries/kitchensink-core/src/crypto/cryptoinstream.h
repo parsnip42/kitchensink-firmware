@@ -2,7 +2,9 @@
 #define INCLUDED_CRYPTOINSTREAM_H
 
 #include "crypto/cryptotypes.h"
+#include "crypto/cryptoutil.h"
 #include "types/datarefinstream.h"
+#include "types/circularstream.h"
 #include "types/instream.h"
 #include "types/strbuf.h"
 #include "types/strref.h"
@@ -39,17 +41,13 @@ private:
     void readHeader();
     
 private:
-    InStream&                 mInStream;
-    StrRef                    mPassword;
-    Crypto::Key               mDataKey;
-    Crypto::IV                mDataIv;
-
-    // FIXME
-    std::size_t               mPosition;
-    std::array<uint8_t, 8192> mContent;
-    std::size_t               mCipherTextLen;
-
-    Error                     mError;
+    InStream&                                  mInStream;
+    StrRef                                     mPassword;
+    Crypto::Key                                mDataKey;
+    Crypto::IV                                 mDataIv;
+    CryptoUtil::HMACContext                    mHMAC;
+    CircularStream<Crypto::kAesBlockSize * 16> mStream;
+    Error                                      mError;
 };
 
 
@@ -60,3 +58,6 @@ CryptoInStream::Error CryptoInStream::error() const
 }
 
 #endif
+
+
+
