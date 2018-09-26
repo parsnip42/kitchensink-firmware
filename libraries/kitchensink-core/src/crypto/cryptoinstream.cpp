@@ -9,7 +9,7 @@ CryptoInStream::CryptoInStream(InStream&     inStream,
                                const StrRef& password)
     : mInStream(inStream)
     , mPassword(password)
-    , mDataStream(DataRef())
+    , mPosition(0)
     , mError(Error::kUninitialized)
 {
     readHeader();
@@ -22,7 +22,26 @@ std::size_t CryptoInStream::read(OutStream& os, std::size_t len)
         return 0;
     }
     
-    return mDataStream.read(os, len);
+    std::array<uint8_t, Crypto::kAesBlockSize> block;
+    std::size_t read = 0;
+    
+    while (mPosition < mCipherTextLen && (len - read) >= Crypto::kAesBlockSize)
+    {
+        mDataIv = CryptoUtil::decrypt(mDataKey,
+                                      mDataIv,
+                                      Crypto::kAesBlockSize,
+                                      mContent.begin() + mPosition,
+                                      block.begin());
+
+        auto blockSize(std::min(Crypto::kAesBlockSize, mCipherTextLen - mPosition));
+        
+        os.write(DataRef(block.begin(), block.begin() + blockSize));
+        
+        mPosition += Crypto::kAesBlockSize;
+        read += blockSize;
+    }
+    
+    return read;
 }
 
 void CryptoInStream::readHeader()
@@ -142,24 +161,22 @@ void CryptoInStream::readHeader()
                         dataIvKeyCrypt,
                         dataIvKey);
     
-    Crypto::IV  dataIv;
-    Crypto::Key dataKey;
-        
-    ArrayUtil<decltype(dataIvKey)>::split(dataIvKey, dataIv, dataKey);
+    ArrayUtil<decltype(dataIvKey)>::split(dataIvKey, mDataIv, mDataKey);
 
     ArrayOutStream ctOut(mContent);
 
     auto contentLen(mInStream.read(ctOut, mContent.size()));
 
+    // Expecting (file size % 16) and HMAC at the end (33 bytes).
     if (contentLen <= 33)
     {
         mError = Error::kTruncated;
         return;
     }
     
-    auto cipherTextLen = contentLen - 33;
+    mCipherTextLen = contentLen - 33;
 
-    if ((cipherTextLen % Crypto::kAesBlockSize) != 0)
+    if ((mCipherTextLen % Crypto::kAesBlockSize) != 0)
     {
         mError = Error::KBadAlignment;
         return;
@@ -171,43 +188,28 @@ void CryptoInStream::readHeader()
               mContent.begin() + contentLen,
               dataHmac.begin());
 
-    if (dataHmac != CryptoUtil::hmac(dataKey,
+    if (dataHmac != CryptoUtil::hmac(mDataKey,
                                      mContent.begin(),
-                                     mContent.begin() + cipherTextLen))
+                                     mContent.begin() + mCipherTextLen))
     {
         mError = Error::kBadDataHmac;
         return;
     }
 
-    CryptoUtil::decrypt(dataKey,
-                        dataIv,
-                        cipherTextLen,
-                        mContent.begin(),
-                        mData.begin());
+    auto cipherTextTrailing(Crypto::kAesBlockSize - *(mContent.begin() + contentLen - 33));
 
-    std::size_t cipherTextTrailing(Crypto::kAesBlockSize - *(mContent.begin() + contentLen - 33));
+    mCipherTextLen -= cipherTextTrailing % Crypto::kAesBlockSize;
 
-    cipherTextLen -= cipherTextTrailing % Crypto::kAesBlockSize;
+    /*
+    mDataIv = CryptoUtil::decrypt(mDataKey,
+                                  mDataIv,
+                                  mCipherTextLen,
+                                  mContent.begin(),
+                                  mData.begin());
+
     
-    mDataStream = DataRefInStream(DataRef(mData.begin(), mData.begin() + cipherTextLen));
+    mDataStream = DataRefInStream(DataRef(mData.begin(), mData.begin() + mCipherTextLen));
+    */
     mError = Error::kNone;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

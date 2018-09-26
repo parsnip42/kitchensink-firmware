@@ -1,6 +1,7 @@
 #ifndef INCLUDED_CRYPTOINSTREAM_H
 #define INCLUDED_CRYPTOINSTREAM_H
 
+#include "crypto/cryptotypes.h"
 #include "types/datarefinstream.h"
 #include "types/instream.h"
 #include "types/strbuf.h"
@@ -40,12 +41,14 @@ private:
 private:
     InStream&                 mInStream;
     StrRef                    mPassword;
+    Crypto::Key               mDataKey;
+    Crypto::IV                mDataIv;
 
     // FIXME
+    std::size_t               mPosition;
     std::array<uint8_t, 8192> mContent;
-    std::array<uint8_t, 8192> mData;
-    
-    DataRefInStream           mDataStream;
+    std::size_t               mCipherTextLen;
+
     Error                     mError;
 };
 

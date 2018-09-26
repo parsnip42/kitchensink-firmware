@@ -38,7 +38,7 @@ void sanityCheck(const DataRef& testData,
         entropyPool.insert(uint8_t(rand() & 0xff));
     }
 
-    std::array<uint8_t, 10000> encryptedData;
+    std::array<uint8_t, 1024 * 1024> encryptedData;
     ArrayOutStream encryptedOut(encryptedData);
 
     {
@@ -55,11 +55,24 @@ void sanityCheck(const DataRef& testData,
     
     ASSERT_EQ(cryptIn.error(), CryptoInStream::Error::kNone);
     
-    std::array<uint8_t, 10000> decryptedData;
+    std::array<uint8_t, 1024 * 1024> decryptedData;
     ArrayOutStream decryptedOut(decryptedData);
 
-    while (cryptIn.read(decryptedOut, decryptedOut.remaining()) != 0);
+    std::size_t size(0);
     
+    while (true)
+    {
+        auto read(cryptIn.read(decryptedOut, decryptedOut.remaining()));
+
+        if (read == 0)
+        {
+            break;
+        }
+        
+        size += read;
+    }
+
+    ASSERT_EQ(testData.size(), size);
     ASSERT_EQ(decryptedOut.data(), testData);
 }
 
@@ -158,4 +171,23 @@ TEST(Crypto, Sanity2)
     DataRef testData(TestDataRaw, TestDataRaw + sizeof(TestDataRaw));
     StrRef password("The quick brown fox jumps over the lazy dog");
     sanityCheck(testData, password, 456);
+}
+
+TEST(Crypto, Sanity3)
+{
+     // Prime to avoid matching any block size.
+    static const size_t HugeSize = 524287;
+    
+    uint8_t* testDataRaw = new uint8_t[HugeSize];
+
+    srand(123);
+    
+    for (size_t i = 0; i < HugeSize; ++i)
+    {
+        testDataRaw[i] = rand() & 0xff;
+    }
+    
+    DataRef testData(testDataRaw, testDataRaw + HugeSize);
+    StrRef password("Another password!123");
+    sanityCheck(testData, password, 789);
 }

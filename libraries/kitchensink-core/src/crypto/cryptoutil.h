@@ -6,10 +6,28 @@
 #include <array>
 #include <cstdint>
 
+#include <mbedTLS_MD.h>
+
+class DataRef;
 class StrRef;
 
 namespace CryptoUtil
 {
+
+class HMACContext
+{
+public:
+    HMACContext() = default;
+    
+public:
+    void init(const Crypto::Key& key);
+    void update(const DataRef& data);
+    Crypto::HMAC finish();
+    
+private:
+    mbedtls_md_context_t mContext;
+};
+
 Crypto::SHA256 sha256(const uint8_t* begin,
                       const uint8_t* end);
 
@@ -20,17 +38,17 @@ Crypto::HMAC hmac(const Crypto::Key& key,
                   const uint8_t*     begin,
                   const uint8_t*     end);
 
-void encrypt(const Crypto::Key& key,
-             const Crypto::IV&  iv,
-             std::size_t        size,
-             const uint8_t*     source,
-             uint8_t*           dest);
+Crypto::IV encrypt(const Crypto::Key& key,
+                   const Crypto::IV&  iv,
+                   std::size_t        size,
+                   const uint8_t*     source,
+                   uint8_t*           dest);
 
-void decrypt(const Crypto::Key& key,
-             const Crypto::IV&  iv,
-             std::size_t        size,
-             const uint8_t*     source,
-             uint8_t*           dest);
+Crypto::IV decrypt(const Crypto::Key& key,
+                   const Crypto::IV&  iv,
+                   std::size_t        size,
+                   const uint8_t*     source,
+                   uint8_t*           dest);
 
 
 template <std::size_t Capacity>
@@ -53,10 +71,10 @@ Crypto::HMAC hmac(const Crypto::Key&                   key,
 
 template <std::size_t Capacity>
 inline
-void encrypt(const Crypto::Key&                   key,
-             const Crypto::IV&                    iv,
-             const std::array<uint8_t, Capacity>& source,
-             std::array<uint8_t, Capacity>&       dest)
+Crypto::IV encrypt(const Crypto::Key&                   key,
+                   const Crypto::IV&                    iv,
+                   const std::array<uint8_t, Capacity>& source,
+                   std::array<uint8_t, Capacity>&       dest)
 {
     return encrypt(key,
                    iv,
@@ -67,10 +85,10 @@ void encrypt(const Crypto::Key&                   key,
 
 template <std::size_t Capacity>
 inline
-void decrypt(const Crypto::Key&                   key,
-             const Crypto::IV&                    iv,
-             const std::array<uint8_t, Capacity>& source,
-             std::array<uint8_t, Capacity>&       dest)
+Crypto::IV decrypt(const Crypto::Key&                   key,
+                   const Crypto::IV&                    iv,
+                   const std::array<uint8_t, Capacity>& source,
+                   std::array<uint8_t, Capacity>&       dest)
 {
     return decrypt(key,
                    iv,

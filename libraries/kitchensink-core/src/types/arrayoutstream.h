@@ -16,7 +16,7 @@ public:
     ArrayOutStream(std::array<uint8_t, Capacity>& array);
 
 public:
-    virtual void write(const DataRef& data) override;
+    virtual std::size_t write(const DataRef& data) override;
 
 public:
     DataRef data() const;

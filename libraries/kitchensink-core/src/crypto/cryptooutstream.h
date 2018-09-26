@@ -1,6 +1,8 @@
 #ifndef INCLUDED_CRYPTOOUTSTREAM_H
 #define INCLUDED_CRYPTOOUTSTREAM_H
 
+#include "crypto/cryptoutil.h"
+#include "crypto/cryptotypes.h"
 #include "types/outstream.h"
 #include "types/strbuf.h"
 #include "types/stroutstream.h"
@@ -20,17 +22,37 @@ public:
     virtual ~CryptoOutStream();
         
 public:
-    virtual void write(const DataRef& data) override;
-        
+    virtual std::size_t write(const DataRef& data) override;
+
 private:
-    OutStream&                mOutStream;
-    StrRef                    mPassword;
-    EntropyPool&              mEntropyPool;
-    std::array<uint8_t, 8192> mData;
-    ArrayOutStream            mDataOut;
+    void writeHeader();
+    void flush();
+
+private:
+    static constexpr std::size_t kBufferSize = Crypto::kAesBlockSize;
+
+private:
+    OutStream&                       mOutStream;
+    StrRef                           mPassword;
+    EntropyPool&                     mEntropyPool;
+    Crypto::IV                       mDataIv;
+    Crypto::Key                      mDataKey;
+    CryptoUtil::HMACContext          mHMAC;
+    std::array<uint8_t, kBufferSize> mData;
+    ArrayOutStream                   mDataOut;
         
 private:
     friend class SecureStorage;
 };
 
 #endif
+
+
+
+
+
+
+
+
+
+

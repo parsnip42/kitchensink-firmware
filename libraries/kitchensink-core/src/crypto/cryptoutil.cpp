@@ -1,5 +1,6 @@
 #include "crypto/cryptoutil.h"
 
+#include "types/dataref.h"
 #include "types/strbuf.h"
 #include "config.h"
 
@@ -9,6 +10,30 @@
 
 namespace CryptoUtil
 {
+
+void HMACContext::init(const Crypto::Key& key)
+{
+    mbedtls_md_setup(&mContext,
+                     mbedtls_md_info_from_type(MBEDTLS_MD_SHA256),
+                     1);
+    
+    mbedtls_md_hmac_starts(&mContext, key.begin(), key.size());
+}
+
+void HMACContext::update(const DataRef& data)
+{
+    mbedtls_md_hmac_update(&mContext, data.begin(), data.size());
+}
+
+Crypto::HMAC HMACContext::finish()
+{
+    Crypto::HMAC hmac;
+
+    mbedtls_md_hmac_finish(&mContext, hmac.begin());
+    mbedtls_md_free(&mContext);
+
+    return hmac;
+}
 
 Crypto::SHA256 sha256(const uint8_t* begin,
                       const uint8_t* end)
@@ -68,27 +93,21 @@ Crypto::HMAC hmac(const Crypto::Key& key,
                   const uint8_t*     begin,
                   const uint8_t*     end)
 {
-    auto mdInfo(mbedtls_md_info_from_type(MBEDTLS_MD_SHA256));
+    HMACContext hmac;
 
-    Crypto::HMAC output;
+    hmac.init(key);
+    hmac.update(DataRef(begin, end));
     
-    mbedtls_md_hmac(mdInfo,
-                    key.begin(),
-                    key.size(),
-                    begin,
-                    end - begin,
-                    output.begin());
-
-    return output;
+    return hmac.finish();
 }
 
-void encrypt(const Crypto::Key& key,
-             const Crypto::IV&  iv,
-             std::size_t        size,
-             const uint8_t*     source,
-             uint8_t*           dest)
+Crypto::IV encrypt(const Crypto::Key& key,
+                   const Crypto::IV&  iv,
+                   std::size_t        size,
+                   const uint8_t*     source,
+                   uint8_t*           dest)
 {
-    auto tempIv(iv);
+    auto nextIv(iv);
     mbedtls_aes_context ctx;
     
     mbedtls_aes_init(&ctx);
@@ -96,19 +115,21 @@ void encrypt(const Crypto::Key& key,
     mbedtls_aes_crypt_cbc(&ctx,
                           MBEDTLS_AES_ENCRYPT,
                           size,
-                          tempIv.begin(),
+                          nextIv.begin(),
                           source,
                           dest);
     mbedtls_aes_free(&ctx);
+
+    return nextIv;
 }
 
-void decrypt(const Crypto::Key& key,
-             const Crypto::IV&  iv,
-             std::size_t        size,
-             const uint8_t*     source,
-             uint8_t*           dest)
+Crypto::IV decrypt(const Crypto::Key& key,
+                   const Crypto::IV&  iv,
+                   std::size_t        size,
+                   const uint8_t*     source,
+                   uint8_t*           dest)
 {
-    auto tempIv(iv);
+    auto nextIv(iv);
     mbedtls_aes_context ctx;
     
     mbedtls_aes_init(&ctx);
@@ -116,10 +137,12 @@ void decrypt(const Crypto::Key& key,
     mbedtls_aes_crypt_cbc(&ctx,
                           MBEDTLS_AES_DECRYPT,
                           size,
-                          tempIv.begin(),
+                          nextIv.begin(),
                           source,
                           dest);
     mbedtls_aes_free(&ctx);
+
+    return nextIv;
 }
 
 }

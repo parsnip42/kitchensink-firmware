@@ -1,7 +1,5 @@
 #include "crypto/cryptooutstream.h"
 
-#include "crypto/cryptotypes.h"
-#include "crypto/cryptoutil.h"
 #include "crypto/entropypool.h"
 #include "types/arrayutil.h"
 #include "types/stroutstream.h"
@@ -15,33 +13,38 @@ CryptoOutStream::CryptoOutStream(OutStream&   outStream,
     , mEntropyPool(entropyPool)
     , mData()
     , mDataOut(mData)
-{ }
+{
+    // FIXME: Test this in advance - at the moment we're relying on the UI.
+    // Note the implicit cast to Key when both types are the same size.
+    mEntropyPool.read(mDataKey);
+
+    writeHeader();
+
+    mHMAC.init(mDataKey);
+}
 
 CryptoOutStream::~CryptoOutStream()
 {
+    flush();
+}
+
+void CryptoOutStream::writeHeader()
+{
     Crypto::SHA256 ivPair;
 
-    // FIXME: Test this in advance - at the moment we're relying on the UI.
     mEntropyPool.read(ivPair);
 
     Crypto::IV iv;
-    Crypto::IV dataIv;
 
-    ArrayUtil<Crypto::SHA256>::split(ivPair, iv, dataIv);
+    ArrayUtil<Crypto::SHA256>::split(ivPair, iv, mDataIv);
 
     auto key(CryptoUtil::stretch(mPassword, iv));
         
-    Crypto::Key dataKey;
+    std::array<uint8_t, sizeof(mDataIv) + sizeof(mDataKey)> dataIvKey;
 
-    // Note the implicit cast to Key when both types are the same
-    // size.
-    mEntropyPool.read(dataKey);
-
-    std::array<uint8_t, dataIv.size() + dataKey.size()> dataIvKey;
-
-    ArrayUtil<decltype(dataIvKey)>::join(dataIv, dataKey, dataIvKey);
+    ArrayUtil<decltype(dataIvKey)>::join(mDataIv, mDataKey, dataIvKey);
     
-    std::array<uint8_t, dataIv.size() + dataKey.size()> dataIvKeyCrypt;
+    std::array<uint8_t, sizeof(mDataIv) + sizeof(mDataKey)> dataIvKeyCrypt;
 
     CryptoUtil::encrypt(key,
                         iv,
@@ -69,31 +72,81 @@ CryptoOutStream::~CryptoOutStream()
     mOutStream.write(iv);
     mOutStream.write(dataIvKeyCrypt);
     mOutStream.write(dataIvKeyHmac);
-
-    auto blockCount((mDataOut.position() + Crypto::kAesBlockSize - 1) / Crypto::kAesBlockSize);
-    auto blockOffset(mDataOut.position() % Crypto::kAesBlockSize);
-    auto cryptSize(blockCount * Crypto::kAesBlockSize);
-
-    // FIXME
-    std::array<uint8_t, 8192> cryptData;
-    
-    CryptoUtil::encrypt(dataKey,
-                        dataIv,
-                        cryptSize,
-                        mData.begin(),
-                        cryptData.begin());
-
-    Crypto::HMAC cryptDataHmac(CryptoUtil::hmac(dataKey,
-                                                cryptData.begin(),
-                                                cryptData.begin() + cryptSize));
-
-    mOutStream.write(DataRef(cryptData.begin(),
-                             cryptData.begin() + cryptSize));
-    mOutStream.write(uint8_t(blockOffset));
-    mOutStream.write(cryptDataHmac);
 }
 
-void CryptoOutStream::write(const DataRef& data)
+std::size_t CryptoOutStream::write(const DataRef& data)
 {
-    mDataOut.write(data);
+    auto currentData = data;
+
+    while (currentData.size() > 0)
+    {
+        auto written = mDataOut.write(currentData);
+        
+        if (mDataOut.remaining() == 0)
+        {
+            std::array<uint8_t, Crypto::kAesBlockSize> cryptData;
+            
+            mDataIv = CryptoUtil::encrypt(mDataKey,
+                                          mDataIv,
+                                          kBufferSize,
+                                          mData.begin(),
+                                          cryptData.begin());
+            
+            auto cryptDataRef(DataRef(cryptData.begin(), cryptData.end()));
+            
+            mHMAC.update(cryptDataRef);
+            mOutStream.write(cryptDataRef);
+
+            mDataOut.reset();
+        }
+        
+        currentData = DataRef(currentData.begin() + written, currentData.end());
+    }
+    
+    return data.size();
 }
+
+void CryptoOutStream::flush()
+{
+    auto blockOffset(mDataOut.position() % Crypto::kAesBlockSize);
+
+    if (mDataOut.position() > 0)
+    {
+        std::array<uint8_t, Crypto::kAesBlockSize> cryptData;
+        
+        mDataIv = CryptoUtil::encrypt(mDataKey,
+                                      mDataIv,
+                                      kBufferSize,
+                                      mData.begin(),
+                                      cryptData.begin());
+
+        auto cryptDataRef(DataRef(cryptData.begin(), cryptData.end()));
+
+        mHMAC.update(cryptDataRef);
+        mOutStream.write(cryptDataRef);
+        
+        mDataOut.reset();
+    }
+    
+    mOutStream.write(uint8_t(blockOffset));
+    mOutStream.write(mHMAC.finish());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
