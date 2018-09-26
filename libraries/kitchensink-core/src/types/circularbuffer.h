@@ -119,7 +119,7 @@ template <typename T, std::size_t Capacity>
 inline
 T CircularBuffer<T, Capacity>::popFront()
 {
-    T value(mData[mStart]);
+    auto value(mData[mStart]);
 
     mStart = (mStart + 1) % Capacity;
     mFull = false;
@@ -131,7 +131,7 @@ template <typename T, std::size_t Capacity>
 inline
 T CircularBuffer<T, Capacity>::popBack()
 {
-    T value(mData[mEnd]);
+    auto value(mData[mEnd]);
 
     mEnd = (mEnd - 1) % Capacity;
     mFull = false;
