@@ -77,7 +77,7 @@ bool load(SecureMacroSet& secureMacroSet,
     
     CryptoInStream cryptoIn(is, password);
 
-    if (cryptoIn.state() != CryptoInStream::Error::kReading)
+    if (cryptoIn.state() != CryptoInStream::State::kReading)
     {
         return false;
     }
@@ -86,7 +86,7 @@ bool load(SecureMacroSet& secureMacroSet,
     
     s.deserialize(cryptoIn, secureMacroSet);
 
-    if (cryptoIn.state() != CryptoInStream::Error::kValidated)
+    if (cryptoIn.state() != CryptoInStream::State::kValidated)
     {
         // Anything here is invalid.
         secureMacroSet.lock();
