@@ -12,17 +12,19 @@
 class CryptoInStream : public InStream
 {
 public:
-    enum class Error
+    enum class State
     {
-        kUninitialized = -1,
-        kNone          = 0,
+        kReading       = 0,
         kCorrupted     = 1,
         kTruncated     = 2,
         kBadHeader     = 3,
         kBadVersion    = 4,
         kBadHmac       = 5,
         kBadDataHmac   = 6,
-        KBadAlignment  = 7
+
+        // Content should be considered untrusted or corrupted until state is
+        // marked with this.
+        kValidated     = 10
     };
     
 public:
@@ -35,26 +37,28 @@ public:
 public:
     virtual std::size_t read(OutStream& os, std::size_t len) override;
 
-    Error error() const;
+    State state() const;
     
 private:
     void readHeader();
-    
+    bool readBlock();
+
 private:
     InStream&                                  mInStream;
     StrRef                                     mPassword;
     Crypto::Key                                mDataKey;
     Crypto::IV                                 mDataIv;
     CryptoUtil::HMACContext                    mHMAC;
-    CircularStream<Crypto::kAesBlockSize * 16> mStream;
-    Error                                      mError;
+    CircularStream<Crypto::kAesBlockSize * 32> mInBuffer;
+    CircularStream<Crypto::kAesBlockSize * 32> mOutBuffer;
+    State                                      mState;
 };
 
 
 inline
-CryptoInStream::Error CryptoInStream::error() const
+CryptoInStream::State CryptoInStream::state() const
 {
-    return mError;
+    return mState;
 }
 
 #endif

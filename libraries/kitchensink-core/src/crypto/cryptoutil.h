@@ -17,7 +17,8 @@ namespace CryptoUtil
 class HMACContext
 {
 public:
-    HMACContext() = default;
+    HMACContext();
+    ~HMACContext();
     
 public:
     void init(const Crypto::Key& key);
@@ -25,8 +26,10 @@ public:
     Crypto::HMAC finish();
     
 private:
+    bool                 mContextInitialized;
     mbedtls_md_context_t mContext;
 };
+
 
 Crypto::SHA256 sha256(const uint8_t* begin,
                       const uint8_t* end);

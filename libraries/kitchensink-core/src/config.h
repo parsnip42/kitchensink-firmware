@@ -8,7 +8,7 @@
 namespace Config
 {
 
-constexpr std::size_t kTimerCount = 30;
+constexpr std::size_t kTimerCount = 10;
 
 constexpr std::size_t kHomeLedCount = 12;
 

@@ -3,6 +3,7 @@
 
 #include "crypto/cryptoutil.h"
 #include "crypto/cryptotypes.h"
+#include "types/circularstream.h"
 #include "types/outstream.h"
 #include "types/strbuf.h"
 #include "types/stroutstream.h"
@@ -29,17 +30,14 @@ private:
     void flush();
 
 private:
-    static constexpr std::size_t kBufferSize = Crypto::kAesBlockSize;
-
-private:
-    OutStream&                       mOutStream;
-    StrRef                           mPassword;
-    EntropyPool&                     mEntropyPool;
-    Crypto::IV                       mDataIv;
-    Crypto::Key                      mDataKey;
-    CryptoUtil::HMACContext          mHMAC;
-    std::array<uint8_t, kBufferSize> mData;
-    ArrayOutStream                   mDataOut;
+    OutStream&                                 mOutStream;
+    StrRef                                     mPassword;
+    EntropyPool&                               mEntropyPool;
+    Crypto::IV                                 mDataIv;
+    Crypto::Key                                mDataKey;
+    CryptoUtil::HMACContext                    mHMAC;
+    std::array<uint8_t, Crypto::kAesBlockSize> mData;
+    ArrayOutStream                             mDataOut;
         
 private:
     friend class SecureStorage;

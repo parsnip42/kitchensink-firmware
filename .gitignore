@@ -3,3 +3,4 @@
 *.elf
 *.hex
 doxygen/*
+.dir-locals.el

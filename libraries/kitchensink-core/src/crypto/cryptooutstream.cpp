@@ -88,7 +88,7 @@ std::size_t CryptoOutStream::write(const DataRef& data)
             
             mDataIv = CryptoUtil::encrypt(mDataKey,
                                           mDataIv,
-                                          kBufferSize,
+                                          Crypto::kAesBlockSize,
                                           mData.begin(),
                                           cryptData.begin());
             
@@ -116,7 +116,7 @@ void CryptoOutStream::flush()
         
         mDataIv = CryptoUtil::encrypt(mDataKey,
                                       mDataIv,
-                                      kBufferSize,
+                                      Crypto::kAesBlockSize,
                                       mData.begin(),
                                       cryptData.begin());
 

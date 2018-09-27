@@ -9,101 +9,25 @@ CryptoInStream::CryptoInStream(InStream&     inStream,
                                const StrRef& password)
     : mInStream(inStream)
     , mPassword(password)
-    , mError(Error::kUninitialized)
+    , mState(State::kReading)
 {
     readHeader();
 }
 
 std::size_t CryptoInStream::read(OutStream& os, std::size_t len)
 {
-    if (mError != Error::kNone)
+    if (mState != State::kReading)
     {
         return 0;
     }
-
-    std::size_t read(0);
-
-    while (true)
+    
+    do
     {
-        mInStream.read(mStream, mStream.remaining());
-        
-        if (mStream.size() > (33 + Crypto::kAesBlockSize))
-        {
-            std::array<uint8_t, Crypto::kAesBlockSize> inBlock;
-            std::array<uint8_t, Crypto::kAesBlockSize> outBlock;
-            ArrayOutStream inBlockStream(inBlock);
-
-            mStream.read(inBlockStream, Crypto::kAesBlockSize);
-            mHMAC.update(DataRef(inBlock.begin(), inBlock.end()));
-        
-            mDataIv = CryptoUtil::decrypt(mDataKey,
-                                          mDataIv,
-                                          Crypto::kAesBlockSize,
-                                          inBlock.begin(),
-                                          outBlock.begin());
-
-            auto blockData(DataRef(outBlock.begin(), outBlock.end()));
-            
-            os.write(blockData);
-            
-            read += Crypto::kAesBlockSize;
-        }
-        else if (mStream.size() == (33 + Crypto::kAesBlockSize))
-        {
-            std::array<uint8_t, Crypto::kAesBlockSize> inBlock;
-            std::array<uint8_t, Crypto::kAesBlockSize> outBlock;
-            ArrayOutStream inBlockStream(inBlock);
-
-            mStream.read(inBlockStream, Crypto::kAesBlockSize);
-            mHMAC.update(DataRef(inBlock.begin(), inBlock.end()));
-
-            mDataIv = CryptoUtil::decrypt(mDataKey,
-                                          mDataIv,
-                                          Crypto::kAesBlockSize,
-                                          inBlock.begin(),
-                                          outBlock.begin());
-
-            ////////////////////////////////////////
-        
-            std::array<uint8_t, 33> suffix;
-            ArrayOutStream suffixStream(suffix);
-
-            mStream.read(suffixStream, suffix.size());
-
-            auto cipherTextTrailing(Crypto::kAesBlockSize - suffix[0]);
-            auto subBlockSize(Crypto::kAesBlockSize - (cipherTextTrailing % Crypto::kAesBlockSize));
-
-            os.write(DataRef(outBlock.begin(), outBlock.begin() + subBlockSize));
-            
-            read += subBlockSize;
-        
-            Crypto::HMAC dataHmac;
-            
-            std::copy(suffix.begin() + 1,
-                      suffix.begin() + 33,
-                      dataHmac.begin());
-
-            auto expectedHmac(mHMAC.finish());
-
-            if (dataHmac != expectedHmac)
-            {
-                mError = Error::kBadHmac;
-            }
-            
-            break;
-        }
-        else if (mStream.size() == 0)
-        {
-            break;
-        }
-        else
-        {
-            mError = Error::kTruncated;
-            break;
-        }
+        mInStream.read(mInBuffer, mInBuffer.remaining());
     }
-
-    return read;
+    while (readBlock() && mState == State::kReading);
+    
+    return mOutBuffer.read(os, len);
 }
 
 void CryptoInStream::readHeader()
@@ -116,7 +40,7 @@ void CryptoInStream::readHeader()
     mInStream.read(out, 3);
     if (out.data() != "AES")
     {
-        mError = Error::kBadHeader;
+        mState = State::kBadHeader;
         return;
     }
     
@@ -126,7 +50,7 @@ void CryptoInStream::readHeader()
     mInStream.read(out, 1);
     if (out.data() != uint8_t('\x02'))
     {
-        mError = Error::kBadVersion;
+        mState = State::kBadVersion;
         return;
     }
 
@@ -136,7 +60,7 @@ void CryptoInStream::readHeader()
     mInStream.read(out, 1);
     if (out.data() != uint8_t('\x00'))
     {
-        mError = Error::kCorrupted;
+        mState = State::kCorrupted;
         return;
     }
 
@@ -149,7 +73,7 @@ void CryptoInStream::readHeader()
         out.reset();
         if (mInStream.read(out, 2) != 2)
         {
-            mError = Error::kTruncated;
+            mState = State::kTruncated;
             return;
         }
 
@@ -159,7 +83,7 @@ void CryptoInStream::readHeader()
         out.reset();
         if (mInStream.read(out, extLen) != extLen)
         {
-            mError = Error::kTruncated;
+            mState = State::kTruncated;
             return;
         }
     } while (extLen != 0);
@@ -173,7 +97,7 @@ void CryptoInStream::readHeader()
     
         if (mInStream.read(out, iv.size()) != iv.size())
         {
-            mError = Error::kTruncated;
+            mState = State::kTruncated;
             return;
         }
     }
@@ -187,7 +111,7 @@ void CryptoInStream::readHeader()
         
         if (mInStream.read(out, dataIvKeyCrypt.size()) != dataIvKeyCrypt.size())
         {
-            mError = Error::kTruncated;
+            mState = State::kTruncated;
             return;
         }
     }
@@ -201,7 +125,7 @@ void CryptoInStream::readHeader()
         
         if (mInStream.read(out, dataIvKeyHmac.size()) != dataIvKeyHmac.size())
         {
-            mError = Error::kTruncated;
+            mState = State::kTruncated;
             return;
         }
     }
@@ -212,7 +136,7 @@ void CryptoInStream::readHeader()
     
     if (dataIvKeyHmac != CryptoUtil::hmac(key, dataIvKeyCrypt))
     {
-        mError = Error::kBadHmac;
+        mState = State::kBadHmac;
         return;
     }
     
@@ -226,7 +150,69 @@ void CryptoInStream::readHeader()
     ArrayUtil<decltype(dataIvKey)>::split(dataIvKey, mDataIv, mDataKey);
 
     mHMAC.init(mDataKey);
-    
-    mError = Error::kNone;
 }
 
+bool CryptoInStream::readBlock()
+{
+    static constexpr size_t SuffixLen = 33;
+    
+    if (mInBuffer.size() < Crypto::kAesBlockSize)
+    {
+        return false;
+    }
+
+    if (mOutBuffer.remaining() < Crypto::kAesBlockSize)
+    {
+        return false;
+    }
+    
+    std::array<uint8_t, Crypto::kAesBlockSize> inBlock;
+    std::array<uint8_t, Crypto::kAesBlockSize> outBlock;
+    ArrayOutStream inBlockStream(inBlock);
+    
+    mInBuffer.read(inBlockStream, Crypto::kAesBlockSize);
+    mHMAC.update(DataRef(inBlock.begin(), inBlock.end()));
+    
+    mDataIv = CryptoUtil::decrypt(mDataKey,
+                                  mDataIv,
+                                  Crypto::kAesBlockSize,
+                                  inBlock.begin(),
+                                  outBlock.begin());
+    
+    auto blockSize(Crypto::kAesBlockSize);
+
+    if (mInBuffer.size() == SuffixLen)
+    {
+        std::array<uint8_t, SuffixLen> suffix;
+        ArrayOutStream suffixStream(suffix);
+        
+        mInBuffer.read(suffixStream, suffix.size());
+        
+        auto cipherTextTrailing(Crypto::kAesBlockSize - suffix[0]);
+        
+        blockSize = Crypto::kAesBlockSize - (cipherTextTrailing % Crypto::kAesBlockSize);
+            
+        Crypto::HMAC dataHmac;
+            
+        std::copy(suffix.begin() + 1,
+                  suffix.begin() + SuffixLen,
+                  dataHmac.begin());
+
+        auto expectedHmac(mHMAC.finish());
+
+        if (dataHmac != expectedHmac)
+        {
+            mState = State::kBadDataHmac;
+        }
+        else
+        {
+            mState = State::kValidated;
+        }
+    }
+    
+    auto blockData(DataRef(outBlock.begin(), outBlock.begin() + blockSize));
+    
+    mOutBuffer.write(blockData);
+
+    return true;
+}

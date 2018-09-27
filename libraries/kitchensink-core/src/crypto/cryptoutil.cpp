@@ -11,6 +11,18 @@
 namespace CryptoUtil
 {
 
+HMACContext::HMACContext()
+    : mContextInitialized(false)
+{ }
+
+HMACContext::~HMACContext()
+{
+    if (mContextInitialized)
+    {
+        mbedtls_md_free(&mContext);
+    }
+}
+
 void HMACContext::init(const Crypto::Key& key)
 {
     mbedtls_md_setup(&mContext,
@@ -18,6 +30,8 @@ void HMACContext::init(const Crypto::Key& key)
                      1);
     
     mbedtls_md_hmac_starts(&mContext, key.begin(), key.size());
+
+    mContextInitialized = true;
 }
 
 void HMACContext::update(const DataRef& data)
@@ -32,6 +46,8 @@ Crypto::HMAC HMACContext::finish()
     mbedtls_md_hmac_finish(&mContext, hmac.begin());
     mbedtls_md_free(&mContext);
 
+    mContextInitialized = false;
+        
     return hmac;
 }
 
