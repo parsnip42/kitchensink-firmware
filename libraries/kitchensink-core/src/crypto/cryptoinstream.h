@@ -44,14 +44,14 @@ private:
     bool readBlock();
 
 private:
-    InStream&                                  mInStream;
-    StrRef                                     mPassword;
-    Crypto::Key                                mDataKey;
-    Crypto::IV                                 mDataIv;
-    CryptoUtil::HMACContext                    mHMAC;
-    CircularStream<Crypto::kAesBlockSize * 32> mInBuffer;
-    CircularStream<Crypto::kAesBlockSize * 32> mOutBuffer;
-    State                                      mState;
+    InStream&                                 mInStream;
+    StrRef                                    mPassword;
+    Crypto::Key                               mDataKey;
+    Crypto::IV                                mDataIv;
+    CryptoUtil::HMACContext                   mHMAC;
+    CircularStream<Crypto::kAesBlockSize * 8> mInBuffer;
+    CircularStream<Crypto::kAesBlockSize * 8> mOutBuffer;
+    State                                     mState;
 };
 
 

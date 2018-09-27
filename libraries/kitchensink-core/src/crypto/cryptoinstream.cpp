@@ -16,16 +16,14 @@ CryptoInStream::CryptoInStream(InStream&     inStream,
 
 std::size_t CryptoInStream::read(OutStream& os, std::size_t len)
 {
-    if (mState != State::kReading)
+    if (mState == State::kReading)
     {
-        return 0;
+        do
+        {
+            mInStream.read(mInBuffer, mInBuffer.remaining());
+        }
+        while (readBlock() && mState == State::kReading);
     }
-    
-    do
-    {
-        mInStream.read(mInBuffer, mInBuffer.remaining());
-    }
-    while (readBlock() && mState == State::kReading);
     
     return mOutBuffer.read(os, len);
 }
@@ -37,7 +35,12 @@ void CryptoInStream::readHeader()
 
     // Header
     
-    mInStream.read(out, 3);
+    if (mInStream.read(out, 3) != 3)
+    {
+        mState = State::kTruncated;
+        return;
+    }
+    
     if (out.data() != "AES")
     {
         mState = State::kBadHeader;
@@ -47,7 +50,12 @@ void CryptoInStream::readHeader()
     // File version
     
     out.reset();
-    mInStream.read(out, 1);
+    if (mInStream.read(out, 1) != 1)
+    {
+        mState = State::kTruncated;
+        return;
+    }
+    
     if (out.data() != uint8_t('\x02'))
     {
         mState = State::kBadVersion;
@@ -57,7 +65,12 @@ void CryptoInStream::readHeader()
     // Reserved
     
     out.reset();
-    mInStream.read(out, 1);
+    if (mInStream.read(out, 1) != 1)
+    {
+        mState = State::kTruncated;
+        return;
+    }
+    
     if (out.data() != uint8_t('\x00'))
     {
         mState = State::kCorrupted;
@@ -155,16 +168,22 @@ void CryptoInStream::readHeader()
 bool CryptoInStream::readBlock()
 {
     static constexpr size_t SuffixLen = 33;
-    
+
+    // Buffer underflow - this shouldn't happen.
     if (mInBuffer.size() < Crypto::kAesBlockSize)
     {
+        mState = State::kTruncated;
+        
         return false;
     }
 
+    // Stop reading blocks until output buffer has been consumed.
     if (mOutBuffer.remaining() < Crypto::kAesBlockSize)
     {
         return false;
     }
+
+    // Now decrypt a single block.
     
     std::array<uint8_t, Crypto::kAesBlockSize> inBlock;
     std::array<uint8_t, Crypto::kAesBlockSize> outBlock;
@@ -181,6 +200,10 @@ bool CryptoInStream::readBlock()
     
     auto blockSize(Crypto::kAesBlockSize);
 
+    bool readMore = true;
+
+    // If the remaining content of the buffer is the exact size of the suffix
+    // then we're at the end - consume the suffix.
     if (mInBuffer.size() == SuffixLen)
     {
         std::array<uint8_t, SuffixLen> suffix;
@@ -208,11 +231,13 @@ bool CryptoInStream::readBlock()
         {
             mState = State::kValidated;
         }
+        
+        readMore = false;
     }
-    
+
     auto blockData(DataRef(outBlock.begin(), outBlock.begin() + blockSize));
     
     mOutBuffer.write(blockData);
 
-    return true;
+    return readMore;
 }
