@@ -3,11 +3,6 @@
 #include "event/screenevent.h"
 #include "keyboardstateutil.h"
 
-#include "hardware/ctrlutil.h"
-
-#include <stdio.h>
-#include <string.h>
-
 UnlockScreen::UnlockScreen(SecureMacroSet& secureMacroSet,
                            TimerManager&   timer,
                            EventStage&     next)
@@ -24,12 +19,6 @@ UnlockScreen::UnlockScreen(SecureMacroSet& secureMacroSet,
 {
     mHStackWidget.applied = Action::memFn<UnlockScreen,
                                           &UnlockScreen::onUnlock>(this);
-
-    auto fm = CtrlUtil::freeMemory();
-
-    char foo[24];
-    snprintf(foo, sizeof(foo), "> %d : %d : %p", fm, sizeof(UnlockScreen), this);
-    mStatusLabel.text = foo;
 }
 
 bool UnlockScreen::processEvent(const Event& event)

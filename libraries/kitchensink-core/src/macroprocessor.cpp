@@ -53,7 +53,8 @@ bool MacroProcessor::processEvent(const Event& event)
             }
             else if (macroEvent.pressed)
             {
-                mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kScreen, ScreenEvent::kMacroUnlock));
+                mNext.processEvent(ScreenEvent::create(ScreenEvent::Type::kScreen,
+                                                       ScreenEvent::kMacroUnlock));
             }
             break;
         }

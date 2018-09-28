@@ -257,8 +257,7 @@ void ScreenManager::displayScreen(const StrRef&      title,
                 mScreenEventQueue.popFront();
                 completed = true;
             }
-            
-            if (!transient(sourceEvent) && transient(event))
+            else if (!transient(sourceEvent) && transient(event))
             {
                 // Consume event and push new screen on top of this screen.
                 mScreenEventQueue.popFront();
@@ -312,10 +311,7 @@ __attribute__ ((noinline)) void ScreenManager::launchMenu(int                men
          menuId == MenuDefinitions::kEditSecureMacros) &&
         !mKeyboardState.secureMacroSet.unlocked())
     {
-        auto unlockEvent(ScreenEvent(ScreenEvent::Type::kScreen,
-                                     ScreenEvent::kMacroUnlock));
-
-        launchScreen(ScreenEvent::kMacroUnlock, unlockEvent);
+        launchMacroUnlockScreen(sourceEvent);
     }
     else
     {
