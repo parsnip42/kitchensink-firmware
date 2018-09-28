@@ -4,7 +4,7 @@
 #include "keyboardstateutil.h"
 
 UnlockScreen::UnlockScreen(SecureMacroSet& secureMacroSet,
-                           TimerManager&          timer,
+                           TimerManager&   timer,
                            EventStage&     next)
     : mSecureMacroSet(secureMacroSet)
     , mPasswordEntry("Password",
