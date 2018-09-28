@@ -36,35 +36,39 @@ private:
     void launch(const ScreenEvent& screen,
                 EventStage&        next);
 
-    void launchHome();
-
-    void launchMenu(int                menuId,
-                    const ScreenEvent& sourceEvent,
-                    EventStage&        next);
-    
     void launchScreen(int                screenId,
                       const ScreenEvent& sourceEvent);
 
-    void launchEditMacro(Macro&             macro,
-                         Event              recordEvent,
-                         const ScreenEvent& sourceEvent);
-
-    void launchRecordMacro(Macro&             macro,
-                           const ScreenEvent& sourceEvent);
-
-    void launchEditLayer(int                layerId,
-                         const ScreenEvent& sourceEvent);
-
-    void launchEditMultiKey(int                multiKeyId,
-                            const ScreenEvent& sourceEvent);
-    
-    void launchEditSmartKey(int                smartKeyId,
-                            const ScreenEvent& sourceEvent);
 
     void displayScreen(const StrRef&      title,
                        Screen&            screen,
                        const ScreenEvent& sourceEvent);
+
+    ////////////////////////////////////////
     
+    void launchHome();
+    void launchMenu(int                menuId,
+                    const ScreenEvent& sourceEvent,
+                    EventStage&        next);
+    void launchRecordMacroScreen(Macro&             macro,
+                                 const ScreenEvent& sourceEvent);
+    void launchEditLayerScreen(int                layerId,
+                               const ScreenEvent& sourceEvent);
+    void launchEditMultiKeyScreen(int                multiKeyId,
+                                  const ScreenEvent& sourceEvent);
+    void launchEditSmartKeyScreen(int                smartKeyId,
+                                  const ScreenEvent& sourceEvent);
+    void launchEditMacroScreen(Macro&             macro,
+                               Event              recordEvent,
+                               const ScreenEvent& sourceEvent);
+    void launchGlobalConfigScreen(const ScreenEvent& sourceEvent);
+    void launchStatusScreen(const ScreenEvent& sourceEvent);
+    void launchCryptoScreen(const ScreenEvent& sourceEvent);
+    void launchEventStreamScreen(const ScreenEvent& sourceEvent);
+    void launchMacroUnlockScreen(const ScreenEvent& sourceEvent);
+    void launchMacroSaveScreen(const ScreenEvent& sourceEvent);
+    void launchInitSecureMacroScreen(const ScreenEvent& sourceEvent);
+
 private:
     Surface         mSurface;
     EventManager&   mEventManager;
@@ -76,6 +80,10 @@ private:
 
 public:
     CircularBuffer<ScreenEvent, 12> mScreenEventQueue;
+
+private:
+    ScreenManager(const ScreenManager&) = delete;
+    ScreenManager& operator=(const ScreenManager&) = delete;
 };
 
 #endif

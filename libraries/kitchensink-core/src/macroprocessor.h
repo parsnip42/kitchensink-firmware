@@ -16,7 +16,7 @@ public:
     MacroProcessor(const MacroSet&       macroSet,
                    const SecureMacroSet& secureMacroSet,
                    const GlobalConfig&   globalConfig,
-                   TimerManager&                timer,
+                   TimerManager&         timer,
                    EventStage&           next);
 
 public:

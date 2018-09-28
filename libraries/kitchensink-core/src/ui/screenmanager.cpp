@@ -102,7 +102,6 @@ void ScreenManager::poll()
     }
 }
 
-
 bool ScreenManager::transient(const ScreenEvent& screenEvent) const
 {
     return (screenEvent.type == ScreenEvent::Type::kMenu);
@@ -131,29 +130,29 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
         break;
 
     case ScreenEvent::Type::kEditMacro:
-        launchEditMacro(mKeyboardState.macroSet[screenEvent.index],
-                        ScreenEvent::create(ScreenEvent::Type::kRecordMacro,
-                                            screenEvent.index),
-                        screenEvent);
+        launchEditMacroScreen(mKeyboardState.macroSet[screenEvent.index],
+                              ScreenEvent::create(ScreenEvent::Type::kRecordMacro,
+                                                  screenEvent.index),
+                              screenEvent);
         break;
         
     case ScreenEvent::Type::kRecordMacro:
-        launchRecordMacro(mKeyboardState.macroSet[screenEvent.index],
-                          screenEvent);
+        launchRecordMacroScreen(mKeyboardState.macroSet[screenEvent.index],
+                                screenEvent);
         
         KeyboardStateUtil::store(mKeyboardState.macroSet);
         break;
 
     case ScreenEvent::Type::kEditSMacro:
-        launchEditMacro(mKeyboardState.secureMacroSet[screenEvent.index],
-                        ScreenEvent::create(ScreenEvent::Type::kRecordSMacro,
-                                            screenEvent.index),
-                        screenEvent);
+        launchEditMacroScreen(mKeyboardState.secureMacroSet[screenEvent.index],
+                              ScreenEvent::create(ScreenEvent::Type::kRecordSMacro,
+                                                  screenEvent.index),
+                              screenEvent);
         break;
 
     case ScreenEvent::Type::kRecordSMacro:
-        launchRecordMacro(mKeyboardState.secureMacroSet[screenEvent.index],
-                          screenEvent);
+        launchRecordMacroScreen(mKeyboardState.secureMacroSet[screenEvent.index],
+                                screenEvent);
 
         launchScreen(ScreenEvent::kMacroSave,
                      ScreenEvent(ScreenEvent::Type::kScreen,
@@ -161,63 +160,22 @@ void ScreenManager::launch(const ScreenEvent& screenEvent,
         break;
         
     case ScreenEvent::Type::kEditLayer:
-        launchEditLayer(screenEvent.index,
-                        screenEvent);
+        launchEditLayerScreen(screenEvent.index,
+                              screenEvent);
         break;
 
     case ScreenEvent::Type::kEditSmart:
-        launchEditSmartKey(screenEvent.index,
-                           screenEvent);
+        launchEditSmartKeyScreen(screenEvent.index,
+                                 screenEvent);
         break;
 
     case ScreenEvent::Type::kEditMulti:
-        launchEditMultiKey(screenEvent.index,
-                           screenEvent);
+        launchEditMultiKeyScreen(screenEvent.index,
+                                 screenEvent);
         break;
 
     default:
         break;
-    }
-}
-
-void ScreenManager::launchHome()
-{
-    HomeScreen screen(mKeyboardState.globalConfig,
-                      mKeyboardState.smartKeySet,
-                      mTimerManager,
-                      mEventManager.defaultOutput);
-    
-    OutputSink output(*this, screen);
-    
-    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
-
-    while (mScreenEventQueue.empty())
-    {
-        mEventManager.poll(output);
-    }
-}
-
-void ScreenManager::launchMenu(int                menuId,
-                               const ScreenEvent& sourceEvent,
-                               EventStage&        next)
-{
-    if ((menuId == MenuDefinitions::kSecureMacros ||
-         menuId == MenuDefinitions::kEditSecureMacros) &&
-        !mKeyboardState.secureMacroSet.unlocked())
-    {
-        auto unlockEvent(ScreenEvent(ScreenEvent::Type::kScreen,
-                                     ScreenEvent::kMacroUnlock));
-
-        launchScreen(ScreenEvent::kMacroUnlock, unlockEvent);
-    }
-    else
-    {
-        MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
-                          next);
-        
-        displayScreen(mMenuDefinitions.getTitle(menuId),
-                      screen,
-                      sourceEvent);
     }
 }
 
@@ -227,187 +185,36 @@ void ScreenManager::launchScreen(int                screenId,
     switch (screenId)
     {
     case ScreenEvent::kGlobalSettings:
-    {
-        GlobalConfigScreen screen(mKeyboardState.smartKeySet,
-                                  mKeyboardState.globalConfig,
-                                  mTimerManager,
-                                  mEventManager);
-
-        displayScreen("Global Settings",
-                      screen,
-                      sourceEvent);
-
-        KeyboardStateUtil::store(mKeyboardState.globalConfig);
+        launchGlobalConfigScreen(sourceEvent);
         break;
-    }
-
+        
     case ScreenEvent::kStatus:
-    {
-        StatusScreen screen(mKeyboardState,
-                            mEventManager,
-                            mTimerManager);
-
-        displayScreen("Status",
-                      screen,
-                      sourceEvent);
+        launchStatusScreen(sourceEvent);
         break;
-    }
-    
+        
     case ScreenEvent::kCryptography:
-    {
-        CryptoScreen screen(mTimerManager,
-                            mEntropyPool);
-
-        displayScreen("Cryptography",
-                      screen,
-                      sourceEvent);
+        launchCryptoScreen(sourceEvent);
         break;
-    }
-    
+        
     case ScreenEvent::kEventStream:
-    {
-        EventStreamScreen screen;
-
-        displayScreen("Event Stream",
-                      screen,
-                      sourceEvent);
+        launchEventStreamScreen(sourceEvent);
         break;
-    }
 
     case ScreenEvent::kMacroUnlock:
-    {
-        UnlockScreen screen(mKeyboardState.secureMacroSet,
-                            mTimerManager,
-                            mEventManager);
-
-        displayScreen("Unlock Secure Macros",
-                      screen,
-                      sourceEvent);
+        launchMacroUnlockScreen(sourceEvent);
         break;
-    }
 
     case ScreenEvent::kMacroSave:
-    {
-        SaveSecureScreen screen(mKeyboardState.secureMacroSet,
-                                mEntropyPool,
-                                mEventManager);
-
-        displayScreen("Saving Secure Macros",
-                      screen,
-                      sourceEvent);
-
+        launchMacroSaveScreen(sourceEvent);
         break;
-    }
     
     case ScreenEvent::kInitSecureMacros:
-    {
-        InitSecureMacroScreen screen(mKeyboardState.secureMacroSet,
-                                     mTimerManager,
-                                     mEventManager);
-        
-        displayScreen("Setup Secure Macros",
-                      screen,
-                      sourceEvent);
-
+        launchInitSecureMacroScreen(sourceEvent);
         break;
-    }
     
     default:
         break;
     }
-}
-
-void ScreenManager::launchEditMacro(Macro&             macro,
-                                    Event              recordEvent,
-                                    const ScreenEvent& sourceEvent)
-{
-    EditMacroScreen screen(mTimerManager,
-                           macro,
-                           recordEvent,
-                           mEventManager);
-
-    displayScreen("Edit Macro",
-                  screen,
-                  sourceEvent);
-}
-
-void ScreenManager::launchRecordMacro(Macro&             macro,
-                                      const ScreenEvent& sourceEvent)
-{
-    // FIXME: Cleanup special case.
-    
-    RecordMacroScreen screen(mTimerManager,
-                             macro,
-                             mEventManager.defaultOutput);
-    
-    OutputSink output(*this, screen);
-    
-    TitleWidget titleWidget;
-    
-    titleWidget.text = "Record Macro";
-    
-    HSplitWidget hSplit(titleWidget,    
-                        screen.rootWidget(),
-                        TitleWidget::kPreferredHeight);
-
-    Surface::WidgetGuard guard(mSurface, hSplit);
-
-    screen.screenInit();
-
-    while (true)
-    {
-        mEventManager.poll(output);
-
-        if (!mScreenEventQueue.empty())
-        {
-            mScreenEventQueue.popFront();
-            break;
-        }
-    }
-
-    screen.screenExit();
-}
-
-void ScreenManager::launchEditLayer(int                layerId,
-                                    const ScreenEvent& sourceEvent)
-{
-    LayerConfigScreen screen(mTimerManager,
-                             mKeyHardware,
-                             mKeyboardState.layerStack[layerId]);
-    
-    displayScreen("Layer Configuration",
-                  screen,
-                  sourceEvent);
-
-    KeyboardStateUtil::store(mKeyboardState.layerStack);
-}
-
-void ScreenManager::launchEditMultiKey(int                multiKeyId,
-                                       const ScreenEvent& sourceEvent)
-{
-    MultiConfigScreen screen(mTimerManager,
-                             mKeyboardState.multiKeySet[multiKeyId],
-                             mEventManager);
-
-    displayScreen("Multi Key Configuration",
-                  screen,
-                  sourceEvent);
-
-    KeyboardStateUtil::store(mKeyboardState.multiKeySet);
-}
-
-void ScreenManager::launchEditSmartKey(int                smartKeyId,
-                                       const ScreenEvent& sourceEvent)
-{
-    SmartConfigScreen screen(mTimerManager,
-                             mKeyboardState.smartKeySet[smartKeyId],
-                             mEventManager);
-
-    displayScreen("Smart Key Configuration",
-                  screen,
-                  sourceEvent);
-
-    KeyboardStateUtil::store(mKeyboardState.smartKeySet);
 }
 
 void ScreenManager::displayScreen(const StrRef&      title,
@@ -471,3 +278,224 @@ void ScreenManager::displayScreen(const StrRef&      title,
     screen.screenCompleted = Action();
 }
 
+// Note the forced noinline below - without this, the optimiser will inline some
+// of these functions and allocate stack memory for them individually in the
+// caller statement. This wastes quite a lot of memory, especially when we're
+// stacking screens together.
+//
+// While this isn't always the case, we want to explicitly force the current and
+// future optimisers to only allocate stack memory for screens that we're using.
+
+
+__attribute__ ((noinline)) void ScreenManager::launchHome()
+{
+    HomeScreen screen(mKeyboardState.globalConfig,
+                      mKeyboardState.smartKeySet,
+                      mTimerManager,
+                      mEventManager.defaultOutput);
+    
+    OutputSink output(*this, screen);
+    
+    Surface::WidgetGuard guard(mSurface, screen.rootWidget());
+
+    while (mScreenEventQueue.empty())
+    {
+        mEventManager.poll(output);
+    }
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchMenu(int                menuId,
+                                                          const ScreenEvent& sourceEvent,
+                                                          EventStage&        next)
+{
+    if ((menuId == MenuDefinitions::kSecureMacros ||
+         menuId == MenuDefinitions::kEditSecureMacros) &&
+        !mKeyboardState.secureMacroSet.unlocked())
+    {
+        auto unlockEvent(ScreenEvent(ScreenEvent::Type::kScreen,
+                                     ScreenEvent::kMacroUnlock));
+
+        launchScreen(ScreenEvent::kMacroUnlock, unlockEvent);
+    }
+    else
+    {
+        MenuScreen screen(mMenuDefinitions.getDataSource(menuId),
+                          next);
+        
+        displayScreen(mMenuDefinitions.getTitle(menuId),
+                      screen,
+                      sourceEvent);
+    }
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchRecordMacroScreen(Macro&             macro,
+                                                                       const ScreenEvent& sourceEvent)
+{
+    // FIXME: Cleanup special case.
+    
+    RecordMacroScreen screen(mTimerManager,
+                             macro,
+                             mEventManager.defaultOutput);
+    
+    OutputSink output(*this, screen);
+    
+    TitleWidget titleWidget;
+    
+    titleWidget.text = "Record Macro";
+    
+    HSplitWidget hSplit(titleWidget,    
+                        screen.rootWidget(),
+                        TitleWidget::kPreferredHeight);
+
+    Surface::WidgetGuard guard(mSurface, hSplit);
+
+    screen.screenInit();
+
+    while (true)
+    {
+        mEventManager.poll(output);
+
+        if (!mScreenEventQueue.empty())
+        {
+            mScreenEventQueue.popFront();
+            break;
+        }
+    }
+
+    screen.screenExit();
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchEditLayerScreen(int                layerId,
+                                                                     const ScreenEvent& sourceEvent)
+{
+    LayerConfigScreen screen(mTimerManager,
+                             mKeyHardware,
+                             mKeyboardState.layerStack[layerId]);
+    
+    displayScreen("Layer Configuration",
+                  screen,
+                  sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.layerStack);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchEditMultiKeyScreen(int                multiKeyId,
+                                                                        const ScreenEvent& sourceEvent)
+{
+    MultiConfigScreen screen(mTimerManager,
+                             mKeyboardState.multiKeySet[multiKeyId],
+                             mEventManager);
+
+    displayScreen("Multi Key Configuration",
+                  screen,
+                  sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.multiKeySet);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchEditSmartKeyScreen(int                smartKeyId,
+                                                                        const ScreenEvent& sourceEvent)
+{
+    SmartConfigScreen screen(mTimerManager,
+                             mKeyboardState.smartKeySet[smartKeyId],
+                             mEventManager);
+
+    displayScreen("Smart Key Configuration",
+                  screen,
+                  sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.smartKeySet);
+}
+
+
+__attribute__ ((noinline)) void ScreenManager::launchEditMacroScreen(Macro&             macro,
+                                                                     Event              recordEvent,
+                                                                     const ScreenEvent& sourceEvent)
+{
+    EditMacroScreen screen(mTimerManager,
+                           macro,
+                           recordEvent,
+                           mEventManager);
+
+    displayScreen("Edit Macro",
+                  screen,
+                  sourceEvent);
+}
+
+
+__attribute__ ((noinline)) void ScreenManager::launchGlobalConfigScreen(const ScreenEvent& sourceEvent)
+{
+    GlobalConfigScreen screen(mKeyboardState.smartKeySet,
+                              mKeyboardState.globalConfig,
+                              mTimerManager,
+                              mEventManager);
+
+    displayScreen("Global Settings",
+                  screen,
+                  sourceEvent);
+
+    KeyboardStateUtil::store(mKeyboardState.globalConfig);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchStatusScreen(const ScreenEvent& sourceEvent)
+{
+    StatusScreen screen(mKeyboardState,
+                        mEventManager,
+                        mTimerManager);
+    
+    displayScreen("Status",
+                  screen,
+                  sourceEvent);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchCryptoScreen(const ScreenEvent& sourceEvent)
+{
+    CryptoScreen screen(mTimerManager,
+                        mEntropyPool);
+    
+    displayScreen("Cryptography",
+                  screen,
+                  sourceEvent);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchEventStreamScreen(const ScreenEvent& sourceEvent)
+{
+    EventStreamScreen screen;
+
+    displayScreen("Event Stream",
+                  screen,
+                  sourceEvent);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchMacroUnlockScreen(const ScreenEvent& sourceEvent)
+{
+    UnlockScreen screen(mKeyboardState.secureMacroSet,
+                        mTimerManager,
+                        mEventManager);
+    
+    displayScreen("Unlock Secure Macros",
+                  screen,
+                  sourceEvent);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchMacroSaveScreen(const ScreenEvent& sourceEvent)
+{
+    SaveSecureScreen screen(mKeyboardState.secureMacroSet,
+                            mEntropyPool,
+                            mEventManager);
+    
+    displayScreen("Saving Secure Macros",
+                  screen,
+                  sourceEvent);
+}
+
+__attribute__ ((noinline)) void ScreenManager::launchInitSecureMacroScreen(const ScreenEvent& sourceEvent)
+{
+    InitSecureMacroScreen screen(mKeyboardState.secureMacroSet,
+                                 mTimerManager,
+                                 mEventManager);
+    
+    displayScreen("Setup Secure Macros",
+                  screen,
+                  sourceEvent);
+}

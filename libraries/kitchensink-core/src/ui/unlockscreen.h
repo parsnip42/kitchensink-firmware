@@ -17,7 +17,7 @@ public:
     UnlockScreen(SecureMacroSet& secureMacroSet,
                  TimerManager&   timer,
                  EventStage&     next);
-    
+
 public:
     virtual bool processEvent(const Event& event) override;
     virtual Widget& rootWidget() override;
