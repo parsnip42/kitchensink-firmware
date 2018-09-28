@@ -147,7 +147,9 @@ void CryptoInStream::readHeader()
     
     auto key(CryptoUtil::stretch(mPassword, iv));
     
-    if (dataIvKeyHmac != CryptoUtil::hmac(key, dataIvKeyCrypt))
+    if (dataIvKeyHmac != HMACContext::generate(key,
+                                               DataRef(dataIvKeyCrypt.begin(),
+                                                       dataIvKeyCrypt.end())))
     {
         mState = State::kBadHmac;
         return;

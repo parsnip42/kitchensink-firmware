@@ -28,21 +28,33 @@ void sanityCheck(const DataRef& testData,
                  const StrRef&  password,
                  int            prngSeed)
 {
-    EntropyPool entropyPool;
-
     // rand() is a PRNG so don't even think about doing this in real code!
     srand(prngSeed);
     
-    for (int i(0); i < 10000; ++i)
+    Crypto::IV iv;
+    Crypto::IV dataIv;
+    Crypto::Key dataKey;
+
+    for (auto& x : iv)
     {
-        entropyPool.insert(uint8_t(rand() & 0xff));
+        x = uint8_t(rand() & 0xff);
+    }
+
+    for (auto& x : dataIv)
+    {
+        x = uint8_t(rand() & 0xff);
+    }
+        
+    for (auto& x : dataKey)
+    {
+        x = uint8_t(rand() & 0xff);
     }
 
     std::array<uint8_t, 1024 * 1024> encryptedData;
     ArrayOutStream encryptedOut(encryptedData);
 
     {
-        CryptoOutStream cryptOut(encryptedOut, password, entropyPool);
+        CryptoOutStream cryptOut(encryptedOut, password, iv, dataIv, dataKey);
 
         cryptOut.write(testData);
     }

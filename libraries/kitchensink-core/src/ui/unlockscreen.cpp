@@ -40,7 +40,7 @@ void UnlockScreen::onUnlock()
         mStatusLabel.text = "Unlocking";
         mStatusLabel.invalidateWidget();
 
-        if (KeyboardStateUtil::load(mSecureMacroSet, password))
+        if (KeyboardStateUtil::load(mSecureMacroSet, password) == KeyboardStateUtil::StorageResult::OK)
         {
             mSecureMacroSet.password = password;
             screenCompleted.fireAction();

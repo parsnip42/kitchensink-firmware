@@ -18,7 +18,7 @@ public:
     EntropyPool();
 
 public:
-    bool read(std::array<uint8_t, 32>& output);
+    bool read(Crypto::SHA256& output);
 
 public:
     std::size_t size() const;

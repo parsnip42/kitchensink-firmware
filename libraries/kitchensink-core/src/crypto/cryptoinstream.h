@@ -3,6 +3,7 @@
 
 #include "crypto/cryptotypes.h"
 #include "crypto/cryptoutil.h"
+#include "crypto/hmaccontext.h"
 #include "types/datarefinstream.h"
 #include "types/circularstream.h"
 #include "types/instream.h"
@@ -48,7 +49,7 @@ private:
     StrRef                                    mPassword;
     Crypto::Key                               mDataKey;
     Crypto::IV                                mDataIv;
-    CryptoUtil::HMACContext                   mHMAC;
+    HMACContext                               mHMAC;
     CircularStream<Crypto::kAesBlockSize * 8> mInBuffer;
     CircularStream<Crypto::kAesBlockSize * 8> mOutBuffer;
     State                                     mState;

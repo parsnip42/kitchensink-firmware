@@ -15,7 +15,7 @@ class InitSecureMacroScreen : public Screen
 {
 public:
     InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
-                          TimerManager&          timer,
+                          TimerManager&   timer,
                           EventStage&     next);
     
 public:

@@ -6,40 +6,17 @@
 #include <array>
 #include <cstdint>
 
-#include <mbedTLS_MD.h>
-
 class DataRef;
 class StrRef;
 
 namespace CryptoUtil
 {
 
-class HMACContext
-{
-public:
-    HMACContext();
-    ~HMACContext();
-    
-public:
-    void init(const Crypto::Key& key);
-    void update(const DataRef& data);
-    Crypto::HMAC finish();
-    
-private:
-    bool                 mContextInitialized;
-    mbedtls_md_context_t mContext;
-};
-
-
 Crypto::SHA256 sha256(const uint8_t* begin,
                       const uint8_t* end);
 
 Crypto::Key stretch(const StrRef&     password,
                     const Crypto::IV& iv);
-
-Crypto::HMAC hmac(const Crypto::Key& key,
-                  const uint8_t*     begin,
-                  const uint8_t*     end);
 
 Crypto::IV encrypt(const Crypto::Key& key,
                    const Crypto::IV&  iv,
@@ -60,16 +37,6 @@ Crypto::SHA256 sha256(const std::array<uint8_t, Capacity>& data)
 {
     return sha256(data.begin(),
                   data.end());
-}
-
-template <std::size_t Capacity>
-inline
-Crypto::HMAC hmac(const Crypto::Key&                   key,
-                  const std::array<uint8_t, Capacity>& data)
-{
-    return hmac(key,
-                data.begin(),
-                data.end());
 }
 
 template <std::size_t Capacity>

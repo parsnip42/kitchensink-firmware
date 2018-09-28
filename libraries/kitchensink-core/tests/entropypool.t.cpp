@@ -69,7 +69,7 @@ TEST(EntropyPool, Simple)
     ASSERT_EQ(ep.count(), 32 * Config::kEntropySourceFactor);
     ASSERT_EQ(ep.entryCount(), 1);    
     
-    std::array<uint8_t, 32> output;
+    Crypto::SHA256 output;
 
     ASSERT_TRUE(ep.read(output));
     ASSERT_EQ(ep.count(), 0);
@@ -114,7 +114,7 @@ TEST(EntropyPool, Overflow)
 
     ASSERT_EQ(ep.count(), Config::kEntropyPoolSize + (32 * Config::kEntropySourceFactor));
     
-    std::array<uint8_t, 32> output;
+    Crypto::SHA256 output;
 
     ASSERT_TRUE(ep.read(output));
     ASSERT_EQ(ep.count(), Config::kEntropyPoolSize - (32 * Config::kEntropySourceFactor));
@@ -155,4 +155,29 @@ TEST(EntropyPool, Overflow)
 
         ASSERT_EQ(outputRef, expectedRef);
     }
+}
+
+TEST(EntropyPool, Underflow0)
+{
+    EntropyPool ep;
+
+    ep.insert(0xff);
+
+    Crypto::SHA256 output;
+
+    ASSERT_FALSE(ep.read(output));
+}
+
+TEST(EntropyPool, Underflow1)
+{
+    EntropyPool ep;
+    
+    for (std::size_t i(0); i < (32 * Config::kEntropySourceFactor) - 1; i+=4)
+    {
+        ep.insert(0xff);
+    }
+
+    Crypto::SHA256 output;
+
+    ASSERT_FALSE(ep.read(output));
 }

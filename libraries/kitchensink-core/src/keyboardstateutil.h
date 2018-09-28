@@ -14,27 +14,35 @@ class SecureMacroSet;
 namespace KeyboardStateUtil
 {
 
+enum class StorageResult
+{
+    OK,
+    StorageError,
+    CryptoError,
+    EntropyError
+};
+
 void load(KeyboardState& keyboardState);
 
-void load(GlobalConfig& globalConfig);
-void load(MacroSet& macroSet);
-void load(LayerStack& layerStack);
-void load(MultiKeySet& multiKeySet);
-void load(SmartKeySet& smartKeySet);
+StorageResult load(GlobalConfig& globalConfig);
+StorageResult load(MacroSet& macroSet);
+StorageResult load(LayerStack& layerStack);
+StorageResult load(MultiKeySet& multiKeySet);
+StorageResult load(SmartKeySet& smartKeySet);
 
-bool load(SecureMacroSet& secureMacroSet,
-          const StrRef& password);
+StorageResult load(SecureMacroSet& secureMacroSet,
+                   const StrRef& password);
 
 void store(const KeyboardState& keyboardState);
 
-void store(const GlobalConfig& globalConfig);
-void store(const MacroSet& macroSet);
-void store(const LayerStack& layerStack);
-void store(const MultiKeySet& multiKeySet);
-void store(const SmartKeySet& smartKeySet);
+StorageResult store(const GlobalConfig& globalConfig);
+StorageResult store(const MacroSet& macroSet);
+StorageResult store(const LayerStack& layerStack);
+StorageResult store(const MultiKeySet& multiKeySet);
+StorageResult store(const SmartKeySet& smartKeySet);
 
-void store(const SecureMacroSet& secureMacroSet,
-           EntropyPool&          entropyPool);
+StorageResult store(const SecureMacroSet& secureMacroSet,
+                    EntropyPool&          entropyPool);
 
 }
 

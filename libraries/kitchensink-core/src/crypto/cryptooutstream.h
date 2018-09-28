@@ -3,6 +3,7 @@
 
 #include "crypto/cryptoutil.h"
 #include "crypto/cryptotypes.h"
+#include "crypto/hmaccontext.h"
 #include "types/circularstream.h"
 #include "types/outstream.h"
 #include "types/strbuf.h"
@@ -10,14 +11,15 @@
 #include "types/arrayoutstream.h"
 
 class DataRef;
-class EntropyPool;
 
 class CryptoOutStream : public OutStream
 {
 public:
-    CryptoOutStream(OutStream&    outStream,
-                    const StrRef& password,
-                    EntropyPool&  entropyPool);
+    CryptoOutStream(OutStream&         outStream,
+                    const StrRef&      password,
+                    const Crypto::IV&  iv,
+                    const Crypto::IV&  dataIv,
+                    const Crypto::Key& dataKey);
 
 public:
     virtual ~CryptoOutStream();
@@ -32,10 +34,10 @@ private:
 private:
     OutStream&                                 mOutStream;
     StrRef                                     mPassword;
-    EntropyPool&                               mEntropyPool;
+    Crypto::IV                                 mIv;
     Crypto::IV                                 mDataIv;
     Crypto::Key                                mDataKey;
-    CryptoUtil::HMACContext                    mHMAC;
+    HMACContext                                mHMAC;
     std::array<uint8_t, Crypto::kAesBlockSize> mData;
     ArrayOutStream                             mDataOut;
         

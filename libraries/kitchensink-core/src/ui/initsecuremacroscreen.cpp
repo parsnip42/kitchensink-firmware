@@ -5,7 +5,7 @@
 #include "config.h"
 
 InitSecureMacroScreen::InitSecureMacroScreen(SecureMacroSet& secureMacroSet,
-                                             TimerManager&          timer,
+                                             TimerManager&   timer,
                                              EventStage&     next)
     : mSecureMacroSet(secureMacroSet)
     , mFlashTimer(timer.createTimer())

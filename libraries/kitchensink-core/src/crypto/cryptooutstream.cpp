@@ -1,23 +1,22 @@
 #include "crypto/cryptooutstream.h"
 
-#include "crypto/entropypool.h"
 #include "types/arrayutil.h"
 #include "types/stroutstream.h"
 #include "config.h"
 
-CryptoOutStream::CryptoOutStream(OutStream&   outStream,
-                                const StrRef& password,
-                                EntropyPool&  entropyPool)
+CryptoOutStream::CryptoOutStream(OutStream&         outStream,
+                                 const StrRef&      password,
+                                 const Crypto::IV&  iv,
+                                 const Crypto::IV&  dataIv,
+                                 const Crypto::Key& dataKey)
     : mOutStream(outStream)
     , mPassword(password)
-    , mEntropyPool(entropyPool)
+    , mIv(iv)
+    , mDataIv(iv)
+    , mDataKey(dataKey)
     , mData()
     , mDataOut(mData)
 {
-    // FIXME: Test this in advance - at the moment we're relying on the UI.
-    // Note the implicit cast to Key when both types are the same size.
-    mEntropyPool.read(mDataKey);
-
     writeHeader();
 
     mHMAC.init(mDataKey);
@@ -30,15 +29,7 @@ CryptoOutStream::~CryptoOutStream()
 
 void CryptoOutStream::writeHeader()
 {
-    Crypto::SHA256 ivPair;
-
-    mEntropyPool.read(ivPair);
-
-    Crypto::IV iv;
-
-    ArrayUtil<Crypto::SHA256>::split(ivPair, iv, mDataIv);
-
-    auto key(CryptoUtil::stretch(mPassword, iv));
+    auto key(CryptoUtil::stretch(mPassword, mIv));
         
     std::array<uint8_t, sizeof(mDataIv) + sizeof(mDataKey)> dataIvKey;
 
@@ -47,11 +38,14 @@ void CryptoOutStream::writeHeader()
     std::array<uint8_t, sizeof(mDataIv) + sizeof(mDataKey)> dataIvKeyCrypt;
 
     CryptoUtil::encrypt(key,
-                        iv,
+                        mIv,
                         dataIvKey,
                         dataIvKeyCrypt);
     
-    Crypto::HMAC dataIvKeyHmac(CryptoUtil::hmac(key, dataIvKeyCrypt));
+    Crypto::HMAC dataIvKeyHmac(
+        HMACContext::generate(key,
+                              DataRef(dataIvKeyCrypt.begin(),
+                                      dataIvKeyCrypt.end())));
 
     mOutStream.write("AES");
     mOutStream.write(uint8_t('\x02'));
@@ -69,7 +63,7 @@ void CryptoOutStream::writeHeader()
     mOutStream.write(uint8_t('\x00'));
     mOutStream.write(uint8_t('\x00'));
     
-    mOutStream.write(iv);
+    mOutStream.write(mIv);
     mOutStream.write(dataIvKeyCrypt);
     mOutStream.write(dataIvKeyHmac);
 }

@@ -2,9 +2,11 @@
 
 #include "keyboardstate.h"
 #include "storage/storage.h"
+#include "crypto/entropypool.h"
 #include "crypto/cryptoinstream.h"
 #include "crypto/cryptooutstream.h"
 #include "serialize/serializer.h"
+#include "types/arrayutil.h"
 
 namespace KeyboardStateUtil
 {
@@ -18,7 +20,7 @@ void load(KeyboardState& keyboardState)
     load(keyboardState.smartKeySet);
 }
 
-void load(GlobalConfig& globalConfig)
+StorageResult load(GlobalConfig& globalConfig)
 {
     Storage storage;
     
@@ -26,9 +28,11 @@ void load(GlobalConfig& globalConfig)
     Serializer<GlobalConfig> s;
     
     s.deserialize(is, globalConfig);
+
+    return StorageResult::OK;
 }
 
-void load(MacroSet& macroSet)
+StorageResult load(MacroSet& macroSet)
 {
     Storage storage;
     
@@ -36,9 +40,11 @@ void load(MacroSet& macroSet)
     Serializer<MacroSet> s;
     
     s.deserialize(is, macroSet);
+
+    return StorageResult::OK;
 }
 
-void load(LayerStack& layerStack)
+StorageResult load(LayerStack& layerStack)
 {
     Storage storage;
     
@@ -46,9 +52,11 @@ void load(LayerStack& layerStack)
     Serializer<LayerStack> s;
     
     s.deserialize(is, layerStack);
+
+    return StorageResult::OK;
 }
 
-void load(MultiKeySet& multiKeySet)
+StorageResult load(MultiKeySet& multiKeySet)
 {
     Storage storage;
     
@@ -56,9 +64,11 @@ void load(MultiKeySet& multiKeySet)
     Serializer<MultiKeySet> s;
     
     s.deserialize(is, multiKeySet);
+
+    return StorageResult::OK;
 }
 
-void load(SmartKeySet& smartKeySet)
+StorageResult load(SmartKeySet& smartKeySet)
 {
     Storage storage;
     
@@ -66,10 +76,12 @@ void load(SmartKeySet& smartKeySet)
     Serializer<SmartKeySet> s;
     
     s.deserialize(is, smartKeySet);
+
+    return StorageResult::OK;
 }
 
-bool load(SecureMacroSet& secureMacroSet,
-          const StrRef&   password)
+StorageResult load(SecureMacroSet& secureMacroSet,
+                   const StrRef&   password)
 {
     Storage storage;
 
@@ -79,7 +91,7 @@ bool load(SecureMacroSet& secureMacroSet,
 
     if (cryptoIn.state() != CryptoInStream::State::kReading)
     {
-        return false;
+        return StorageResult::CryptoError;
     }
     
     Serializer<SecureMacroSet> s;
@@ -91,10 +103,10 @@ bool load(SecureMacroSet& secureMacroSet,
         // Anything here is invalid.
         secureMacroSet.lock();
         
-        return false;
+        return StorageResult::CryptoError;
     }
-
-    return true;
+    
+    return StorageResult::OK;
 }
 
 void store(const KeyboardState& keyboardState)
@@ -106,7 +118,7 @@ void store(const KeyboardState& keyboardState)
     store(keyboardState.smartKeySet);
 }
 
-void store(const GlobalConfig& globalConfig)
+StorageResult store(const GlobalConfig& globalConfig)
 {
     Storage storage;
     Serializer<GlobalConfig> s;
@@ -114,9 +126,11 @@ void store(const GlobalConfig& globalConfig)
     auto os(storage.write(Storage::Region::kConfig));
     
     s.serialize(globalConfig, os);
+
+    return StorageResult::OK;
 }
 
-void store(const MacroSet& macroSet)
+StorageResult store(const MacroSet& macroSet)
 {
     Storage storage;
     Serializer<MacroSet> s;
@@ -124,9 +138,11 @@ void store(const MacroSet& macroSet)
     auto os(storage.write(Storage::Region::kMacro));
     
     s.serialize(macroSet, os);
+
+    return StorageResult::OK;
 }
 
-void store(const LayerStack& layerStack)
+StorageResult store(const LayerStack& layerStack)
 {
     Storage storage;
     Serializer<LayerStack> s;
@@ -134,9 +150,11 @@ void store(const LayerStack& layerStack)
     auto os(storage.write(Storage::Region::kLayer));
     
     s.serialize(layerStack, os);
+
+    return StorageResult::OK;
 }
 
-void store(const MultiKeySet& multiKeySet)
+StorageResult store(const MultiKeySet& multiKeySet)
 {
     Storage storage;
     Serializer<MultiKeySet> s;
@@ -144,20 +162,24 @@ void store(const MultiKeySet& multiKeySet)
     auto os(storage.write(Storage::Region::kMultiKey));
     
     s.serialize(multiKeySet, os);
+
+    return StorageResult::OK;
 }
 
-void store(const SmartKeySet& smartKeySet)
+StorageResult store(const SmartKeySet& smartKeySet)
 {
     Storage storage;
     Serializer<SmartKeySet> s;
     
     auto os(storage.write(Storage::Region::kSmartKey));
     
-    s.serialize(smartKeySet, os);   
+    s.serialize(smartKeySet, os);
+
+    return StorageResult::OK;
 }
 
-void store(const SecureMacroSet& secureMacroSet,
-           EntropyPool&          entropyPool)
+StorageResult store(const SecureMacroSet& secureMacroSet,
+                    EntropyPool&          entropyPool)
 {
     if (!secureMacroSet.password.empty())
     {
@@ -165,14 +187,36 @@ void store(const SecureMacroSet& secureMacroSet,
         
         auto output(storage.write(Storage::Region::kSecureMacro));
         
+        Crypto::IV iv;
+        Crypto::IV dataIv;
+        Crypto::Key dataKey;
+
+        Crypto::SHA256 ivPair;
+
+        if (!entropyPool.read(ivPair))
+        {
+            return StorageResult::EntropyError;
+        }
+
+        ArrayUtil<decltype(ivPair)>::split(ivPair, iv, dataIv);
+
+        if (!entropyPool.read(dataKey))
+        {
+            return StorageResult::EntropyError;
+        }
+        
         CryptoOutStream os(output,
                            secureMacroSet.password,
-                           entropyPool);
+                           iv,
+                           dataIv,
+                           dataKey);
         
         Serializer<SecureMacroSet> s;
         
         s.serialize(secureMacroSet, os);
     }
+
+    return StorageResult::OK;
 }
 
 }
