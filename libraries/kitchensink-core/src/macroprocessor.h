@@ -34,7 +34,7 @@ private:
     const Macro*                   mCurrent;
     Macro::Content::const_iterator mBegin;
     Macro::Content::const_iterator mEnd;
-    Timer                  mPlaybackTimer;
+    Timer                          mPlaybackTimer;
     EventStage&                    mNext;
     
 private:

@@ -27,7 +27,7 @@ private:
     
 private:
     SecureMacroSet&                     mSecureMacroSet;
-    Timer                       mFlashTimer;
+    Timer                               mFlashTimer;
     LabelledWidget<PasswordEntryWidget> mPasswordEntry;
     LabelledWidget<PasswordEntryWidget> mConfirmEntry;
     LabelWidget                         mStatusLabel;
