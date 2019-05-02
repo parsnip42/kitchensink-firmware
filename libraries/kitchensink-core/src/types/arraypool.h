@@ -104,7 +104,7 @@ bool ArrayPool<Element>::insert(std::size_t index, const_iterator begin, const_i
     }
     
     std::move(entry.end(),
-              entry.end() + mPoolSize,
+              mPoolData.end(),
               entry.begin());
 
     mPoolSize -= entrySize;

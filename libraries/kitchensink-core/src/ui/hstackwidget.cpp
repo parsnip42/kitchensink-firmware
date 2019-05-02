@@ -5,7 +5,6 @@
 
 #include <algorithm>
 
-
 bool HStackWidget::processEvent(const Event& event)
 {
     if (mFocused != mItems.end() &&
@@ -19,8 +18,6 @@ bool HStackWidget::processEvent(const Event& event)
         {
             return applied.fireAction();
         }
-        
-        // return true;
     }
     else if (Keys::prev(event))
     {

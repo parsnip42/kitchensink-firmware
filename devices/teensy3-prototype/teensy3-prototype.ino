@@ -30,9 +30,9 @@ void setup()
 
 void loop()
 {
-    SerialLogger serialLogger;
+    // SerialLogger serialLogger;
 
-    Log::setLogger(&serialLogger);
+    // Log::setLogger(&serialLogger);
 
     DMOLED32Display display;
 
@@ -112,5 +112,5 @@ void loop()
 
     screenManager.poll();
 
-    Log::clearLogger();
+    // Log::clearLogger();
 }

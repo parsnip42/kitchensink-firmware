@@ -202,6 +202,8 @@ TEST(Crypto, Sanity3)
     DataRef testData(testDataRaw, testDataRaw + HugeSize);
     StrRef password("Another password!123");
     sanityCheck(testData, password, 789);
+
+    delete [] testDataRaw;
 }
 
 TEST(Crypto, AesCryptRead)
