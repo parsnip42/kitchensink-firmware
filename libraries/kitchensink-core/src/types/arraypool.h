@@ -98,7 +98,7 @@ bool ArrayPool<Element>::insert(std::size_t index, const_iterator begin, const_i
 
     // Note that if the size of an existing entry is bigger than the total used
     // size of the pool, then we're already in a complete mess.
-    if (((mPoolSize - entrySize) + dataSize) >= mPoolCapacity)
+    if (((mPoolSize - entrySize) + dataSize) > mPoolCapacity)
     {
         return false;
     }
@@ -111,13 +111,15 @@ bool ArrayPool<Element>::insert(std::size_t index, const_iterator begin, const_i
 
     for (auto& e : mIndexData)
     {
+        // Note here that entry.end() corresponds to the element following the
+        // end of the entry, so adjacent entries may start at this point.
         if (e.begin() >= entry.end())
         {
             e.begin() -= entrySize;
             e.end() -= entrySize;
         }
     }
-        
+    
     std::copy(begin,
               end,
               mPoolData.begin() + mPoolSize);

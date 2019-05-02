@@ -51,8 +51,7 @@ public:
 
 public:
     PasswordContent password;
-    Action          applied;
-    
+
 private:
     EntryWidget mEntryWidget;
     

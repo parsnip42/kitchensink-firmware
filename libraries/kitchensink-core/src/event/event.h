@@ -55,7 +55,8 @@ public:
     
     constexpr Event(Type    type,
                     uint8_t subType,
-                    uint8_t value);
+                    uint8_t value,
+                    bool inverted = false);
 
 public:
     constexpr Type type() const;
@@ -78,9 +79,9 @@ public:
 
     constexpr uint16_t data() const;
 
+    constexpr Event invert() const;
+
     bool isUserEvent() const;
-    
-    Event invert() const;
 
 private:
     uint16_t mData;
@@ -120,10 +121,12 @@ constexpr Event::Event(Type    type,
 inline
 constexpr Event::Event(Type    type,
                        uint8_t subType,
-                       uint8_t value)
+                       uint8_t value,
+                       bool inverted)
     : mData(static_cast<uint16_t>(type) << kTypeOffset |
             ((((static_cast<uint16_t>(subType) << invertible(type))) & kSubTypeMask) << kSubTypeOffset) |
-            (value & kValueMask))
+            (value & kValueMask) |
+            (invertible(type) && inverted) << kSubTypeOffset)
 { }
 
 inline
@@ -184,6 +187,12 @@ constexpr bool Event::invertible(Type type)
 }
 
 inline
+constexpr Event Event::invert() const
+{
+    return invertible() ? Event(type(), subType(), value(), !inverted()) : Event();
+}
+
+inline
 bool Event::isUserEvent() const
 {
     // This event was created directly as a result of user interaction with the
@@ -198,23 +207,6 @@ bool Event::isUserEvent() const
             t == Type::kSMacro ||
             t == Type::kAction ||
             t == Type::kScreen);
-}
-
-inline
-Event Event::invert() const
-{
-    if (invertible())
-    {
-        Event e(*this);
-        
-        e.mData ^= (1 << kSubTypeOffset);
-
-        return e;
-    }
-    else
-    {
-        return Event();
-    }
 }
 
 #endif

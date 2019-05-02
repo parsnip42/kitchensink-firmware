@@ -181,6 +181,7 @@ StorageResult store(const SmartKeySet& smartKeySet)
 StorageResult store(const SecureMacroSet& secureMacroSet,
                     EntropyPool&          entropyPool)
 {
+    /*
     if (!secureMacroSet.password.empty())
     {
         Storage storage;
@@ -214,7 +215,14 @@ StorageResult store(const SecureMacroSet& secureMacroSet,
         Serializer<SecureMacroSet> s;
         
         s.serialize(secureMacroSet, os);
+
+        return StorageResult::OK;
     }
+    else
+    {
+        return StorageResult::DataLockedError;
+    }
+    */
 
     return StorageResult::OK;
 }

@@ -43,12 +43,15 @@ public:
     virtual void render(const RasterLine& rasterLine, int row) override;
     virtual Dimension minimumSize() const override;
 
+private:
+    bool processVKeyboard(const Event& event);
+    bool processCursor(const Event& event);
+
 public:
     Content* content;
-    Action   applied;
-    
+
 private:
-    Timer   mFlashTimer;
+    Timer           mFlashTimer;
     bool            mFocused;
     bool            mFlash;
     std::size_t     mCursorPosition;

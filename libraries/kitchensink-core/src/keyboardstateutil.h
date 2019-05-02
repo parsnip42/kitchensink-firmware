@@ -19,7 +19,8 @@ enum class StorageResult
     OK,
     StorageError,
     CryptoError,
-    EntropyError
+    EntropyError,
+    DataLockedError
 };
 
 void load(KeyboardState& keyboardState);

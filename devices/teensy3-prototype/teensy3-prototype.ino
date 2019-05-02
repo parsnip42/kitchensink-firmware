@@ -14,11 +14,14 @@
 #include "event/compositeeventsource.h"
 #include "hardware/compositekeyhardware.h"
 #include "hardware/keyboardplate.h"
+#include "event/eventlogger.h"
+#include "log/log.h"
 
 #include <teensyusbkeyboard.h>
 #include <teensyledsource.h>
 #include <dmoled32display.h>
 #include <i2ckeymatrix.h>
+#include <seriallogger.h>
 
 void setup()
 {
@@ -27,6 +30,10 @@ void setup()
 
 void loop()
 {
+    SerialLogger serialLogger;
+
+    Log::setLogger(&serialLogger);
+
     DMOLED32Display display;
 
     EntropyPool entropyPool;
@@ -74,6 +81,13 @@ void loop()
                                         timerManager,
                                         smartKeyProcessor);
 
+    /*
+    EventLogger eventLogger(multiKeyProcessor);
+    EventStage& rootEventStage(eventLogger);
+    */
+
+    EventStage& rootEventStage(multiKeyProcessor);
+
     KeySource keySource(keyboard,
                         keyboardState.layerStack);
 
@@ -85,7 +99,7 @@ void loop()
     CompositeEventSource<3> eventSource({ &keySource, &ledSource, &timerManager });
     
     EventManager eventManager(eventSource,
-                              multiKeyProcessor,
+                              rootEventStage,
                               toplevel,
                               usbKeyboard);
     
@@ -97,4 +111,6 @@ void loop()
                                 entropyPool);
 
     screenManager.poll();
+
+    Log::clearLogger();
 }

@@ -13,9 +13,9 @@ class Macro;
 class RecordMacroScreen : public Screen
 {    
 public:
-    RecordMacroScreen(TimerManager&      timer,
-                      Macro&      macro,
-                      EventStage& next);
+    RecordMacroScreen(TimerManager& timer,
+                      Macro&        macro,
+                      EventStage&   next);
 
 public:
     virtual bool processEvent(const Event& event);
@@ -27,7 +27,7 @@ private:
     int           mMacroId;
     EventRecorder mRecorder;
     LabelWidget   mLabelWidget;
-    Timer mFlashTimer;
+    Timer         mFlashTimer;
     bool          mFlash;
     EventStage&   mNext;
     

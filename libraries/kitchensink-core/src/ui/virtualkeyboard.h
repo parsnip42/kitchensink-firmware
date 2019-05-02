@@ -4,13 +4,13 @@
 #include "event/eventstage.h"
 #include "modifierstate.h"
 
-class VirtualKeyboard : public EventStage
+class VirtualKeyboard
 {
 public:
     VirtualKeyboard();
 
 public:
-    virtual bool processEvent(const Event& keyEvent) override;
+    bool processEvent(const Event& keyEvent);
     char consumeChar();
     
 private:

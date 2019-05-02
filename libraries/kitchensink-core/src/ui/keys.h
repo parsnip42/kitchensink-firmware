@@ -49,11 +49,13 @@ constexpr bool right(const Event& event)
 inline
 constexpr bool ok(const Event& event)
 {
+    // HACK: We're waiting for key release here seeing as time consuming events
+    // can trigger autorepeat and generally mess things up a bit.
     return event == KeyEvent::create(KeyCode::Enter);
 }
 
 inline
-bool okReleased(const Event& event)
+constexpr bool okReleased(const Event& event)
 {
     return ok(event.invert());
 }

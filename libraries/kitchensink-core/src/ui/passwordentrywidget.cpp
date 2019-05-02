@@ -51,16 +51,13 @@ void PasswordEntryWidget::PasswordContent::updateMask()
 
 PasswordEntryWidget::PasswordEntryWidget(TimerManager& timer)
     : mEntryWidget(timer, &password)
-{
-    mEntryWidget.applied = Action::action(applied);
-}
+{ }
 
 PasswordEntryWidget::PasswordEntryWidget(PasswordEntryWidget&& rhs)
     : password(std::move(rhs.password))
     , mEntryWidget(std::move(rhs.mEntryWidget))
 {
     mEntryWidget.content = &password;
-    mEntryWidget.applied = Action::action(applied);
 }
 
 void PasswordEntryWidget::setFocused(bool focused)

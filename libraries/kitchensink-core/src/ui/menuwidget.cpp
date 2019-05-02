@@ -5,6 +5,7 @@
 #include "ui/menuitemwidget.h"
 #include "event/event.h"
 
+
 MenuWidget::MenuWidget(const DataSource& dataSource)
     : filterIndex(dataSource.size())
     , mDataSource(dataSource)

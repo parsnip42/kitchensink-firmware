@@ -55,7 +55,7 @@ public:
     void lock();
     
 public:
-    StrBuf<24> password;
+    StrBuf<Config::kPasswordMax + 1> password;
 };
 
 
@@ -123,9 +123,8 @@ SecureMacroSet::SecureMacroSet()
 inline
 void SecureMacroSet::lock()
 {
-    // TODO: We should securely wipe this.
     reset();
-    password = "";
+    password.clearSecure();
 }
 
 inline

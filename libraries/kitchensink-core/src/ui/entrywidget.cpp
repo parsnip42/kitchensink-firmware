@@ -9,6 +9,7 @@
 #include "ui/surface.h"
 #include "ui/colors.h"
 
+
 EntryWidget::EntryWidget(TimerManager&   timer,
                          Content* nContent)
     : content(nContent)
@@ -101,48 +102,108 @@ bool EntryWidget::processEvent(const Event& event)
         return true;
     }
 
+    if (event.is<KeyEvent>() && event.get<KeyEvent>().pressed)
+    {
+        mFlash = true;
+        mFlashTimer.scheduleRepeating(1000, 500);
+    }
+
     const auto& text(content->textContent());
+    
     mCursorPosition = std::min(mCursorPosition, text.length());
 
-    mVKeyboard.processEvent(event);
+    if (processVKeyboard(event))
+    {
+        return true;
+    }
+    else if (processCursor(event))
+    {
+        return true;
+    }
+    
+    return false;
+}
+
+bool EntryWidget::processVKeyboard(const Event& event)
+{
+    const auto& text(content->textContent());
+
+    if (mVKeyboard.processEvent(event))
+    {
+        if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)
+        {
+            char newChar(mVKeyboard.consumeChar());
+            
+            if (newChar)
+            {
+                if (content->insertChar(newChar, mCursorPosition))
+                {
+                    ++mCursorPosition;
+                }
+            }
+        }
+
+        invalidateWidget();
+
+        return true;
+    }
+
+    return false;
+}
+
+bool EntryWidget::processCursor(const Event& event)
+{
+    const auto& text(content->textContent());
 
     if (event.is<KeyEvent>())
     {
         auto keyEvent(event.get<KeyEvent>());
 
-        if (keyEvent.pressed)
+        switch (keyEvent.key)
         {
-            mFlash = true;
-            mFlashTimer.scheduleRepeating(1000, 500);
-
-            switch (keyEvent.key)
+        case KeyCode::Left:
+            if (keyEvent.pressed)
             {
-            case KeyCode::None:
-                break;
-                
-            case KeyCode::Left:
                 if (mCursorPosition > 0)
                 {
                     --mCursorPosition;
                 }
-                break;
                 
-            case KeyCode::Right:
+                invalidateWidget();
+            }
+            return true;
+                
+        case KeyCode::Right:
+            if (keyEvent.pressed)
+            {
                 if (mCursorPosition < text.length())
                 {
                     ++mCursorPosition;
                 }
-                break;
                 
-            case KeyCode::Home:
+                invalidateWidget();
+            }
+            return true;
+            
+        case KeyCode::Home:
+            if (keyEvent.pressed)
+            {
                 mCursorPosition = 0;
-                break;
+                invalidateWidget();
+            }
+            return true;
                 
-            case KeyCode::End:
+        case KeyCode::End:
+            if (keyEvent.pressed)
+            {
                 mCursorPosition = text.length();
-                break;
+                invalidateWidget();
+            }
+            return true;
 
-            case KeyCode::Backspace:
+        case KeyCode::Backspace:
+            if (keyEvent.pressed)
+            {
                 if (mCursorPosition > 0)
                 {
                     if (content->eraseChar(mCursorPosition))
@@ -150,35 +211,14 @@ bool EntryWidget::processEvent(const Event& event)
                         --mCursorPosition;
                     }
                 }
-                break;
-
-            case KeyCode::Enter:
-                return applied.fireAction();
                 
-            default:
-                if (text.length() < static_cast<std::size_t>(widgetSize().width / Font::kWidth) - 1)
-                {
-                    char newChar(mVKeyboard.consumeChar());
-                    
-                    if (newChar)
-                    {
-                        if (content->insertChar(newChar, mCursorPosition))
-                        {
-                            ++mCursorPosition;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                break;
+                invalidateWidget();
             }
-        }
+            return true;
 
-        invalidateWidget();
-        
-        return true;
+        default:
+            break;
+        }
     }
 
     return false;

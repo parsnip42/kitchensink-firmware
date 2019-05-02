@@ -24,6 +24,8 @@
 #include "eventmanager.h"
 #include "keyboardstateutil.h"
 
+#include "event/eventlogger.h"
+
 namespace
 {
 
@@ -241,7 +243,7 @@ void ScreenManager::displayScreen(const StrRef&      title,
     
     screen.screenCompleted = Action::trigger(completed);
     screen.screenInit();
-    
+
     while (!completed)
     {
         mEventManager.poll(output);

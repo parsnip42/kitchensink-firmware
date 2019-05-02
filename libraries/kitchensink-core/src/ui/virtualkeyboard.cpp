@@ -10,27 +10,35 @@ VirtualKeyboard::VirtualKeyboard()
 
 bool VirtualKeyboard::processEvent(const Event& event)
 {
-    if (!mModifierState.processEvent(event))
+    if (mModifierState.processEvent(event))
     {
-        if (event.is<KeyEvent>())
-        {
-            auto keyEvent(event.get<KeyEvent>());
-
-            if (keyEvent.pressed)
-            {
-                if (mModifierState.shift())
-                {
-                    mActiveChar = KeyMap::getEntry(keyEvent.key).shift;
-                }
-                else
-                {
-                    mActiveChar = KeyMap::getEntry(keyEvent.key).dflt; 
-                }
-            }
-        }
+        return true;
     }
 
-    return true;
+    if (event.is<KeyEvent>())
+    {
+        auto keyEvent(event.get<KeyEvent>());
+        
+        char nextChar;
+        
+        if (mModifierState.shift())
+        {
+            nextChar = KeyMap::getEntry(keyEvent.key).shift;
+        }
+        else
+        {
+            nextChar = KeyMap::getEntry(keyEvent.key).dflt;
+        }
+        
+        if (keyEvent.pressed)
+        {
+            mActiveChar = nextChar;
+        }
+        
+        return (nextChar != 0);
+    }
+
+    return false;
 }
 
 char VirtualKeyboard::consumeChar()

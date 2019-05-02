@@ -36,6 +36,7 @@ public:
     constexpr bool empty() const;
 
     void clear();
+    void clearSecure();
     
 public:
     StrBuf<Capacity>& operator=(const StrRef& strRef);
@@ -93,6 +94,18 @@ inline
 void StrBuf<Capacity>::clear()
 {
     mData.front() = '\0';
+}
+
+template <std::size_t Capacity>
+inline
+void StrBuf<Capacity>::clearSecure()
+{
+    // Will not be optimised away as described here:
+    // https://en.cppreference.com/w/cpp/string/byte/memset
+    
+    std::fill(reinterpret_cast<volatile char*>(begin()),
+              reinterpret_cast<volatile char*>(end()),
+              '\0');   
 }
 
 template <std::size_t Capacity>

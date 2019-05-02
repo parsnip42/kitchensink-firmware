@@ -5,30 +5,31 @@
 
 #include <algorithm>
 
+
 bool HStackWidget::processEvent(const Event& event)
 {
     if (mFocused != mItems.end() &&
         mFocused->widget->processEvent(event))
     {
-        // Skip
+        return true;
     }
-    else if (Keys::next(event) || Keys::ok(event))
+    else if (Keys::next(event) || Keys::okReleased(event))
     {
-        if (!focusNext() && Keys::ok(event))
+        if (!focusNext() && Keys::okReleased(event))
         {
             return applied.fireAction();
         }
+        
+        // return true;
     }
     else if (Keys::prev(event))
     {
         focusPrev();
-    }
-    else
-    {
-        return false;
-    }
 
-    return true;
+        return true;
+    }
+    
+    return false;
 }
 
 void HStackWidget::setFocused(bool focused)

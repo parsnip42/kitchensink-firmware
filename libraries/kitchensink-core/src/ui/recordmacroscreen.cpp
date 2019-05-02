@@ -10,9 +10,9 @@
 
 #include <cstdint>
 
-RecordMacroScreen::RecordMacroScreen(TimerManager&      timer,
-                                     Macro&      macro,
-                                     EventStage& next)
+RecordMacroScreen::RecordMacroScreen(TimerManager& timer,
+                                     Macro&        macro,
+                                     EventStage&   next)
     : mMacro(macro)
     , mRecorder(macro.type == Macro::Type::kRealtime)
     , mLabelWidget("Recording",
