@@ -22,8 +22,8 @@ public:
     std::size_t size() const;
     std::size_t poolUsage() const;
     std::size_t poolCapacity() const;
-    void reset();
-    
+    void clear();
+
 private:
     MacroDataPool<Size, PoolSize> mMacroPool;
     MacroData                     mMacroData;
@@ -106,7 +106,7 @@ MacroSetImpl<Size, PoolSize>::MacroSetImpl()
 
 template <std::size_t Size, std::size_t PoolSize>
 inline
-void MacroSetImpl<Size, PoolSize>::reset()
+void MacroSetImpl<Size, PoolSize>::clear()
 {
     mMacroPool.clear();
 
@@ -116,6 +116,7 @@ void MacroSetImpl<Size, PoolSize>::reset()
     }
 }
 
+
 inline
 SecureMacroSet::SecureMacroSet()
 { }
@@ -123,7 +124,7 @@ SecureMacroSet::SecureMacroSet()
 inline
 void SecureMacroSet::lock()
 {
-    reset();
+    clear();
     password.clearSecure();
 }
 

@@ -2,9 +2,9 @@
 
 void KeyboardState::reset()
 {
-    layerStack.reset();
-    macroSet.reset();
-    secureMacroSet.reset();
+    layerStack.clear();
+    macroSet.clear();
+    secureMacroSet.clear();
     multiKeySet = MultiKeySet();
     smartKeySet = SmartKeySet();
 }

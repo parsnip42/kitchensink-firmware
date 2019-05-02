@@ -4,6 +4,7 @@
 #include "event/event.h"
 #include "types/arraypool.h"
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 
@@ -39,6 +40,16 @@ template <std::size_t Size, std::size_t PoolSize>
 inline
 void MacroDataPool<Size, PoolSize>::clear()
 {
+    // TODO: Check that this isn't optimised away.
+    
+    std::fill(indexData.begin(),
+              indexData.end(),
+              Range<Event*>(nullptr, nullptr));
+
+    std::fill(poolData.begin(),
+              poolData.end(),
+              Event());
+    
     pool.clear();
 }
 

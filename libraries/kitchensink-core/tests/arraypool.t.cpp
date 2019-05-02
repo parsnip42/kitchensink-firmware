@@ -71,8 +71,6 @@ TEST(ArrayPool, Simple)
     
         ASSERT_TRUE(std::memcmp(testC, contentC.begin(), 2) == 0);
     
-        auto contentA(ap[1]);
-    
         ASSERT_EQ(ap[1].begin(), ap[1].end());
 
         auto contentB(ap[2]);

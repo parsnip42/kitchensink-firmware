@@ -36,7 +36,7 @@ public:
                   int row,
                   int column) const;
 
-    void reset();
+    void clear();
     
 public:
     const Layer& operator[](std::size_t n) const;
