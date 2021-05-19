@@ -2,8 +2,8 @@
 
 Event Layer::at(int row, int column) const
 {
-    if (row >= 0 && row < kRows &&
-        column >= 0 && column < kColumns)
+    if (row >= 0 && row < (int)kRows &&
+        column >= 0 && column < (int)kColumns)
     {
         return mapping[row][column];
     }
@@ -15,8 +15,8 @@ Event Layer::at(int row, int column) const
 
 void Layer::set(int row, int column, const Event& event)
 {
-    if (row >= 0 && row < kRows &&
-        column >= 0 && column < kColumns)
+    if (row >= 0 && row < (int)kRows &&
+        column >= 0 && column < (int)kColumns)
     {
         mapping[row][column] = event;
     }
